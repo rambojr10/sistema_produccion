@@ -1,0 +1,373 @@
+<?php
+    require_once 'conexion.php';
+    //Orden crud
+    
+//Sentencias de creación =========================================================================================
+
+    function nuevafinca($datos_c, $lotes){
+        $ibm = $datos_c['ibm'];
+        $nombre = $datos_c['nombre'];
+        $neta = $datos_c['neta'];
+        $bruta = $datos_c['bruta'];
+        $bruta = $datos_c['bruta'];
+        $empresa = $datos_c['empresa'];
+        $bd = conectar();
+        try{
+            $datos = $bd->prepare("INSERT INTO tblfincas VALUES(:ibm, :nombre, :neta, :bruta, :empresa)");
+            $datos->bindParam(":ibm", $ibm, PDO::PARAM_STR);
+            $datos->bindParam(":nombre", $nombre, PDO::PARAM_STR);
+            $datos->bindParam(":neta", $neta, PDO::PARAM_STR);
+            $datos->bindParam(":bruta", $bruta, PDO::PARAM_STR);
+            $datos->bindParam(":empresa", $empresa, PDO::PARAM_STR);
+            if($datos->execute()){
+                foreach ($lotes as $l) {
+                    $nom_l = $l[0];
+                    $neta_l = $l[1];
+                    $bruta_l = $l[2];
+                    $ibm = $datos_c['ibm'];
+                    $datos = $bd->prepare("INSERT INTO tbllotes VALUES(null, :nom, :neta, :bruta, :ibm)");
+                    $datos->bindParam(":nom", $nom_l, PDO::PARAM_STR);
+                    $datos->bindParam(":neta", $neta_l, PDO::PARAM_STR);
+                    $datos->bindParam(":bruta", $bruta_l, PDO::PARAM_STR);
+                    $datos->bindParam(":ibm", $ibm, PDO::PARAM_STR);
+                    $datos->execute();
+                }
+                return true;
+            }else{
+                return false;
+            }
+        }catch (Exception $e) {
+            echo "Error".$e;
+        }
+    }
+
+    function nuevaempresa($empresa){
+        try {
+            $bd = conectar();
+            $datos = $bd->prepare("INSERT INTO tblempresas VALUES(:nit, :nombre, :direccion, :telefono)");
+            $datos->bindParam(":nit", $empresa['nit'], PDO::PARAM_STR);
+            $datos->bindParam(":nombre", $empresa['nom'], PDO::PARAM_STR);
+            $datos->bindParam(":direccion", $empresa['dir'], PDO::PARAM_STR);
+            $datos->bindParam(":telefono", $empresa['tel'], PDO::PARAM_STR);
+            if($datos->execute()){
+                return true;
+            }else{
+                return false;
+            }
+        } catch (SQLException $e) {
+            echo "Error".$e;
+        }
+    }
+
+    function guardarcaja($caja){
+        try {
+            $bd = conectar();
+            $datos = $bd->prepare("INSERT INTO tblcajasproduccion VALUES(:codigo, :descripcion, :factor, :tipofruta)");
+            $datos->bindParam(":codigo", $caja['codigo'], PDO::PARAM_STR);
+            $datos->bindParam(":descripcion", $caja['descripcion'], PDO::PARAM_STR);
+            $datos->bindParam(":factor", $caja['factor'], PDO::PARAM_STR);
+            $datos->bindParam(":tipofruta", $caja['tipofruta'], PDO::PARAM_INT);
+            if ($datos->execute()) {
+                return true;
+            }else{
+                return false;
+            }
+        } catch (SQLException $e) {
+            echo "Error".$e;
+        }
+    }
+
+    function crearembarque($ano, $semana){
+        try{
+            $bd = conectar();
+            $datos = $bd->prepare("INSERT INTO tblembarque VALUES(null, :semana, :ano)");
+            $datos->bindParam(":semana", $semana, PDO::PARAM_INT);
+            $datos->bindParam(":ano", $ano, PDO::PARAM_STR);
+            if ($datos->execute())
+                return $bd->lastInsertId();
+            else
+                return false;
+        } catch (SQLException $e) {
+            echo "Error".$e;
+        }
+    }
+// Sentencias de búsqueda ==========================================================================================
+    
+    function ingreso($usuario, $password){
+        $bd = conectar();
+        $datos = $bd->prepare("SELECT * FROM tblusuarios INNER JOIN tblfincas 
+                                ON tblusuarios.FKIbm_TblFincas = tblfincas.PKIbm 
+                                WHERE tblusuarios.FKIbm_TblFincas = :usuario 
+                                AND tblusuarios.Password = :password");
+        $datos->bindParam(":usuario", $usuario, PDO::PARAM_STR);
+        $datos->bindParam(":password", $password, PDO::PARAM_STR);
+        $datos->execute();
+        return $datos->fetchAll();
+    }
+
+    function listarfincas(){
+        $bd = conectar();
+        $datos = $bd->prepare("SELECT * FROM tblfincas");
+        $datos->execute();
+        return $datos->fetchAll();
+    }
+
+    function listarempresas(){
+        $bd = conectar();
+        $datos = $bd->prepare("SELECT * FROM tblempresas");
+        $datos->execute();
+        return $datos->fetchAll();
+    }
+
+    function cajasproduccion(){
+        $bd = conectar();
+        $datos = $bd->prepare("SELECT c.PKCodigo, c.Descripcion, c.FactorConversion, t.Descripcion TipoFruta
+                                FROM tblcajasproduccion c, tbltipofruta t
+                                WHERE c.FKId_TblTipoFruta = t.PKId");
+        $datos->execute();
+        return $datos->fetchAll();
+    }
+
+    function listarlotes($ibm_l){
+        $bd = conectar();
+        $datos = $bd->prepare("SELECT * FROM tbllotes WHERE FKIbm_TblFincas = :ibm_l");
+        $datos->bindParam(":ibm_l", $ibm_l, PDO::PARAM_STR);
+        $datos->execute();
+        return $datos->fetchAll();
+    }
+
+    function buscarfinca($ibm_f){
+        $bd = conectar();
+        $datos = $bd->prepare("SELECT tblfincas.Nombre FROM TblFincas WHERE PKIbm = :ibm_f");
+        $datos->bindParam(":ibm_f", $ibm_f, PDO::PARAM_STR);
+        $datos->execute();
+        return $datos->fetch();
+    }
+
+    function buscarlote($id_lote){
+        $bd = conectar();
+        $datos = $bd->prepare("SELECT * FROM tbllotes WHERE PKId = :id_lote");
+        $datos->bindParam(":id_lote", $id_lote, PDO::PARAM_INT);
+        $datos->execute();
+        return $datos->fetch();
+    }
+
+    function buscarempresa($ibm_e){
+        $bd = conectar();
+        $datos = $bd->prepare("SELECT e.PKNit, e.Nombre, e.Direccion, e.Telefono 
+                                FROM tblempresas as e, tblfincas as f 
+                                WHERE f.FKNit_TblEmpresas = e.PKNit AND f.PKIbm = :ibm_e");
+        $datos->bindParam(":ibm_e", $ibm_e, PDO::PARAM_STR);
+        $datos->execute();
+        return $datos->fetch();
+    }
+
+    function editarempresa($nit){
+        $bd = conectar();
+        $datos = $bd->prepare("SELECT * FROM tblempresas WHERE PKNit = :nit");
+        $datos->bindParam(":nit", $nit, PDO::PARAM_STR);
+        $datos->execute();
+        return $datos->fetch();
+    }
+
+    function buscarcaja($codigo){
+        $bd = conectar();
+        $datos = $bd->prepare("SELECT * FROM tblcajasproduccion WHERE PKCodigo = :codigo");
+        $datos->bindParam(":codigo", $codigo, PDO::PARAM_STR);
+        $datos->execute();
+        return $datos->fetch();
+    }
+
+    function cargarsemanas(){
+        $bd = conectar();
+        $datos = $bd->prepare("SELECT * FROM tblsemanas");
+        $datos->execute();
+        return $datos->fetchAll();
+    }
+
+    //Funciones de ver elaboración de acuerdo al tipo de filtro
+        function verelaboracion_s($finca, $semana, $ano, $codigocaja){
+            $bd = conectar();
+            $datos = $bd->prepare("
+                SELECT  (SELECT DATE_ADD(s.Fecha_Inicio, INTERVAL (di.PKId-1) DAY)) as Fecha, 
+                            di.Descripcion as Dia, d.N_CajasProducidas_Dia as Total_CajaDia		
+                FROM	
+                    tbldet_tbldet_tblproduccion as d, tblcajasproduccion as c, tbldias as di, tblfincas as f, 
+                    tblsemanas as s, tbldet_tblproduccion as p, tblproduccion as pr
+                WHERE
+                    d.FKCodigo_TblCajasProduccion = :codigocaja
+                AND
+                    d.FKCodigo_TblCajasProduccion = c.PKCodigo
+                AND 
+                    d.FKId_TblDet_TblProduccion = p.PKId
+                AND 
+                    p.FKId_TblDias = di.PKId
+                AND 
+                    p.FKId_TblProduccion = pr.PKId
+                AND 
+                    pr.FKIbm_TblFincas = f.PKIbm
+                AND 
+                    pr.FKId_TblSemanas = s.PKId
+                AND
+                    pr.FKIbm_TblFincas = :finca
+                AND
+                    pr.FKId_TblSemanas = :semana
+                AND
+                    pr.Anho_Produccion = :ano
+            ");
+            $datos->bindParam(":codigocaja", $codigocaja, PDO::PARAM_STR);
+            $datos->bindParam(":finca", $finca, PDO::PARAM_STR);
+            $datos->bindParam(":semana", $semana, PDO::PARAM_INT);
+            $datos->bindParam(":ano", $ano, PDO::PARAM_STR);
+            $datos->execute();
+            return $datos->fetchAll();
+        }
+
+        function verelaboracion_a($finca, $ano, $codigocaja){
+            $bd = conectar();
+            $datos = $bd->prepare("
+                SELECT SUM(dd.N_CajasProducidas_Dia) as total_anual 
+                FROM
+                    tbldet_tbldet_tblproduccion as dd, tblcajasproduccion as cp, tbldet_tblproduccion as dp, tblproduccion as pr, tblfincas as fi
+                WHERE
+                    dd.FKCodigo_TblCajasProduccion = cp.PKCodigo
+                AND
+                    dd.FKId_TblDet_TblProduccion = dp.PKId
+                AND
+                    dp.FKId_TblProduccion = pr.PKId
+                AND
+                    pr.FKIbm_TblFincas = fi.PKIbm
+                AND
+                    cp.PKCodigo = :codigocaja
+                AND 
+                    pr.Anho_Produccion = :ano
+                AND
+                    fi.PKIbm = :finca
+            ");
+            $datos->bindParam(":codigocaja", $codigocaja, PDO::PARAM_STR);
+            $datos->bindParam(":ano", $ano, PDO::PARAM_STR);
+            $datos->bindParam(":finca", $finca, PDO::PARAM_STR);
+            $datos->execute();
+            return $datos->fetch();
+        }
+
+        function verelaboracion_h($finca, $codigocaja){
+            $bd = conectar();
+            $datos = $bd->prepare("
+                SELECT SUM(dd.N_CajasProducidas_Dia) as total_historico
+                FROM
+                    tbldet_tbldet_tblproduccion as dd, tblcajasproduccion as cp, tbldet_tblproduccion as dp, tblproduccion as pr, tblfincas as fi
+                WHERE
+                    dd.FKCodigo_TblCajasProduccion = cp.PKCodigo
+                AND
+                    dd.FKId_TblDet_TblProduccion = dp.PKId
+                AND
+                    dp.FKId_TblProduccion = pr.PKId
+                AND
+                    pr.FKIbm_TblFincas = fi.PKIbm
+                AND
+                    cp.PKCodigo = :codigocaja
+                AND
+                    fi.PKIbm = :finca
+            ");
+            $datos->bindParam(":codigocaja", $codigocaja, PDO::PARAM_STR);
+            $datos->bindParam(":finca", $finca, PDO::PARAM_STR);
+            $datos->execute();
+            return $datos->fetch();
+        }
+    // ----------------------------------------------------------------
+
+    //
+    function cargarsemanas_pe($ano_pe){
+        $bd = conectar();
+        $datos = $bd->prepare("
+            SELECT s.PKId, s.N_Semana
+            FROM tblsemanas as s
+            WHERE NOT EXISTS (SELECT NULL
+                                FROM tblembarque as e
+                                WHERE s.PKId = e.FKId_TblSemanas
+                                AND e.anho = :ano)");
+        $datos->bindParam(":ano", $ano_pe, PDO::PARAM_STR);
+        $datos->execute();
+        return $datos->fetchAll();
+    }
+
+    //
+    function tipofrutaselect(){
+        $bd = conectar();
+        $datos = $bd->prepare("SELECT * FROM TblTipoFruta");
+        $datos->execute();
+        return $datos->fetchAll();
+    }
+
+//Sentencias de actualización------------------------------------------------------------------------------------------------------------
+
+    //Recibe arreglo de php para actualizar los datos
+    function actualizarempresa($empresa){
+        try {
+            $bd = conectar();
+            $datos = $bd->prepare("UPDATE tblempresas SET Nombre = :nom, Direccion = :dir, Telefono = :tel WHERE PKNit = :nit");
+            $datos->bindParam(":nom", $empresa['nom']);
+            $datos->bindParam(":dir", $empresa['dir']);
+            $datos->bindParam(":tel", $empresa['tel']);
+            $datos->bindParam(":nit", $empresa['nit']);
+            if($datos->execute()){
+                return true;
+            }else{
+                return false;
+            }                        
+        } catch (SQLException $e) {
+            echo "Error".$e;
+        }
+    }
+
+    function actualizarcaja($caja){
+        try {
+            if(eliminar_s($caja['codigo_real'], 'PKCodigo', 'tblcajasproduccion')){
+                $bd = conectar();
+                $datos = $bd->prepare("INSERT INTO tblcajasproduccion VALUES(:codigo, :descripcion, :factor, :tipofruta)");
+                $datos->bindParam(":codigo", $caja['codigo'], PDO::PARAM_STR);
+                $datos->bindParam(":descripcion", $caja['descripcion'], PDO::PARAM_STR);
+                $datos->bindParam(":factor", $caja['factor'], PDO::PARAM_STR);
+                $datos->bindParam(":tipofruta", $caja['tipofruta'], PDO::PARAM_INT);
+                $datos->execute();
+                return true;
+            }
+        } catch (SQLException $e) {
+            echo "Error".$e;
+        }
+    }
+    
+//Sentencias de eliminación ----------------------------------------------------------------------------------------
+    //Esta función recibe la llave primaria y la tabla como referencia de eliminación (eliminar_s = método Eliminar del archivo statements)
+    //sirve para eliminar datos de un único registro
+    function eliminar_s($key, $campo, $tabla){
+        try {
+            $bd = conectar();
+            if ($tabla == 'tblfincas'){
+                eliminar_lotes($key);
+            }
+            $datos = $bd->prepare("DELETE FROM ".$tabla." WHERE ".$campo." = :key");
+            $datos->bindParam(":key", $key, PDO::PARAM_STR);
+            $datos->execute();
+            return true;
+        }catch (SQLException $e){
+            echo "Error".$e;
+        }
+    }
+
+    function eliminar_lotes($key){
+        try{
+            $bd = conectar();
+            $datos = $bd->prepare("DELETE FROM tbllotes WHERE tbllotes.FKIbm_TblFincas = :key");
+            $datos->bindParam(":key", $key, PDO::PARAM_STR);
+            $datos->execute();
+        }catch(SQLException $e){
+            echo "Error".$e;
+        }
+    }
+    /* echo "<pre>";
+        print_r($_POST);
+        echo "</pre>"; */
+
+?>

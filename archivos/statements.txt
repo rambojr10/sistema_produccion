@@ -1,0 +1,293 @@
+	/* datos de prueba */
+	
+	INSERT INTO TblMercadoNacional VALUES(NULL, '1', '1', '86');
+	INSERT INTO TblMercadoNacional VALUES(NULL, '2', '1', '10');
+	INSERT INTO TblMercadoNacional VALUES(NULL, '1', '2', '94');
+	INSERT INTO TblMercadoNacional VALUES(NULL, '2', '2', '19');
+	INSERT INTO TblMercadoNacional VALUES(NULL, '1', '3', '70');
+	INSERT INTO TblMercadoNacional VALUES(NULL, '2', '3', '14');
+	
+	INSERT INTO TblEmbolse VALUES(null, 50, 7510, 99);
+	INSERT INTO TblRacimos VALUES(null, 50, 2819, 29);
+	INSERT INTO TblProduccion VALUES(null, '80074', 1, 1, 50, 1, 2833, 111, 2722, 0.98, 12.73, 22.4, 112.30, 2.23, 2019);
+	INSERT INTO TblDet_TblProduccion VALUES(null, 1, 1, 1174, 0, 1174, 1.03, 10, 20.4, 42.09, 2);
+	INSERT INTO TblDet_TblProduccion VALUES(null, 1, 2, 833, 2, 831, 0.94, 14, 23.9, 37.11, 2.4);
+	INSERT INTO TblDet_TblProduccion VALUES(null, 1, 3, 826, 109, 717, 1.13, 14.2, 23, 33.1, 2.3);
+
+	INSERT INTO `tbldet_tbldet_tblproduccion` (`PKId`, `FKId_TblDet_TblProduccion`, `FKCodigo_TblCajasProduccion`, `N_CajasProducidas_Dia`) 
+	VALUES  (NULL, '1', '1339', '36'), 
+		(NULL, '1', '1242', '15'), 
+		(NULL, '1', '1313', '220'), 
+		(NULL, '1', '1081', '35'), 
+		(NULL, '1', '1355', '110'), 
+		(NULL, '1', '1014', '162'), 
+		(NULL, '1', '1017', '216'), 
+		(NULL, '1', '1329', '110'), 
+		(NULL, '1', '1290', '270');
+
+	INSERT INTO `tbldet_tbldet_tblproduccion` (`PKId`, `FKId_TblDet_TblProduccion`, `FKCodigo_TblCajasProduccion`, `N_CajasProducidas_Dia`) 
+	VALUES  (NULL, '2', '1243', '30'), 
+		(NULL, '2', '1339', '3'), 
+		(NULL, '2', '1081', '34'), 
+		(NULL, '2', '1355', '55'), 
+		(NULL, '2', '1271', '216'), 
+		(NULL, '2', '1357', '495');
+
+	INSERT INTO `tbldet_tbldet_tblproduccion` (`PKId`, `FKId_TblDet_TblProduccion`, `FKCodigo_TblCajasProduccion`, `N_CajasProducidas_Dia`) 
+	VALUES  (NULL, '3', '1141', '20'), 
+		(NULL, '3', '1313', '440'), 
+		(NULL, '3', '1355', '165'), 
+		(NULL, '3', '1329', '110'), 
+		(NULL, '3', '1361', '91');
+
+	INSERT INTO `tbldet_tblracimos_tbldias` (`PKId`, `FKId_TblRacimos`, `FKId_TblDias`, `N_RacimosC_Dia`, `N_RacimosR_Dia`, `Total_PEmbarque`, `Total_POtrasFincas`) 
+	VALUES 	(NULL, '1', '1', '1155', '11', '42', '5'), 
+		(NULL, '1', '2', '892', '8', '31', '0'), 
+		(NULL, '1', '3', '740', '10', '30', '2');
+	
+	INSERT INTO `tbldet_tbldet_tblracimos_tbldias` 
+		(`PKId`, `FKId_TblDet_TblRacimos_TblDias`, `FKId_TblCintas`, `FKId_TblLotes`, `N_RacimosC_Cintas_Lotes`, `N_RacimosR_Cintas_Lotes`) 
+	VALUES 	(NULL, '1', '6', '5', '72', '2'), 
+		(NULL, '1', '6', '11', '50', '2'), 
+		(NULL, '1', '6', '16', '50', '1');
+
+	INSERT INTO `tbldet_tbldet_tblracimos_tbldias` 
+		(`PKId`, `FKId_TblDet_TblRacimos_TblDias`, `FKId_TblCintas`, `FKId_TblLotes`, `N_RacimosC_Cintas_Lotes`, `N_RacimosR_Cintas_Lotes`) 
+	VALUES 	(NULL, '1', '7', '6', '115', '1'), 
+		(NULL, '1', '7', '11', '115', '1'), 
+		(NULL, '1', '7', '16', '115', '1'), 
+		(NULL, '1', '7', '17', '115', '1'), 
+		(NULL, '1', '7', '24', '115', '0'), 
+		(NULL, '1', '7', '23', '115', '0');
+
+	INSERT INTO `tbldet_tbldet_tblracimos_tbldias` 
+		(`PKId`, `FKId_TblDet_TblRacimos_TblDias`, `FKId_TblCintas`, `FKId_TblLotes`, `N_RacimosC_Cintas_Lotes`, `N_RacimosR_Cintas_Lotes`) 
+	VALUES 	(NULL, '1', '8', '5', '46', '0'), 
+		(NULL, '1', '8', '11', '46', '1'), 
+		(NULL, '1', '8', '16', '46', '0'), 
+		(NULL, '1', '8', '17', '46', '0'), 
+		(NULL, '1', '8', '23', '46', '2'), 
+		(NULL, '1', '8', '24', '45', '0');
+
+	INSERT INTO `tbldet_tbldet_tblracimos_tbldias` 
+		(`PKId`, `FKId_TblDet_TblRacimos_TblDias`, `FKId_TblCintas`, `FKId_TblLotes`, `N_RacimosC_Cintas_Lotes`, `N_RacimosR_Cintas_Lotes`) 
+	VALUES 	(NULL, '1', '9', '5', '3', '0'), 
+		(NULL, '1', '9', '11', '3', '0'), 
+		(NULL, '1', '9', '16', '3', '0'), 
+		(NULL, '1', '9', '17', '3', '0'), 
+		(NULL, '1', '9', '23', '3', '0'), 
+		(NULL, '1', '9', '24', '3', '0');
+
+	INSERT INTO `tbldet_tbldet_tblracimos_tbldias` 
+		(`PKId`, `FKId_TblDet_TblRacimos_TblDias`, `FKId_TblCintas`, `FKId_TblLotes`, `N_RacimosC_Cintas_Lotes`, `N_RacimosR_Cintas_Lotes`) 
+	VALUES 	(NULL, '2', '6', '6', '19', '0'), 
+		(NULL, '2', '6', '7', '19', '0'), 
+		(NULL, '2', '6', '8', '19', '1'), 
+		(NULL, '2', '6', '9', '18', '0'), 
+		(NULL, '2', '6', '18', '18', '1'), 
+		(NULL, '2', '6', '19', '18', '0'), 
+		(NULL, '2', '6', '20', '18', '0'), 
+		(NULL, '2', '6', '21', '18', '0');
+	
+	INSERT INTO `tbldet_tbldet_tblracimos_tbldias` 
+		(`PKId`, `FKId_TblDet_TblRacimos_TblDias`, `FKId_TblCintas`, `FKId_TblLotes`, `N_RacimosC_Cintas_Lotes`, `N_RacimosR_Cintas_Lotes`) 
+	VALUES 	(NULL, '2', '6', '6', '58', '0'), 
+		(NULL, '2', '6', '7', '58', '0'), 
+		(NULL, '2', '6', '8', '58', '0'), 
+		(NULL, '2', '6', '9', '58', '0'), 
+		(NULL, '2', '6', '18', '58', '0'), 
+		(NULL, '2', '6', '19', '57', '0'), 
+		(NULL, '2', '6', '20', '57', '0'), 
+		(NULL, '2', '6', '21', '57', '0');
+	
+	INSERT INTO `tbldet_tbldet_tblracimos_tbldias` 
+		(`PKId`, `FKId_TblDet_TblRacimos_TblDias`, `FKId_TblCintas`, `FKId_TblLotes`, `N_RacimosC_Cintas_Lotes`, `N_RacimosR_Cintas_Lotes`) 
+	VALUES 	(NULL, '2', '8', '6', '30', '0'), 
+		(NULL, '2', '8', '7', '30', '0'), 
+		(NULL, '2', '8', '8', '30', '0'), 
+		(NULL, '2', '8', '9', '30', '0'), 
+		(NULL, '2', '8', '18', '30', '0'), 
+		(NULL, '2', '8', '19', '30', '0'), 
+		(NULL, '2', '8', '20', '30', '0'), 
+		(NULL, '2', '8', '21', '29', '0');
+
+	INSERT INTO `tbldet_tbldet_tblracimos_tbldias` 
+		(`PKId`, `FKId_TblDet_TblRacimos_TblDias`, `FKId_TblCintas`, `FKId_TblLotes`, `N_RacimosC_Cintas_Lotes`, `N_RacimosR_Cintas_Lotes`) 
+	VALUES 	(NULL, '2', '9', '7', '15', '0'),  
+		(NULL, '2', '9', '21', '20', '2');
+
+	INSERT INTO `tbldet_tbldet_tblracimos_tbldias` 
+		(`PKId`, `FKId_TblDet_TblRacimos_TblDias`, `FKId_TblCintas`, `FKId_TblLotes`, `N_RacimosC_Cintas_Lotes`, `N_RacimosR_Cintas_Lotes`) 
+	VALUES 	(NULL, '3', '6', '2', '14', '0'), 
+		(NULL, '3', '6', '10', '14', '0'), 
+		(NULL, '3', '6', '12', '14', '0'), 
+		(NULL, '3', '6', '13', '14', '0'), 
+		(NULL, '3', '6', '14', '14', '0'), 
+		(NULL, '3', '6', '15', '14', '0'), 
+		(NULL, '3', '6', '20', '14', '1'), 
+		(NULL, '3', '6', '21', '12', '0');
+
+	INSERT INTO `tbldet_tbldet_tblracimos_tbldias` 
+		(`PKId`, `FKId_TblDet_TblRacimos_TblDias`, `FKId_TblCintas`, `FKId_TblLotes`, `N_RacimosC_Cintas_Lotes`, `N_RacimosR_Cintas_Lotes`) 
+	VALUES 	(NULL, '3', '6', '2', '60', '1'), 
+		(NULL, '3', '6', '10', '60', '1'), 
+		(NULL, '3', '6', '12', '60', '0'), 
+		(NULL, '3', '6', '13', '60', '6'), 
+		(NULL, '3', '6', '14', '60', '0'), 
+		(NULL, '3', '6', '15', '55', '0'), 
+		(NULL, '3', '6', '20', '60', '2'), 
+		(NULL, '3', '6', '21', '60', '0');
+	
+********************************************************************************************************
+
+	/* CONSULTA LOTES POR FINCA */
+	SELECT 
+		tbllotes.Lote, tbllotes.Area_Neta, tbllotes.Area_Bruta, tblfincas.Nombre
+	FROM
+		tbllotes, tblfincas
+	WHERE
+		tbllotes.FKIbm_TblFincas = tblfincas.PKIbm
+	AND
+		tblfincas.Nombre = "ÁLAMOS"
+
+
+	/* CONSULTA EMBOLSE DE SEMANA*/
+	SELECT 
+    	tblsemanas.N_Semana Semana,
+		tblcintas.Descripcion Cinta_Prematuro, 
+		tblembolse.N_PlantasPrematuro Embolse_Prematuro, 
+        (SELECT 
+			tblcintas.Descripcion 
+		FROM 
+			tblcintas, tblsemanas 
+		WHERE 
+			tblsemanas.PKId = 28-1 
+		AND 
+			tblsemanas.FKId_TblCintas = tblcintas.PKId) Cinta_Presente,
+     	tblembolse.N_PlantasPresente Embolse_Presente
+      
+	FROM	
+		tblcintas, tblsemanas, tblembolse
+	WHERE
+		tblembolse.FKId_TblSemanas = 28 AND
+		tblembolse.FKId_TblSemanas = tblsemanas.PKId AND
+    		tblsemanas.FKId_TblCintas = tblcintas.PKId
+/**********************************************************************************************************/
+
+	/* CONSULTA FINCAS POR EMPRESA */
+	SELECT tblfincas.PKIbm, tblfincas.Nombre, tblfincas.Area_Neta, tblfincas.Area_Bruta
+	FROM tblfincas, tblempresas
+	WHERE tblempresas.PKNit = "900306440-7"
+	AND tblfincas.FKNit_TblEmpresas = tblempresas.PKNit
+
+	SELECT tblempresas.PKNit, tblempresas.Nombre, tblempresas.Direccion, tblempresas.Telefono
+	FROM tblfincas, tblempresas
+	WHERE tblfincas.PKIbm = "80008"
+	AND tblfincas.FKNit_TblEmpresas = tblempresas.PKNit
+
+
+/**********************************************************************************************************/
+/* Tabla semanas llenar FECHA_INICIAL FECHA_FINAL */
+
+	UPDATE `tblsemanas` SET `Fecha_Inicial`= '2018-12-31',`Fecha_Final`= '2019-01-06' 
+	WHERE tblsemanas.PKId = 1;
+
+	SET @x = 1;
+	SET @fechai = (SELECT tblsemanas.Fecha_Inicio FROM tblsemanas WHERE tblsemanas.PKId = @x);
+	UPDATE `tblsemanas` 
+	SET `Fecha_Inicio` = (SELECT DATE_ADD(@fechai, INTERVAL 7 DAY)) 
+	WHERE tblsemanas.PKId = @x + 1;
+	
+
+	SET @x = 1;
+	SET @fechaf = (SELECT tblsemanas.Fecha_Fin FROM tblsemanas WHERE tblsemanas.PKId = @x);
+	UPDATE `tblsemanas` 
+	SET `Fecha_Fin` = (SELECT DATE_ADD(@fechaf, INTERVAL 7 DAY)) 
+	WHERE tblsemanas.PKId = @x + 1;
+
+
+/**********************************************************************************************************/
+//Consulta elaboración de caja por semana y código
+SELECT (SELECT DATE_ADD(s.Fecha_Inicio, INTERVAL (di.PKId-1) DAY)) as Fecha, d.PKId as CodDetDetPro, c.PKCodigo as CodCaja, c.Descripcion as NomCaja, d.N_CajasProducidas_Dia Total_CajaDia, p.PKId as Id_DetPro,
+		di.Descripcion as Dia, pr.PKId as CodProd, f.Nombre as NomFinca, s.N_Semana as Semana
+FROM	
+	tbldet_tbldet_tblproduccion as d, tblcajasproduccion as c, tbldias as di, tblfincas as f, 
+    tblsemanas as s, tbldet_tblproduccion as p, tblproduccion as pr
+WHERE
+	
+	d.FKCodigo_TblCajasProduccion = '1313'
+AND
+	d.FKCodigo_TblCajasProduccion = c.PKCodigo
+AND 
+	d.FKId_TblDet_TblProduccion = p.PKId
+AND 
+	p.FKId_TblDias = di.PKId
+AND 
+	p.FKId_TblProduccion = pr.PKId
+AND 
+	pr.FKIbm_TblFincas = f.PKIbm
+AND 
+	pr.FKId_TblSemanas = s.PKId
+AND
+	pr.FKIbm_TblFincas = '80074'
+AND
+	pr.FKId_TblSemanas = '28'
+
+______________________________________________________________________
+
+SELECT SUM(dd.N_CajasProducidas_Dia) as total 
+FROM
+	tbldet_tbldet_tblproduccion as dd, tblcajasproduccion as cp, tbldet_tblproduccion as dp, tblproduccion as pr, tblfincas as fi
+WHERE
+	dd.FKCodigo_TblCajasProduccion = cp.PKCodigo
+AND
+	dd.FKId_TblDet_TblProduccion = dp.PKId
+AND
+	dp.FKId_TblProduccion = pr.PKId
+AND
+	pr.FKIbm_TblFincas = fi.PKIbm
+AND
+	cp.PKCodigo = '1339'
+AND 
+	pr.Anho_Produccion = '2019'
+AND
+	fi.PKIbm = '80008'
+_____________________________________________________________________
+
+<div class="modal fade" id="modal-ve" role="dialog" style="overflow-y: auto;">
+    <div class="modal-dialog modals-default">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dimiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+            <div class="header">
+        Profile Picture
+    </div>
+    <div class="image content">
+        <div class="ui medium image">
+            <img src="/images/avatar/large/chris.jpg">
+        </div>
+        <div class="description">
+            <div class="ui header">We've auto-chosen a profile image for you.</div>
+            <p>We've grabbed the following image from the <a href="https://www.gravatar.com" target="_blank">gravatar</a> image associated with your registered e-mail address.</p>
+            <p>Is it okay to use this photo?</p>
+        </div>
+    </div>
+    <div class="actions">
+        <div class="ui black deny button">
+            Nope
+        </div>
+        <div class="ui positive right labeled icon button">
+            Yep, that's me
+            <i class="checkmark icon"></i>
+        </div>
+    </div>
+            </div>
+            <div class="modal-footer">
+            
+            </div>
+        </div>
+    </div>
+
+</div>
