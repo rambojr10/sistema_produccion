@@ -175,6 +175,7 @@
         var ident = $(this).attr("ident");
         var total = (suma == null || suma == undefined || suma == "") ? 0 : suma;
         
+        
         //se piensa elaborar un identificador a los campos de abajo para calcular 
     });
 

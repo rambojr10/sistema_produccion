@@ -143,6 +143,7 @@
                                         <?php if ($_SESSION['conectado']->FKId_TblTipoUsuario == 1) : ?>
                                         <li><a href="#cajasproduccion">Cajas Producción</a></li>
                                         <li><a href="#programarembarque">Programar Embarque</a></li>
+                                        <li><a href="#generarsemanas">Generar Semanas</a></li>
                                         <?php endif; ?>
 
                                     </ul>
