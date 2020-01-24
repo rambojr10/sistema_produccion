@@ -23,6 +23,10 @@
             case 'crearembarque':
                 crear_embarque();
                 break;
+            
+            case 'anhonuevo':
+                anho_nuevo();
+                break;
 
     //Métodos de mostrar
             case 'listarfincas':
@@ -95,6 +99,11 @@
             //Carga tipo de fruta para select nuevo o editar
             case 'tipofruta-select':
                 tipofruta_select();
+                break;
+
+            //Carga las semanas generadas
+            case 'semanasgeneradas':
+                semanas_generadas();
                 break;
 
     //Metodos de actualizar            
@@ -184,6 +193,25 @@
             }
             echo json_encode($vista);
         // }
+    }
+
+    //generar semanas
+    function anho_nuevo(){
+        $anhos = buscarregistro("tblsemanas", "N_Semana", "SEMANA 52");
+        $ultimo_anho = end($anhos);
+        $verificar_anho = buscarregistro("tblregistrosemanas", "Anho_generado", $_POST["anhonuevo"]+1);
+        if (isset($verificar_anho[0])) {
+            echo "No se creó";
+        } else {
+            $fechai = date('Y-m-d', strtotime($ultimo_anho->Fecha_Inicio.'+ 1 week'));
+            $fechaf = date('Y-m-d', strtotime($ultimo_anho->Fecha_Fin.'+ 1 week'));
+            $result = anhonuevo($fechai, $fechaf, $ultimo_anho->Anho+1, $ultimo_anho->FKId_TblCintas+1);
+            if ($result = true) {
+                echo "Ok";
+            }else {
+                echo "Err";
+            }
+        }
     }
 
 // BUSCAR =================================================================================================================
@@ -526,6 +554,60 @@
                     ";
                 }
             }
+        }
+    }
+
+    //
+    function semanas_generadas(){
+        $semanas_generadas = semanasgeneradas();
+        foreach ($semanas_generadas as $s) {
+            echo "
+                <div class='panel panel-collapse notika-accrodion-cus'>
+                    <div class='panel-heading' role='tab'>
+                        <h4 class='panel-title'>
+                            <a data-toggle='collapse' data-parent='#accordionGreen' href='#accordionGreen-one' aria-expanded='true'>
+                                    Año: <span class='ui orange label'>$s->Anho</span>
+                                </a>
+                        </h4>
+                    </div>
+                    <div id='accordionGreen-one' class='collapse in' role='tabpanel'>
+                        <div class='panel-body'>
+                        <table class='ui single line table'>
+                            <thead>
+                                <tr>
+                                    <th>Semana</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Fecha Fin</th>
+                                    <th>Cinta</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            ";
+            $semanas_anho = semanasanho($s->Anho);
+            foreach ($semanas_anho as $sa){
+                            echo "
+                                <tr>
+                                    <td>
+                                        $sa->N_Semana
+                                    </td>
+                                    <td>
+                                        $sa->Fecha_Inicio
+                                    </td>
+                                    <td>
+                                        $sa->Fecha_Fin
+                                    </td>
+                                    <td>
+                                        $sa->Descripcion
+                                    </td>
+                                </tr>
+                            ";
+            }
+            echo "
+                           </tbody> 
+                        </div>
+                    </div>
+                </div>
+            ";
         }
     }
 

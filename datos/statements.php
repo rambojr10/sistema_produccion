@@ -91,8 +91,74 @@
             echo "Error".$e;
         }
     }
+
+    //
+    function anhonuevo($fechai, $fechaf, $anho, $cinta){
+        try{
+            $bd = conectar();
+            $datos = $bd->prepare("INSERT INTO tblsemanas VALUES(null, 'SEMANA 1', :fechai, :fechaf, :anho, :cinta)");
+            $datos->bindParam(":fechai", $fechai, PDO::PARAM_STR);
+            $datos->bindParam(":fechaf", $fechaf, PDO::PARAM_STR);
+            $datos->bindParam(":anho", $anho, PDO::PARAM_INT);
+            $datos->bindParam(":cinta", $cinta, PDO::PARAM_INT);
+            if($datos->execute()){
+                for ($x=2; $x < 53; $x++) { 
+                    $datos = $bd->prepare("
+                        SELECT  tblsemanas.Fecha_Inicio as fechai, 
+                                tblsemanas.Fecha_Fin as fechaf, 
+                                tblsemanas.FKId_TblCintas as cinta 
+                        FROM tblsemanas WHERE tblsemanas.N_Semana = 'SEMANA ".($x-1)."' AND tblsemanas.Anho = :anho
+                    ");
+                    $datos->bindParam(":anho", $anho, PDO::PARAM_INT);
+                    if ($datos->execute()){
+                        $ultima_semana = $datos->fetch();
+                        if ($ultima_semana->cinta == 10) {
+                        	$ultima_semana->cinta = 0;
+                        }
+                        $datos = $bd->prepare("SELECT DATE_ADD(:fechai, INTERVAL 7 DAY) as fechai, DATE_ADD(:fechaf, INTERVAL 7 DAY) as fechaf, :cinta+1 as cinta");
+                        $datos->bindParam(":fechai", $ultima_semana->fechai, PDO::PARAM_STR);
+                        $datos->bindParam(":fechaf", $ultima_semana->fechaf, PDO::PARAM_STR);
+                        $datos->bindParam(":cinta", $ultima_semana->cinta, PDO::PARAM_INT);
+                        if ($datos->execute()){
+                            $insertar_semana = $datos->fetch();
+                            $datos = $bd->prepare("INSERT INTO tblsemanas VALUES(null, 'SEMANA ".$x."', :fechai, :fechaf, :anho, :cinta)");
+                            $datos->bindParam(":fechai", $insertar_semana->fechai, PDO::PARAM_STR);
+                            $datos->bindParam(":fechaf", $insertar_semana->fechaf, PDO::PARAM_STR);
+                            $datos->bindParam(":anho", $anho, PDO::PARAM_INT);
+                            $datos->bindParam(":cinta", $insertar_semana->cinta, PDO::PARAM_INT);
+                            $datos->execute();
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+                $datos = $bd->prepare("INSERT INTO tblregistrosemanas VALUES (null, :anho)");
+                $datos->bindParam(":anho", $anho, PDO::PARAM_INT);
+                if ($datos->execute()) {
+                    return true;
+                }else {
+                    return false;
+                }
+            }else {
+                return false;
+            }
+        } catch (SQLException $e) {
+            echo "Error".$e;
+        }
+    }
 // Sentencias de búsqueda ==========================================================================================
-    
+    //función busca un único registro globalmente
+    function buscarregistro($tabla, $campo, $key){
+        $bd = conectar();
+        $datos = $bd->prepare("SELECT * FROM ".$tabla." WHERE ".$campo." = :key");
+        $datos->bindParam(":key", $key, PDO::PARAM_STR);
+        $datos->execute();
+        return $datos->fetchAll();
+    }
+
+
     function ingreso($usuario, $password){
         $bd = conectar();
         $datos = $bd->prepare("SELECT * FROM tblusuarios INNER JOIN tblfincas 

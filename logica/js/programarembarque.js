@@ -136,9 +136,9 @@
                         <td><span class="ui ${tipofruta} label" title="${data_cajas_pe.Descripcion}">${data_cajas_pe.PKCodigo}</span></td>
                         <td align="center"><input type="text" class="valida text-center" id="ic" ident="t_zz" style="width:80px" value="0"></td>
                         <td align="center"><input type="text" class="valida text-center" id="ic" ident="t_gm" style="width:80px" value="0"></td>
+                        <td align="center"><input type="text" class="valida text-center" id="ic" ident="t_tw" style="width:80px" value="0"></td>
                         <td align="center"><input type="text" class="valida text-center" id="ic" ident="t_cn" style="width:80px" value="0"></td>
                         <td align="center"><input type="text" class="valida text-center" id="ic" ident="t_al" style="width:80px" value="0"></td>
-                        <td align="center"><input type="text" class="valida text-center" id="ic" ident="t_tw" style="width:80px" value="0"></td>
                         <td align="center"><input type="text" class="valida text-center" id="ic" ident="t_kl" style="width:80px" value="0"></td>
                         <td align="center"><input type="text" class="valida text-center" style="width:80px" value="0" disabled></td>
                         <td align="center"><input type="text" class="valida text-center" style="width:80px" value="0" disabled></td>
@@ -171,11 +171,17 @@
         });
 
         //--------------------------------------------
-        var suma = parseInt($(this).val());
+        var valor = parseInt($(this).val());
         var ident = $(this).attr("ident");
-        var total = (suma == null || suma == undefined || suma == "") ? 0 : suma;
-        
-        
+        var total = (valor == null || valor == undefined || valor == "") ? 0 : valor;
+        total = (parseInt(total) + parseInt(valor));
+        let valores=0;
+        $(this).parents("tr").find(ident).each(function () {
+            // valores += parseInt($(this).val());
+            alert("hola");
+        });
+        console.log(valores+" "+ident);
+        // document.getElementById(ident).innerHTML = total;
         //se piensa elaborar un identificador a los campos de abajo para calcular 
     });
 

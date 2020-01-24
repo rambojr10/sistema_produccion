@@ -13,7 +13,25 @@
         hoy = new Date(fecha);
         $("#lblsemana").text(hoy.getWeekNumber());
         $("#lblfecha").text(`${hoy.getDate()}/${hoy.getMonth()+1}/${hoy.getFullYear()}`);
-        
+        if (hoy.getWeekNumber() == '52') {
+            const op = new FormData();
+            op.append("op", "anhonuevo");
+            op.append("anhonuevo", hoy.getFullYear());
+            fetch('../logica/contenido.php', {
+                method: 'POST',
+                body: op
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.text();
+                }else {
+                    throw "No se pueden cargar los datos";
+                }
+            })
+            .then(res => {
+                console.log(res);
+            });
+        }
     });
 
 //Controla el contenido sin recargar la página de inicio interactúa con el archivo contenido.php para la obtención de datos
@@ -97,9 +115,35 @@
         });
     });
 
+    //Cargar modal generar semanas
+    $(document).on("click", "[href='#generarsemanas']", function () {
+        /* $(".contenido").load("./generarsemanas.php");
+        const op = new FormData();
+        op.append("op", "semanasgeneradas");
+        fetch('../logica/contenido.php', {
+            method: 'POST',
+            body: op
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.text();
+            }else {
+                throw "No se pueden cargar los datos.";
+            }
+        })
+        .then(res => {
+            $("#accordionGreen").html(res);
+        }); */
+    });
+
 // COMPLEMENTOS --------------------------------------------------------------------------------------------------------
     //Valida campos de ingreso de sólo número
     $(document).on("input", ".valida", function () {
         this.value = this.value.replace(/[^0-9]/g,'');
+    });
+
+    //Genera semanas
+    $(document).on("click", "#btnGenerarSemanas", function () {
+        
     });
    
