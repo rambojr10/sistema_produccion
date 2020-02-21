@@ -105,7 +105,7 @@
             case 'semanasgeneradas':
                 semanas_generadas();
                 break;
-
+            
     //Metodos de actualizar            
             case 'actualizarempresa':
                 actualizar_empresa();
@@ -182,11 +182,11 @@
     //Crea embarque según datos y consulta cajas para cargar la vista 
     function crear_embarque(){
         $datos = json_decode($_POST['datos']);
-        // $result = crearembarque($datos->ano, $datos->id_semana);
+        // $result = crearembarque($datos->cod_embarque, $datos->ano, $datos->id_semana);
         $vista = [];
         // if ($result != false) {
             //aquí va todo lo que se va poner en la vista para asignar las cajas
-            // $vista['embarque'] = "Embarque #" . $result . " - " . $datos->descripcion_semana . " del " . $datos->ano;
+            // $vista['embarque'] = "Código: " . $result->PKCod . " - " . $datos->descripcion_semana . " del " . $datos->ano;
             //Tabla cajas lleva todos los campos a usar en la tabla
             for ($x=0; $x < count($datos->codigocajas) ; $x++) { 
                 $vista['cajas'][$x] = buscarcaja($datos->codigocajas[$x]);

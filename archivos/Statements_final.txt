@@ -27,6 +27,8 @@
 	EMBARQUE			%24
 	EMBARQUE - CAJAS PRODUCCION	%25
 	ALINEACIÓN			%26
+	REGISTRO SEMANAS		%27
+	CLASIFICACION			%28
 	
 
 ***************************************************************************************************************/
@@ -71,7 +73,9 @@
 		Descripcion VARCHAR(100) not null,
 		FactorConversion FLOAT not null,
 		FKId_TblTipoFruta INT not null,
-		FOREIGN KEY (FKId_TblTipoFruta) REFERENCES TblTipoFruta(PKId)
+		FKId_TblClasificacion INT,
+		FOREIGN KEY (FKId_TblTipoFruta) REFERENCES TblTipoFruta(PKId),
+		FOREIGN KEY (FKId_TblClasificacion) REFERENCES TblClasificacion(PKId)
 	);
 
 	/* CINTAS */
@@ -86,6 +90,7 @@
 		N_Semana VARCHAR(50),
 		Fecha_Inicio DATE,
 		Fecha_Fin DATE,
+		Anho INT not null,
 		FKId_TblCintas INT not null,
 		FOREIGN KEY (FKId_TblCintas) REFERENCES TblCintas(PKId)
 	);
@@ -280,12 +285,25 @@
 	CREATE TABLE TblAlineacion(
 		PKId INTEGER PRIMARY KEY AUTO_INCREMENT,
     		FKId_TblEmbarque INT not null,
+		FKIbm_TblFincas VARCHAR(5) not null,
     		FKCodigo_TblCajasProduccion VARCHAR(5) not null,
     		Cantidad_AElaborar INT not null,
     		FOREIGN KEY (FKId_TblEmbarque) REFERENCES TblEmbarque(PKId),
+		FOREIGN KEY (FKIbm_TblFincas) REFERENCES TblFincas(PKIbm),
     		FOREIGN KEY (FKCodigo_TblCajasProduccion) REFERENCES TblCajasProduccion(PKCodigo)
 	);
 
+	/* TABLAS INDEPENDIENTES DE CONFIGURACIÓN */
+	CREATE TABLE TblRegistroSemanas(
+		PKId INTEGER PRIMARY KEY AUTO_INCREMENT,
+		Anho_generado INT not null
+	);
+
+	/* TABLA CLASIFICACION */
+	CREATE TABLE TblClasificacion(
+		PKId INTEGER PRIMARY KEY AUTO_INCREMENT,
+		Descripcion VARCHAR(50)
+	);
 /*******************************************************************************************************/
 
 /* STATEMENTS PARA LLENAR TABLAS*/
@@ -311,59 +329,59 @@
 	INSERT INTO TblCajasMercadoNacional VALUES(null, 'CANASTAS SUCIAS');
 
 	/* TABLA SEMANAS */
-		INSERT INTO `tblsemanas` (`PKId`, `N_Semana`, `Fecha_Inicio`, `Fecha_Fin`, `FKId_TblCintas`) VALUES
-			(1, 'SEMANA 01', '2018-12-31', '2019-01-06', 1),
-			(2, 'SEMANA 02', '2019-01-07', '2019-01-13', 2),
-			(3, 'SEMANA 03', '2019-01-14', '2019-01-20', 3),
-			(4, 'SEMANA 04', '2019-01-21', '2019-01-27', 4),
-			(5, 'SEMANA 05', '2019-01-28', '2019-02-03', 5),
-			(6, 'SEMANA 06', '2019-02-04', '2019-02-10', 6),
-			(7, 'SEMANA 07', '2019-02-11', '2019-02-17', 7),
-			(8, 'SEMANA 08', '2019-02-18', '2019-02-24', 8),
-			(9, 'SEMANA 09', '2019-02-25', '2019-03-03', 9),
-			(10, 'SEMANA 10', '2019-03-04', '2019-03-10', 10),
-			(11, 'SEMANA 11', '2019-03-11', '2019-03-17', 1),
-			(12, 'SEMANA 12', '2019-03-18', '2019-03-24', 2),
-			(13, 'SEMANA 13', '2019-03-25', '2019-03-31', 3),
-			(14, 'SEMANA 14', '2019-04-01', '2019-04-07', 4),
-			(15, 'SEMANA 15', '2019-04-08', '2019-04-14', 5),
-			(16, 'SEMANA 16', '2019-04-15', '2019-04-21', 6),
-			(17, 'SEMANA 17', '2019-04-22', '2019-04-28', 7),
-			(18, 'SEMANA 18', '2019-04-29', '2019-05-05', 8),
-			(19, 'SEMANA 19', '2019-05-06', '2019-05-12', 9),
-			(20, 'SEMANA 20', '2019-05-13', '2019-05-19', 10),
-			(21, 'SEMANA 21', '2019-05-20', '2019-05-26', 1),
-			(22, 'SEMANA 22', '2019-05-27', '2019-06-02', 2),
-			(23, 'SEMANA 23', '2019-06-03', '2019-06-09', 3),
-			(24, 'SEMANA 24', '2019-06-10', '2019-06-16', 4),
-			(25, 'SEMANA 25', '2019-06-17', '2019-06-23', 5),
-			(26, 'SEMANA 26', '2019-06-24', '2019-06-30', 6),
-			(27, 'SEMANA 27', '2019-07-01', '2019-07-07', 7),
-			(28, 'SEMANA 28', '2019-07-08', '2019-07-14', 8),
-			(29, 'SEMANA 29', '2019-07-15', '2019-07-21', 9),
-			(30, 'SEMANA 30', '2019-07-22', '2019-07-28', 10),
-			(31, 'SEMANA 31', '2019-07-29', '2019-08-04', 1),
-			(32, 'SEMANA 32', '2019-08-05', '2019-08-11', 2),
-			(33, 'SEMANA 33', '2019-08-12', '2019-08-18', 3),
-			(34, 'SEMANA 34', '2019-08-19', '2019-08-25', 4),
-			(35, 'SEMANA 35', '2019-08-26', '2019-09-01', 5),
-			(36, 'SEMANA 36', '2019-09-02', '2019-09-08', 6),
-			(37, 'SEMANA 37', '2019-09-09', '2019-09-15', 7),
-			(38, 'SEMANA 38', '2019-09-16', '2019-09-22', 8),
-			(39, 'SEMANA 39', '2019-09-23', '2019-09-29', 9),
-			(40, 'SEMANA 40', '2019-09-30', '2019-10-06', 10),
-			(41, 'SEMANA 41', '2019-10-07', '2019-10-13', 1),
-			(42, 'SEMANA 42', '2019-10-14', '2019-10-20', 2),
-			(43, 'SEMANA 43', '2019-10-21', '2019-10-27', 3),
-			(44, 'SEMANA 44', '2019-10-28', '2019-11-03', 4),
-			(45, 'SEMANA 45', '2019-11-04', '2019-11-10', 5),
-			(46, 'SEMANA 46', '2019-11-11', '2019-11-17', 6),
-			(47, 'SEMANA 47', '2019-11-18', '2019-11-24', 7),
-			(48, 'SEMANA 48', '2019-11-25', '2019-12-01', 8),
-			(49, 'SEMANA 49', '2019-12-02', '2019-12-08', 9),
-			(50, 'SEMANA 50', '2019-12-09', '2019-12-15', 10),
-			(51, 'SEMANA 51', '2019-12-16', '2019-12-22', 1),
-			(52, 'SEMANA 52', '2019-12-23', '2019-12-29', 2);
+		INSERT INTO `tblsemanas` (`PKId`, `N_Semana`, `Fecha_Inicio`, `Fecha_Fin`, `Anho`, `FKId_TblCintas`) VALUES
+			(1, 'SEMANA 01', '2018-12-31', '2019-01-06', 2019, 1),
+			(2, 'SEMANA 02', '2019-01-07', '2019-01-13', 2019, 2),
+			(3, 'SEMANA 03', '2019-01-14', '2019-01-20', 2019, 3),
+			(4, 'SEMANA 04', '2019-01-21', '2019-01-27', 2019, 4),
+			(5, 'SEMANA 05', '2019-01-28', '2019-02-03', 2019, 5),
+			(6, 'SEMANA 06', '2019-02-04', '2019-02-10', 2019, 6),
+			(7, 'SEMANA 07', '2019-02-11', '2019-02-17', 2019, 7),
+			(8, 'SEMANA 08', '2019-02-18', '2019-02-24', 2019, 8),
+			(9, 'SEMANA 09', '2019-02-25', '2019-03-03', 2019, 9),
+			(10, 'SEMANA 10', '2019-03-04', '2019-03-10', 2019, 10),
+			(11, 'SEMANA 11', '2019-03-11', '2019-03-17', 2019, 1),
+			(12, 'SEMANA 12', '2019-03-18', '2019-03-24', 2019, 2),
+			(13, 'SEMANA 13', '2019-03-25', '2019-03-31', 2019, 3),
+			(14, 'SEMANA 14', '2019-04-01', '2019-04-07', 2019, 4),
+			(15, 'SEMANA 15', '2019-04-08', '2019-04-14', 2019, 5),
+			(16, 'SEMANA 16', '2019-04-15', '2019-04-21', 2019, 6),
+			(17, 'SEMANA 17', '2019-04-22', '2019-04-28', 2019, 7),
+			(18, 'SEMANA 18', '2019-04-29', '2019-05-05', 2019, 8),
+			(19, 'SEMANA 19', '2019-05-06', '2019-05-12', 2019, 9),
+			(20, 'SEMANA 20', '2019-05-13', '2019-05-19', 2019, 10),
+			(21, 'SEMANA 21', '2019-05-20', '2019-05-26', 2019, 1),
+			(22, 'SEMANA 22', '2019-05-27', '2019-06-02', 2019, 2),
+			(23, 'SEMANA 23', '2019-06-03', '2019-06-09', 2019, 3),
+			(24, 'SEMANA 24', '2019-06-10', '2019-06-16', 2019, 4),
+			(25, 'SEMANA 25', '2019-06-17', '2019-06-23', 2019, 5),
+			(26, 'SEMANA 26', '2019-06-24', '2019-06-30', 2019, 6),
+			(27, 'SEMANA 27', '2019-07-01', '2019-07-07', 2019, 7),
+			(28, 'SEMANA 28', '2019-07-08', '2019-07-14', 2019, 8),
+			(29, 'SEMANA 29', '2019-07-15', '2019-07-21', 2019, 9),
+			(30, 'SEMANA 30', '2019-07-22', '2019-07-28', 2019, 10),
+			(31, 'SEMANA 31', '2019-07-29', '2019-08-04', 2019, 1),
+			(32, 'SEMANA 32', '2019-08-05', '2019-08-11', 2019, 2),
+			(33, 'SEMANA 33', '2019-08-12', '2019-08-18', 2019, 3),
+			(34, 'SEMANA 34', '2019-08-19', '2019-08-25', 2019, 4),
+			(35, 'SEMANA 35', '2019-08-26', '2019-09-01', 2019, 5),
+			(36, 'SEMANA 36', '2019-09-02', '2019-09-08', 2019, 6),
+			(37, 'SEMANA 37', '2019-09-09', '2019-09-15', 2019, 7),
+			(38, 'SEMANA 38', '2019-09-16', '2019-09-22', 2019, 8),
+			(39, 'SEMANA 39', '2019-09-23', '2019-09-29', 2019, 9),
+			(40, 'SEMANA 40', '2019-09-30', '2019-10-06', 2019, 10),
+			(41, 'SEMANA 41', '2019-10-07', '2019-10-13', 2019, 1),
+			(42, 'SEMANA 42', '2019-10-14', '2019-10-20', 2019, 2),
+			(43, 'SEMANA 43', '2019-10-21', '2019-10-27', 2019, 3),
+			(44, 'SEMANA 44', '2019-10-28', '2019-11-03', 2019, 4),
+			(45, 'SEMANA 45', '2019-11-04', '2019-11-10', 2019, 5),
+			(46, 'SEMANA 46', '2019-11-11', '2019-11-17', 2019, 6),
+			(47, 'SEMANA 47', '2019-11-18', '2019-11-24', 2019, 7),
+			(48, 'SEMANA 48', '2019-11-25', '2019-12-01', 2019, 8),
+			(49, 'SEMANA 49', '2019-12-02', '2019-12-08', 2019, 9),
+			(50, 'SEMANA 50', '2019-12-09', '2019-12-15', 2019, 10),
+			(51, 'SEMANA 51', '2019-12-16', '2019-12-22', 2019, 1),
+			(52, 'SEMANA 52', '2019-12-23', '2019-12-29', 2019, 2);
 
 
 	/* TABLA DÍAS */
@@ -543,10 +561,10 @@
 
 	/* CAJAS PRODUCCIÓN */
 	INSERT INTO `tblcajasproduccion` (`PKCodigo`, `Descripcion`, `FactorConversion`, `FKId_TblTipoFruta`) VALUES
-	('1003', 'PR ORSERO BANANAS --', 1, 1),
-	('1010', 'PR TURBANA 3 LBS BAN', 1, 1),
-	('1011', 'FT TESCO*', 0.94, 6),
-	('1014', 'FLO FAIR TRADE EU***', 1, 6),
+	('1003', 'PR ORSERO BANANAS --', 1, 1, 1),
+	('1010', 'PR TURBANA 3 LBS BAN', 1, 1, 1),
+	('1011', 'FT TESCO*', 0.94, 6, null),
+	('1014', 'FLO FAIR TRADE EU***', 1, 6, 1),
 	('1015', 'FT JS FAIR TRADE 17K', 0.94, 6),
 	('1016', 'FT 14 KLS- 75 DEDOS*', 0.77, 6),
 	('1017', 'FT FLO FAIR TRADE EU', 1, 6),
@@ -909,5 +927,8 @@
 	('991', 'FT TEFTB 15 EU-50 17 KL BAG', 0.94, 6),
 	('999', 'JS FAIR TRADE 17K E', 0.94, 1);
 
+	/* CLASIFICACION */
+	INSERT INTO TblClasificacion(1, "PREMIUN");
+	INSERT INTO TblClasificacion(2, "FRUTA DE APROVECHAMIENTO");
 
 

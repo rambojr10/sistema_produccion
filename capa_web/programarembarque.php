@@ -165,7 +165,7 @@
                     </div>
                     <div class="col-lg-2 col-md-2">
                         <button class="btn btn-teal teal-icon-notika waves-effect" id="btnGuardar-sc">
-                            <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                            <i class="fa fa-chevron-right" aria-hidden="true"></i>
                         </button>
                         <button class="btn btn-deeporange deeporange-icon-notika waves-effect" id="btnCancelar-sc">
                             <i class="notika-icon notika-close"></i>
@@ -179,11 +179,11 @@
         <div class="col-lg-12 col-md-12 col sm-12-col-xs-12">
             <div class="form-element-list mg-t-20">
                 <div class="nk-int-mk sl-dp-mn sm-res-mg-t-10">
-                    <h2>Alineación</h2>
+                    <h3>Alineación</h3>
                 </div>
                 <hr>
                 <div class="datagrid">
-                    <table class="display table-hover">
+                    <table class="display table-hover" id="tblAlineacion-pe">
                         <thead>
                             <tr>
                                 <th>#</th>
@@ -253,127 +253,75 @@
                                     </div>
                                 </td>
                             </tr>
-                            <tr>
-                                <td colspan="2">
-                                    <div id="paging">
-                                       <strong class="ui label">EST. PREM:</strong>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div id="paging" class="text-center">
-                                       <label class="ui green label">0</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div id="paging" class="text-center">
-                                        <label class="ui green label">0</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div id="paging" class="text-center">
-                                        <label class="ui green label">0</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div id="paging" class="text-center">
-                                        <label class="ui green label">0</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div id="paging" class="text-center">
-                                        <label class="ui green label">0</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div id="paging" class="text-center">
-                                        <label class="ui green label">0</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div id="paging" class="text-center">
-                                        <label class="ui green label">0</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div id="paging" class="text-center">
-                                        <label class="ui green label">0</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div id="paging" class="text-center">
-                                        <label class="ui green label">0</label>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2">
-                                    <div id="paging">
-                                       <strong class="ui label mg-d-5">EST. M. ES:</strong>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div id="paging" class="text-center">
-                                       <label class="ui green label">0</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div id="paging" class="text-center">
-                                        <label class="ui green label">0</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div id="paging" class="text-center">
-                                        <label class="ui green label">0</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div id="paging" class="text-center">
-                                        <label class="ui green label">0</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div id="paging" class="text-center">
-                                        <label class="ui green label">0</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div id="paging" class="text-center">
-                                        <label class="ui green label">0</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div id="paging" class="text-center">
-                                        <label class="ui green label">0</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div id="paging" class="text-center">
-                                        <label class="ui green label">0</label>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div id="paging" class="text-center">
-                                        <label class="ui green label">0</label>
-                                    </div>
-                                </td>
-                            </tr>
                         </tfoot>
                         <tbody id="data_cajas_pe">
-                            <!-- <tr>
-                                <td>1</td>
-                                <td><span class="ui blue label">0101</span></td>
-                                <td><center><input type="text" class="text-center" style="width:80px" value="0"></center></td>
-                                <td><center><input type="text" class="text-center" style="width:80px" value="0"></center></td>
-                                <td><center><input type="text" class="text-center" style="width:80px" value="0"></center></td>
-                                <td><center><input type="text" class="text-center" style="width:80px" value="0"></center></td>
-                                <td><center><input type="text" class="text-center" style="width:80px" value="0"></center></td>
-                                <td><center><input type="text" class="text-center" style="width:80px" value="0"></center></td>
-                                <td><center><input type="text" class="text-center" style="width:80px" value="0" disabled></center></td>
-                                <td><center><input type="text" class="text-center" style="width:80px" value="0" disabled></center></td>
-                                <td><center><input type="text" class="text-center" style="width:80px" value="0" disabled></center></td>
-                            </tr> -->
+                           
                         </tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" id="estimativo-pe" hidden>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="form-element-list mg-t-10">
+                <div class="nk-int-mk sl-dp-mn sm-res-mg-t-10">
+                    <h3>Estimativo</h3>
+                </div>
+                <hr>
+                <div class="ui form">
+                    <div class="fields">
+                        <div class="field">
+                            <label>GUAIMARAL</label>
+                            <input type="number" placeholder="Premiun">
+                            <hr>
+                            <input type="number" placeholder="Especial">
+                        </div>
+                        <div class="field">
+                            <label>ZARZAMORA</label>
+                            <input type="number" placeholder="Premiun">
+                            <hr>
+                            <input type="number" placeholder="Especial">
+                        </div>
+                        <div class="field">
+                            <label>TAIWÁN</label>
+                            <input type="number" placeholder="Premiun">
+                            <hr>
+                            <input type="number" placeholder="Especial">
+                        </div>
+                        <div class="field">
+                            <label>KALAMARÍ</label>
+                            <input type="number" placeholder="Premiun">
+                            <hr>
+                            <input type="number" placeholder="Especial">
+                        </div>
+                        <div class="field">
+                            <label>ÁLAMOS</label>
+                            <input type="number" placeholder="Premiun">
+                            <hr>
+                            <input type="number" placeholder="Especial">
+                        </div>
+                        <div class="field">
+                            <label>CANDELARIA</label>
+                            <input type="number" placeholder="Premiun">
+                            <hr>
+                            <input type="number" placeholder="Especial">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" id="opciones-pe" hidden>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="form-element-list mg-t-10">
+                <div class="form-inline text-center">
+                    <button id="btnGuardar-pe" class="btn btn-default btn-icon-notika" data-tooltip="Guardar" data-position="top center">
+                        <i class="fa fa-save"></i>
+                    </button>
+                    <button class="btn btn-default btn-icon-notika" data-tooltip="Eliminar" data-position="top center">
+                        <i class="fa fa-trash"></i>
+                    </button>
                 </div>
             </div>
         </div>

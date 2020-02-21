@@ -77,14 +77,15 @@
         }
     }
 
-    function crearembarque($ano, $semana){
+    function crearembarque($cod_embarque, $ano, $semana){
         try{
             $bd = conectar();
-            $datos = $bd->prepare("INSERT INTO tblembarque VALUES(null, :semana, :ano)");
+            $datos = $bd->prepare("INSERT INTO tblembarque VALUES(:cod_embarque, :semana, :ano)");
+            $datos->bindParam(":cod_embarque", $cod_embarque, PDO::PARAM_INT);
             $datos->bindParam(":semana", $semana, PDO::PARAM_INT);
             $datos->bindParam(":ano", $ano, PDO::PARAM_STR);
             if ($datos->execute())
-                return $bd->lastInsertId();
+                return $bd->query("SELECT * FROM TblEmbarque ORDER BY PKCod DESC LIMIT 1")->fetch();
             else
                 return false;
         } catch (SQLException $e) {
@@ -92,7 +93,7 @@
         }
     }
 
-    //
+    //Genera semanas según el año siguiente, recibe la fecha de la primera semana del año próximo y empieza a generar los datos a partír de la primera inserción
     function anhonuevo($fechai, $fechaf, $anho, $cinta){
         try{
             $bd = conectar();
