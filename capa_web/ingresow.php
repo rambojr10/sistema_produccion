@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Easy | Sistema Producción - Grupo MONTESOL</title>
+    <title>Sistema Producción - Grupo MONTESOL</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- favicon
@@ -16,6 +16,7 @@
     <!-- Bootstrap CSS
 		============================================ -->
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/css/semantic/semantic.min.css">
     <!-- animate CSS
 		============================================ -->
     <link rel="stylesheet" href="../assets/css/animate.css">
@@ -43,8 +44,11 @@
       <div class="nk-block toggled" id="l-login">
         <div class="nk-form">
           <div>
-            <center><a href="#"><img src="../assets/img/logo/logo2.png" alt="" /></a></center>
-            <br>
+            <!-- <center><a href="#"><img src="../assets/img/logo/logo2.png" alt="" /></a></center> -->
+            <div class="ui teal huge label">
+                Producción
+            </div>
+            <hr>
           </div>
           <div class="input-group">
             <span class="input-group-addon nk-ic-st-pro"><i class="notika-icon notika-support"></i></span>

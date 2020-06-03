@@ -115,27 +115,6 @@
         });
     });
 
-    //Cargar modal generar semanas
-    $(document).on("click", "[href='#generarsemanas']", function () {
-        /* $(".contenido").load("./generarsemanas.php");
-        const op = new FormData();
-        op.append("op", "semanasgeneradas");
-        fetch('../logica/contenido.php', {
-            method: 'POST',
-            body: op
-        })
-        .then(response => {
-            if (response.ok) {
-                return response.text();
-            }else {
-                throw "No se pueden cargar los datos.";
-            }
-        })
-        .then(res => {
-            $("#accordionGreen").html(res);
-        }); */
-    });
-
 // COMPLEMENTOS --------------------------------------------------------------------------------------------------------
     //Valida campos de ingreso de sólo número
     $(document).on("input", ".valida", function () {

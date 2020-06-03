@@ -1,3 +1,7 @@
+<?php 
+    // require_once '../capa_web/modals/crearembarque.php';
+?>
+
 <!-- ////////////////////////////////////////////////////////////////////////////// -->
 <style>
     .datagrid table { 
@@ -180,6 +184,7 @@
             <div class="form-element-list mg-t-20">
                 <div class="nk-int-mk sl-dp-mn sm-res-mg-t-10">
                     <h3>Alineación</h3>
+                    <h2>Código: <span class="ui green label" id="cod_embarque-pe"></span></h2>
                 </div>
                 <hr>
                 <div class="datagrid">
@@ -269,9 +274,17 @@
                     <h3>Estimativo</h3>
                 </div>
                 <hr>
+                <div class="form-group ic-cmp-int">
+                    <div class="form-ic-cmp">
+                        <i class="notika-icon notika-wifi"></i>
+                    </div>
+                    <div class="nk-int-st">
+                        <input type="text" class="form-control input-sm" placeholder="Internet">
+                    </div>
+                </div>
                 <div class="ui form">
-                    <div class="fields">
-                        <div class="field">
+                    <div class="fields" id="estimativoVue">
+                        <div class="">
                             <label>GUAIMARAL</label>
                             <input type="number" placeholder="Premiun">
                             <hr>

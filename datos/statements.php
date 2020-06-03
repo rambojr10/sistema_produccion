@@ -88,7 +88,7 @@
                 return $bd->query("SELECT * FROM TblEmbarque ORDER BY PKCod DESC LIMIT 1")->fetch();
             else
                 return false;
-        } catch (SQLException $e) {
+        } catch (Exception $e) {
             echo "Error".$e;
         }
     }
@@ -353,7 +353,8 @@
             WHERE NOT EXISTS (SELECT NULL
                                 FROM tblembarque as e
                                 WHERE s.PKId = e.FKId_TblSemanas
-                                AND e.anho = :ano)");
+                                AND e.anho = :ano)
+            AND s.Anho = :ano");
         $datos->bindParam(":ano", $ano_pe, PDO::PARAM_STR);
         $datos->execute();
         return $datos->fetchAll();

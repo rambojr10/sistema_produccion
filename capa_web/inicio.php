@@ -13,9 +13,9 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Easy | Sistema Producción - Grupo MONTESOL </title>
+    <title>Sistema Producción - Grupo MONTESOL </title>
     <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=1000, initial-scale=1.0, minimun-scale=1.0, user-scalable=no">
     <!-- favicon
 		============================================ -->
     <link rel="shortcut icon" type="image/x-icon" href="../assets/img/logo/icono.png">
@@ -86,7 +86,10 @@
             <div class="row">
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                     <div class="logo-area">
-                        <a href="#"><img src="../assets/img/logo/logoe.png" alt="" /></a>
+                        <!-- <a href="#"><img src="../assets/img/logo/logoe.png" alt="" /></a> -->
+                        <div class="ui black huge label">
+                            Producción
+                        </div>
                     </div>
                 </div>
                 <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
@@ -625,6 +628,8 @@
     <script src="../logica/js/cajasproduccion.js"></script>
     <script src="../logica/js/lotes.js"></script>
     <script src="../logica/js/programarembarque.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- <script src="../logica/js/pruebas.js"></script> -->
     
 </body>
 

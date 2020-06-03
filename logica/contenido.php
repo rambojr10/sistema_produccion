@@ -187,10 +187,12 @@
         // if ($result != false) {
             //aquí va todo lo que se va poner en la vista para asignar las cajas
             // $vista['embarque'] = "Código: " . $result->PKCod . " - " . $datos->descripcion_semana . " del " . $datos->ano;
+            //$vista['cod_embarque'] = $result->PKCod;
             //Tabla cajas lleva todos los campos a usar en la tabla
             for ($x=0; $x < count($datos->codigocajas) ; $x++) { 
                 $vista['cajas'][$x] = buscarcaja($datos->codigocajas[$x]);
             }
+            $vista['cod_embarque'] = "EMB-202001";
             echo json_encode($vista);
         // }
     }
@@ -330,10 +332,15 @@
         }
     }
     
-    //Buscar Finca por ibm
+    //Buscar Finca por ibm o por nombre
     function buscar_finca(){
-        $finca = buscarfinca($_POST['ibm_f']);
-        echo $finca->Nombre;
+        if (isset($_GET['nombre_finca'])){
+            $finca = buscarregistro("TblFincas", "Nombre", $_GET['nombre_finca']);
+            echo $finca[0]->PKIbm;
+        }else if (isset($_POST['ibm_f'])){
+            $finca = buscarfinca($_POST['ibm_f']);
+            echo $finca->Nombre;
+        }
     }
 
     //Buscar lote por id
@@ -351,11 +358,11 @@
     function buscar_empresa(){
         $result = buscarempresa($_POST['ibm_e']);
         $empresa = array(
-                            'nit' => $result->PKNit,
-                            'nombre' => $result->Nombre,
-                            'dir' => $result->Direccion,
-                            'tel' => $result->Telefono
-                        );
+            'nit' => $result->PKNit,
+            'nombre' => $result->Nombre,
+            'dir' => $result->Direccion,
+            'tel' => $result->Telefono
+        );
         echo json_encode($empresa);
     }
 
@@ -363,11 +370,11 @@
     function editar_empresa(){
         $result = editarempresa($_POST['nit']);
         $empresa = array(
-                            'nit' => $result->PKNit,
-                            'nom' => $result->Nombre,
-                            'dir' => $result->Direccion,
-                            'tel' => $result->Telefono
-                        );
+            'nit' => $result->PKNit,
+            'nom' => $result->Nombre,
+            'dir' => $result->Direccion,
+            'tel' => $result->Telefono
+        );
         echo json_encode($empresa);
     }
 
@@ -375,11 +382,11 @@
     function buscar_caja(){
         $result = buscarcaja($_POST['codigo']);
         $caja = array(
-                        'codigo' => $result->PKCodigo,
-                        'descripcion' => $result->Descripcion,
-                        'factor' => $result->FactorConversion,
-                        'tipofruta' => $result->FKId_TblTipoFruta
-                    );
+            'codigo' => $result->PKCodigo,
+            'descripcion' => $result->Descripcion,
+            'factor' => $result->FactorConversion,
+            'tipofruta' => $result->FKId_TblTipoFruta
+        );
         echo json_encode($caja);
     }
 
