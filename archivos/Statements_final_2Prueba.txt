@@ -291,6 +291,16 @@
 		PKId INTEGER PRIMARY KEY AUTO_INCREMENT,
 		Descripcion VARCHAR(50)
 	);
+
+	/* TABLA ESTIMATIVO */
+	CREATE TABLE TblEstimativo(
+		PKId INTEGER PRIMARY KEY AUTO_INCREMENT,
+    		Finca VARCHAR(50) not null,
+    		Premiun INT,
+    		Especial INT,
+    		FKCod_TblEmbarque VARCHAR(8) not null,
+    		FOREIGN KEY (FKCod_TblEmbarque) REFERENCES TblEmbarque(PKCod)
+	); 
 /*******************************************************************************************************/
 
 /* STATEMENTS PARA LLENAR TABLAS*/

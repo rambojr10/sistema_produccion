@@ -1,4 +1,5 @@
 //CONTROL DE VISTAS EN PROGRAMAR EMBARQUE ------------------------------------------------------------------
+
     //Muestra la vista para seleccionar las cajas del embarque y verifica si el embarque a generar ya existe...
     $(document).on("click", "[href='#seleccionar_pe']", function(e) {
         e.preventDefault();
@@ -210,7 +211,39 @@
                     cod_embarque: cod_embarque,
                     ano: ano,
                     id_semana: id_semana,
-                    cajas: []
+                    cajas: [],
+                    estimativo: [
+                        {
+                            finca: "ZARZAMORA",
+                            premiun: ($("#premiun_zz").val()),
+                            especial: ($("#especial_zz").val())
+                        }, 
+                        {
+                            finca: "GUAIMARAL",
+                            premiun: ($("#premiun_gm").val()),
+                            especial: ($("#especial_gm").val())
+                        },
+                        {
+                            finca: "TAIWÁN",
+                            premiun: ($("#premiun_tw").val()),
+                            especial: ($("#especial_tw").val())
+                        },
+                        {
+                            finca: "CANDELARIA",
+                            premiun: ($("#premiun_cn").val()),
+                            especial: ($("#especial_cn").val())
+                        },
+                        {
+                            finca: "ÁLAMOS",
+                            premiun: ($("#premiun_al").val()),
+                            especial: ($("#especial_al").val())
+                        },
+                        {
+                            finca: "KALAMARÍ",
+                            premiun: ($("#premiun_kl").val()),
+                            especial: ($("#especial_kl").val())
+                        }
+                    ]                
                 }
                 //Recorre la tabla obteniendo los datos de cada fila 
                 $("#tblAlineacion-pe tbody tr").each( function() {
@@ -247,41 +280,55 @@
                                     default:
                                         break;
                                 }
-                                const buscar_ibmfinca_pe_async = async (nombre_finca) => {
+                                $.ajax({
+                                    async: false,
+                                    cache: false,
+                                    dataType: 'JSON',
+                                    data: {
+                                        op: 'buscarfinca',
+                                        nombre_finca: nom_finca
+                                    },
+                                    type: 'GET',
+                                    url: '../logica/contenido.php',
+                                    success: (res_ibmfinca) => {
+                                        item = {
+                                            codigo_caja: codigo_caja,
+                                            ibm_finca: res_ibmfinca,
+                                            cantidad: cantidad
+                                        }
+                                        detalles.cajas.push(item);
+                                    }
+                                });
+                                
+                                /* const buscar_ibmfinca_pe_async = async (nombre_finca) => {
                                     try {
                                         const response = await fetch(`../logica/contenido.php?op=buscarfinca&nombre_finca=${nombre_finca}`);
                                         const res = await response.text();
-                                        // alert(`Cod: ${codigo_caja} - Finca: ${res} - ${nombre_finca} - Cantidad: ${cantidad}`);
                                         item = {
                                             codigo_caja: codigo_caja,
                                             ibm_finca: res,
                                             cantidad: cantidad
                                         }
                                         detalles.cajas.push(item);
+                                        console.log("KLXF3L193");
                                     } catch (error) {
                                         console.log(error);
                                     }
-                                    console.log(JSON.stringify(detalles));
                                 }
-                                buscar_ibmfinca_pe_async(nom_finca);
+                                buscar_ibmfinca_pe_async(nom_finca); */
                             }
                         }
                     });
                 });
+                if(validar_datos()){
+                    alert("Datos listos para guardar");
+                }else{
+                    swal("Guardar programación de embarque", "Por favor complete los datos", "error");
+                }
             }
         })
     });
 
-    // Estimativo con vue (prueba)
-    new Vue({
-        el: "#estimativoVue",
-        data: {
-            
-        },
-        methods: {
-
-        }
-    })
 
 // COMPLEMENTOS ----------------------------------------------------------------------------------------------
 
@@ -342,3 +389,16 @@
             return suma_final;
         });
     });
+
+    // Validar datos
+    function validar_datos(){
+        let tblalineacion = $("#t_cj").text(); 
+        let tblestimativo_premiun = $("#t_premiun").text();
+        let tblestimativo_especial = $("#t_especial").text();
+        let retorno = false;
+        if(tblalineacion > 1 && tblestimativo_premiun > 1 && tblestimativo_especial > 1){
+            retorno = true;
+        }
+        return retorno;
+    } 
+

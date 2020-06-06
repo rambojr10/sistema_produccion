@@ -564,9 +564,9 @@
         }
     }
 
-    //
+    // valor agregado (sin uso)
     function semanas_generadas(){
-        $semanas_generadas = semanasgeneradas();
+        /* $semanas_generadas = semanasgeneradas();
         foreach ($semanas_generadas as $s) {
             echo "
                 <div class='panel panel-collapse notika-accrodion-cus'>
@@ -615,7 +615,7 @@
                     </div>
                 </div>
             ";
-        }
+        } */
     }
 
 //  ACTUALIZAR ==================================================================================================================

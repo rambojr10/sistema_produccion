@@ -79,7 +79,6 @@
         e.preventDefault();
         $(".contenido").load("../capa_web/programarembarque.php");
         $(".contenido").hide().show("blind", 1500);
-        
     });
     
     //Mostrar empresas
@@ -121,8 +120,5 @@
         this.value = this.value.replace(/[^0-9]/g,'');
     });
 
-    //Genera semanas
-    $(document).on("click", "#btnGenerarSemanas", function () {
-        
-    });
+
    

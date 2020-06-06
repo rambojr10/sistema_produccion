@@ -16,7 +16,6 @@
     <!-- Bootstrap CSS
 		============================================ -->
     <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../assets/css/semantic/semantic.min.css">
     <!-- animate CSS
 		============================================ -->
     <link rel="stylesheet" href="../assets/css/animate.css">
@@ -44,10 +43,7 @@
       <div class="nk-block toggled" id="l-login">
         <div class="nk-form">
           <div>
-            <!-- <center><a href="#"><img src="../assets/img/logo/logo2.png" alt="" /></a></center> -->
-            <div class="ui teal huge label">
-                Producción
-            </div>
+            <center><a href="#"><img src="../assets/img/logo/logo2.png" alt="" /></a></center>
             <hr>
           </div>
           <div class="input-group">

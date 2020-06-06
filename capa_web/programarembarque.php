@@ -1,8 +1,5 @@
-<?php 
-    // require_once '../capa_web/modals/crearembarque.php';
-?>
 
-<!-- ////////////////////////////////////////////////////////////////////////////// -->
+<!-- Tabla alineación ////////////////////////////////////////////////////////////////////////////// -->
 <style>
     .datagrid table { 
 		border-collapse: collapse; 
@@ -96,26 +93,33 @@
         background-color:#f2fa07;
         border-radius:2px;
     }
+    .bg-primary{
+        color:#fff;
+        background-color:#337ab7;
+    }
 
 </style>
 
+<!-- Contenedor principal -->
 <div class="container">
+
+    <!-- Programar embarque -->
     <div class="row">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="form-element-list">
                 <div class="basic-tb-hd">
                     <h2>Programar Embarque</h2>
                     <hr>
-                    <div class="row ui blue segment">
+                    <div class="row">
                         <div class="col-lg-5 col-md-5 col-sm-5 col-xs-12">
                             <div class="form-inline text-center">
                                 <div class="form-group">
                                     <div class="input-group">
-                                        <div class="input-group-addon">Año</div>
+                                        <div class="input-group-addon bg-primary">Año</div>
                                         <input type="number" class="valida form-control" id="ano_pe">
                                     </div>
                                     <div class="input-group">
-                                        <button class="ui blue button tiny waves-effect" id="btnBuscar_pe">
+                                        <button class="btn btn-default notika-btn-default waves-effect" id="btnBuscar_pe">
                                             <i class="notika-icon notika-search"></i>
                                         </button>
                                     </div>
@@ -126,14 +130,14 @@
                             <form class="form-inline text-center">
                                 <div class="form-group">
                                     <div class="input-group">
-                                        <div class="input-group-addon">Semana</div>
+                                        <div class="input-group-addon bg-primary">Semana</div>
                                         <select class="form-control" name="semanas_pe" id="semanas_pe">
                                         
                                         </select>
                                     </div>
                                     <div class="input-group">
                                         <div class="dropdown">
-                                            <button class="ui blue button small waves-effect dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                            <button class="btn btn-default notika-btn-default small waves-effect dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                                 Selección de Cajas
                                                 <span class="caret"></span>
                                             </button>
@@ -151,34 +155,38 @@
             </div>
         </div>
     </div>
+
+    <!-- Selección de cajas -->
     <div class="row" id="seleccion-pe" hidden>
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-            <div class="form-element-list mg-t-30">
+            <div class="form-element-list mg-t-20">
                 <div class="nk-int-mk sl-dp-mn sm-res-mg-t-10">
                     <h2>Selección de cajas</h2>
                 </div>
                 <hr>
                 <div class="row">
                     <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
-                        <div class="panel panel-warning input-group">
-                            <div class="input-group-addon">Cajas</div>
+                        <div class="ui raised segment input-group">
+                            <div class="input-group-addon bg-primary">Cajas</div>
                             <select id="select-sc-pe" class="js-example-placeholder-multiple form-control" multiple="multiple">
 
                             </select>
                         </div>
                     </div>
-                    <div class="col-lg-2 col-md-2">
+                    <div class="col-lg-2 col-md-2 mg-t-15 text-center">
                         <button class="btn btn-teal teal-icon-notika waves-effect" id="btnGuardar-sc">
                             <i class="fa fa-chevron-right" aria-hidden="true"></i>
                         </button>
-                        <button class="btn btn-deeporange deeporange-icon-notika waves-effect" id="btnCancelar-sc">
-                            <i class="notika-icon notika-close"></i>
+                        <button class="btn btn-gray gray-icon-notika waves-effect" id="btnCancelar-sc">
+                            <i class="fa fa-close"></i>
                         </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Alineación -->
     <div class="row" id="alineacion-pe" hidden>
         <div class="col-lg-12 col-md-12 col sm-12-col-xs-12">
             <div class="form-element-list mg-t-20">
@@ -267,64 +275,68 @@
             </div>
         </div>
     </div>
+
+    <!-- Estimativo -->
     <div class="row" id="estimativo-pe" hidden>
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ui center aligned segment">
             <div class="form-element-list mg-t-10">
                 <div class="nk-int-mk sl-dp-mn sm-res-mg-t-10">
                     <h3>Estimativo</h3>
                 </div>
                 <hr>
-                <div class="form-group ic-cmp-int">
-                    <div class="form-ic-cmp">
-                        <i class="notika-icon notika-wifi"></i>
-                    </div>
-                    <div class="nk-int-st">
-                        <input type="text" class="form-control input-sm" placeholder="Internet">
-                    </div>
-                </div>
-                <div class="ui form">
-                    <div class="fields" id="estimativoVue">
-                        <div class="">
-                            <label>GUAIMARAL</label>
-                            <input type="number" placeholder="Premiun">
-                            <hr>
-                            <input type="number" placeholder="Especial">
-                        </div>
-                        <div class="field">
+                <div class="ui mini form">
+                    <div class="fields container" id="estimativoVue">
+                        <div class="field text-center">
                             <label>ZARZAMORA</label>
-                            <input type="number" placeholder="Premiun">
+                            <input type="number" class="valida" v-model.number="premiun_zz" id="premiun_zz" placeholder="Premiun">
                             <hr>
-                            <input type="number" placeholder="Especial">
+                            <input type="number" class="valida" v-model.number="especial_zz" id="especial_zz" placeholder="Especial">
                         </div>
-                        <div class="field">
+                        <div class="field text-center">
+                            <label>GUAIMARAL</label>
+                            <input type="number" class="valida" v-model.number="premiun_gm" id="premiun_gm" placeholder="Premiun">
+                            <hr>
+                            <input type="number" class="valida" v-model.number="especial_gm" id="especial_gm" placeholder="Especial">
+                        </div>
+                        <div class="field text-center">
                             <label>TAIWÁN</label>
-                            <input type="number" placeholder="Premiun">
+                            <input type="number" class="valida" v-model.number="premiun_tw" id="premiun_tw" placeholder="Premiun">
                             <hr>
-                            <input type="number" placeholder="Especial">
+                            <input type="number" class="valida" v-model.number="especial_tw" id="especial_tw" placeholder="Especial">
                         </div>
-                        <div class="field">
-                            <label>KALAMARÍ</label>
-                            <input type="number" placeholder="Premiun">
-                            <hr>
-                            <input type="number" placeholder="Especial">
-                        </div>
-                        <div class="field">
-                            <label>ÁLAMOS</label>
-                            <input type="number" placeholder="Premiun">
-                            <hr>
-                            <input type="number" placeholder="Especial">
-                        </div>
-                        <div class="field">
+                        <div class="field text-center">
                             <label>CANDELARIA</label>
-                            <input type="number" placeholder="Premiun">
+                            <input type="number" class="valida" v-model.number="premiun_cn" id="premiun_cn" placeholder="Premiun">
                             <hr>
-                            <input type="number" placeholder="Especial">
+                            <input type="number" class="valida" v-model.number="especial_cn" id="especial_cn" placeholder="Especial">
+                        </div>
+                        <div class="field text-center">
+                            <label>ÁLAMOS</label>
+                            <input type="number" class="valida" v-model.number="premiun_al" id="premiun_al" placeholder="Premiun">
+                            <hr>
+                            <input type="number" class="valida" v-model.number="especial_al" id="especial_al" placeholder="Especial">
+                        </div>
+                        <div class="field text-center">
+                            <label>KALAMARÍ</label>
+                            <input type="number" class="valida" v-model.number="premiun_kl" id="premiun_kl" placeholder="Premiun">
+                            <hr>
+                            <input type="number" class="valida" v-model.number="especial_kl" id="especial_kl" placeholder="Especial">
+                        </div>
+                        <div class="field text-center">
+                            <label>TOTAL</label>
+                            <div class="website-traffic-ctn">
+                                <h2><span class="counter" id="t_premiun"> {{ premiun_total() }} </span></h2>
+                                <br>
+                                <h2><span class="counter" id="t_especial"> {{ especial_total() }} </span></h2>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Botones finales -->
     <div class="row" id="opciones-pe" hidden>
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="form-element-list mg-t-10">
@@ -339,4 +351,34 @@
             </div>
         </div>
     </div>
+
 </div>
+
+    <!-- Método vue -->
+    <script type="text/javascript">
+        new Vue({
+            el: "#estimativoVue",
+            data: {
+                premiun_zz: 0,
+                premiun_gm: 0,
+                premiun_tw: 0,
+                premiun_cn: 0,
+                premiun_al: 0,
+                premiun_kl: 0,
+                especial_zz: 0,
+                especial_gm: 0,
+                especial_tw: 0,
+                especial_cn: 0,
+                especial_al: 0,
+                especial_kl: 0
+            },
+            methods: {
+                premiun_total: function(){
+                    return (new Intl.NumberFormat().format((this.premiun_zz + this.premiun_gm + this.premiun_tw + this.premiun_cn + this.premiun_al + this.premiun_kl)));
+                },
+                especial_total: function(){
+                    return (new Intl.NumberFormat().format((this.especial_zz + this.especial_gm + this.especial_tw + this.especial_cn + this.especial_al + this.especial_kl)));
+                }
+            }
+        });
+    </script>

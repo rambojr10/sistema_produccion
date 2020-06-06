@@ -30,9 +30,9 @@
     <link rel="stylesheet" href="../assets/css/font-awesome.min.css">
     <!-- owl.carousel CSS
 		============================================ -->
-    <!-- <link rel="stylesheet" href="../assets/css/owl.carousel.css">
+    <link rel="stylesheet" href="../assets/css/owl.carousel.css">
     <link rel="stylesheet" href="../assets/css/owl.theme.css">
-    <link rel="stylesheet" href="../assets/css/owl.transitions.css"> -->
+    <link rel="stylesheet" href="../assets/css/owl.transitions.css">
     <!-- meanmenu CSS
 		============================================ -->
     <link rel="stylesheet" href="../assets/css/meanmenu/meanmenu.min.css">
@@ -77,6 +77,9 @@
     <!-- modernizr JS
 		============================================ -->
     <script src="../assets/js/vendor/modernizr-2.8.3.min.js"></script>
+    <!-- Vue JS
+		============================================ -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
 
 </head>
 
@@ -86,10 +89,7 @@
             <div class="row">
                 <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                     <div class="logo-area">
-                        <!-- <a href="#"><img src="../assets/img/logo/logoe.png" alt="" /></a> -->
-                        <div class="ui black huge label">
-                            Producción
-                        </div>
+                        <a href="#"><img src="../assets/img/logo/logoe.png" alt="" /></a>
                     </div>
                 </div>
                 <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
@@ -552,8 +552,8 @@
     <!-- End Footer area-->
     <!-- jquery
 		============================================ -->
-    <script src="../assets/js/vendor/jquery.js"></script>
     <script src="../assets/js/vendor/jquery-1.12.4.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../assets/js/vendor/jquery.js"><\/script>')</script>
     <script src="../assets/js/vendor/jquery-ui.js"></script>
 
     <!-- bootstrap JS
@@ -628,7 +628,6 @@
     <script src="../logica/js/cajasproduccion.js"></script>
     <script src="../logica/js/lotes.js"></script>
     <script src="../logica/js/programarembarque.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <!-- <script src="../logica/js/pruebas.js"></script> -->
     
 </body>
