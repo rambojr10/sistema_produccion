@@ -1,5 +1,5 @@
 //CONTROL DE VISTAS EN PROGRAMAR EMBARQUE ------------------------------------------------------------------
-
+    
     //Muestra la vista para seleccionar las cajas del embarque y verifica si el embarque a generar ya existe...
     $(document).on("click", "[href='#seleccionar_pe']", function(e) {
         e.preventDefault();
@@ -55,7 +55,7 @@
         $("#semanas_pe").html("");
         let ano_pe = $("#ano_pe").val();
         let ano_posible = new Date();
-        if  (ano_pe == ano_posible.getFullYear() || ano_pe == (ano_posible.getFullYear()+1)) {
+        if  (ano_pe == ano_posible.getFullYear() || ano_pe == (ano_posible.getFullYear()+1) || ano_pe == (ano_posible.getFullYear()-1)) {
             const op = new FormData();
             op.append("op", "semanaspe");
             op.append("ano_pe", ano_pe);
@@ -71,7 +71,31 @@
                 }
             })
             .then(res => {
-                $("#semanas_pe").html(res);
+                if (res != ""){
+                    $("#semanas_pe").html(res);
+                    $.notify({
+                        icon: "fa fa-check-circle",
+                        message: "Semanas cargadas correctamente"
+                    },{
+                        type: "success"
+                    });
+                }else {
+                    $.notify({
+                        icon: "fa fa-times",
+                        title: "<strong>Buscar semanas: </strong>",
+                        message: "No se han podido cargar las semanas"
+                    },{
+                        type: "danger"
+                    });
+                }
+            });
+        }else {
+            $.notify({
+                icon: "fa fa-times",
+                title: "<strong>Buscar semanas: </strong>",
+                message: "Fuera de rango"
+            },{
+                type: "danger"
             });
         }
     });
@@ -141,6 +165,7 @@
         .then(res => {
             $("#cod_embarque-pe").text(res.cod_embarque); //asigna en pantalla el código de embarque
             $("#cod_embarque-pe").data("cod_embarque", res.cod_embarque); //guarda el código de embarque
+            $("#descripcion_embarque-pe").text(res.embarque); //asigna en pantalla la descripcion del embarque
             tabla_body.innerHTML = ""; // Limpia el body de la tabla 
             let x=0; //Se usa para asignar el número de cada caja en la tabla
             //recorre el objeto para llenar la tabla
@@ -321,7 +346,27 @@
                     });
                 });
                 if(validar_datos()){
-                    alert("Datos listos para guardar");
+                    const op = new FormData();
+                    op.append("op", "guardarprogramacion");
+                    op.append("jsonprogramacion", JSON.stringify(detalles));
+                    fetch('../logica/contenido.php', {
+                        method: "POST",
+                        body: op
+                    })
+                    .then(response => {
+                        if (response.ok){
+                            return response.text()
+                        }else{
+                            throw "No se ha podido guardar los datos";
+                        }
+                    })
+                    .then(res => {
+                        console.log(res);
+                        if (res == true) {
+                            swal("Guardar programación de embarque", "Programación guardada satisfactoriamente", "success");
+                            $("[href='#programarembarque']").trigger("click");
+                        }
+                    });
                 }else{
                     swal("Guardar programación de embarque", "Por favor complete los datos", "error");
                 }
@@ -329,6 +374,47 @@
         })
     });
 
+// Eliminar datos
+
+    // Elimina un embarque generado en el módulo programar embarque (previo a guardarlo)
+    $(document).on("click", "#btnEliminar-pe", function() {
+        swal({
+            title: "Está seguro?",
+            text: "El embarque se eliminará, podrá crearlo nuevamente cuando desee",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Si, eliminar!",
+            cancelButtonText: "No, cancelar!"
+        })
+        .then(isConfirm => {
+            if (isConfirm){
+                const op = new FormData();
+                let cod_embarque = $("#cod_embarque-pe").data("cod_embarque")
+                op.append("op", "eliminarembarque");
+                op.append("key", cod_embarque);
+                op.append("tabla", "tblembarque");
+                op.append("campo", "PKCod");
+                fetch("../logica/contenido.php", {
+                    method: "POST",
+                    body: op
+                })
+                .then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    }else {
+                        throw "No se ha podido completar la acción";
+                    }
+                })
+                .then(res => {
+                    console.log(res);
+                    if (res == true) {
+                        swal("Eliminar embarque", "Acción completada, "+cod_embarque+" eliminado", "success");
+                        $("[href='#programarembarque']").trigger("click");
+                    }
+                })
+            }
+        });
+    });
 
 // COMPLEMENTOS ----------------------------------------------------------------------------------------------
 

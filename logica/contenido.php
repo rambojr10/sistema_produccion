@@ -27,6 +27,11 @@
             case 'anhonuevo':
                 anho_nuevo();
                 break;
+            
+            //Guarda los datos de la programación y el estimativo de la semana
+            case 'guardarprogramacion':
+                guardar_programacion();
+                break;
 
     //Métodos de mostrar
             case 'listarfincas':
@@ -100,11 +105,6 @@
             case 'tipofruta-select':
                 tipofruta_select();
                 break;
-
-            //Carga las semanas generadas
-            case 'semanasgeneradas':
-                semanas_generadas();
-                break;
             
     //Metodos de actualizar            
             case 'actualizarempresa':
@@ -125,6 +125,10 @@
                 break;
 
             case 'eliminarcaja':
+                eliminar();
+                break;
+
+            case 'eliminarembarque':
                 eliminar();
                 break;
 
@@ -182,19 +186,22 @@
     //Crea embarque según datos y consulta cajas para cargar la vista 
     function crear_embarque(){
         $datos = json_decode($_POST['datos']);
-        // $result = crearembarque($datos->cod_embarque, $datos->ano, $datos->id_semana);
-        $vista = [];
-        // if ($result != false) {
+        $result = crearembarque($datos->cod_embarque, $datos->ano, $datos->id_semana);
+        // print_r($result);
+        $vista = array();
+        if ($result != false) {
             //aquí va todo lo que se va poner en la vista para asignar las cajas
-            // $vista['embarque'] = "Código: " . $result->PKCod . " - " . $datos->descripcion_semana . " del " . $datos->ano;
-            //$vista['cod_embarque'] = $result->PKCod;
+            $vista['embarque'] = $datos->descripcion_semana . " del " . $datos->ano;
+            $vista['cod_embarque'] = $result->PKCod;
             //Tabla cajas lleva todos los campos a usar en la tabla
             for ($x=0; $x < count($datos->codigocajas) ; $x++) { 
                 $vista['cajas'][$x] = buscarcaja($datos->codigocajas[$x]);
             }
-            $vista['cod_embarque'] = "EMB-202001";
+            // $vista['cod_embarque'] = "EMB-202001";
             echo json_encode($vista);
-        // }
+        }else {
+            echo $result;
+        }
     }
 
     //generar semanas
@@ -204,16 +211,30 @@
         $verificar_anho = buscarregistro("tblregistrosemanas", "Anho_generado", $_POST["anhonuevo"]+1);
         if (isset($verificar_anho[0])) {
             echo "No se creó";
-        } else {
+        }else {
             $fechai = date('Y-m-d', strtotime($ultimo_anho->Fecha_Inicio.'+ 1 week'));
             $fechaf = date('Y-m-d', strtotime($ultimo_anho->Fecha_Fin.'+ 1 week'));
             $result = anhonuevo($fechai, $fechaf, $ultimo_anho->Anho+1, $ultimo_anho->FKId_TblCintas+1);
-            if ($result = true) {
+            if ($result === true) {
                 echo "Ok";
             }else {
                 echo "Err";
             }
         }
+    }
+
+    //Guarda la programación y el estimativo de la semana
+    function guardar_programacion(){
+        $result = false;
+        $datos = array();
+        $datos = json_decode($_POST['jsonprogramacion']);
+        foreach ($datos->cajas as $c){
+            $result = guardarprogramacion($datos->cod_embarque, $c->ibm_finca, $c->codigo_caja, $c->cantidad);
+        }
+        foreach ($datos->estimativo  as $e){
+            $result = guardarestimativo($e->finca, $e->premiun, $e->especial, $datos->cod_embarque);
+        }
+        echo $result;
     }
 
 // BUSCAR =================================================================================================================
@@ -347,10 +368,10 @@
     function buscar_lote(){
         $result = buscarlote($_POST['id_lote']);
         $lote = array(
-                        'lote' => $result->Lote,
-                        'neta' => $result->Area_Neta,
-                        'bruta' => $result->Area_Bruta,
-                    );
+            'lote' => $result->Lote,
+            'neta' => $result->Area_Neta,
+            'bruta' => $result->Area_Bruta,
+        );
         echo json_encode($lote);
     }
 
@@ -564,60 +585,6 @@
         }
     }
 
-    // valor agregado (sin uso)
-    function semanas_generadas(){
-        /* $semanas_generadas = semanasgeneradas();
-        foreach ($semanas_generadas as $s) {
-            echo "
-                <div class='panel panel-collapse notika-accrodion-cus'>
-                    <div class='panel-heading' role='tab'>
-                        <h4 class='panel-title'>
-                            <a data-toggle='collapse' data-parent='#accordionGreen' href='#accordionGreen-one' aria-expanded='true'>
-                                    Año: <span class='ui orange label'>$s->Anho</span>
-                                </a>
-                        </h4>
-                    </div>
-                    <div id='accordionGreen-one' class='collapse in' role='tabpanel'>
-                        <div class='panel-body'>
-                        <table class='ui single line table'>
-                            <thead>
-                                <tr>
-                                    <th>Semana</th>
-                                    <th>Fecha Inicio</th>
-                                    <th>Fecha Fin</th>
-                                    <th>Cinta</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-            ";
-            $semanas_anho = semanasanho($s->Anho);
-            foreach ($semanas_anho as $sa){
-                            echo "
-                                <tr>
-                                    <td>
-                                        $sa->N_Semana
-                                    </td>
-                                    <td>
-                                        $sa->Fecha_Inicio
-                                    </td>
-                                    <td>
-                                        $sa->Fecha_Fin
-                                    </td>
-                                    <td>
-                                        $sa->Descripcion
-                                    </td>
-                                </tr>
-                            ";
-            }
-            echo "
-                           </tbody> 
-                        </div>
-                    </div>
-                </div>
-            ";
-        } */
-    }
-
 //  ACTUALIZAR ==================================================================================================================
     //
     function actualizar_empresa(){
@@ -644,13 +611,13 @@
     }
     
 // ELIMINAR ==================================================================================================================
-        //
-        function eliminar(){
-            $key = $_REQUEST['key'];
-            $campo = $_REQUEST['campo'];
-            $tabla = $_REQUEST['tabla'];
-            $eliminar = eliminar_s($key, $campo, $tabla);
-            echo $eliminar;
-        }
-        
+    //
+    function eliminar(){
+        $key = $_REQUEST['key'];
+        $campo = $_REQUEST['campo'];
+        $tabla = $_REQUEST['tabla'];
+        $eliminar = eliminar_s($key, $campo, $tabla);
+        echo $eliminar;
+    }   
+
 ?>

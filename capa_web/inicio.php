@@ -84,6 +84,7 @@
 </head>
 
 <body>
+    <!-- Header -->
     <div class="header-top-area">
         <div class="container">
             <div class="row">
@@ -116,6 +117,7 @@
         </div>
     </div>
     <!-- End Header Top Area -->
+
     <!-- Mobile Menu start -->
     <div class="mobile-menu-area">
         <div class="container">
@@ -175,6 +177,7 @@
         </div>
     </div>
     <!-- Mobile Menu end -->
+
     <!-- Main Menu area start-->
     <div class="main-menu-area mg-tb-40">
         <div class="container">
@@ -269,8 +272,11 @@
         </div>
     </div>
     <!-- Main Menu area End-->
-    <!-- Breadcomb area Start-->
+
+    <!-- Container initial-->
     <div class="contenido">
+
+        <!-- section title -->
         <div class="breadcomb-area">
             <div class="container">
                 <div class="row">
@@ -299,8 +305,9 @@
                 </div>
             </div>
         </div>
-        <!-- Breadcomb area End-->
-        <!-- Server time start-->
+        <!-- section title End-->
+
+        <!-- stadistics home-->
         <?php if ($_SESSION['conectado']->FKId_TblTipoUsuario == 1) :?>
         <div class="visitor-sv-tm-area">
             <div class="container">
@@ -382,8 +389,9 @@
                 </div>
             </div>
         </div>
-        <!-- Server time End-->
-        <!-- Search Engine Start-->
+        <!-- statistics home End-->
+
+        <!-- section of three cards -->
         <div class="search-engine-area mg-t-30">
             <div class="container">
                 <div class="row">
@@ -534,22 +542,26 @@
                 </div>
             </div>
         </div>
+        <!-- section of three cards End -->
+
     </div>
     <?php endif;?>
-    <!-- Search Engine End-->
+    <!-- Container initial End-->
+
     <!-- Start Footer area-->
     <div class="footer-copyright-area">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="footer-copy-right">
-                        <p>Copyright © 2019. Todos los derechos reservados. <a href="#">Grupo Montesol</a>.</p>
+                        <p>Copyright © 2019. Todos los derechos reservados. <a href="http://bananerasmontesol.com.co">Grupo Montesol</a>.</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- End Footer area-->
+    
     <!-- jquery
 		============================================ -->
     <script src="../assets/js/vendor/jquery-1.12.4.min.js"></script>
@@ -618,7 +630,11 @@
 
     <!--  select2 JS
 		============================================ -->
-    <script src="../assets/js/select2/select2.min.js"></script>
+    <script src="../assets/js/select2/select2.min.js"></script> 
+    
+    <!--  Notify JS
+		============================================ -->
+    <script src="../assets/js/notification/notify.min.js"></script>
 
     <!-- Controlador de contenido, según menú 
         ============================================ -->

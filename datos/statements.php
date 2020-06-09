@@ -54,7 +54,7 @@
             }else{
                 return false;
             }
-        } catch (SQLException $e) {
+        } catch (Exception $e) {
             echo "Error".$e;
         }
     }
@@ -72,7 +72,7 @@
             }else{
                 return false;
             }
-        } catch (SQLException $e) {
+        } catch (Exception $e) {
             echo "Error".$e;
         }
     }
@@ -81,13 +81,14 @@
         try{
             $bd = conectar();
             $datos = $bd->prepare("INSERT INTO tblembarque VALUES(:cod_embarque, :semana, :ano)");
-            $datos->bindParam(":cod_embarque", $cod_embarque, PDO::PARAM_INT);
+            $datos->bindParam(":cod_embarque", $cod_embarque, PDO::PARAM_STR);
             $datos->bindParam(":semana", $semana, PDO::PARAM_INT);
             $datos->bindParam(":ano", $ano, PDO::PARAM_STR);
-            if ($datos->execute())
+            if ($datos->execute()){
                 return $bd->query("SELECT * FROM TblEmbarque ORDER BY PKCod DESC LIMIT 1")->fetch();
-            else
+            }else {
                 return false;
+            }
         } catch (Exception $e) {
             echo "Error".$e;
         }
@@ -145,10 +146,50 @@
             }else {
                 return false;
             }
-        } catch (SQLException $e) {
+        } catch (Exception $e) {
             echo "Error".$e;
         }
     }
+
+    //Guardar programacion
+    function guardarprogramacion($cod_embarque, $ibm_finca, $codigo_caja, $cantidad) {
+        try {
+            $bd = conectar();
+            $datos = $bd->prepare("INSERT INTO tbldet_tblembarque VALUES(null, :codigo_embarque, :ibm_finca, :codigo_caja, :cantidad);");
+            $datos->bindParam(":codigo_embarque", $cod_embarque, PDO::PARAM_STR);
+            $datos->bindParam(":ibm_finca", $ibm_finca, PDO::PARAM_STR);
+            $datos->bindParam(":codigo_caja", $codigo_caja, PDO::PARAM_STR);
+            $datos->bindParam(":cantidad", $cantidad, PDO::PARAM_INT);
+            if($datos->execute()) {
+                return true;
+            }else {
+                return false;
+            }
+        } catch (Exception $e) {
+            echo "Error".$e;
+        }
+    }
+    
+    //Guardar estimativo
+    function guardarestimativo($finca, $premiun, $especial, $cod_embarque) {
+        try {
+            $bd = conectar();
+            $datos = $bd->prepare("INSERT INTO tblestimativo VALUES(null, :finca, :premiun, :especial, :cod_embarque);");
+            $datos->bindParam(":finca", $finca, PDO::PARAM_STR);
+            $datos->bindParam(":premiun", $premiun, PDO::PARAM_INT);
+            $datos->bindParam(":especial", $especial, PDO::PARAM_INT);
+            $datos->bindParam(":cod_embarque", $cod_embarque, PDO::PARAM_STR);
+            if($datos->execute()) {
+                return true;
+            }else {
+                return false;
+            }
+        } catch (Exception $e) {
+            echo "Error".$e;
+        }
+    }
+    
+    
 // Sentencias de búsqueda ==========================================================================================
     //función busca un único registro globalmente
     function buscarregistro($tabla, $campo, $key){
@@ -384,7 +425,7 @@
             }else{
                 return false;
             }                        
-        } catch (SQLException $e) {
+        } catch (Exception $e) {
             echo "Error".$e;
         }
     }
@@ -401,7 +442,7 @@
                 $datos->execute();
                 return true;
             }
-        } catch (SQLException $e) {
+        } catch (Exception $e) {
             echo "Error".$e;
         }
     }
@@ -419,7 +460,7 @@
             $datos->bindParam(":key", $key, PDO::PARAM_STR);
             $datos->execute();
             return true;
-        }catch (SQLException $e){
+        }catch (Exception $e){
             echo "Error".$e;
         }
     }
@@ -430,12 +471,13 @@
             $datos = $bd->prepare("DELETE FROM tbllotes WHERE tbllotes.FKIbm_TblFincas = :key");
             $datos->bindParam(":key", $key, PDO::PARAM_STR);
             $datos->execute();
-        }catch(SQLException $e){
+        }catch(Exception $e){
             echo "Error".$e;
         }
     }
     /* echo "<pre>";
         print_r($_POST);
         echo "</pre>"; */
+
 
 ?>

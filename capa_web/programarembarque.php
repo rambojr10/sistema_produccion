@@ -89,13 +89,13 @@
         position: fixed !important; 
     }
     .titulo{
-        color:#000000;
-        background-color:#f2fa07;
-        border-radius:2px;
+        color: #000000;
+        background-color: #f2fa07;
+        border-radius: 2px;
     }
     .bg-primary{
-        color:#fff;
-        background-color:#337ab7;
+        color: #fff;
+        background-color: #337ab7;
     }
 
 </style>
@@ -193,6 +193,7 @@
                 <div class="nk-int-mk sl-dp-mn sm-res-mg-t-10">
                     <h3>Alineación</h3>
                     <h2>Código: <span class="ui green label" id="cod_embarque-pe"></span></h2>
+                    <p class="text-muted" id="descripcion_embarque-pe">Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
                 </div>
                 <hr>
                 <div class="datagrid">
@@ -344,7 +345,7 @@
                     <button id="btnGuardar-pe" class="btn btn-default btn-icon-notika" data-tooltip="Guardar" data-position="top center">
                         <i class="fa fa-save"></i>
                     </button>
-                    <button class="btn btn-default btn-icon-notika" data-tooltip="Eliminar" data-position="top center">
+                    <button id="btnEliminar-pe" class="btn btn-default btn-icon-notika" data-tooltip="Eliminar" data-position="top center">
                         <i class="fa fa-trash"></i>
                     </button>
                 </div>
