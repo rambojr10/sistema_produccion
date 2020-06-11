@@ -205,6 +205,8 @@
     }
 
 // COMPLEMENTOS ------------------------------------------------------------------------------------------
+
+    //Modal ver_elaboracion
     $(document).on('change', "#cbsemanal", function () {
         $("#resultado_ve").html("");
         $("#cbanual").prop('checked', false);
@@ -277,8 +279,8 @@
         //Verifico cual de los checkbox está seleccionado y asigno los valores de los campos a las variables
         if ($("#cbsemanal").is(":checked")) {
             filtro = "semanal";
-            semana = $("[name='semana_ve']").val();
-            ano = $("[name='ano_semana']").val();
+            semana = $("[name='semana-ve']").val();
+            ano = $("[name='ano_semana-ve']").val();
         }else if ($("#cbanual").is(":checked")){
             filtro = "anual";
             ano = $("[name='ano_anual']").val();
@@ -385,4 +387,29 @@
     //Carga el tipo de fruta para modal nueva caja
     $(document).on("click", "#modal_nuevacaja", function() {
         tipofruta_select("nuevacaja", null);
+    });
+
+    //cuando se digite un año en el campo ano_semana-ve del filtro semanal se cargan las semanas del año digitado
+    $(document).on("input", "[name='ano_semana-ve']", function(){
+        if($(this).val().length == 4) {
+            const op = new FormData();
+            op.append("op", "cargarsemanaspa");
+            op.append("anho", $(this).val());
+            fetch("../logica/contenido.php", {
+                method: "POST",
+                body: op
+            })
+            .then(response => {
+                if (response.ok){
+                    return response.text();
+                }else {
+                    throw "No se ha podido completar la acción";
+                }
+            })
+            .then(res => {
+                $("[name='semana-ve']").html(res);
+            });
+        }else {
+            $("[name='semana-ve']").html("");
+        }
     });

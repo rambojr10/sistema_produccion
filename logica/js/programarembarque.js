@@ -55,7 +55,7 @@
         $("#semanas_pe").html("");
         let ano_pe = $("#ano_pe").val();
         let ano_posible = new Date();
-        if  (ano_pe == ano_posible.getFullYear() || ano_pe == (ano_posible.getFullYear()+1) || ano_pe == (ano_posible.getFullYear()-1)) {
+        if  (ano_pe == ano_posible.getFullYear() || ano_pe == (ano_posible.getFullYear()+1)) {
             const op = new FormData();
             op.append("op", "semanaspe");
             op.append("ano_pe", ano_pe);

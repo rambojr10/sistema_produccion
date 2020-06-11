@@ -65,6 +65,11 @@
             case 'mostrarempresa':
                 buscar_empresa();
                 break;
+            
+            //Carga los option con las semanas por año
+            case 'cargarsemanaspa':
+                cargar_semanaspa();
+                break;
 
             //Carga los datos de la empresa a editar
             case 'editarempresa':
@@ -391,6 +396,14 @@
         echo json_encode($empresa);
     }
 
+    //Carga semanas por año
+    function cargar_semanaspa() {
+        $result = cargarsemanaspa($_POST['anho']);
+        foreach ($result as $r) {
+            echo "<option value='$r->PKId'>$r->N_Semana</option>";
+        }
+    }
+
     //Buscar empresa por nit para editar
     function editar_empresa(){
         $result = editarempresa($_POST['nit']);
@@ -422,22 +435,19 @@
             switch ($filtro) {
 
                 case 'semanal':
-                    $semanal = cargarsemanas("semanal");
-                    echo "  <div class='nk-int-mk sl-dp-mn sm-res-mg-t-10'>
-                                <h2>Semana</h2>
-                            </div>
-                            <div class='bootstrap-select fm-cmp-mg'>
-                                <select class='form-control' name='semana_ve'>";
-                                foreach ($semanal as $s){
-                                    echo "<option value='$s->PKId'>$s->N_Semana</option>";
-                                }
                     echo "  
-                                </select>
-                            </div>
-                            <div class='nk-int-mk sl-dp-mn sm-res-mg-t-10'>
-                                <h2>Año</h2>
-                            </div>
-                            <input type='number' class='form-control' name='ano_semana'>";
+                        <div class='nk-int-mk sl-dp-mn sm-res-mg-t-10'>
+                            <h2>Año</h2>
+                        </div>
+                        <input type='text' class='form-control' name='ano_semana-ve'>
+                        <div class='nk-int-mk sl-dp-mn sm-res-mg-t-10'>
+                            <h2>Semana</h2>
+                        </div>
+                        <div class='bootstrap-select fm-cmp-mg'>
+                            <select class='form-control' name='semana-ve'>
+                            </select>
+                        </div>";
+                            
                 break;
                 
                 case 'anual':
@@ -445,7 +455,7 @@
                         <div class='nk-int-mk sl-dp-mn sm-res-mg-t-10'>
                             <h2>Año</h2>
                         </div>
-                        <input type='number' class='form-control' name='ano_anual'>
+                        <input type='text' class='form-control' name='ano_anual'>
                     ";
                     break;
                 
@@ -466,7 +476,7 @@
         }
     }
 
-    //
+    //Muestra los datos del modal ver_elaboracion en base al filtro
     function ver_elaboracion(){
         //decodifica el json y lo convierte en un array para controlarlo desde php
         $filtros = (json_decode($_POST['filtros']));
@@ -510,7 +520,7 @@
                         <div class='content'>
                             <div class='center aligned header'>Total Elaboración</div>
                             <div class='center aligned description'>
-                                <div class='ui green massive label'>
+                                <div class='ui massive label'>
                                     $result->total_anual
                                 </div>
                             </div>
@@ -528,7 +538,7 @@
                         <div class='content'>
                             <div class='center aligned header'>Total Elaboración - Histórico</div>
                             <div class='center aligned description'>
-                                <div class='ui orange massive label'>
+                                <div class='ui massive label'>
                                     $result->total_historico
                                 </div>
                             </div>
@@ -545,9 +555,7 @@
     function semanas_pe(){
         $semanas = cargarsemanas_pe($_POST['ano_pe']);
         foreach ($semanas as $s) {
-            echo "
-                <option value='$s->PKId'>$s->N_Semana</option>
-            ";
+            echo "<option value='$s->PKId'>$s->N_Semana</option>";
         }
     }
 

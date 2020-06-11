@@ -289,9 +289,10 @@
         return $datos->fetch();
     }
 
-    function cargarsemanas(){
+    function cargarsemanaspa($anho){
         $bd = conectar();
-        $datos = $bd->prepare("SELECT * FROM tblsemanas");
+        $datos = $bd->prepare("SELECT * FROM tblsemanas WHERE Anho = :anho");
+        $datos->bindParam(":anho", $anho, PDO::PARAM_STR);
         $datos->execute();
         return $datos->fetchAll();
     }

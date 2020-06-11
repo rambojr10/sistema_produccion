@@ -8,7 +8,7 @@
                 <div class="header">
                     <h3>Elaboración Caja</h3>
                     <div>
-                        <h4 class="text-muted">Codigo: <span class="ui green circular label" id="codigo_ve"></span></h4>
+                        <h4 class="text-muted">Codigo: <span class="ui blue circular label" id="codigo_ve"></span></h4>
                         <!-- <label for="fincas_ve" class="form-control">Finca: </label> -->
                         <select name="fincas_ve" class="form-control">
                             
