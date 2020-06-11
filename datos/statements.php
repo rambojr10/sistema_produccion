@@ -215,7 +215,10 @@
 
     function listarfincas(){
         $bd = conectar();
-        $datos = $bd->prepare("SELECT * FROM tblfincas");
+        $datos = $bd->prepare("SELECT f.PKIbm, f.Nombre, 
+                                (SELECT ROUND(SUM(Area_Neta), 2) FROM tbllotes WHERE FKIbm_TblFincas = f.PKIbm) as area_neta, 
+                                (SELECT ROUND(SUM(Area_Bruta), 2) FROM tbllotes WHERE FKIbm_TblFincas = f.PKIbm) as area_bruta
+                                FROM tblfincas as f");
         $datos->execute();
         return $datos->fetchAll();
     }
@@ -430,6 +433,7 @@
         }
     }
 
+    //Actualiza con código 
     function actualizarcaja($caja){
         try {
             if(eliminar_s($caja['codigo_real'], 'PKCodigo', 'tblcajasproduccion')){
@@ -443,6 +447,21 @@
                 return true;
             }
         } catch (Exception $e) {
+            echo "Error".$e;
+        }
+    }
+
+    //
+    function editarlote($id_lote, $area_neta, $area_bruta) {
+        try {
+            $bd = conectar();
+            $datos = $bd->prepare("UPDATE tbllotes SET Area_Neta =". $area_neta .", Area_Bruta =". $area_bruta ." WHERE PKId =". $id_lote .";");
+            if ($datos->execute()){
+                return true;
+            }else {
+                return false;
+            }
+        }catch (Exception $e) {
             echo "Error".$e;
         }
     }
@@ -475,9 +494,5 @@
             echo "Error".$e;
         }
     }
-    /* echo "<pre>";
-        print_r($_POST);
-        echo "</pre>"; */
-
 
 ?>

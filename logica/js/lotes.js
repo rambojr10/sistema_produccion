@@ -1,5 +1,4 @@
 
-// MOSTRAR LOTES -------------------------------------------------------------------------------------------
     //Mostrar lotes por finca
     function ver_lotes(ibm) {
         $("#listarlotes").html("");
@@ -15,6 +14,7 @@
                     cache: false,
                     success: function(res) {
                         $("#finca_l").text(res + " - " + ibm);
+                        $("#finca_l").data("ibm_finca-ll", ibm);
                     }
                 });
             }
@@ -23,16 +23,59 @@
 
     //Busca el lote en la base de datos por el ID único para cargar los datos en el modal
     $(document).on("click", "[href='#editar_lote']", function(){
-        id_lote = $(this).attr("id");
+        let id_lote = $(this).attr("id");
         $.post({
             url: '../logica/contenido.php',
             data: {op: 'buscarlote', id_lote: id_lote},
             cache: false,
             success: function(res) {
-                var lote = JSON.parse(res);
-                $("#nom_l").text(lote.lote);
+                let lote = JSON.parse(res);
+                $("#nom_lote-el").data("id_lote", id_lote);
+                $("#nom_lote-el").text(lote.lote);
+                $("#area_neta-el").val(lote.neta);
+                $("#area_bruta-el").val(lote.bruta);
             }
         });
     });
 
-// Falta editar lote
+    // Actualizar lote 
+    $(document).on("click", "#btnActualizar-el", function() {
+        let id_lote = $("#nom_lote-el").data("id_lote");
+        let area_neta = $("#area_neta-el").val();
+        let area_bruta = $("#area_bruta-el").val();
+        const op = new FormData();
+        op.append("op", "editarlote");
+        op.append("id_lote", id_lote);
+        op.append("area_neta", area_neta);
+        op.append("area_bruta", area_bruta);
+        fetch('../logica/contenido.php', {
+            method: "POST",
+            body: op
+        })
+        .then(response => {
+            if (response.ok)
+                return response.text();
+            else
+                throw "No se ha podido completar la acción";
+        })
+        .then(res => {
+            if (res == 1) {
+                swal("Editar lote", "Acción realizada correctamente", "success");
+                ver_lotes($("#finca_l").data("ibm_finca-ll"));
+            }else {
+                $.notify({
+                    icon: "fa fa-times",
+                    title: "<strong>Editar lote: </strong>",
+                    message: "No se ha podido completar la acción"
+                },{
+                    type: "danger"
+                });
+            }
+        })
+
+    });
+
+    //cerrar modal lotes
+    $(document).on("hidden.bs.modal", "#modal-ll", function () {
+        listar_fincas();
+    });

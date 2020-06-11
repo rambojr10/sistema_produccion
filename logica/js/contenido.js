@@ -39,10 +39,9 @@
     //Envía los datos de la tabla fincas a el archivo fincas.php para ser incluido en el inicio, obtiene los datos en el archivo, listas fincas.    
 
 /* Mostrar datos ================================================================================*/ 
-
+    
     //carga fincas
-    $(document).on("click", "[href='#listarfincas']", function(e){
-        e.preventDefault();
+    function listar_fincas() {
         $(".contenido").load("../capa_web/fincas.php");
         const op = new FormData();
         op.append('op', 'listarfincas');
@@ -65,6 +64,10 @@
         });
 
         $(".contenido").hide().show("blind", 1500);
+    }
+    $(document).on("click", "[href='#listarfincas']", function(e){
+        e.preventDefault();
+        listar_fincas();
     });
 
     //Cargar vista producción

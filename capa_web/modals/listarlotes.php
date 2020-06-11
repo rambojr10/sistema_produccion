@@ -28,12 +28,12 @@
                 </div>  
             </div>
             <div class="modal-footer">
-                <!-- <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button> -->
                 <hr>
             </div>
         </div>
     </div>
 </div>
+
 <?php
     include_once './modals/editarlote.php';
 ?>

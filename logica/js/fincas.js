@@ -48,7 +48,6 @@
         if (ibm != "" && nombre != "" && neta != "" && bruta != "" && empresa != 0 && lotes[0][0] != "" && lotes[0][1] != "") {
             var data = {ibm: ibm, nombre: nombre, neta: neta, bruta: bruta, empresa: empresa, lotes: lotes};
             $.get("../logica/contenido.php",{op: 'nuevafinca', data: data}, function(res){
-                alert(res);
                 if(res == true){
                     swal("Registro", "Registro de datos exitoso", "success");
                 }else{

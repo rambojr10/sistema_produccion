@@ -114,6 +114,10 @@
             case 'actualizarcaja':
                 actualizar_caja();
                 break;
+            
+            case 'editarlote':
+                editar_lote();
+                break;
 
     //Métodos de eliminar
             case 'eliminar':
@@ -251,10 +255,10 @@
                 " . $f->Nombre . "
                 </td>
                 <td>
-                " . $f->Area_Neta . "
+                " . $f->area_neta . "
                 </td>
                 <td>
-                " . $f->Area_Bruta . "
+                " . $f->area_bruta . "
                 </td>
                 <td dato='$f->PKIbm'>
                     <a href='#editar_finca' class='notika-icon notika-edit' title='Editar'></a> - 
@@ -586,6 +590,7 @@
     }
 
 //  ACTUALIZAR ==================================================================================================================
+    
     //
     function actualizar_empresa(){
         $empresa = array(
@@ -598,6 +603,7 @@
         echo $result;
     }
 
+    //
     function actualizar_caja(){
         $caja = array(
             'codigo_real' => $_POST['caja']['codigo_real'],
@@ -607,6 +613,12 @@
             'tipofruta' => $_POST['caja']['tipofruta']
         );
         $result = actualizarcaja($caja);
+        echo $result;
+    }
+
+    //
+    function editar_lote(){
+        $result = editarlote($_POST['id_lote'], $_POST['area_neta'], $_POST['area_bruta']);
         echo $result;
     }
     

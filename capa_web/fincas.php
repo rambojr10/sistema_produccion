@@ -4,6 +4,7 @@
     include_once '../capa_web/modals/verempresa.php';
 ?>
 
+    <!-- title area -->
     <div class="breadcomb-area">
 		<div class="container">
 			<div class="row">
@@ -31,8 +32,10 @@
 				</div>
 			</div>
 		</div>
-	</div>
+    </div>
+    <!-- title area End -->
 
+    <!-- container module -->
     <div class="normal-table-area">
         <div class="container">
             <div class="row">
@@ -63,3 +66,4 @@
             </div> 
         </div>
     </div>
+    <!-- container module End -->

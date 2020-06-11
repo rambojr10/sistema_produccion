@@ -1,4 +1,4 @@
-//CONTROL DE VISTAS EN PROGRAMAR EMBARQUE ------------------------------------------------------------------
+//CONTROL DE VISTAS EN PROGRAMAR EMBARQUE --------------------------------------------------------------------
     
     //Muestra la vista para seleccionar las cajas del embarque y verifica si el embarque a generar ya existe...
     $(document).on("click", "[href='#seleccionar_pe']", function(e) {
@@ -100,7 +100,7 @@
         }
     });
 
-//MOSTRAR DATOS --------------------------------------------------------------------------------    
+//MOSTRAR DATOS -----------------------------------------------------------------------------------------------    
     
     //Carga las cajas para mostrarlas en el select de programar embarque
     function cargar_cajas_pe(){

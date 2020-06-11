@@ -3,7 +3,7 @@
     if(isset($_SESSION['conectado'])){
 
     }else{
-        header("Location:./ingresow.php");
+        header("Location:./ingreso.php");
     }
 ?>
 
@@ -309,243 +309,243 @@
 
         <!-- stadistics home-->
         <?php if ($_SESSION['conectado']->FKId_TblTipoUsuario == 1) :?>
-        <div class="visitor-sv-tm-area">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <div class="visitor-sv-tm-int">
-                            <div class="contact-hd mg-bt-ant-inner">
-                                <h2>Producción</h2>
-                                <p>Total produccion por fincas, histórico.</p>
-                            </div>
-                            <div class="visitor-sv-tm-ch">
-                                <div id="visit-server-time" class="flot-chart"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mg-t-30">
-                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-                        <div class="visitor-sv-tm-int sm-res-mg-t-30">
-                            <div class="contact-hd mg-bt-ant-inner server-sts-rgt">
-                                <h2>Semana registrada</h2>
-                                <p>Última semana registrada por cada fincas.</p>
-                            </div>
-                            <div class="search-eg-table">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Finca</th>
-                                            <th class="text-right">#Semana</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Álamos</td>
-                                            <td class="text-right"><span class="btn-success">50</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Guaimaral</td>
-                                            <td class="text-right"><span class="btn-danger">49</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Taiwán</td>
-                                            <td class="text-right"><span class="btn-danger">49</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Kalamarí</td>
-                                            <td class="text-right"><span class="btn-danger">48</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Zarzamora</td>
-                                            <td class="text-right"><span class="btn-success">51</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="analysis-rd-mg">Candelaria</td>
-                                            <td class="text-right analysis-rd-mg"><span class="btn-success">51</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td colspan="2">
-                                                <span class="ui red label">Atrasado</span><span class="ui green label">Al día</span>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+            <div class="visitor-sv-tm-area">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="visitor-sv-tm-int">
+                                <div class="contact-hd mg-bt-ant-inner">
+                                    <h2>Producción</h2>
+                                    <p>Total produccion por fincas, histórico.</p>
+                                </div>
+                                <div class="visitor-sv-tm-ch">
+                                    <div id="visit-server-time" class="flot-chart"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-8 col-md-6 col-sm-6 col-xs-12">
-                        <div class="visitor-sv-tm-int sm-res-mg-t-30 tb-res-mg-t-30 tb-res-ds-n dk-res-ds">
-                            <div class="contact-hd mg-bt-ant-inner">
-                                <h2>Producción semanal</h2>
-                                <p>Comparativa con el total de producción de las fincas.</p>
+                    <div class="row mg-t-30">
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                            <div class="visitor-sv-tm-int sm-res-mg-t-30">
+                                <div class="contact-hd mg-bt-ant-inner server-sts-rgt">
+                                    <h2>Semana registrada</h2>
+                                    <p>Última semana registrada por cada fincas.</p>
+                                </div>
+                                <div class="search-eg-table">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Finca</th>
+                                                <th class="text-right">#Semana</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Álamos</td>
+                                                <td class="text-right"><span class="btn-success">50</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Guaimaral</td>
+                                                <td class="text-right"><span class="btn-danger">49</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Taiwán</td>
+                                                <td class="text-right"><span class="btn-danger">49</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Kalamarí</td>
+                                                <td class="text-right"><span class="btn-danger">48</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Zarzamora</td>
+                                                <td class="text-right"><span class="btn-success">51</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="analysis-rd-mg">Candelaria</td>
+                                                <td class="text-right analysis-rd-mg"><span class="btn-success">51</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2">
+                                                    <span class="ui red label">Atrasado</span><span class="ui green label">Al día</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                            <div class="visitor-st-ch visitor-ov-ct">
-                                <div id="visit-over-time" class="flot-chart"></div>
-                                <div class="flc-visits"></div>
+                        </div>
+                        <div class="col-lg-8 col-md-6 col-sm-6 col-xs-12">
+                            <div class="visitor-sv-tm-int sm-res-mg-t-30 tb-res-mg-t-30 tb-res-ds-n dk-res-ds">
+                                <div class="contact-hd mg-bt-ant-inner">
+                                    <h2>Producción semanal</h2>
+                                    <p>Comparativa con el total de producción de las fincas.</p>
+                                </div>
+                                <div class="visitor-st-ch visitor-ov-ct">
+                                    <div id="visit-over-time" class="flot-chart"></div>
+                                    <div class="flc-visits"></div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- statistics home End-->
+            <!-- statistics home End-->
 
-        <!-- section of three cards -->
-        <div class="search-engine-area mg-t-30">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-                        <div class="search-engine-int">
-                            <div class="contact-hd search-hd-eg">
-                                <h2>Cajas Rechazadas</h2>
-                                <p>Total de cajas rechazadas por fincas durante la semana.</p>
-                            </div>
-                            <div class="search-eg-table">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Finca</th>
-                                            <th class="text-right">Cajas R - Semana</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Álamos</td>
-                                            <td class="text-right"><span class="btn-danger">120</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Guaimaral</td>
-                                            <td class="text-right"><span class="btn-success">0</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Taiwán</td>
-                                            <td class="text-right"><span class="btn-danger">57</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Kalamarí</td>
-                                            <td class="text-right"><span class="btn-danger">90</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Zarzamora</td>
-                                            <td class="text-right"><span class="btn-danger">156</span></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="analysis-rd-mg">Candelaria</td>
-                                            <td class="text-right analysis-rd-mg"><span class="btn-success">0</span></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-                        <div class="search-engine-int sm-res-mg-t-30 tb-res-mg-t-30 tb-res-mg-t-0">
-                            <div class="contact-hd search-hd-eg">
-                                <h2>Comparativa de produccion</h2>
-                                <p>Diferencias entre el total de cajas elaboradas de la semana anterior.</p>
-                            </div>
-                            <div class="search-eg-table">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Finca</th>
-                                            <th class="text-right">Diferencia</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Álamos</td>
-                                            <td class="text-right">1220 <i class="notika-icon notika-up-arrow"></i></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Guaimaral</td>
-                                            <td class="text-right">132 <i class="notika-icon notika-down-arrow"></i></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Taiwán</td>
-                                            <td class="text-right">350 <i class="notika-icon notika-up-arrow"></i></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Kalamarí</td>
-                                            <td class="text-right">298 <i class="notika-icon notika-up-arrow"></i></td>
-                                        </tr>
-                                        <tr>
-                                            <td>Zarzamora</td>
-                                            <td class="text-right">828 <i class="notika-icon notika-down-arrow"></i></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="analysis-rd-mg">Candelaria</td>
-                                            <td class="text-right analysis-rd-mg">212 <i class="notika-icon notika-up-arrow"></i></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+            <!-- section of three cards -->
+            <div class="search-engine-area mg-t-30">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                            <div class="search-engine-int">
+                                <div class="contact-hd search-hd-eg">
+                                    <h2>Cajas Rechazadas</h2>
+                                    <p>Total de cajas rechazadas por fincas durante la semana.</p>
+                                </div>
+                                <div class="search-eg-table">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Finca</th>
+                                                <th class="text-right">Cajas R - Semana</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Álamos</td>
+                                                <td class="text-right"><span class="btn-danger">120</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Guaimaral</td>
+                                                <td class="text-right"><span class="btn-success">0</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Taiwán</td>
+                                                <td class="text-right"><span class="btn-danger">57</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Kalamarí</td>
+                                                <td class="text-right"><span class="btn-danger">90</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Zarzamora</td>
+                                                <td class="text-right"><span class="btn-danger">156</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="analysis-rd-mg">Candelaria</td>
+                                                <td class="text-right analysis-rd-mg"><span class="btn-success">0</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-                        <div class="search-engine-int sm-res-mg-t-30 tb-res-mg-t-30 tb-res-ds-n dk-res-ds">
-                            <div class="contact-hd search-hd-eg">
-                                <h2>Cajas Producidas</h2>
-                                <p>Total de cajas producidas por finca durante la semana.</p>
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                            <div class="search-engine-int sm-res-mg-t-30 tb-res-mg-t-30 tb-res-mg-t-0">
+                                <div class="contact-hd search-hd-eg">
+                                    <h2>Comparativa de produccion</h2>
+                                    <p>Diferencias entre el total de cajas elaboradas de la semana anterior.</p>
+                                </div>
+                                <div class="search-eg-table">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Finca</th>
+                                                <th class="text-right">Diferencia</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Álamos</td>
+                                                <td class="text-right">1220 <i class="notika-icon notika-up-arrow"></i></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Guaimaral</td>
+                                                <td class="text-right">132 <i class="notika-icon notika-down-arrow"></i></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Taiwán</td>
+                                                <td class="text-right">350 <i class="notika-icon notika-up-arrow"></i></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Kalamarí</td>
+                                                <td class="text-right">298 <i class="notika-icon notika-up-arrow"></i></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Zarzamora</td>
+                                                <td class="text-right">828 <i class="notika-icon notika-down-arrow"></i></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="analysis-rd-mg">Candelaria</td>
+                                                <td class="text-right analysis-rd-mg">212 <i class="notika-icon notika-up-arrow"></i></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                            <div class="search-eg-table">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th>Fincas</th>
-                                            <th class="text-right">Cajas E - Semana</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Álamos</td>
-                                            <td class="text-right">
-                                                <h4><span class="counter">10,563</span></h4>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Guaimaral</td>
-                                            <td class="text-right">
-                                                <h4><span class="counter">8,760</span></h4>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Taiwán</td>
-                                            <td class="text-right">
-                                                <h4><span class="counter">3,490</span></h4>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Kalamarí</td>
-                                            <td class="text-right">
-                                                <h4><span class="counter">9,789</span></h4>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>Zarzamora</td>
-                                            <td class="text-right">
-                                                <h4><span class="counter">12,756</span></h4>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="analysis-rd-mg">Candelaria</td>
-                                            <td class="text-right analysis-rd-mg">
-                                                <h4><span class="counter">3,650</span></h4>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                            <div class="search-engine-int sm-res-mg-t-30 tb-res-mg-t-30 tb-res-ds-n dk-res-ds">
+                                <div class="contact-hd search-hd-eg">
+                                    <h2>Cajas Producidas</h2>
+                                    <p>Total de cajas producidas por finca durante la semana.</p>
+                                </div>
+                                <div class="search-eg-table">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Fincas</th>
+                                                <th class="text-right">Cajas E - Semana</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Álamos</td>
+                                                <td class="text-right">
+                                                    <h4><span class="counter">10,563</span></h4>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Guaimaral</td>
+                                                <td class="text-right">
+                                                    <h4><span class="counter">8,760</span></h4>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Taiwán</td>
+                                                <td class="text-right">
+                                                    <h4><span class="counter">3,490</span></h4>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Kalamarí</td>
+                                                <td class="text-right">
+                                                    <h4><span class="counter">9,789</span></h4>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td>Zarzamora</td>
+                                                <td class="text-right">
+                                                    <h4><span class="counter">12,756</span></h4>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="analysis-rd-mg">Candelaria</td>
+                                                <td class="text-right analysis-rd-mg">
+                                                    <h4><span class="counter">3,650</span></h4>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- section of three cards End -->
+            <!-- section of three cards End -->
+        <?php endif; ?>
 
     </div>
-    <?php endif;?>
     <!-- Container initial End-->
 
     <!-- Start Footer area-->
