@@ -111,6 +111,10 @@
                 tipofruta_select();
                 break;
             
+            //
+            case 'cargardatos_racimos_ip':
+                cargardatos_racimos_ip();
+                break;
     //Metodos de actualizar            
             case 'actualizarempresa':
                 actualizar_empresa();
@@ -595,6 +599,18 @@
                 }
             }
         }
+    }
+
+    //
+    function cargardatos_racimos_ip() {
+        $ids = array(
+            'id1' => $_POST['id_semana']+0,
+            'id2' => ($_POST['id_semana']+1),
+            'id3' => ($_POST['id_semana']-1),
+            'id4' => ($_POST['id_semana']-2)
+        );
+        $datos['cintas'] = cargarcintas($ids);
+        echo json_encode($datos);
     }
 
 //  ACTUALIZAR ==================================================================================================================

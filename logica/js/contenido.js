@@ -1,4 +1,4 @@
-//Función de carga
+//Función de carga  
     //Asigna fecha y semana al inicio
     $(document).ready(function() {
         Date.prototype.getWeekNumber = function () {

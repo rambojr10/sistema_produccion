@@ -413,6 +413,24 @@
         return $datos->fetchAll();
     }
 
+    //
+    function cargarcintas($ids){
+        $bd = conectar();
+        $datos = $bd->prepare("SELECT c.PKId as id_cinta, c.Descripcion as cinta, s.PKId as id_semana, s.N_Semana as semana 
+                            FROM tblcintas as c, tblsemanas as s 
+                            WHERE s.PKId IN (:id1, :id2, :id3, :id4) 
+                            AND s.FKId_TblCintas = c.PKId");
+        $datos->bindParam(":id1", $ids['id1'], PDO::PARAM_INT);
+        $datos->bindParam(":id2", $ids['id2'], PDO::PARAM_INT);
+        $datos->bindParam(":id3", $ids['id3'], PDO::PARAM_INT);
+        $datos->bindParam(":id4", $ids['id4'], PDO::PARAM_INT);
+        if ($datos->execute()) {
+            return $datos->fetchAll();
+        }else {
+            return false;
+        }
+    }
+
 //Sentencias de actualización------------------------------------------------------------------------------------------------------------
 
     //Recibe arreglo de php para actualizar los datos

@@ -15,7 +15,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Sistema Producción - Grupo MONTESOL </title>
     <meta name="description" content="">
-    <meta name="viewport" content="width=1000, initial-scale=1.0, minimun-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=auto, initial-scale=1.0, minimun-scale=1.0, user-scalable=no">
     <!-- favicon
 		============================================ -->
     <link rel="shortcut icon" type="image/x-icon" href="../assets/img/logo/icono.png">
@@ -80,6 +80,9 @@
     <!-- Vue JS
 		============================================ -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+
+    <!-- Handsontable -->
+    <link href="../assets/plugins/handsontable/handsontable.full.min.css" rel="stylesheet" media="screen">
 
 </head>
 
@@ -236,9 +239,9 @@
                                 <li>
                                     <a href="#programarembarque">Programar Embarque</a>
                                 </li>
-                                <li>
-                                    <a href="#generarsemanas">Generar Semanas</a>
-                                </li>
+                                <!-- <li>
+                                    <a href="#handsontable">Handsontable</a>
+                                </li> -->
 
                                 <?php endif; ?>
 
@@ -554,7 +557,7 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="footer-copy-right">
-                        <p>Copyright © 2019. Todos los derechos reservados. <a href="http://bananerasmontesol.com.co">Grupo Montesol</a>.</p>
+                        <p>Copyright © 2020. Todos los derechos reservados. <a href="http://bananerasmontesol.com.co">Grupo Montesol</a>.</p>
                     </div>
                 </div>
             </div>
@@ -636,6 +639,13 @@
 		============================================ -->
     <script src="../assets/js/notification/notify.min.js"></script>
 
+    <!--  Handsontable JS
+        ============================================ -->
+        <script src="../assets/plugins/handsontable/handsontable.full.min.js"></script>
+        <!-- <script src="../assets/plugins/ruleJs.all.full.min.js"></script> -->
+        <!-- <script src="../assets/plugins/handsontable/formula.js"></script> -->
+        <!-- <script src="../assets/plugins/handsontable/hot-formula-parser/formula-parser.js"></script> -->
+
     <!-- Controlador de contenido, según menú 
         ============================================ -->
     <script src="../logica/js/contenido.js"></script>
@@ -644,6 +654,7 @@
     <script src="../logica/js/cajasproduccion.js"></script>
     <script src="../logica/js/lotes.js"></script>
     <script src="../logica/js/programarembarque.js"></script>
+    <script src="../logica/js/ingresarproduccion.js"></script>
     <!-- <script src="../logica/js/pruebas.js"></script> -->
     
 </body>

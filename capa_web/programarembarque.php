@@ -93,10 +93,7 @@
         background-color: #f2fa07;
         border-radius: 2px;
     }
-    .bg-primary{
-        color: #fff;
-        background-color: #337ab7;
-    }
+    
 
 </style>
 

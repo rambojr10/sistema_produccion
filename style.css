@@ -56,7 +56,7 @@
 /*----------------------------------------*/
 html, body {font-family: 'Roboto', sans-serif;font-weight:400;}
 /* body {background:#F6F8FA;} */
-body {background:#eff3f7;}
+body {background:#f8f8f8;}
 .floatleft {float:left}
 .floatright {float:right}
 .alignleft {float:left;margin-right:15px;margin-bottom: 15px}
@@ -4639,3 +4639,35 @@ body.box-layout {
 /*----------------------------------------*/
 .mCS-light-1.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{ background-color: #00c292; }
 .mCS-light-1.mCSB_scrollTools .mCSB_draggerRail{ background-color: #ccc; }
+
+
+
+/* Propios o ajustes */
+.bg-primary{
+    color: #fff;
+    background-color: #337ab7;
+}
+.bg-success{
+    color: #fff;
+    background-color: #006400;
+}
+
+.embolseRed{
+    color: #fff;
+    background-color: #df1d0f !important;
+}
+
+.embolseYellow{
+    color: #000;
+    background-color: yellow !important;
+}
+
+.embolseGreen{
+    color: #fff;
+    background-color: rgb(25, 112, 84) !important;
+}
+
+.embolseOrange{
+    color: #fff;
+    background-color: rgb(218, 147, 12) !important;
+}
