@@ -1,5 +1,5 @@
 <?php
-    
+    include_once '../capa_web/modals/cargarembarque_racimos_ip.php';
 ?>
 
     <div class="breadcomb-area">
@@ -27,6 +27,7 @@
     </div>
 
     <div class="container">
+        <!-- Racimos -->
         <div class="panel panel-success text-center">
             <div class="panel-heading">
                 <h4>Racimos</h4>
@@ -34,10 +35,11 @@
             <div class="panel-body">
                 <h5 class="card-title">Información de racimos</h5>
                 <p class="card-text">Última semana registrada: <span class="label label-warning">31</span></p>
-                <button type="button" class="btn btn-success notika-btn-success waves-effect" id="btnIngresarRacimos_ip">Ingresar</button>
+                <button type="button" id="btnModal_racimos_ip" class="btn btn-success notika-btn-success waves-effect" data-toggle="modal" data-target="#modal-racimos-ip">Ingresar</button>
             </div>
         </div>
         
+        <!-- Cajas -->
         <div class="panel panel-primary text-center">
             <div class="panel-heading">
                 <h4>Cajas Elaboradas</h4>
@@ -49,6 +51,7 @@
             </div>
         </div>
         
+        <!-- Mercado Nacional -->
         <div class="panel panel-danger text-center">
             <div class="panel-heading">
                 <h4>Mercado Nacional</h4>

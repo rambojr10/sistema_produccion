@@ -115,6 +115,11 @@
             case 'cargardatos_racimos_ip':
                 cargardatos_racimos_ip();
                 break;
+            
+            // Verifica si existe el código de embarque
+            case 'codEmbarque_verificar':
+                buscar_registro();
+                break;
     //Metodos de actualizar            
             case 'actualizarempresa':
                 actualizar_empresa();
@@ -251,6 +256,15 @@
     }
 
 // BUSCAR =================================================================================================================
+
+    //
+    function buscar_registro() {
+        $key = $_REQUEST['key'];
+        $campo = $_REQUEST['campo'];
+        $tabla = $_REQUEST['tabla'];
+        $result = buscarregistro($key, $campo, $tabla);
+        echo json_encode($result);
+    }
 
     //Obtiene los datos de las fincas desde el archivo /datos/statements.php para enviarlos de vuelta al archivo contenido.js
     function listar_fincas(){
@@ -609,9 +623,15 @@
             'id3' => ($_POST['id_semana']-1),
             'id4' => ($_POST['id_semana']-2)
         );
-        $datos['cintas'] = cargarcintas($ids);
+        $datos['semanas'] = cargarcintas($ids);
         echo json_encode($datos);
     }
+
+    // futuro uso para cajas en ingresar producción
+    /* function cargarembarques_select(){
+        $result = cargarembarques();
+    } */
+
 
 //  ACTUALIZAR ==================================================================================================================
     

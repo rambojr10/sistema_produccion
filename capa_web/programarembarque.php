@@ -128,7 +128,7 @@
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon bg-primary">Semana</div>
-                                        <select class="form-control" name="semanas_pe" id="semanas_pe">
+                                        <select class="ui dropdown" name="semanas_pe" id="semanas_pe">
                                         
                                         </select>
                                     </div>
@@ -354,6 +354,7 @@
 
     <!-- Método vue -->
     <script type="text/javascript">
+        $("#semanas_pe").dropdown();
         new Vue({
             el: "#estimativoVue",
             data: {

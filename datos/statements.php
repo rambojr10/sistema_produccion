@@ -192,7 +192,7 @@
     
 // Sentencias de búsqueda ==========================================================================================
     //función busca un único registro globalmente
-    function buscarregistro($tabla, $campo, $key){
+    function buscarregistro($key, $campo, $tabla){
         $bd = conectar();
         $datos = $bd->prepare("SELECT * FROM ".$tabla." WHERE ".$campo." = :key");
         $datos->bindParam(":key", $key, PDO::PARAM_STR);
@@ -416,7 +416,8 @@
     //
     function cargarcintas($ids){
         $bd = conectar();
-        $datos = $bd->prepare("SELECT c.PKId as id_cinta, c.Descripcion as cinta, s.PKId as id_semana, s.N_Semana as semana 
+        $datos = $bd->prepare("SELECT c.PKId as id_cinta, c.Descripcion as cinta, s.PKId as id_semana, s.N_Semana as semana, 
+                                s.Fecha_Inicio as fecha_inicio, s.Fecha_Fin as fecha_fin  
                             FROM tblcintas as c, tblsemanas as s 
                             WHERE s.PKId IN (:id1, :id2, :id3, :id4) 
                             AND s.FKId_TblCintas = c.PKId");

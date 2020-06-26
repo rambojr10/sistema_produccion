@@ -4643,31 +4643,66 @@ body.box-layout {
 
 
 /* Propios o ajustes */
-.bg-primary{
-    color: #fff;
-    background-color: #337ab7;
-}
-.bg-success{
-    color: #fff;
-    background-color: #006400;
-}
+    .bg-primary{
+        color: #fff;
+        background-color: #337ab7;
+    }
+    .bg-success{
+        color: #fff;
+        background-color: #006400;
+    }
 
-.embolseRed{
-    color: #fff;
-    background-color: #df1d0f !important;
-}
+/* Embolse color */
+    .embolseCoffee{
+        color: #fff;
+        background-color: #79422d !important;
+    }
 
-.embolseYellow{
-    color: #000;
-    background-color: yellow !important;
-}
+    .embolseBlack{
+        color: #fff;
+        background-color: black !important;
+    }
 
-.embolseGreen{
-    color: #fff;
-    background-color: rgb(25, 112, 84) !important;
-}
+    .embolseOrange{
+        color: #fff;
+        background-color: rgb(218, 147, 12) !important;
+    }
 
-.embolseOrange{
-    color: #fff;
-    background-color: rgb(218, 147, 12) !important;
-}
+    .embolseGreen{
+        color: #fff;
+        background-color: rgb(25, 112, 84) !important;
+    }
+
+    .embolseYellow{
+        color: #000;
+        background-color: yellow !important;
+    }
+
+    .embolseWhite{
+        color: #545454;
+        background-color: white !important;
+        border-color: black;
+    }
+
+    .embolseBlue{
+        color: #fff;
+        background-color: #1683bd !important;
+    }
+
+    .embolsePurple{
+        color: #fff;
+        background-color: #9a2be2 !important;
+    }
+
+    .embolseRed{
+        color: #fff;
+        background-color: #df1d0f !important;
+    }
+
+
+
+
+
+
+
+
