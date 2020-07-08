@@ -81,7 +81,7 @@
     $(document).on("click", "[href='#programarembarque']", function(e){
         e.preventDefault();
         $(".contenido").load("../capa_web/programarembarque.php");
-        $(".contenido").hide().show("blind", 1500);
+        // $(".contenido").hide().show("blind", 1500);
     });
     
     //Mostrar empresas
@@ -97,7 +97,6 @@
     $(document).on("click", "[href='#cajasproduccion']", function(e){
         e.preventDefault();
         $(".contenido").load("../capa_web/cajasproduccion.php");
-        // $("#cajasproduccion").html("");
         const op = new FormData();
         op.append('op', 'cajasproduccion');
         fetch('../logica/contenido.php', {
@@ -122,6 +121,12 @@
     $(document).on("input", ".valida", function () {
         this.value = this.value.replace(/[^0-9]/g,'');
     });
+
+    // Loader
+    window.onload = function () {
+        $(".osc").fadeOut();
+        $("#loader").fadeOut();
+    }
 
 
    

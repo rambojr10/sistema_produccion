@@ -27,8 +27,7 @@
 	EMBARQUE			%24
 	EMBARQUE - CAJAS PRODUCCION	%25
 	REGISTRO SEMANAS		%26
-	CLASIFICACION			%27
-	ESTIMATIVO			%28
+	ESTIMATIVO			%27
 	
 
 ***************************************************************************************************************/
@@ -36,9 +35,9 @@
 	/* EMPRESAS */
 	CREATE TABLE TblEmpresas(
 		PKNit VARCHAR(11) PRIMARY KEY,
-    		Nombre VARCHAR(50) not null,
-    		Direccion VARCHAR(100) not null,
-    		Telefono VARCHAR(10) not null
+		Nombre VARCHAR(50) not null,
+		Direccion VARCHAR(100) not null,
+		Telefono VARCHAR(10) not null
 	);
 	
 	/* FINCAS */
@@ -67,13 +66,12 @@
 		Descripcion VARCHAR(50) not null
 	);
 
-	/* CAJAS PRODUCCIÓN  - FALTA RELACIONAR tblclasificacion */
+	/* CAJAS PRODUCCIÓN */
 	CREATE TABLE TblCajasProduccion(
 		PKCodigo VARCHAR(5) PRIMARY KEY,
 		Descripcion VARCHAR(100) not null,
 		FactorConversion FLOAT not null,
 		FKId_TblTipoFruta INT not null,
-		FKId_TblClasificacion INT,
 		FOREIGN KEY (FKId_TblTipoFruta) REFERENCES TblTipoFruta(PKId)
 	);
 
@@ -179,14 +177,21 @@
 		Nombres VARCHAR(200) not null,
 		Telefono VARCHAR(10) not null
 	);
-
+	
 	CREATE TABLE TblMercadoNacional(
 		PKId INTEGER PRIMARY KEY AUTO_INCREMENT,
 		FKId_TblCajasMercadoNacional INT not null,
+		Total_Elaborado INT not null,
+		FOREIGN KEY (FKId_TblCajasMercadoNacional) REFERENCES TblCajasMercadoNacional(PKId)
+	);
+	
+	CREATE TABLE TblDet_TblMercadoNacional(
+		PKId INTEGER PRIMARY KEY AUTO_INCREMENT,
+		FKId_TblMercadoNacional INT not null,
 		FKId_TblDias INT not null,
 		Cantidad_Elaborado INT not null,
-        	FOREIGN KEY (FKId_TblCajasMercadoNacional) REFERENCES TblCajasMercadoNacional(PKId),
-        	FOREIGN KEY (FKId_TblDias) REFERENCES TblDias(PKId)
+		FOREIGN KEY (FKId_TblMercadoNacional) REFERENCES TblMercadoNacional(PKId),
+		FOREIGN KEY (FKId_TblDias) REFERENCES TblDias(PKId)
 	);
 	
 	CREATE TABLE TblCargue(
@@ -284,12 +289,6 @@
 	CREATE TABLE TblRegistroSemanas(
 		PKId INTEGER PRIMARY KEY AUTO_INCREMENT,
 		Anho_generado INT not null
-	);
-
-	/* TABLA CLASIFICACION */
-	CREATE TABLE TblClasificacion(
-		PKId INTEGER PRIMARY KEY AUTO_INCREMENT,
-		Descripcion VARCHAR(50)
 	);
 
 	/* TABLA ESTIMATIVO */

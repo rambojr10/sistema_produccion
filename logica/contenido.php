@@ -1,163 +1,7 @@
 <?php
+
     require_once "../datos/statements.php";
     
-    //valida el ingreso al archivo desde la petición del archivo logica/contenido.js 
-    if(isset($_REQUEST['op'])){
-        $op = $_REQUEST['op'];
-        switch ($op) {
-
-    //Métodos de crear
-            case 'nuevafinca':
-                nueva_finca();
-                break;
-            
-            case 'guardarempresa':
-                nueva_empresa();
-                break;
-            
-            case 'guardarcaja':
-                guardar_caja();
-                break;
-
-            //Crea embarque y muestra las cajas en la vista de programar embarque
-            case 'crearembarque':
-                crear_embarque();
-                break;
-            
-            case 'anhonuevo':
-                anho_nuevo();
-                break;
-            
-            //Guarda los datos de la programación y el estimativo de la semana
-            case 'guardarprogramacion':
-                guardar_programacion();
-                break;
-
-    //Métodos de mostrar
-            case 'listarfincas':
-                listar_fincas();
-                break;
-
-            case 'listarempresas':
-                listar_empresas();
-                break;
-
-            case 'select_rs':
-                select_rs();
-                break;
-
-            case 'cajasproduccion':
-                listar_cajas();
-                break;
-            
-            case 'listarlotes':
-                listar_lotes();
-                break;
-            
-            case 'buscarfinca':
-                buscar_finca();
-                break;
-
-            case 'buscarlote':
-                buscar_lote();
-                break;
-
-            case 'mostrarempresa':
-                buscar_empresa();
-                break;
-            
-            //Carga los option con las semanas por año
-            case 'cargarsemanaspa':
-                cargar_semanaspa();
-                break;
-
-            //Carga los datos de la empresa a editar
-            case 'editarempresa':
-                editar_empresa();
-                break;
-            
-            //Carga los datos de la caja a editar
-            case 'buscarcaja':
-                buscar_caja();
-                break;
-
-            //Carga los datos de acuerdo al filtro en ver_elaboracion
-            case 'verfiltrocaja':
-                ver_filtrocaja();
-                break;
-
-            //Carga las fincas para el select de ver_elaboración
-            case 'fincasve':
-                fincas_ve();
-                break;
-    
-            //Carga la elaboración de cajas de acuerdo a los filtros
-            case 'verelaboracion':
-                ver_elaboracion();
-                break;
-            
-            //Carga las semanas para el select de programarmebarque
-            case 'semanaspe':
-                semanas_pe();
-                break;
-                
-            //Carga cajas para select de programarembarque
-            case 'cargarcajas_select':
-                cargarcajas_select();
-                break;
-            
-            //Carga tipo de fruta para select nuevo o editar
-            case 'tipofruta-select':
-                tipofruta_select();
-                break;
-            
-            //
-            case 'cargardatos_racimos_ip':
-                cargardatos_racimos_ip();
-                break;
-            
-            // Verifica si existe el código de embarque
-            case 'codEmbarque_verificar':
-                buscar_registro();
-                break;
-    //Metodos de actualizar            
-            case 'actualizarempresa':
-                actualizar_empresa();
-                break;
-            
-            case 'actualizarcaja':
-                actualizar_caja();
-                break;
-            
-            case 'editarlote':
-                editar_lote();
-                break;
-
-    //Métodos de eliminar
-            case 'eliminar':
-                eliminar();
-                break;
-
-            case 'eliminarempresa':
-                eliminar();
-                break;
-
-            case 'eliminarcaja':
-                eliminar();
-                break;
-
-            case 'eliminarembarque':
-                eliminar();
-                break;
-
-
-    // Defecto
-            default:
-                header("Location:../index.php");
-                break;
-        }
-    }
-
 //  CREAR ===========================================================================================================
     //
     function nueva_finca(){
@@ -224,9 +68,9 @@
 
     //generar semanas
     function anho_nuevo(){
-        $anhos = buscarregistro("tblsemanas", "N_Semana", "SEMANA 52");
+        $anhos = buscarregistro("SEMANA 52", "N_Semana", "tblsemanas");
         $ultimo_anho = end($anhos);
-        $verificar_anho = buscarregistro("tblregistrosemanas", "Anho_generado", $_POST["anhonuevo"]+1);
+        $verificar_anho = buscarregistro($_POST["anhonuevo"]+1, "Anho_generado", "tblregistrosemanas");
         if (isset($verificar_anho[0])) {
             echo "No se creó";
         }else {
@@ -255,7 +99,7 @@
         echo $result;
     }
 
-// BUSCAR =================================================================================================================
+//  BUSCAR =================================================================================================================
 
     //
     function buscar_registro() {
@@ -383,7 +227,7 @@
     //Buscar Finca por ibm o por nombre
     function buscar_finca(){
         if (isset($_GET['nombre_finca'])){
-            $finca = buscarregistro("TblFincas", "Nombre", $_GET['nombre_finca']);
+            $finca = buscarregistro($_GET['nombre_finca'], "Nombre", "TblFincas");
             echo $finca[0]->PKIbm;
         }else if (isset($_POST['ibm_f'])){
             $finca = buscarfinca($_POST['ibm_f']);
@@ -666,7 +510,7 @@
         echo $result;
     }
     
-// ELIMINAR ==================================================================================================================
+//  ELIMINAR ==================================================================================================================
     //
     function eliminar(){
         $key = $_REQUEST['key'];
@@ -676,4 +520,161 @@
         echo $eliminar;
     }   
 
+
+    //valida el ingreso al archivo desde la petición del archivo logica/contenido.js 
+    if(isset($_REQUEST['op'])){
+        $op = $_REQUEST['op'];
+        switch ($op) {
+
+    //Métodos de crear
+            case 'nuevafinca':
+                nueva_finca();
+                break;
+            
+            case 'guardarempresa':
+                nueva_empresa();
+                break;
+            
+            case 'guardarcaja':
+                guardar_caja();
+                break;
+
+            //Crea embarque y muestra las cajas en la vista de programar embarque
+            case 'crearembarque':
+                crear_embarque();
+                break;
+            
+            case 'anhonuevo':
+                anho_nuevo();
+                break;
+            
+            //Guarda los datos de la programación y el estimativo de la semana
+            case 'guardarprogramacion':
+                guardar_programacion();
+                break;
+
+    //Métodos de mostrar
+            case 'listarfincas':
+                listar_fincas();
+                break;
+
+            case 'listarempresas':
+                listar_empresas();
+                break;
+
+            case 'select_rs':
+                select_rs();
+                break;
+
+            case 'cajasproduccion':
+                listar_cajas();
+                break;
+            
+            case 'listarlotes':
+                listar_lotes();
+                break;
+            
+            case 'buscarfinca':
+                buscar_finca();
+                break;
+
+            case 'buscarlote':
+                buscar_lote();
+                break;
+
+            case 'mostrarempresa':
+                buscar_empresa();
+                break;
+            
+            //Carga los option con las semanas por año
+            case 'cargarsemanaspa':
+                cargar_semanaspa();
+                break;
+
+            //Carga los datos de la empresa a editar
+            case 'editarempresa':
+                editar_empresa();
+                break;
+            
+            //Carga los datos de la caja a editar
+            case 'buscarcaja':
+                buscar_caja();
+                break;
+
+            //Carga los datos de acuerdo al filtro en ver_elaboracion
+            case 'verfiltrocaja':
+                ver_filtrocaja();
+                break;
+
+            //Carga las fincas para el select de ver_elaboración
+            case 'fincasve':
+                fincas_ve();
+                break;
+    
+            //Carga la elaboración de cajas de acuerdo a los filtros
+            case 'verelaboracion':
+                ver_elaboracion();
+                break;
+            
+            //Carga las semanas para el select de programarmebarque
+            case 'semanaspe':
+                semanas_pe();
+                break;
+                
+            //Carga cajas para select de programarembarque
+            case 'cargarcajas_select':
+                cargarcajas_select();
+                break;
+            
+            //Carga tipo de fruta para select nuevo o editar
+            case 'tipofruta-select':
+                tipofruta_select();
+                break;
+            
+            //
+            case 'cargardatos_racimos_ip':
+                cargardatos_racimos_ip();
+                break;
+            
+            // Verifica si existe el código de embarque
+            case 'codEmbarque_verificar':
+                buscar_registro();
+                break;
+    //Metodos de actualizar            
+            case 'actualizarempresa':
+                actualizar_empresa();
+                break;
+            
+            case 'actualizarcaja':
+                actualizar_caja();
+                break;
+            
+            case 'editarlote':
+                editar_lote();
+                break;
+
+    //Métodos de eliminar
+            case 'eliminar':
+                eliminar();
+                break;
+
+            case 'eliminarempresa':
+                eliminar();
+                break;
+
+            case 'eliminarcaja':
+                eliminar();
+                break;
+
+            case 'eliminarembarque':
+                eliminar();
+                break;
+
+
+    // Defecto
+            default:
+                header("Location:../index.php");
+                break;
+        }
+    }
 ?>

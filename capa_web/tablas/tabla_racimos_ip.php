@@ -1,14 +1,29 @@
 <?php
     if (isset($_GET['cod'])) {
-        $x = $_GET['cod'];
+        $cod_embarque = $_GET['cod'];
     }
 ?>
-    <!-- Insertar racimos -->
-    <div class="container">
+    <!-- cinta de opciones -->
+     <!-- Botones finales -->
+     
+     <!-- Insertar racimos -->
+     <div class="container">
 
-        <div class="ui green segment">
-            <div class="mg-b-15">
-                <p>Código de embarque: <span class="badge" id="cod_embarque_ip"><?php echo $x; ?></span></p>
+        <div class="ui segment animated bounceInRight">
+            <div class="row">
+                <div class="col-lg-6 col-md-6">
+                    <p>Código de embarque: <span class="badge" id="cod_embarque_ip"><?php echo $cod_embarque; ?></span></p>
+                </div>
+                <div class="col-lg-6 col-md-6">
+                    <div style="text-align: right;">
+                        <button id="btnGuardar_racimos_ip" class="btn btn-default btn-icon-notika" data-tooltip="Guardar" data-position="top center">
+                            <i class="fa fa-save"></i>
+                        </button>
+                        <button id="btnVolver_racimos_ip" class="btn btn-default btn-icon-notika" data-tooltip="Inicio" data-position="top center">
+                            <i class="fa fa-home"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div class="row">
@@ -55,7 +70,7 @@
 
             </div>
         </div>
-        
+
     </div>
 
     <div class="breadcomb-area">

@@ -87,6 +87,17 @@
 </head>
 
 <body>
+    <!-- Loader  -->
+    <div class="osc"></div>
+    <div class="loadingio-spinner-pulse-2aaif4t0mjx centerLoading" id="loader">
+        <div class="ldio-biy5nta378e">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <!-- End loader -->
+
     <!-- Header -->
     <div class="header-top-area">
         <div class="container">
@@ -564,7 +575,8 @@
         </div>
     </div>
     <!-- End Footer area-->
-    
+
+
     <!-- jquery
 		============================================ -->
     <script src="../assets/js/vendor/jquery-1.12.4.min.js"></script>

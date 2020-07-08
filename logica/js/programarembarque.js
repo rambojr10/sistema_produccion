@@ -324,23 +324,6 @@
                                         detalles.cajas.push(item);
                                     }
                                 });
-                                
-                                /* const buscar_ibmfinca_pe_async = async (nombre_finca) => {
-                                    try {
-                                        const response = await fetch(`../logica/contenido.php?op=buscarfinca&nombre_finca=${nombre_finca}`);
-                                        const res = await response.text();
-                                        item = {
-                                            codigo_caja: codigo_caja,
-                                            ibm_finca: res,
-                                            cantidad: cantidad
-                                        }
-                                        detalles.cajas.push(item);
-                                        console.log("KLXF3L193");
-                                    } catch (error) {
-                                        console.log(error);
-                                    }
-                                }
-                                buscar_ibmfinca_pe_async(nom_finca); */
                             }
                         }
                     });

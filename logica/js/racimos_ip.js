@@ -1,4 +1,11 @@
-    
+// Cinta de opciones -------------------------------------------------------------------------------------------------------------
+
+    $(document).on('click', '#btnGuardar_racimos_ip', function () {
+        console.log(hot.getData());
+    });
+
+    var hot;
+
     const cod_embarque = $("#cod_embarque_ip").text();
     const op = new FormData();
     op.append("op", "codEmbarque_verificar");
@@ -18,8 +25,8 @@
         }
     })
     .then(res => {
-        console.log(res);
-        cargar_tabla_racimos_ip(res[0].FKId_TblSemanas)
+        // $("#cod_embarque_ip").data("id_semana", res[0].FKId_TblSemanas);
+        cargar_tabla_racimos_ip(res[0].FKId_TblSemanas);
     });
 
 // ----------------------------------------------------------------------------------------------------------
@@ -225,7 +232,7 @@
             // Recibe las cintas y semanas para clasificarlas según el color y así renderizarlas en los td
             function renderizarCintas(cinta) {
                 switch (cinta) {
-                    case 'CAFE':
+                    case 'CAFÉ':
                         return coffeeRenderer;
                         break;
                     case 'NEGRA':
@@ -263,7 +270,7 @@
             // recibe el embolse y renderiza la clase al panel
             function renderizarEmbolse(cinta) {
                 switch (cinta) {
-                    case 'CAFE':
+                    case 'CAFÉ':
                         return "embolseCoffee";
                         break;
                     case 'NEGRA':
@@ -297,7 +304,9 @@
                         break;
                 }
             }
-        // ------------------------------------------------------------------------------------------------------------------------
+        
+        // End renderers ---------------------------------------------------------------------------------------------------------
+
 
             var tblRacimos = document.querySelector('#tblRacimos_ip');
             var tblSettings = {
@@ -421,7 +430,7 @@
                 dropdownMenu: false
             };
             
-            var hot = new Handsontable(tblRacimos, tblSettings);  
+            hot = new Handsontable(tblRacimos, tblSettings);  
             
         });
     }
