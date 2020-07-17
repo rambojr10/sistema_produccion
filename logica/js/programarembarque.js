@@ -329,6 +329,8 @@
                     });
                 });
                 if(validar_datos()){
+                    $(".osc").fadeIn();
+                    $("#loader").fadeIn();
                     const op = new FormData();
                     op.append("op", "guardarprogramacion");
                     op.append("jsonprogramacion", JSON.stringify(detalles));
@@ -346,6 +348,8 @@
                     .then(res => {
                         console.log(res);
                         if (res == true) {
+                            $(".osc").fadeOut();
+                            $("#loader").fadeOut();
                             swal("Guardar programación de embarque", "Programación guardada satisfactoriamente", "success");
                             $("[href='#programarembarque']").trigger("click");
                         }

@@ -1,5 +1,5 @@
 <?php
-
+    session_start();
     require_once "../datos/statements.php";
     
 //  CREAR ===========================================================================================================
@@ -471,10 +471,11 @@
         echo json_encode($datos);
     }
 
-    // futuro uso para cajas en ingresar producción
-    /* function cargarembarques_select(){
-        $result = cargarembarques();
-    } */
+    // 
+    function cargar_cajas_ip(){
+        $result = cargarcajasip($_POST['cod_embarque'], $_SESSION['conectado']->PKIbm);
+        echo json_encode($result);
+    }
 
 
 //  ACTUALIZAR ==================================================================================================================
@@ -640,6 +641,12 @@
             case 'codEmbarque_verificar':
                 buscar_registro();
                 break;
+
+            // Carga las cajas para ingresar producción según la finca
+            case 'cargar_cajas_ip':
+                cargar_cajas_ip();
+                break;
+
     //Metodos de actualizar            
             case 'actualizarempresa':
                 actualizar_empresa();

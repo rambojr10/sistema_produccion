@@ -1,5 +1,5 @@
 <?php
-    include_once '../capa_web/modals/cargarembarque_racimos_ip.php';
+    include_once '../capa_web/modals/cargarembarque_ip.php';
 ?>
 
     <div class="breadcomb-area">
@@ -47,7 +47,7 @@
             <div class="panel-body">
                 <h5 class="card-title">Información de Cajas Elaboradas</h5>
                 <p class="card-text">Última semana registrada: <span class="label label-warning">31</span></p>
-                <button type="button" class="btn btn-primary notika-btn-primary waves-effect" id="btnIngresarCajas_ip">Ingresar</button>
+                <button type="button" class="btn btn-primary notika-btn-primary waves-effect" id="btnIngresarCajas_ip" data-toggle="modal" data-target="#modal-cajas-ip">Ingresar</button>
             </div>
         </div>
         

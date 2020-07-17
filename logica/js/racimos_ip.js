@@ -1,10 +1,10 @@
 // Cinta de opciones -------------------------------------------------------------------------------------------------------------
 
+    var hot;
+    
     $(document).on('click', '#btnGuardar_racimos_ip', function () {
         console.log(hot.getData());
     });
-
-    var hot;
 
     const cod_embarque = $("#cod_embarque_ip").text();
     const op = new FormData();
@@ -25,7 +25,6 @@
         }
     })
     .then(res => {
-        // $("#cod_embarque_ip").data("id_semana", res[0].FKId_TblSemanas);
         cargar_tabla_racimos_ip(res[0].FKId_TblSemanas);
     });
 
@@ -308,8 +307,8 @@
         // End renderers ---------------------------------------------------------------------------------------------------------
 
 
-            var tblRacimos = document.querySelector('#tblRacimos_ip');
-            var tblSettings = {
+            const tblRacimos = document.querySelector('#tblRacimos_ip');
+            var tblSettings_racimos = {
                 licenseKey: 'non-commercial-and-evaluation',
                 data: data,
                 className: 'htCenter',
@@ -338,11 +337,12 @@
                     {row: 9, col: 7, readOnly: true},
                     {row: 9, col: 8, renderer: boldRenderer},
                 ],
-                columns: [{
+                columns: [
+                    {
                         data: 'descripcion',
                         type: 'text',
                         editor: false,
-                        readOnly: true,
+                        readOnly: true
                     },
                     {
                         data: 'lunes',
@@ -430,7 +430,7 @@
                 dropdownMenu: false
             };
             
-            hot = new Handsontable(tblRacimos, tblSettings);  
+            hot = new Handsontable(tblRacimos, tblSettings_racimos);  
             
         });
     }

@@ -40,31 +40,7 @@
 
 /* Mostrar datos ================================================================================*/ 
     
-    //carga fincas
-    function listar_fincas() {
-        $(".contenido").load("../capa_web/fincas.php");
-        const op = new FormData();
-        op.append('op', 'listarfincas');
-        fetch("../logica/contenido.php", {
-            method: 'POST',
-            body: op
-        })
-        .then(res => {
-            if (res.ok) {
-                return res.text()  
-            }else{
-                throw "Error al cargar los datos";
-            }
-        })
-        .then(datos => {
-            $("#listarfincas").html(datos);
-        })
-        .catch(function(err) {
-            console.log(err); 
-        });
-
-        $(".contenido").hide().show("blind", 1500);
-    }
+    //Llama método en archivo finca.js para listar las fincas
     $(document).on("click", "[href='#listarfincas']", function(e){
         e.preventDefault();
         listar_fincas();

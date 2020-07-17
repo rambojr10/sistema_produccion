@@ -1,7 +1,7 @@
 <?php
     session_start();
     if(isset($_SESSION['conectado'])){
-
+        
     }else{
         header("Location:./ingreso.php");
     }
@@ -577,6 +577,14 @@
     <!-- End Footer area-->
 
 
+
+    <!-- Usuario -->
+    <!-- <script>
+        sessionStorage.setItem('usuario', '<?php echo $_SESSION["conectado"]->Nombre; ?>');
+        sessionStorage.setItem('ibm', '<?php echo $_SESSION["conectado"]->PKIbm; ?>');
+    </script> -->
+
+
     <!-- jquery
 		============================================ -->
     <script src="../assets/js/vendor/jquery-1.12.4.min.js"></script>
@@ -654,9 +662,9 @@
     <!--  Handsontable JS
         ============================================ -->
         <script src="../assets/plugins/handsontable/handsontable.full.min.js"></script>
+        <!-- <script src="../assets/plugins/handsontable/hot-formula-parser/formula-parser.js"></script> -->
         <!-- <script src="../assets/plugins/ruleJs.all.full.min.js"></script> -->
         <!-- <script src="../assets/plugins/handsontable/formula.js"></script> -->
-        <!-- <script src="../assets/plugins/handsontable/hot-formula-parser/formula-parser.js"></script> -->
 
     <!-- Controlador de contenido, según menú 
         ============================================ -->
@@ -667,7 +675,6 @@
     <script src="../logica/js/lotes.js"></script>
     <script src="../logica/js/programarembarque.js"></script>
     <script src="../logica/js/ingresarproduccion.js"></script>
-    <!-- <script src="../logica/js/pruebas.js"></script> -->
     
 </body>
 

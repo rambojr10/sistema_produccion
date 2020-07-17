@@ -432,6 +432,27 @@
         }
     }
 
+    //
+    function cargarcajasip($cod_embarque, $ibm_finca) {
+        $bd = conectar();
+        $datos = $bd->prepare("
+            SELECT dem.FKCodigo_TblCajasProduccion, cp.Descripcion, cp.FactorConversion
+            FROM tbldet_tblembarque as dem, tblcajasproduccion as cp, tblembarque as em, tblfincas as fi
+            WHERE cp.PKCodigo = dem.FKCodigo_TblCajasProduccion
+            AND em.PKCod = dem.FKCod_TblEmbarque
+            AND dem.FKCod_TblEmbarque = :cod_embarque
+            AND fi.PKIbm = dem.FKIbm_TblFincas
+            AND dem.FKIbm_TblFincas = :ibm_finca
+        ");
+        $datos->bindParam(':cod_embarque', $cod_embarque, PDO::PARAM_STR);
+        $datos->bindParam(':ibm_finca', $ibm_finca, PDO::PARAM_STR);
+        if ($datos->execute()) {
+            return $datos->fetchAll();
+        } else {
+            return false;
+        }
+    }
+
 //Sentencias de actualización------------------------------------------------------------------------------------------------------------
 
     //Recibe arreglo de php para actualizar los datos

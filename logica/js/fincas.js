@@ -1,5 +1,6 @@
 
-// MOSTRAR RAZÓN SOCIAL POR FINCAS ----------------------------------------------------------------------------
+// MOSTRAR RAZÓN SOCIAL POR FINCAS ------------------------------------------------------------------------
+    
     $(document).on("click", "[href='#ver_empresa']", function() {
         var ibm = $(this).attr("ibm");
         $.post({
@@ -16,7 +17,35 @@
         });
     });
 
+// LISTAR FINCAS ------------------------------------------------------------------------------------------
+    
+    function listar_fincas() {
+        $(".contenido").load("../capa_web/fincas.php");
+        const op = new FormData();
+        op.append('op', 'listarfincas');
+        fetch("../logica/contenido.php", {
+            method: 'POST',
+            body: op
+        })
+        .then(res => {
+            if (res.ok) {
+                return res.text()  
+            }else{
+                throw "Error al cargar los datos";
+            }
+        })
+        .then(datos => {
+            $("#listarfincas").html(datos);
+        })
+        .catch(function(err) {
+            console.log(err); 
+        });
+
+        $(".contenido").hide().show("blind", 1500);
+    }
+
 // AGREGAR NUEVA FINCA ------------------------------------------------------------------------------------
+    
     function guardar_finca() {
         var ibm = $("[name='ibm_finca']").val();
         var nombre = $("[name='nombre_finca']").val();
@@ -66,6 +95,7 @@
 
 
 // ELIMINAR FINCA ----------------------------------------------------------------------------------------
+    
     $(document).on("click", "[href='#eliminar_finca']", function(){
         var ibm = "";
         $(this).parents("tr").find("td").each(function(){
@@ -100,7 +130,7 @@
         });
     });
 
-// COMPLEMENTOS -----------------------------------------------------------------------------------------------
+// COMPLEMENTOS ------------------------------------------------------------------------------------------
 
     //solicita en la capa lógica, los datos necesarios para cargar en el option del modal nueva finca 
     function cargar_razonsocial(){

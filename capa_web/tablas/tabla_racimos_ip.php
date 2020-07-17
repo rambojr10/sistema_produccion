@@ -19,6 +19,9 @@
                         <button id="btnGuardar_racimos_ip" class="btn btn-default btn-icon-notika" data-tooltip="Guardar" data-position="top center">
                             <i class="fa fa-save"></i>
                         </button>
+                        <button id="#btnCajas_racimos_ip" class="btn btn-default btn-icon-notika" data-tooltip="Insertar cajas" data-position="top center">
+                            <i class="fa fa-box"></i>
+                        </button>
                         <button id="btnVolver_racimos_ip" class="btn btn-default btn-icon-notika" data-tooltip="Inicio" data-position="top center">
                             <i class="fa fa-home"></i>
                         </button>
