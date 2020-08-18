@@ -1,10 +1,15 @@
 
     var hot2;
 
+    $(document).on("click", "#btnGuardar_cajas_ip", function() {
+        console.log(hot2.getData());
+    });
+
     // Obtiene las cajas según el código de embarque y la finca
+    const cod_embarque = $("#codEmbarque_cajas_ip").text();
     const op = new FormData();
     op.append('op', 'cargar_cajas_ip');
-    op.append('cod_embarque', 'EMB-20203');
+    op.append('cod_embarque', cod_embarque);
     fetch('../logica/contenido.php', {
         method: 'POST',
         body: op
@@ -18,12 +23,14 @@
     })
     .then(res => {
 
-        console.log(res);
+        $("#semana_cajas_ip").val(res.semana.N_Semana);
+        $("#from_cajas_ip").val(res.semana.Fecha_Inicio);
+        $("#to_cajas_ip").val(res.semana.Fecha_Fin);
 
         var tblCajas_data = [];
 
         // Asigna las cajas y datos a las filas
-        res.forEach(function (element, index) {
+        res.cajas.forEach(function (element, index) {
             let item = {
                 caja: element.Descripcion,
                 codigo: element.FKCodigo_TblCajasProduccion,
@@ -39,7 +46,6 @@
                 conversion: `=C${index+1}*K${index+1}`
             }
             tblCajas_data.push(item);
-            console.log(index);
         });
 
         // Asigna las últimas filas a la tabla
@@ -79,15 +85,20 @@
                 conversion: `=L${tblCajas_data.length+1}-L${tblCajas_data.length+2}`
             }, {
                 caja: 'Ratio 1a. / 2a.',
+                total: `=ROUND(AVERAGE(D${tblCajas_data.length+4}:J${tblCajas_data.length+4}), 2)`,
             }, {
                 caja: '% Merma',
+                total: `=ROUND(AVERAGE(D${tblCajas_data.length+5}:J${tblCajas_data.length+5}), 2)`,
             }, {
                 caja: 'Peso Racimos',
+                total: `=ROUND(AVERAGE(D${tblCajas_data.length+6}:J${tblCajas_data.length+6}), 2)`,
             }, {
                 caja: 'Area Recorrida',
+                total: `=SUM(D${tblCajas_data.length+7}:J${tblCajas_data.length+7})`,
             }, {
                 caja: 'Peso Vástago',
-            }
+                total: `=ROUND(AVERAGE(D${tblCajas_data.length+8}:J${tblCajas_data.length+8}), 2)`,
+            },
         ];
         filas.forEach(element => {
             tblCajas_data.push(element);
@@ -259,5 +270,6 @@
         };
 
         hot2 = new Handsontable(tblCajas, tblSettings_cajas);
+        hot2.render();
 
     });

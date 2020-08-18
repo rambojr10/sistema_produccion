@@ -436,9 +436,10 @@
     function cargarcajasip($cod_embarque, $ibm_finca) {
         $bd = conectar();
         $datos = $bd->prepare("
-            SELECT dem.FKCodigo_TblCajasProduccion, cp.Descripcion, cp.FactorConversion
-            FROM tbldet_tblembarque as dem, tblcajasproduccion as cp, tblembarque as em, tblfincas as fi
+            SELECT dem.FKCodigo_TblCajasProduccion, cp.Descripcion, cp.FactorConversion, tp.Descripcion as TipoFruta
+            FROM tbldet_tblembarque as dem, tblcajasproduccion as cp, tblembarque as em, tblfincas as fi, tbltipofruta as tp
             WHERE cp.PKCodigo = dem.FKCodigo_TblCajasProduccion
+            AND tp.PKId = cp.FKId_TblTipoFruta
             AND em.PKCod = dem.FKCod_TblEmbarque
             AND dem.FKCod_TblEmbarque = :cod_embarque
             AND fi.PKIbm = dem.FKIbm_TblFincas
@@ -449,6 +450,23 @@
         if ($datos->execute()) {
             return $datos->fetchAll();
         } else {
+            return false;
+        }
+    }
+
+    // Carga la semana según el código de embarque
+    function semanape($cod_embarque) {
+        $bd = conectar();
+        $datos = $bd->prepare("
+            SELECT se.N_Semana, se.Fecha_Inicio, se.Fecha_Fin
+            FROM tblembarque as em, tblsemanas as se
+            WHERE em.FKId_TblSemanas = se.PKId
+            AND em.PKCod = :cod_embarque
+        ");
+        $datos->bindParam(":cod_embarque", $cod_embarque, PDO::PARAM_STR);
+        if ($datos->execute()) {
+            return $datos->fetch();
+        }else {
             return false;
         }
     }

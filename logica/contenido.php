@@ -473,7 +473,9 @@
 
     // 
     function cargar_cajas_ip(){
-        $result = cargarcajasip($_POST['cod_embarque'], $_SESSION['conectado']->PKIbm);
+        $cod_embarque = $_POST['cod_embarque'];
+        $result['cajas'] = cargarcajasip($cod_embarque, $_SESSION['conectado']->PKIbm);
+        $result['semana'] = semanape($cod_embarque);
         echo json_encode($result);
     }
 
