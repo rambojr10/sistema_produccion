@@ -200,7 +200,6 @@
         return $datos->fetchAll();
     }
 
-
     function ingreso($usuario, $password){
         $bd = conectar();
         $datos = $bd->prepare("SELECT * FROM tblusuarios INNER JOIN tblfincas 

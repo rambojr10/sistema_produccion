@@ -59,7 +59,7 @@
             <div class="panel-body">
                 <h5 class="card-title">Información de Mercado Nacional</h5>
                 <p class="card-text">Última semana registrada: <span class="label label-warning">31</span></p>
-                <button type="button" class="btn btn-danger notika-btn-danger waves-effect" id="btnIngresarNacional_ip">Ingresar</button>
+                <button type="button" class="btn btn-danger notika-btn-danger waves-effect" id="btnIngresarNacional_ip" data-toggle="modal" data-target="#modal-nacional-ip">Ingresar</button>
             </div>
         </div>
     </div>

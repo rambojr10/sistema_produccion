@@ -2,7 +2,7 @@
     //carga los scrips
     
     // Métodos de mostrar
-    $(document).on("click", "#btnCargarembarque_racimos_ip", function() {
+    $(document).on("click", "#btnCargarembarque_racimos_ip", () => {
         //Captura el valor del input en el modal
         const CodEmbarque_racimos_ip = $("#txtCodEmbarque_racimos_ip").val();
         //verifica si existe la búsqueda
@@ -64,4 +64,36 @@
                 swal("Cargar embarque, insertar cajas", "¡No existe el registro!", "error");
             }
         });
+    });
+
+    $(document).on("click", "#btnCargarembarque_nacional_ip", () => {
+        $("#btnCancelar_modal_nacional").trigger('click');
+        $('.contenido').load(`../capa_web/tablas/tabla_nacional_ip.php?cod_embarque=EMB-2000110`);
+        /* const CodEmbarque_nacional_ip = $("#txtCodEmbarque_nacional_ip").val();
+        const op = new FormData();
+        op.append("op", "codEmbarque_verificar");
+        op.append("key", CodEmbarque_nacional_ip);
+        op.append("campo", "PKCod");
+        op.append("tabla", "tblembarque");
+        fetch('../logica/contenido.php', {
+            method: 'POST',
+            body: op
+        })
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            else {
+                throw "No se ha podido cargar los datos IP";
+            }
+        })
+        .then(res => {
+            if (res != "" && res[0].PKCod == CodEmbarque_nacional_ip) {
+                $("#btnCancelar_modal_nacional").trigger('click');
+                swal("Cargar embarque, insertar mercado nacional", "¡Datos cargados correctamente!", "success");
+                $('.contenido').load(`../capa_web/tablas/tabla_nacional_ip.php?cod_embarque=${CodEmbarque_nacional_ip}`);
+            }else {
+                swal("Cargar embarque, insertar mercado nacional", "¡No existe el registro!", "error");
+            }
+        }); */
     });

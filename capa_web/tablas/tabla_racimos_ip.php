@@ -3,8 +3,6 @@
         $cod_embarque = $_GET['cod_embarque'];
     }
 ?>
-    <!-- cinta de opciones -->
-     <!-- Botones finales -->
      
      <!-- Insertar racimos -->
      <div class="container">
@@ -27,6 +25,7 @@
             </div>
 
             <div class="row">
+                
                 <!-- col1 -->
                 <div class="col-lg-6 col-md-6">
                     <form class="ui small form">
@@ -34,15 +33,15 @@
                         <div class="three fields text-center">
                             <div class="field">
                                 <label for="semana">Semana</label>
-                                <input type="text" name="semana_racimos_ip" value="Semana 1" class="text-center" disabled>
+                                <input type="text" name="semana_racimos_ip" value="Semana 0" class="text-center" disabled>
                             </div>
                             <div class="field">
                                 <label for="from">Desde</label>
-                                <input type="text" name="from_racimos_ip" value="12/06/2020" class="text-center" disabled>
+                                <input type="text" name="from_racimos_ip" value="00/00/0000" class="text-center" disabled>
                             </div>
                             <div class="field">
                                 <label for="to">Hasta</label>
-                                <input type="text" name="to_racimos_ip" value="18/06/2020" class="text-center" disabled>
+                                <input type="text" name="to_racimos_ip" value="00/00/0000" class="text-center" disabled>
                             </div>
                         </div>
                     </form>
@@ -55,13 +54,13 @@
                             <div class="field">
                                 <div class="panel" id="pnlPresente">
                                     <label style="padding-left: 5px;">Presente</label>
-                                    <input type="text" class="form-control" value="3851">
+                                    <input type="text" class="form-control" value="0" id="txtPresente_racimos_ip">
                                 </div>
                             </div>
                             <div class="field">
                                 <div class="panel" id="pnlPrematuro">
                                     <label style="padding-left: 5px;">Prematuro</label>
-                                    <input type="text" class="form-control" value="3851">
+                                    <input type="text" class="form-control" value="0" id="txtPrematuro_racimos_ip">
                                 </div>
                             </div>
                         </div>
@@ -78,7 +77,23 @@
             <div id="tblRacimos_ip"></div>
         </div>
     </div>
+    
+    <div class="breadcomb-area mg-t-10" style="margin: 25px;">
+        <div id="tblCajas_ip"></div>
+    </div>
+    
+    <div class="breadcomb-area mg-t-10">
+        <div style="margin: 25px;">
+            <div id="tblNacional_ip"></div>
+        </div>
+    </div>
+    
+    <div class="breadcomb-area mg-t-10">
+        <div style="margin: 25px;">
+            <div id="tblCargue_ip"></div>
+        </div>
+    </div>
 
-    <script src="../logica/js/racimos_ip.js"></script>
+    <script src="../logica/js/ingresarproduccion/experimental.js"></script>
 
     

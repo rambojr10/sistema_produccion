@@ -4,6 +4,8 @@
     
     $(document).on('click', '#btnGuardar_racimos_ip', function () {
         console.log(hot.getData());
+        console.log($("#txtPresente_racimos_ip").val());
+        console.log($("#txtPrematuro_racimos_ip").val());
     });
 
     const cod_embarque = $("#cod_embarque_ip").text();

@@ -124,7 +124,7 @@
     // End renderers -------------------------------------------------------------------------------
         
         const tblCajas = document.querySelector('#tblCajas_ip');
-        var tblSettings_cajas = {
+        let tblSettings_cajas = {
             licenseKey: 'non-commercial-and-evaluation',
             data: tblCajas_data,
             stretchH: 'all',
@@ -270,6 +270,5 @@
         };
 
         hot2 = new Handsontable(tblCajas, tblSettings_cajas);
-        hot2.render();
-
+        
     });

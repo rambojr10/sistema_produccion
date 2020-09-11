@@ -3,25 +3,27 @@
         $cod_embarque = $_GET['cod_embarque'];
     }
 ?>
+    <!-- Insertar mercado nacional -->
     <div class="container">
+
         <div class="ui segment">
 
             <div class="row">
                 <div class="col-lg-6 col-md-6">
-                    <p class="mg-t-5">Codigo de embarque: <span class="badge" id="codEmbarque_cajas_ip"><?php echo $cod_embarque;?></span></p>
+                    <p>Código de embarque: <span class="badge" id="codEmbarque_nacional_ip"><?php echo $cod_embarque; ?></span></p>
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <div style="text-align: right;">
-                        <button id="btnGuardar_cajas_ip" class="btn btn-default btn-icon-notika" data-tooltip="Guardar" data-position="top center">
+                        <button id="btnGuardar_nacional_ip" class="btn btn-default btn-icon-notika" data-tooltip="Guardar" data-position="top center">
                             <i class="fa fa-save"></i>
                         </button>
-                        <button id="btnInicio_cajas_ip" class="btn btn-default btn-icon-notika" data-tooltip="Inicio" data-position="top center">
+                        <button id="btnVolver_nacional_ip" class="btn btn-default btn-icon-notika" data-tooltip="Inicio" data-position="top center">
                             <i class="fa fa-home"></i>
                         </button>
                     </div>
                 </div>
             </div>
-            
+
             <div class="row">
                 <div class="col-lg-12">
                     <form class="ui small form">
@@ -29,25 +31,37 @@
                         <div class="three fields text-center">
                             <div class="field">
                                 <label for="semana">Semana</label>
-                                <input type="text" id="semana_cajas_ip" value="Semana 1" class="text-center" disabled>
+                                <input type="text" id="semana_nacional_ip" value="Semana 1" class="text-center" disabled>
                             </div>
                             <div class="field">
                                 <label for="from">Desde</label>
-                                <input type="text" id="from_cajas_ip" value="12/06/2020" class="text-center" disabled>
+                                <input type="text" id="from_nacional_ip" value="00/00/0000" class="text-center" disabled>
                             </div>
                             <div class="field">
                                 <label for="to">Hasta</label>
-                                <input type="text" id="to_cajas_ip" value="18/06/2020" class="text-center" disabled>
+                                <input type="text" id="to_nacional_ip" value="00/00/0000" class="text-center" disabled>
                             </div>
                         </div>
                     </form>
                 </div>
             </div>
         </div>
+
     </div>
 
-    <div class="breadcomb-area" style="margin: 25px;">
-        <div id="tblCajas_ip"></div>
+    <!-- Nacional -->
+    <div class="breadcomb-area">
+        <div style="margin: 25px;">
+            <div id="tblNacional_ip"></div>
+        </div>
     </div>
 
-    <script src="../logica/js/ingresarproduccion/cajas_ip.js"></script>
+    <!-- Cargue -->
+    <div class="breadcomb-area mg-t-10">
+        <div style="margin: 25px;">
+            <div id="tblCargue_ip"></div>
+        </div>
+    </div>
+
+    <script src="../logica/js/ingresarproduccion/nacional_ip.js"></script>
+    
