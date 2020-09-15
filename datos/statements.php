@@ -188,6 +188,65 @@
             echo "Error".$e;
         }
     }
+
+    // Guarda los datos del embolse de la semana
+    function guardarembolse($id_semana, $presente, $prematuro) {
+        $bd = conectar();
+        $datos = $bd->prepare("INSERT INTO TblEmbolse VALUES(null, :id_semana, :presente, :prematuro)");
+        $datos->bindParam(':id_semana', $id_semana, PDO::PARAM_INT);
+        $datos->bindParam(':presente', $presente, PDO::PARAM_INT);
+        $datos->bindParam(':prematuro', $prematuro, PDO::PARAM_INT);
+        if ($datos->execute())
+            return $bd->lastInsertId();
+        else 
+            return false;
+    }
+
+    // Guarda los datos del total de racimos cortados y rechazados durante la semana
+    function guardarracimos($id_semana, $totalRacimosCortados, $totalRacimosRechazados) {
+        $bd = conectar();
+        $datos = $bd->prepare("INSERT INTO TblRacimos VALUES(null, :id_semana, :totalRacimosCortados, :totalRacimosRechazados);");
+        $datos->bindParam(':id_semana', $id_semana, PDO::PARAM_INT);
+        $datos->bindParam(':totalRacimosCortados', $totalRacimosCortados, PDO::PARAM_INT);
+        $datos->bindParam(':totalRacimosRechazados', $totalRacimosRechazados, PDO::PARAM_INT);
+        if  ($datos->execute()) 
+            return $bd->lastInsertId();
+        else
+            return false;
+    }
+
+    // 
+    function guardarracimos_detalle($lastIdRacimos, $idTblDias, 
+                                    $racimosCortadosDia, $racimosRechazadosDia, 
+                                    $totalPersonasEmbarque, $totalPersonasOtrasFincas ) {
+        $bd = conectar();
+        $datos = $bd->prepare("
+            INSERT INTO TblDet_TblRacimos_TblDias VALUES(
+            null, :lastIdRacimos, :idTblDias, :racimosCortadosDia, :racimosRechazadosDia, 
+            :totalPersonasEmbarque, :totalPersonasOtrasFincas);
+        ");
+        $datos->bindParam(":lastIdRacimos", $lastIdRacimos, PDO::PARAM_INT);
+        $datos->bindParam(":idTblDias", $idTblDias, PDO::PARAM_INT);
+        $datos->bindParam(":racimosCortadosDia", $racimosCortadosDia, PDO::PARAM_INT);
+        $datos->bindParam(":racimosRechazadosDia", $racimosRechazadosDia, PDO::PARAM_INT);
+        $datos->bindParam(":totalPersonasEmbarque", $totalPersonasEmbarque, PDO::PARAM_INT);
+        $datos->bindParam(":totalPersonasOtrasFincas", $totalPersonasOtrasFincas, PDO::PARAM_INT);
+        if ($datos->execute())
+            return $bd->lastInsertId();
+        else 
+            return false;
+    }
+
+    //
+    function guardarracimos_detalle_detalle($idRacimosDetalle, $idCinta, $racimosCortadosCinta) {
+        $bd = conectar();
+        $datos = $bd->prepare("INSERT INTO TblDet_TblDet_TblRacimos_TblDias VALUES(null, :idRacimosDetalle, :idCinta, :racimosCortadosCinta);");
+        $datos->bindParam(":idRacimosDetalle", $idRacimosDetalle, PDO::PARAM_INT);
+        $datos->bindParam(":idCinta", $idCinta, PDO::PARAM_INT);
+        $datos->bindParam(":racimosCortadosCinta", $racimosCortadosCinta, PDO::PARAM_INT);
+        $datos->execute();
+    }
+
     
     
 // Sentencias de búsqueda ==========================================================================================

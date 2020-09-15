@@ -192,14 +192,49 @@
 // Cinta de opciones ------------------------------------------------------------------------------------------------------------
 
     $(document).on('click', '#btnGuardar_ip', function () {
-        console.log(hot1.getData());
-        console.log(hot2.getData());
-        console.log(hot3.getData());
-        console.log(hot4.getData());
-        console.log($("#txtPresente_ip").val());
-        console.log($("#txtPrematuro_ip").val());
+        swal({
+            title: "¡Guardar producción!",
+            text: "¿Desea guardar los datos de producción?",
+            type: "info",
+            showCancelButton: true,
+            confirmButtonText: "Si, guardar!",
+            cancelButtonText: "No, cancelar!"
+        }).then(function(isConfirm) {
+            if(isConfirm){
+                let jsonProduccion = {
+                    embolse: {
+                        id_semana: $("#cod_embarque_ip").data('idSemana_ip'),
+                        id_cinta: $("#cod_embarque_ip").data('idCinta_ip'),
+                        presente: $("#txtPresente_ip").val(),
+                        prematuro: $("#txtPrematuro_ip").val()
+                    },
+                    tblRacimos: hot1.getData(),
+                    tblCajas: hot2.getData(),
+                    tblNacional: hot3.getData(),
+                    tblCargue: hot4.getData()
+                };
+
+                const op = new FormData();
+                op.append('op', 'guardarProduccion');
+                op.append('datosProduccionGuardar', JSON.stringify(jsonProduccion));
+                fetch('../logica/contenido.php', {
+                    method: 'POST',
+                    body: op
+                })
+                .then(response => {
+                    if (response.ok)
+                        return response.text();
+                    else
+                        throw "No se ha podido guardar los datos correctamente IP";
+                })
+                .then(res => {
+                    console.log(res);
+                });
+            }
+        });
     });
 
+    // Script de carga de tablas
     const op = new FormData();
     op.append("op", "codEmbarque_verificar");
     op.append("key", cod_embarque);
@@ -218,7 +253,9 @@
         }
     })
     .then(res => {
+        console.log(res);
         cargar_tabla_racimos_ip(res[0].FKId_TblSemanas);
+        $("#cod_embarque_ip").data("idSemana_ip", res[0].FKId_TblSemanas);
     });
 
 // Tabla racimos ----------------------------------------------------------------------------------------------------------
@@ -240,6 +277,10 @@
             }
         })
         .then(res => {
+            
+            //Guarda el id de la cinta para guardar los datos de los racimos en la tabla tblDet_tblDet_tblRacimos_tblDias
+            $("#cod_embarque_ip").data("idCinta_ip", res.semanas[2].id_cinta)
+
             $("[name='semana_ip']").val(res.semanas[2].semana);
             $("[name='from_ip']").val(res.semanas[2].fecha_inicio);
             $("[name='to_ip']").val(res.semanas[2].fecha_fin);
@@ -248,46 +289,46 @@
             let data = [
                 {
                     descripcion:  `12 Semanas ${res.semanas[0].cinta}` ,
-                    lunes: '0',
-                    martes: '0',
-                    miercoles: '0',
-                    jueves: '0',
-                    viernes: '0',
-                    sabado: '0',
-                    domingo: '0',
+                    lunes: 0,
+                    martes: 0,
+                    miercoles: 0,
+                    jueves: 0,
+                    viernes: 0,
+                    sabado: 0,
+                    domingo: 0,
                     total: "=SUM(B1:H1)"
                 },
                 {
                     descripcion: `11 Semanas ${res.semanas[1].cinta}`,
-                    lunes: '0',
-                    martes: '0',
-                    miercoles: '0',
-                    jueves: '0',
-                    viernes: '0',
-                    sabado: '0',
-                    domingo: '0',
+                    lunes: 0,
+                    martes: 0,
+                    miercoles: 0,
+                    jueves: 0,
+                    viernes: 0,
+                    sabado: 0,
+                    domingo: 0,
                     total: "=SUM(B2:H2)"
                 },
                 {
                     descripcion: `10 Semanas ${res.semanas[2].cinta}`,
-                    lunes: '0',
-                    martes: '0',
-                    miercoles: '0',
-                    jueves: '0',
-                    viernes: '0',
-                    sabado: '0',
-                    domingo: '0',
+                    lunes: 0,
+                    martes: 0,
+                    miercoles: 0,
+                    jueves: 0,
+                    viernes: 0,
+                    sabado: 0,
+                    domingo: 0,
                     total: "=SUM(B3:H3)"
                 },
                 {
                     descripcion: `09 Semanas ${res.semanas[3].cinta}`,
-                    lunes: '0',
-                    martes: '0',
-                    miercoles: '0',
-                    jueves: '0',
-                    viernes: '0',
-                    sabado: '0',
-                    domingo: '0',
+                    lunes: 0,
+                    martes: 0,
+                    miercoles: 0,
+                    jueves: 0,
+                    viernes: 0,
+                    sabado: 0,
+                    domingo: 0,
                     total: "=SUM(B4:H4)"
                 },
                 {
@@ -314,13 +355,13 @@
                 },
                 {
                     descripcion: "Rechazados",
-                    lunes: '0',
-                    martes: '0',
-                    miercoles: '0',
-                    jueves: '0',
-                    viernes: '0',
-                    sabado: '0',
-                    domingo: '0',
+                    lunes: 0,
+                    martes: 0,
+                    miercoles: 0,
+                    jueves: 0,
+                    viernes: 0,
+                    sabado: 0,
+                    domingo: 0,
                     total: "=SUM(B9:H9)"
                 },
                 {

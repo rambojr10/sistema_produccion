@@ -93,10 +93,74 @@
         foreach ($datos->cajas as $c){
             $result = guardarprogramacion($datos->cod_embarque, $c->ibm_finca, $c->codigo_caja, $c->cantidad);
         }
-        foreach ($datos->estimativo  as $e){
+        foreach ($datos->estimativo as $e){
             $result = guardarestimativo($e->finca, $e->premiun, $e->especial, $datos->cod_embarque);
         }
         echo $result;
+    }
+
+    //
+    function guardar_produccion() {
+        $datosProduccion = json_decode($_POST['datosProduccionGuardar']);
+        $lastIdEmbolse = guardarembolse(
+            $datosProduccion->embolse->id_semana, 
+            ($datosProduccion->embolse->presente == null ? 0 : $datosProduccion->embolse->presente), 
+            ($datosProduccion->embolse->prematuro == null ? 0: $datosProduccion->embolse->prematuro)
+        );
+
+    // TblRacimos ---------------------------
+        $lastIdRacimos = guardarracimos(
+            $datosProduccion->embolse->id_semana, 
+            $datosProduccion->tblRacimos[4][8], 
+            $datosProduccion->tblRacimos[8][8]
+        );
+
+        // Obtener cintas 
+            $cinta12 = $datosProduccion->embolse->id_cinta-2;
+            if ($cinta12 == -1) 
+                $cinta12 = 9;
+            else if ($cinta12 == 0)
+                $cinta12 = 10;
+            // Ubicados en orden de semanas 12-11-10-9 
+            $cintas = array(
+                0 => $cinta12,
+                1 => (($datosProduccion->embolse->id_cinta-1) == 0 ? 10 : ($datosProduccion->embolse->id_cinta-1)),
+                2 => $datosProduccion->embolse->id_cinta+0,
+                3 => (($datosProduccion->embolse->id_cinta+1) == 11 ? 0 : ($datosProduccion->embolse->id_cinta+1)),
+            );
+        // ---------------------------
+        if ($lastIdRacimos != false) {
+            for ($x=1; $x < 8 ; $x++) { 
+                // Validar los campos a ingresar si son los campos de los usuarios
+                $idRacimosDetalle = guardarracimos_detalle(
+                    $lastIdRacimos, $x, 
+                    ($datosProduccion->tblRacimos[4][$x] == null ? 0 : $datosProduccion->tblRacimos[4][$x]), 
+                    ($datosProduccion->tblRacimos[8][$x] == null ? 0 : $datosProduccion->tblRacimos[8][$x]),
+                    ($datosProduccion->tblRacimos[5][$x] == null ? 0 : $datosProduccion->tblRacimos[5][$x]), 
+                    ($datosProduccion->tblRacimos[6][$x] == null ? 0 : $datosProduccion->tblRacimos[6][$x])
+                );
+                if  ($idRacimosDetalle != false) {
+                    for ($y=0; $y < 4; $y++) { 
+                        guardarracimos_detalle_detalle($idRacimosDetalle, $cintas[$y], $datosProduccion->tblRacimos[$y][$x]);
+                    }
+                }
+            }
+            echo "Okey!";
+        }
+    // End TblRacimos ------------------------------------------
+
+    // TblCajas ------------------------------------------------
+
+        
+
+    // End TblCajas --------------------------------------------
+
+    // TblNacional y cargue ------------------------------------
+
+        
+
+    // End TblNacional y cargue --------------------------------
+
     }
 
 //  BUSCAR =================================================================================================================
@@ -461,11 +525,17 @@
 
     //
     function cargardatos_racimos_ip() {
+        // Obtiene y cambia los números de acuerdo a los ids de las cintas en la tabla que van de 1 a 10
+        $id4 = $_POST['id_semana']-2;
+        if ($id4 == -1) 
+            $id4 = 9;
+        else if ($id4 == 0)
+            $id4 = 10;
         $ids = array(
             'id1' => $_POST['id_semana']+0,
-            'id2' => ($_POST['id_semana']+1),
-            'id3' => ($_POST['id_semana']-1),
-            'id4' => ($_POST['id_semana']-2)
+            'id2' => (($_POST['id_semana']+1) == 11 ? 1 : ($_POST['id_semana']+1)),
+            'id3' => (($_POST['id_semana']-1) == 0 ? 10 : ($_POST['id_semana']-1)),
+            'id4' => ($id4) 
         );
         $datos['semanas'] = cargarcintas($ids);
         echo json_encode($datos);
@@ -554,6 +624,11 @@
             //Guarda los datos de la programación y el estimativo de la semana
             case 'guardarprogramacion':
                 guardar_programacion();
+                break;
+
+            // 
+            case 'guardarProduccion':
+                guardar_produccion();
                 break;
 
     //Métodos de mostrar

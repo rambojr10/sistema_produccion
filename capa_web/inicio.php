@@ -15,7 +15,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <title>Sistema Producción - Grupo MONTESOL </title>
     <meta name="description" content="">
-    <meta name="viewport" content="width=auto, initial-scale=1.0, minimun-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- favicon
 		============================================ -->
     <link rel="shortcut icon" type="image/x-icon" href="../assets/img/logo/icono.png">
@@ -134,7 +134,7 @@
     <!-- End Header Top Area -->
 
     <!-- Mobile Menu start -->
-    <div class="mobile-menu-area">
+    <!-- <div class="mobile-menu-area">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -190,7 +190,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <!-- Mobile Menu end -->
 
     <!-- Main Menu area start-->
@@ -577,15 +577,7 @@
     </div>
     <!-- End Footer area-->
 
-
-
-    <!-- Usuario -->
-    <!-- <script>
-        sessionStorage.setItem('usuario', '<?php echo $_SESSION["conectado"]->Nombre; ?>');
-        sessionStorage.setItem('ibm', '<?php echo $_SESSION["conectado"]->PKIbm; ?>');
-    </script> -->
-
-
+    
     <!-- jquery
 		============================================ -->
     <script src="../assets/js/vendor/jquery-1.12.4.min.js"></script>

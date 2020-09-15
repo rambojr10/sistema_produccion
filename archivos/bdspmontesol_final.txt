@@ -158,12 +158,10 @@
 		PKId INTEGER PRIMARY KEY AUTO_INCREMENT,
 		FKId_TblDet_TblRacimos_TblDias INT not null,
 		FKId_TblCintas INT not null,
-		FKId_TblLotes INT not null,
 		N_RacimosC_Cintas_Lotes INT not null,
 		N_RacimosR_Cintas_Lotes INT not null,
 		FOREIGN KEY (FKId_TblDet_TblRacimos_TblDias) REFERENCES TblDet_TblRacimos_TblDias(PKId),
-		FOREIGN KEY (FKId_TblCintas) REFERENCES TblCintas(PKId),
-		FOREIGN KEY (FKId_TblLotes) REFERENCES TblLotes(PKId)
+		FOREIGN KEY (FKId_TblCintas) REFERENCES TblCintas(PKId)
 	);
 
 	/* MERCADO NACIONAL */
