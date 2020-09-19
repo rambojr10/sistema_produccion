@@ -4766,6 +4766,11 @@ body.box-layout {
         background-color: #1683bd !important;
     }
 
+    .embolseGray{
+        color: #000;
+        background-color: #808080;
+    }
+
     .embolsePurple{
         color: #fff;
         background-color: #9a2be2 !important;

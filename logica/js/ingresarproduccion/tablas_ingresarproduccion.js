@@ -202,6 +202,7 @@
         }).then(function(isConfirm) {
             if(isConfirm){
                 let jsonProduccion = {
+                    cod_embarque: cod_embarque,
                     embolse: {
                         id_semana: $("#cod_embarque_ip").data('idSemana_ip'),
                         id_cinta: $("#cod_embarque_ip").data('idCinta_ip'),
@@ -839,6 +840,7 @@
             especial: 0,
             dedoSueltoBolsa20: 0,
             dedoSueltoBolsa25: 0,
+            total: '=SUM(D1:I1)', 
         }, {
             dedoSuelto: 0,
             cluster: 0,
