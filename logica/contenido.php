@@ -51,10 +51,10 @@
         $result = crearembarque($datos->cod_embarque, $datos->ano, $datos->id_semana);
         // print_r($result);
         $vista = array();
-        if ($result != false) {
+        if ($result == true) {
             //aquí va todo lo que se va poner en la vista para asignar las cajas
             $vista['embarque'] = $datos->descripcion_semana . " del " . $datos->ano;
-            $vista['cod_embarque'] = $result->PKCod;
+            $vista['cod_embarque'] = $datos->cod_embarque;
             //Tabla cajas lleva todos los campos a usar en la tabla
             for ($x=0; $x < count($datos->codigocajas) ; $x++) { 
                 $vista['cajas'][$x] = buscarcaja($datos->codigocajas[$x]);
@@ -101,118 +101,125 @@
 
     //
     function guardar_produccion() {
+        
         $datosProduccion = json_decode($_POST['datosProduccionGuardar']);
-        $lastIdEmbolse = guardarembolse(
-            $datosProduccion->embolse->id_semana, 
-            ($datosProduccion->embolse->presente == null ? 0 : $datosProduccion->embolse->presente), 
-            ($datosProduccion->embolse->prematuro == null ? 0: $datosProduccion->embolse->prematuro)
-        );
-
-    // TblRacimos ---------------------------
-        $lastIdRacimos = guardarracimos(
-            $datosProduccion->embolse->id_semana, 
-            $datosProduccion->tblRacimos[4][8], 
-            $datosProduccion->tblRacimos[8][8]
-        );
-
-        // Obtener cintas 
-            /* $cinta12 = $datosProduccion->embolse->id_cinta-2;
-            if ($cinta12 == -1) 
-                $cinta12 = 9;
-            else if ($cinta12 == 0)
-                $cinta12 = 10; */
-            // Ubicados en orden de semanas 12-11-10-9 
-            $cintas = array(
-                0 => (($datosProduccion->embolse->id_cinta-2) == 0 ? 10 : (($datosProduccion->embolse->id_cinta-2) == -1 ? 9 : ($datosProduccion->embolse->id_cinta-2))),
-                1 => (($datosProduccion->embolse->id_cinta-1) == 0 ? 10 : ($datosProduccion->embolse->id_cinta-1)),
-                2 => $datosProduccion->embolse->id_cinta+0,
-                3 => (($datosProduccion->embolse->id_cinta+1) == 11 ? 0 : ($datosProduccion->embolse->id_cinta+1)),
+        $validarCantidadesCajas = false;
+        foreach ($datosProduccion->tblCajas as $caja) {
+            if ($caja[1] != null){
+                // print_r(compararEmbarqueAndProduccion($_SESSION['conectado']->PKIbm, $caja[1], $datosProduccion->cod_embarque));
+                $cantidadEmbarque = compararEmbarqueAndProduccion($_SESSION['conectado']->PKIbm, $caja[1], $datosProduccion->cod_embarque);
+                if ($caja[10] > $cantidadEmbarque->Cantidad)
+                    break;
+                else
+                    $validarCantidadesCajas = true;
+            } else {
+                break;
+            }
+        }
+        if ($validarCantidadesCajas) {
+            $lastIdEmbolse = guardarembolse(
+                $datosProduccion->embolse->id_semana, 
+                ($datosProduccion->embolse->presente == null ? 0 : $datosProduccion->embolse->presente), 
+                ($datosProduccion->embolse->prematuro == null ? 0: $datosProduccion->embolse->prematuro)
             );
-        // ---------------------------
-        if ($lastIdRacimos != false) {
-            for ($x=1; $x < 8 ; $x++) { 
-                // Validar los campos a ingresar si son los campos de los usuarios
-                $idRacimosDetalle = guardarracimos_detalle(
-                    $lastIdRacimos, $x, 
-                    ($datosProduccion->tblRacimos[4][$x] == null ? 0 : $datosProduccion->tblRacimos[4][$x]), 
-                    ($datosProduccion->tblRacimos[8][$x] == null ? 0 : $datosProduccion->tblRacimos[8][$x]),
-                    ($datosProduccion->tblRacimos[5][$x] == null ? 0 : $datosProduccion->tblRacimos[5][$x]), 
-                    ($datosProduccion->tblRacimos[6][$x] == null ? 0 : $datosProduccion->tblRacimos[6][$x])
+
+        // TblRacimos ---------------------------
+            $lastIdRacimos = guardarracimos(
+                $datosProduccion->embolse->id_semana, 
+                $datosProduccion->tblRacimos[4][8], 
+                $datosProduccion->tblRacimos[8][8]
+            );
+
+            // Obtener cintas 
+                // Ubicados en orden de semanas 12-11-10-9 
+                $cintas = array(
+                    0 => (($datosProduccion->embolse->id_cinta-2) == 0 ? 10 : (($datosProduccion->embolse->id_cinta-2) == -1 ? 9 : ($datosProduccion->embolse->id_cinta-2))),
+                    1 => (($datosProduccion->embolse->id_cinta-1) == 0 ? 10 : ($datosProduccion->embolse->id_cinta-1)),
+                    2 => $datosProduccion->embolse->id_cinta+0,
+                    3 => (($datosProduccion->embolse->id_cinta+1) == 11 ? 1 : ($datosProduccion->embolse->id_cinta+1)),
                 );
-                if  ($idRacimosDetalle != false) {
-                    for ($y=0; $y < 4; $y++) { 
-                        guardarracimos_detalle_detalle($idRacimosDetalle, $cintas[$y], $datosProduccion->tblRacimos[$y][$x]);
+            // ---------------------------
+            if ($lastIdRacimos != false) {
+                for ($x=1; $x < 8 ; $x++) { 
+                    // Validar los campos a ingresar si son los campos de los usuarios
+                    $idRacimosDetalle = guardarracimos_detalle(
+                        $lastIdRacimos, $x, 
+                        ($datosProduccion->tblRacimos[4][$x] == null ? 0 : $datosProduccion->tblRacimos[4][$x]), 
+                        ($datosProduccion->tblRacimos[8][$x] == null ? 0 : $datosProduccion->tblRacimos[8][$x]),
+                        ($datosProduccion->tblRacimos[5][$x] == null ? 0 : $datosProduccion->tblRacimos[5][$x]), 
+                        ($datosProduccion->tblRacimos[6][$x] == null ? 0 : $datosProduccion->tblRacimos[6][$x])
+                    );
+                    if  ($idRacimosDetalle != false) {
+                        for ($y=0; $y < 4; $y++) { 
+                            guardarracimos_detalle_detalle($idRacimosDetalle, $cintas[$y], $datosProduccion->tblRacimos[$y][$x]);
+                        }
                     }
                 }
+            } else {
+                echo false;
             }
-            echo "Okey!";
-        } else {
-            echo false;
-        }
-    // End TblRacimos ------------------------------------------
+        // End TblRacimos ------------------------------------------
 
-    // TblNacional y cargue ------------------------------------
-        
-        $lastIdNacional = guardarnacional($datosProduccion->tblNacional[6][8]);
-        if ($lastIdNacional != false) {
-            for ($x=1; $x < 8; $x++) {
-                for ($y=1; $y < 7; $y++) {
-                    guardarnacional_detalle($lastIdNacional, $x, $y, $datosProduccion->tblNacional[$x-1][$y]);
-                }
-            }
-        } else {
-            echo false;
-        }
-
-    // End TblNacional y cargue --------------------------------
-
-    // TblCajas ------------------------------------------------
-
-        //Guarda los datos en la tblProduccion
-        $maxItems = count($datosProduccion->tblCajas);
-        $anhoProduccion = buscarregistro($datosProduccion->embolse->id_semana, "PKId", "TblSemanas");
-        $lastIdProduccion = guardarproduccion(
-            $_SESSION['conectado']->PKIbm, $lastIdEmbolse, $lastIdRacimos, $datosProduccion->embolse->id_semana, null, $datosProduccion->cod_embarque,
-            $datosProduccion->tblCajas[$maxItems-8][10], $datosProduccion->tblCajas[$maxItems-7][10], $datosProduccion->tblCajas[$maxItems-6][10],
-            ($datosProduccion->tblCajas[$maxItems-5][10] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-5][10]), 
-            ($datosProduccion->tblCajas[$maxItems-4][10] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-4][10]),
-            ($datosProduccion->tblCajas[$maxItems-3][10] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-3][10]),
-            $datosProduccion->tblCajas[$maxItems-2][10], 
-            ($datosProduccion->tblCajas[$maxItems-1][10] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-1][10]),
-            $anhoProduccion[0]->Anho
-        );
-        if ($lastIdProduccion != false) {
-            for ($x = 1; $x < 8; $x++) {
-                $idProduccionDetalle = guardarproduccion_detalle(
-                    $lastIdProduccion, $x, $datosProduccion->tblCajas[$maxItems-8][$x+2], $datosProduccion->tblCajas[$maxItems-7][$x+2],
-                    $datosProduccion->tblCajas[$maxItems-6][$x+2],
-                    ($datosProduccion->tblCajas[$maxItems-5][$x+2] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-5][$x+2]),
-                    ($datosProduccion->tblCajas[$maxItems-4][$x+2] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-4][$x+2]),
-                    ($datosProduccion->tblCajas[$maxItems-3][$x+2] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-3][$x+2]),
-                    $datosProduccion->tblCajas[$maxItems-2][$x+2],
-                    ($datosProduccion->tblCajas[$maxItems-1][$x+2] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-1][$x+2])
-                );
-                if  ($idProduccionDetalle != false) {
-                    for ($y = 0; $y < $maxItems-8; $y++) {
-                        guardarproduccion_detalle_detalle(
-                            $idProduccionDetalle, $datosProduccion->tblCajas[$y][1], 
-                            ($datosProduccion->tblCajas[$y][$x+2] >= 0 ? $datosProduccion->tblCajas[$y][$x+2] : 0)
-                        );
-                        $result = $y == 0 ? true : false;
-                        echo $result;
+        // TblNacional y cargue ------------------------------------
+            
+            $lastIdNacional = guardarnacional($datosProduccion->tblNacional[6][8]);
+            if ($lastIdNacional != false) {
+                for ($x=1; $x < 8; $x++) {
+                    for ($y=1; $y < 7; $y++) {
+                        guardarnacional_detalle($lastIdNacional, $x, $y, $datosProduccion->tblNacional[$x-1][$y]);
                     }
-                } else {
-                    echo false;
                 }
+            } else {
+                echo false;
             }
+
+        // End TblNacional y cargue --------------------------------
+
+        // TblCajas ------------------------------------------------
+
+            //Guarda los datos en la tblProduccion
+            $maxItems = count($datosProduccion->tblCajas);
+            $lastIdProduccion = guardarproduccion(
+                $_SESSION['conectado']->PKIbm, $lastIdEmbolse, $lastIdRacimos, $datosProduccion->embolse->id_semana, $lastIdNacional, $datosProduccion->cod_embarque,
+                $datosProduccion->tblCajas[$maxItems-8][10], $datosProduccion->tblCajas[$maxItems-7][10], $datosProduccion->tblCajas[$maxItems-6][10],
+                ($datosProduccion->tblCajas[$maxItems-5][10] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-5][10]), 
+                ($datosProduccion->tblCajas[$maxItems-4][10] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-4][10]),
+                ($datosProduccion->tblCajas[$maxItems-3][10] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-3][10]),
+                $datosProduccion->tblCajas[$maxItems-2][10], 
+                ($datosProduccion->tblCajas[$maxItems-1][10] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-1][10]),
+                substr($datosProduccion->cod_embarque, 4,4)
+            );
+            if ($lastIdProduccion != false) {
+                for ($x = 1; $x < 8; $x++) {
+                    $idProduccionDetalle = guardarproduccion_detalle(
+                        $lastIdProduccion, $x, $datosProduccion->tblCajas[$maxItems-8][$x+2], $datosProduccion->tblCajas[$maxItems-7][$x+2],
+                        $datosProduccion->tblCajas[$maxItems-6][$x+2],
+                        ($datosProduccion->tblCajas[$maxItems-5][$x+2] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-5][$x+2]),
+                        ($datosProduccion->tblCajas[$maxItems-4][$x+2] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-4][$x+2]),
+                        ($datosProduccion->tblCajas[$maxItems-3][$x+2] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-3][$x+2]),
+                        $datosProduccion->tblCajas[$maxItems-2][$x+2],
+                        ($datosProduccion->tblCajas[$maxItems-1][$x+2] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-1][$x+2])
+                    );
+                    if  ($idProduccionDetalle != false) {
+                        for ($y = 0; $y < $maxItems-8; $y++) {
+                            guardarproduccion_detalle_detalle(
+                                $idProduccionDetalle, $datosProduccion->tblCajas[$y][1], 
+                                ($datosProduccion->tblCajas[$y][$x+2] >= 0 ? $datosProduccion->tblCajas[$y][$x+2] : 0)
+                            );
+                        }
+                    } else {
+                        echo false;
+                    }
+                }
+            } else {
+                echo false;
+            }
+
+        // End TblCajas --------------------------------------------
         } else {
-            echo false;
+            echo 22; //response 22 is a error code for limit of elaboration
         }
-        
-
-    // End TblCajas --------------------------------------------
-
-    }
+    } 
 
 //  BUSCAR =================================================================================================================
 
@@ -774,6 +781,11 @@
             case 'cargar_cajas_ip':
                 cargar_cajas_ip();
                 break;
+
+            // Verifica si existe un embarque por su código
+            /* case 'buscar_embarque':
+                buscar_registro();
+                break; */
 
     //Metodos de actualizar            
             case 'actualizarempresa':

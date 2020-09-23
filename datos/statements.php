@@ -84,11 +84,10 @@
             $datos->bindParam(":cod_embarque", $cod_embarque, PDO::PARAM_STR);
             $datos->bindParam(":semana", $semana, PDO::PARAM_INT);
             $datos->bindParam(":ano", $ano, PDO::PARAM_STR);
-            if ($datos->execute()){
-                return $bd->query("SELECT * FROM TblEmbarque ORDER BY PKCod DESC LIMIT 1")->fetch();
-            }else {
+            if ($datos->execute())
+                return true;
+            else 
                 return false;
-            }
         } catch (Exception $e) {
             echo "Error".$e;
         }
@@ -572,7 +571,7 @@
             $datos->execute();
             return $datos->fetch();
         }
-    // ----------------------------------------------------------------
+    // End funciones de ver elaboración --------------------------------------------------
 
     //
     function cargarsemanas_pe($ano_pe){
@@ -654,6 +653,23 @@
         }else {
             return false;
         }
+    }
+
+    //
+    function compararEmbarqueAndProduccion($ibmFinca, $codCajasProduccion, $codEmbarque) {
+        $bd = conectar();
+        $datos = $bd->prepare("
+            SELECT d.Cantidad FROM tbldet_tblembarque as d WHERE d.FKIbm_TblFincas = :ibmFinca
+            AND d.FKCodigo_TblCajasProduccion = :codCajasProduccion
+            AND d.FKCod_TblEmbarque = :codEmbarque
+        ");
+        $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
+        $datos->bindParam(':codCajasProduccion', $codCajasProduccion, PDO::PARAM_STR);
+        $datos->bindParam(':codEmbarque', $codEmbarque, PDO::PARAM_STR);
+        if ($datos->execute())
+            return $datos->fetch();
+        else
+            return false;
     }
 
 //Sentencias de actualización------------------------------------------------------------------------------------------------------------

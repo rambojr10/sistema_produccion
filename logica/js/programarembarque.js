@@ -4,28 +4,28 @@
     $(document).on("click", "[href='#seleccionar_pe']", function(e) {
         e.preventDefault();
         if ($("#semanas_pe").val() != null) {
-            let semana_pe, num_semana_pe, anho_pe, cod_embarque_buscar;
-            semana_pe = $("#semanas_pe option:selected").text();
-            num_semana_pe = semana_pe.split(" ");
-            anho_pe = $("#ano_pe").val();
-            cod_embarque_buscar = `EMB-${anho_pe+num_semana_pe[1]}`;
+            let semana_pe = $("#semanas_pe option:selected").text();
+            let num_semana_pe = semana_pe.split(" ");
+            let anho_pe = $("#ano_pe").val();
+            let cod_embarque = `EMB-${anho_pe+num_semana_pe[1]}`;
             // -------------------------------------------------------------------------
             const op = new FormData();
-            op.append("op", "buscarembarque");
-            op.append("cod_embarque", cod_embarque_buscar);
+            op.append("op", "codEmbarque_verificar");
+            op.append("key", cod_embarque);
+            op.append("campo", "PKCod");
+            op.append("tabla", "TblEmbarque");
             fetch('../logica/contenido.php', {
                 method: 'POST',
                 body: op
             })
             .then(response => {
-                if (response.ok) {
-                    return response.text();
-                } else {
+                if (response.ok)
+                    return response.json();
+                else
                     throw "No se puede obtener los datos";
-                }
             })
             .then(res => {
-                if (res == true) {
+                if (res.length > 0) {
                     swal({
                         title: "¡Datos pendientes!",
                         text: "El embarque ya existe, ¿desea cargarlo?",
@@ -38,6 +38,7 @@
                             //FALTA RECIBIR PETICIÓN Y PROCESARLA
                         }
                     });
+                    console.log(res);
                 } else {
                     $("#seleccion-pe").removeAttr("hidden");
                     cargar_cajas_pe();
@@ -46,7 +47,6 @@
         }else {
             swal("Seleccionar Cajas", "Debe seleccionar una semana a programar", "error");
         }
-        // let semana = $("#semanas_pe option:selected").text();
     });
 
     //Mostrar vista con semanas disponibles para programar embarque

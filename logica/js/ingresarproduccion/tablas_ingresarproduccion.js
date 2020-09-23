@@ -191,6 +191,7 @@
 
 // Cinta de opciones ------------------------------------------------------------------------------------------------------------
 
+    //Guardar datos de las tablas 
     $(document).on('click', '#btnGuardar_ip', function () {
         swal({
             title: "¡Guardar producción!",
@@ -214,7 +215,8 @@
                     tblNacional: hot3.getData(),
                     tblCargue: hot4.getData()
                 };
-
+                $(".osc").fadeIn();
+                $("#loader").fadeIn();
                 const op = new FormData();
                 op.append('op', 'guardarProduccion');
                 op.append('datosProduccionGuardar', JSON.stringify(jsonProduccion));
@@ -229,7 +231,27 @@
                         throw "No se ha podido guardar los datos correctamente IP";
                 })
                 .then(res => {
-                    console.log(res);
+                    $(".osc").fadeOut();
+                    $("#loader").fadeOut();
+                    if (res == "") {
+                        $.notify({
+                            icon: 'fa fa-check-circle',
+                            message: 'Datos guardados correctamente.',
+                            title: '<strong>Producción: </strong>'
+                        }, {
+                            type: 'success'
+                        });
+                    } else if (res == 22) { //response 22 is a error code for limit of elaboration
+                        setTimeout(func => {swal('Guardar producción', '¡Los datos superan el límite de elaboración!', 'error')}, 1000);
+                    } else {
+                        $.notify({
+                            icon: 'fa fa-times',
+                            message: 'Ha ocurrido un error, verifica los datos.',
+                            title: '<strong>Producción: </strong>'
+                        }, {
+                            type: 'danger'
+                        });
+                    }
                 });
             }
         });

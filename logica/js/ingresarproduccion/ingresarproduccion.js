@@ -23,6 +23,9 @@
         .then(res => {
             //si existe carga el módulo de insertar racimos, enviando un parámetro por get para pintar el valor en la vista
             if (res != "" && res[0].PKCod == CodEmbarque_ip){
+                //Aquí ejecutar una nueva petición para verificar si el embarque existe en la tblProduccion 
+                // si existe, obtener el json con los datos de la produccion para asignarlos en localStorage como primera opción 
+                // o encontrar la forma de enviarlos al archivo para asignarlas a las tablas
                 $("#btnCancelar_ip").trigger('click');
                 swal("Cargar embarque, insertar producción", "¡Datos cargados correctamente!", "success")
                 $('.contenido').load(`../capa_web/tablas/tablas_ingresarproduccion.php?cod_embarque=${CodEmbarque_ip}`);
