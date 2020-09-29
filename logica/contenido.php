@@ -223,12 +223,13 @@
 
 //  BUSCAR =================================================================================================================
 
-    //
+    // Busca un registro en cualquier tabla y si existe condicional lo valida
     function buscar_registro() {
         $key = $_REQUEST['key'];
         $campo = $_REQUEST['campo'];
         $tabla = $_REQUEST['tabla'];
-        $result = buscarregistro($key, $campo, $tabla);
+        $condicional = isset($_REQUEST['condicional']) ? $_REQUEST['condicional'] : false;
+        $result = buscarregistro($key, $campo, $tabla, $condicional);
         echo json_encode($result);
     }
 
@@ -607,6 +608,54 @@
         echo json_encode($result);
     }
 
+    //
+    function cargar_produccion_ip() {
+        $cod_embarque = $_GET['cod_embarque'];
+        $tblProduccion = buscarregistro($cod_embarque, 'Cod_Embarque', 'TblProduccion', 'AND FKIbm_TblFincas = '.$_SESSION['conectado']->PKIbm);
+        // $tblProduccion = buscarregistro($cod_embarque, "Cod_Embarque", "TblProduccion", "FKIbm_TblFincas = '".$_GET['ibm_finca']."';");
+        $tblProduccion = (count($tblProduccion) > 0 ? $tblProduccion[0] : ""); // == 1 pero lo pongo temporalmente así porque hay 2 registros en la bd
+        if ($tblProduccion != "") {
+
+            $tblEmbolse = buscarregistro($tblProduccion->FKId_TblEmbolse, "PKId", "TblEmbolse", false);
+            $tblEmbolse = (count($tblEmbolse) > 0 ? $tblEmbolse[0] : "");
+            $idCinta = buscarregistro($tblProduccion->FKId_TblSemanas, "PKId", "TblSemanas", false);
+
+            //TblRacimos
+            $tblRacimos = buscarregistro($tblProduccion->FKId_TblRacimos, "PKId", "TblRacimos", false);
+            $tblRacimos = buscarregistro($tblRacimos[0]->PKId, "FKId_TblRacimos", "TblDet_TblRacimos_TblDias", false);
+            $detalleRacimos = array();
+            foreach ($tblRacimos as $dr) {
+                $pushDetalle = [$dr->N_RacimosR_Dia, $dr->Total_PEmbarque, $dr->Total_POtrasFincas];
+                $datosDia = buscarregistro($dr->PKId, "FKId_TblDet_TblRacimos_TblDias", "TblDet_TblDet_TblRacimos_tblDias", false);
+                $pushDetalleDetalle = [];
+                foreach ($datosDia as $dd) {
+                    $pushDetalleDetalle[] = $dd->N_RacimosC_Cintas;
+                }
+                $resultRacimos = array_merge($pushDetalleDetalle, $pushDetalle);
+                array_push($detalleRacimos, $resultRacimos);
+            }
+            
+            //TblCajas
+            // $tblCajas = buscarregistro();
+            $datosProduccion = [
+                'cod_embarque' => $cod_embarque,
+                'embolse' => [
+                    'id_semana' => $tblProduccion->FKId_TblSemanas,
+                    'id_cinta' => $idCinta[0]->FKId_TblCintas,
+                    'presente' => $tblEmbolse->N_PlantasPresente, 
+                    'prematuro' => $tblEmbolse->N_PlantasPrematuro 
+                ],
+                'tblRacimos' => $detalleRacimos,
+                'tblCajas' => [],
+                'tblNacional' => [],
+                'tblCargue' => []
+            ];
+            echo json_encode($datosProduccion);
+        } else {
+            echo false;
+        }
+        // echo $tblProduccion->FKId_TblEmbolse;
+    }
 
 //  ACTUALIZAR ==================================================================================================================
     
@@ -782,10 +831,10 @@
                 cargar_cajas_ip();
                 break;
 
-            // Verifica si existe un embarque por su código
-            /* case 'buscar_embarque':
-                buscar_registro();
-                break; */
+            // 
+            case 'cargar_produccion_ip':
+                cargar_produccion_ip();
+                break;
 
     //Metodos de actualizar            
             case 'actualizarempresa':

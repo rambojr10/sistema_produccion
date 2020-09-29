@@ -376,10 +376,13 @@
     
     
 // Sentencias de búsqueda ==========================================================================================
-    //función busca un único registro globalmente
-    function buscarregistro($key, $campo, $tabla){
+    //función busca un único registro globalmente si tiene condicional lo ejecuta
+    function buscarregistro($key, $campo, $tabla, $condicional){
         $bd = conectar();
-        $datos = $bd->prepare("SELECT * FROM ".$tabla." WHERE ".$campo." = :key");
+        if ($condicional != false)
+            $datos = $bd->prepare("SELECT * FROM $tabla WHERE $campo = :key AND $condicional");
+        else
+            $datos = $bd->prepare("SELECT * FROM $tabla WHERE $campo = :key");
         $datos->bindParam(":key", $key, PDO::PARAM_STR);
         $datos->execute();
         return $datos->fetchAll();
