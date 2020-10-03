@@ -276,18 +276,18 @@
     .then(res => {
         if (res[0].PKCod == cod_embarque) {
             $("#cod_embarque_ip").data("idSemana_ip", res[0].FKId_TblSemanas);
-            fetch(`../logica/contenido.php?op=cargar_produccion_ip&cod_embarque=${cod_embarque}`)
+            fetch(`../logica/contenido.php?op=cargar_produccion_ip&cod_embarque=${cod_embarque}&ibm_finca=${80074}`)
             .then(response => response.json())
             .then(datosProduccion => {
                 console.log(datosProduccion);
                 if (datosProduccion == false) {
                     cargar_tabla_racimos_ip(res[0].FKId_TblSemanas, false);
-                    cargar_tabla_cajas_ip();
-                    cargar_tabla_nacional_ip();
+                    cargar_tabla_cajas_ip(false);
+                    cargar_tabla_nacional_ip(false, false);
                 } else {
                     cargar_tabla_racimos_ip(res[0].FKId_TblSemanas, datosProduccion.tblRacimos);
-                    cargar_tabla_cajas_ip();
-                    cargar_tabla_nacional_ip();
+                    cargar_tabla_cajas_ip(datosProduccion.tblCajas);
+                    cargar_tabla_nacional_ip(datosProduccion.tblNacional, false);
                 }
             });
         }
@@ -620,14 +620,13 @@
 // Tabla cajas ------------------------------------------------------------------------------------------------
 
     // Obtiene las cajas según el código de embarque y la finca
-    // const cod_embarque2 = $("#codEmbarque_cajas_ip").text();
-    function cargar_tabla_cajas_ip() {
-        const op2 = new FormData();
-        op2.append('op', 'cargar_cajas_ip');
-        op2.append('cod_embarque', cod_embarque);
+    function cargar_tabla_cajas_ip(existsTblCajas) {
+        const op = new FormData();
+        op.append('op', 'cargar_cajas_ip');
+        op.append('cod_embarque', cod_embarque);
         fetch('../logica/contenido.php', {
             method: 'POST',
-            body: op2
+            body: op
         })
         .then( response => {
             if (response.ok)
@@ -645,13 +644,13 @@
                     caja: element.Descripcion,
                     codigo: element.FKCodigo_TblCajasProduccion,
                     factor: element.FactorConversion,
-                    lunes: '',
-                    martes: '',
-                    miercoles: '',
-                    jueves: '',
-                    viernes: '',
-                    sabado: '',
-                    domingo: '',
+                    lunes: (existsTblCajas != false ? existsTblCajas[0][index] : ''),
+                    martes: (existsTblCajas != false ? existsTblCajas[1][index] : ''),
+                    miercoles: (existsTblCajas != false ? existsTblCajas[2][index] : ''),
+                    jueves: (existsTblCajas != false ? existsTblCajas[3][index] : ''),
+                    viernes: (existsTblCajas != false ? existsTblCajas[4][index] : ''),
+                    sabado: (existsTblCajas != false ? existsTblCajas[5][index] : ''),
+                    domingo: (existsTblCajas != false ? existsTblCajas[6][index] : ''),
                     total: `=SUM(D${index+1}:J${index+1})`,
                     conversion: `=C${index+1}*K${index+1}`
                 }
@@ -662,6 +661,8 @@
             let filas = [
                 { 
                     caja: 'CAJAS ELABORADAS',
+                    codigo: null,
+                    factor: null,
                     lunes: `=SUM(D1:D${tblCajas_data.length})`,
                     martes: `=SUM(E1:E${tblCajas_data.length})`,
                     miercoles: `=SUM(F1:F${tblCajas_data.length})`,
@@ -673,17 +674,21 @@
                     conversion: `=SUM(L1:L${tblCajas_data.length})`
                 }, {
                     caja: 'CAJAS RECHAZADAS',
-                    lunes: '0',
-                    martes: '0',
-                    miercoles: '0',
-                    jueves: '0',
-                    viernes: '0',
-                    sabado: '0',
-                    domingo: '0',
+                    codigo: null,
+                    factor: null,
+                    lunes: (existsTblCajas != false ? existsTblCajas[0].cajasRechazadas : 0),
+                    martes: (existsTblCajas != false ? existsTblCajas[1].cajasRechazadas : 0),
+                    miercoles: (existsTblCajas != false ? existsTblCajas[2].cajasRechazadas : 0),
+                    jueves: (existsTblCajas != false ? existsTblCajas[3].cajasRechazadas : 0),
+                    viernes: (existsTblCajas != false ? existsTblCajas[4].cajasRechazadas : 0),
+                    sabado: (existsTblCajas != false ? existsTblCajas[5].cajasRechazadas : 0),
+                    domingo: (existsTblCajas != false ? existsTblCajas[6].cajasRechazadas : 0),
                     total: `=SUM(D${tblCajas_data.length+2}:J${tblCajas_data.length+2})`,
                     conversion: `=K${tblCajas_data.length+2}`
                 }, {
                     caja: 'CAJAS EXPORTADAS',
+                    codigo: null,
+                    factor: null,
                     lunes: `=D${tblCajas_data.length+1}-D${tblCajas_data.length+2}`,
                     martes: `=E${tblCajas_data.length+1}-E${tblCajas_data.length+2}`,
                     miercoles: `=F${tblCajas_data.length+1}-F${tblCajas_data.length+2}`,
@@ -695,19 +700,68 @@
                     conversion: `=L${tblCajas_data.length+1}-L${tblCajas_data.length+2}`
                 }, {
                     caja: 'Ratio 1a. / 2a.',
+                    codigo: null,
+                    factor: null,
+                    lunes: (existsTblCajas != false ? existsTblCajas[0].ratio : ''),
+                    martes: (existsTblCajas != false ? existsTblCajas[1].ratio : ''),
+                    miercoles: (existsTblCajas != false ? existsTblCajas[2].ratio : ''),
+                    jueves: (existsTblCajas != false ? existsTblCajas[3].ratio : ''),
+                    viernes: (existsTblCajas != false ? existsTblCajas[4].ratio : ''),
+                    sabado: (existsTblCajas != false ? existsTblCajas[5].ratio : ''),
+                    domingo: (existsTblCajas != false ? existsTblCajas[6].ratio : ''),
                     total: `=ROUND(AVERAGE(D${tblCajas_data.length+4}:J${tblCajas_data.length+4}), 2)`,
+                    conversion: null
                 }, {
                     caja: '% Merma',
+                    codigo: null,
+                    factor: null,
+                    lunes: (existsTblCajas != false ? existsTblCajas[0].merma : ''),
+                    martes: (existsTblCajas != false ? existsTblCajas[1].merma : ''),
+                    miercoles: (existsTblCajas != false ? existsTblCajas[2].merma : ''),
+                    jueves: (existsTblCajas != false ? existsTblCajas[3].merma : ''),
+                    viernes: (existsTblCajas != false ? existsTblCajas[4].merma : ''),
+                    sabado: (existsTblCajas != false ? existsTblCajas[5].merma : ''),
+                    domingo: (existsTblCajas != false ? existsTblCajas[6].merma : ''),
                     total: `=ROUND(AVERAGE(D${tblCajas_data.length+5}:J${tblCajas_data.length+5}), 2)`,
+                    conversion: null
                 }, {
                     caja: 'Peso Racimos',
+                    codigo: null,
+                    factor: null,
+                    lunes: (existsTblCajas != false ? existsTblCajas[0].pesoRacimos : ''),
+                    martes: (existsTblCajas != false ? existsTblCajas[1].pesoRacimos : ''),
+                    miercoles: (existsTblCajas != false ? existsTblCajas[2].pesoRacimos : ''),
+                    jueves: (existsTblCajas != false ? existsTblCajas[3].pesoRacimos : ''),
+                    viernes: (existsTblCajas != false ? existsTblCajas[4].pesoRacimos : ''),
+                    sabado: (existsTblCajas != false ? existsTblCajas[5].pesoRacimos : ''),
+                    domingo: (existsTblCajas != false ? existsTblCajas[6].pesoRacimos : ''),
                     total: `=ROUND(AVERAGE(D${tblCajas_data.length+6}:J${tblCajas_data.length+6}), 2)`,
                 }, {
                     caja: 'Area Recorrida',
+                    codigo: null,
+                    factor: null,
+                    lunes: (existsTblCajas != false ? existsTblCajas[0].areaRecorrida : ''),
+                    martes: (existsTblCajas != false ? existsTblCajas[1].areaRecorrida : ''),
+                    miercoles: (existsTblCajas != false ? existsTblCajas[2].areaRecorrida : ''),
+                    jueves: (existsTblCajas != false ? existsTblCajas[3].areaRecorrida : ''),
+                    viernes: (existsTblCajas != false ? existsTblCajas[4].areaRecorrida : ''),
+                    sabado: (existsTblCajas != false ? existsTblCajas[5].areaRecorrida : ''),
+                    domingo: (existsTblCajas != false ? existsTblCajas[6].areaRecorrida : ''),
                     total: `=SUM(D${tblCajas_data.length+7}:J${tblCajas_data.length+7})`,
+                    conversion: null
                 }, {
                     caja: 'Peso Vástago',
+                    codigo: null,
+                    factor: null,
+                    lunes: (existsTblCajas != false ? existsTblCajas[0].pesoVastago : ''),
+                    martes: (existsTblCajas != false ? existsTblCajas[1].pesoVastago : ''),
+                    miercoles: (existsTblCajas != false ? existsTblCajas[2].pesoVastago : ''),
+                    jueves: (existsTblCajas != false ? existsTblCajas[3].pesoVastago : ''),
+                    viernes: (existsTblCajas != false ? existsTblCajas[4].pesoVastago : ''),
+                    sabado: (existsTblCajas != false ? existsTblCajas[5].pesoVastago : ''),
+                    domingo: (existsTblCajas != false ? existsTblCajas[6].pesoVastago : ''),
                     total: `=ROUND(AVERAGE(D${tblCajas_data.length+8}:J${tblCajas_data.length+8}), 2)`,
+                    conversion: null
                 },
             ];
             filas.forEach(element => {
@@ -725,7 +779,7 @@
                 formulas: true,
                 rowHeaders: false,
                 contextMenu: false,
-                // maxRows: .length
+                maxRows: length,
                 manualRowResize: false,
                 manualColumnResize: false,
                 manualRowMove: false,
@@ -862,74 +916,76 @@
                     {row: (length-1), col: 0, rowspan: 1, colspan: 3},
                 ],
             };
-
             hot2 = new Handsontable(tblCajas, tblSettings_cajas);
-            
+            // hot2.setDataAtCell(length-5, 10, `=ROUND(AVERAGE(D${length-4}:J${length-4}), 2)`);
+            // setTimeout(() => {hot3.render(); alert("renderizar");}, 1000);
         });
     }
 
 // Tabla nacional + cargue --------------------------------------------------------------------------------------
-    function cargar_tabla_nacional_ip() {
+    function cargar_tabla_nacional_ip(existsTblNacional, existsTblCargue) {
+        console.log(existsTblNacional);
+        console.log(existsTblCargue);
         let tblNacional_data = [
             {
                 descripcion: 'Dedo suelto cartón',
-                lunes: '',
-                martes: '',
-                miercoles: '',
-                jueves: '',
-                viernes: '',
-                sabado: '',
-                domingo: '',
+                lunes: existsTblNacional != false ? existsTblNacional.lunes[0] : '',
+                martes: existsTblNacional != false ? existsTblNacional.martes[0] : '',
+                miercoles: existsTblNacional != false ? existsTblNacional.miercoles[0] : '',
+                jueves: existsTblNacional != false ? existsTblNacional.jueves[0] : '',
+                viernes: existsTblNacional != false ? existsTblNacional.viernes[0] : '',
+                sabado: existsTblNacional != false ? existsTblNacional.sabado[0] : '',
+                domingo: existsTblNacional != false ? existsTblNacional.domingo[0] : '',
                 total: '=SUM(B1:H1)'
             }, {
                 descripcion: 'Cluster cartón',
-                lunes: '',
-                martes: '',
-                miercoles: '',
-                jueves: '',
-                viernes: '',
-                sabado: '',
-                domingo: '',
+                lunes: existsTblNacional != false ? existsTblNacional.lunes[1] : '',
+                martes: existsTblNacional != false ? existsTblNacional.martes[1] : '',
+                miercoles: existsTblNacional != false ? existsTblNacional.miercoles[1] : '',
+                jueves: existsTblNacional != false ? existsTblNacional.jueves[1] : '',
+                viernes: existsTblNacional != false ? existsTblNacional.viernes[1] : '',
+                sabado: existsTblNacional != false ? existsTblNacional.sabado[1] : '',
+                domingo: existsTblNacional != false ? existsTblNacional.domingo[1] : '',
                 total: '=SUM(B2:H2)'
             }, {
                 descripcion: 'Mano entera',
-                lunes: '',
-                martes: '',
-                miercoles: '',
-                jueves: '',
-                viernes: '',
-                sabado: '',
-                domingo: '',
+                lunes: existsTblNacional != false ? existsTblNacional.lunes[2] : '',
+                martes: existsTblNacional != false ? existsTblNacional.martes[2] : '',
+                miercoles: existsTblNacional != false ? existsTblNacional.miercoles[2] : '',
+                jueves: existsTblNacional != false ? existsTblNacional.jueves[2] : '',
+                viernes: existsTblNacional != false ? existsTblNacional.viernes[2] : '',
+                sabado: existsTblNacional != false ? existsTblNacional.sabado[2] : '',
+                domingo: existsTblNacional != false ? existsTblNacional.domingo[2] : '',
                 total: '=SUM(B3:H3)'
             }, {
                 descripcion: 'Dedo suelto en bolsa de 20Kls',
-                lunes: '',
-                martes: '',
-                miercoles: '',
-                jueves: '',
-                viernes: '',
-                sabado: '',
-                domingo: '',
+                lunes: existsTblNacional != false ? existsTblNacional.lunes[3] : '',
+                martes: existsTblNacional != false ? existsTblNacional.martes[3] : '',
+                miercoles: existsTblNacional != false ? existsTblNacional.miercoles[3] : '',
+                jueves: existsTblNacional != false ? existsTblNacional.jueves[3] : '',
+                viernes: existsTblNacional != false ? existsTblNacional.viernes[3] : '',
+                sabado: existsTblNacional != false ? existsTblNacional.sabado[3] : '',
+                domingo: existsTblNacional != false ? existsTblNacional.domingo[3] : '',
                 total: '=SUM(B4:H4)'
             }, {
                 descripcion: 'Fruta de piso bolsa de 25Kls',
-                lunes: '',
-                martes: '',
-                miercoles: '',
-                jueves: '',
-                viernes: '',
-                sabado: '',
-                domingo: '',
+                lunes: existsTblNacional != false ? existsTblNacional.lunes[4] : '',
+                martes: existsTblNacional != false ? existsTblNacional.martes[4] : '',
+                miercoles: existsTblNacional != false ? existsTblNacional.miercoles[4] : '',
+                jueves: existsTblNacional != false ? existsTblNacional.jueves[4] : '',
+                viernes: existsTblNacional != false ? existsTblNacional.viernes[4] : '',
+                sabado: existsTblNacional != false ? existsTblNacional.sabado[4] : '',
+                domingo: existsTblNacional != false ? existsTblNacional.domingo[4] : '',
                 total: '=SUM(B5:H5)'
             }, {
                 descripcion: 'Canastas sucias',
-                lunes: '',
-                martes: '',
-                miercoles: '',
-                jueves: '',
-                viernes: '',
-                sabado: '',
-                domingo: '',
+                lunes: existsTblNacional != false ? existsTblNacional.lunes[5] : '',
+                martes: existsTblNacional != false ? existsTblNacional.martes[5] : '',
+                miercoles: existsTblNacional != false ? existsTblNacional.miercoles[5] : '',
+                jueves: existsTblNacional != false ? existsTblNacional.jueves[5] : '',
+                viernes: existsTblNacional != false ? existsTblNacional.viernes[5] : '',
+                sabado: existsTblNacional != false ? existsTblNacional.sabado[5] : '',
+                domingo: existsTblNacional != false ? existsTblNacional.domingo[5] : '',
                 total: '=SUM(B6:H6)'
             }, {
                 descripcion: "TOTAL",

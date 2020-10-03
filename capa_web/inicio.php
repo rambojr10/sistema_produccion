@@ -621,7 +621,6 @@
     <!-- Data Table JS
 		============================================ -->
         <script src="../assets/js/data-table/jquery.dataTables.min.js"></script>
-        <!-- <script src="../assets/js/data-table/dataTables.min.js"></script> -->
 
     <!-- plugins JS
 		============================================ -->

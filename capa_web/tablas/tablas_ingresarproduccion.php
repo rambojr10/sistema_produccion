@@ -3,8 +3,19 @@
         $cod_embarque = $_GET['cod_embarque'];
     }
 ?>
-     
-     <div class="container">
+    <style>
+        hr {
+            height: 3px;
+            background: #1abc9c ;
+            border: none;
+            border-radius: 50px;
+            outline: none;
+            margin: .5em 6em .5em;
+            position: relative;
+            content: attr(data-symbol);
+        }
+    </style>
+    <div class="container">
 
         <div class="ui segment animated bounceInRight">
             <div class="row">
@@ -73,16 +84,23 @@
 
     <!-- tblRacimos -->
     <div class="breadcomb-area" style="margin: 25px;">
+        <blockquote>
+            <p class="blockquote-nk">Tabla racimos</p>
+        </blockquote>
         <div id="tblRacimos_ip"></div>
     </div>
-    <hr>
     <!-- tblCajas -->
     <div class="breadcomb-area mg-t-10" style="margin: 25px;">
+        <blockquote>
+            <p class="blockquote-nk">Tabla cajas producción</p>
+        </blockquote>
         <div id="tblCajas_ip"></div>
     </div>
-    <hr>
     <!-- tblNacional -->
     <div class="breadcomb-area mg-t-10" style="margin: 25px;">
+        <blockquote>
+            <p class="blockquote-nk">Mercado nacional y cargue</p>
+        </blockquote>
         <div id="tblNacional_ip"></div>
     </div>
     <hr>

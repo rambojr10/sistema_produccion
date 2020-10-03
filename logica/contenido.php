@@ -602,17 +602,16 @@
 
     // 
     function cargar_cajas_ip(){
-        $cod_embarque = $_POST['cod_embarque'];
-        $result['cajas'] = cargarcajasip($cod_embarque, $_SESSION['conectado']->PKIbm);
-        $result['semana'] = semanape($cod_embarque);
+        $result['cajas'] = cargarcajasip($_POST['cod_embarque'], $_SESSION['conectado']->PKIbm);
+        $result['semana'] = semanape($_POST['cod_embarque']);
         echo json_encode($result);
     }
 
     //
     function cargar_produccion_ip() {
         $cod_embarque = $_GET['cod_embarque'];
-        $tblProduccion = buscarregistro($cod_embarque, 'Cod_Embarque', 'TblProduccion', 'AND FKIbm_TblFincas = '.$_SESSION['conectado']->PKIbm);
-        // $tblProduccion = buscarregistro($cod_embarque, "Cod_Embarque", "TblProduccion", "FKIbm_TblFincas = '".$_GET['ibm_finca']."';");
+        // $tblProduccion = buscarregistro($cod_embarque, 'Cod_Embarque', 'TblProduccion', 'AND FKIbm_TblFincas = '.$_SESSION['conectado']->PKIbm);
+        $tblProduccion = buscarregistro($cod_embarque, "Cod_Embarque", "TblProduccion", "FKIbm_TblFincas = '".$_GET['ibm_finca']."';");
         $tblProduccion = (count($tblProduccion) > 0 ? $tblProduccion[0] : ""); // == 1 pero lo pongo temporalmente así porque hay 2 registros en la bd
         if ($tblProduccion != "") {
 
@@ -623,7 +622,7 @@
             //TblRacimos
             $tblRacimos = buscarregistro($tblProduccion->FKId_TblRacimos, "PKId", "TblRacimos", false);
             $tblRacimos = buscarregistro($tblRacimos[0]->PKId, "FKId_TblRacimos", "TblDet_TblRacimos_TblDias", false);
-            $detalleRacimos = array();
+            $infoRacimos = array();
             foreach ($tblRacimos as $dr) {
                 $pushDetalle = [$dr->N_RacimosR_Dia, $dr->Total_PEmbarque, $dr->Total_POtrasFincas];
                 $datosDia = buscarregistro($dr->PKId, "FKId_TblDet_TblRacimos_TblDias", "TblDet_TblDet_TblRacimos_tblDias", false);
@@ -632,11 +631,65 @@
                     $pushDetalleDetalle[] = $dd->N_RacimosC_Cintas;
                 }
                 $resultRacimos = array_merge($pushDetalleDetalle, $pushDetalle);
-                array_push($detalleRacimos, $resultRacimos);
+                array_push($infoRacimos, $resultRacimos);
             }
             
             //TblCajas
-            // $tblCajas = buscarregistro();
+            $tblCajas = buscarregistro($tblProduccion->PKId, "FKId_TblProduccion", "TblDet_TblProduccion", false);
+            $infoCajas = array();
+            foreach ($tblCajas as $dc) {
+                $pushDetalle = ["cajasRechazadas" => $dc->Total_CR_Dia, "ratio" => $dc->Ratio, "merma" => $dc->Merma, "pesoRacimos" => $dc->Peso_Racimos, "areaRecorrida" => $dc->Area_Recorrida, "pesoVastago" => $dc->Peso_Vastago];
+                $datosDia = buscarregistro($dc->PKId, "FKId_TblDet_TblProduccion", "TblDet_TblDet_TblProduccion", false);
+                $pushDetalleDetalle = [];
+                foreach ($datosDia as $ddd) {
+                    $pushDetalleDetalle[] = $ddd->N_CajasProducidas_Dia;
+                }
+                $resultCajas = array_merge($pushDetalleDetalle, $pushDetalle);
+                array_push($infoCajas, $resultCajas);
+            }
+
+            //TblNacional
+            $tblNacional = buscarregistro($tblProduccion->FKId_TblMercadoNacional, "PKId", "TblMercadoNacional", false);
+            $tblNacional = buscarregistro($tblNacional[0]->PKId, "FKId_TblMercadoNacional", "TblDet_TblMercadoNacional", false);
+            $infoNacional = [
+                'lunes' => [],
+                'martes' => [],
+                'miercoles' => [],
+                'jueves' => [],
+                'viernes' => [],
+                'sabado' => [],
+                'domingo' => []
+            ];
+            foreach ($tblNacional as $dn) {
+                switch ($dn->FKId_TblDias) {
+                    case '1':
+                        array_push($infoNacional['lunes'], $dn->Cantidad_Elaborado);
+                        break;
+                    case '2':
+                        array_push($infoNacional['martes'], $dn->Cantidad_Elaborado);
+                        break;
+                    case '3':
+                        array_push($infoNacional['miercoles'], $dn->Cantidad_Elaborado);
+                        break;
+                    case '4':
+                        array_push($infoNacional['jueves'], $dn->Cantidad_Elaborado);
+                        break;
+                    case '5':
+                        array_push($infoNacional['viernes'], $dn->Cantidad_Elaborado);
+                        break;
+                    case '6':
+                        array_push($infoNacional['sabado'], $dn->Cantidad_Elaborado);
+                        break;
+                    case '7':
+                        array_push($infoNacional['domingo'], $dn->Cantidad_Elaborado);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            //TblCargue
+
             $datosProduccion = [
                 'cod_embarque' => $cod_embarque,
                 'embolse' => [
@@ -645,16 +698,15 @@
                     'presente' => $tblEmbolse->N_PlantasPresente, 
                     'prematuro' => $tblEmbolse->N_PlantasPrematuro 
                 ],
-                'tblRacimos' => $detalleRacimos,
-                'tblCajas' => [],
-                'tblNacional' => [],
+                'tblRacimos' => $infoRacimos,
+                'tblCajas' => $infoCajas,
+                'tblNacional' => $infoNacional,
                 'tblCargue' => []
             ];
             echo json_encode($datosProduccion);
         } else {
             echo false;
         }
-        // echo $tblProduccion->FKId_TblEmbolse;
     }
 
 //  ACTUALIZAR ==================================================================================================================
