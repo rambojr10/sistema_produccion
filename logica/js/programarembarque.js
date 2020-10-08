@@ -328,6 +328,7 @@
                         }
                     });
                 });
+                
                 if(validar_datos()){
                     $(".osc").fadeIn();
                     $("#loader").fadeIn();
@@ -339,14 +340,12 @@
                         body: op
                     })
                     .then(response => {
-                        if (response.ok){
+                        if (response.ok)
                             return response.text()
-                        }else{
+                        else
                             throw "No se ha podido guardar los datos";
-                        }
                     })
                     .then(res => {
-                        console.log(res);
                         if (res == true) {
                             $(".osc").fadeOut();
                             $("#loader").fadeOut();

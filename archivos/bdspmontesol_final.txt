@@ -126,8 +126,8 @@
 	CREATE TABLE TblEmbolse(
 		PKId INTEGER PRIMARY KEY AUTO_INCREMENT,
 		FKId_TblSemanas INT not null,
-		N_PlantasPrematuro INT not null,
 		N_PlantasPresente INT not null,
+		N_PlantasPrematuro INT not null,
 		FOREIGN KEY (FKId_TblSemanas) REFERENCES TblSemanas(PKId)
 	);
 
@@ -169,12 +169,6 @@
 		Descripcion VARCHAR(250) not null
 	);
 		
-	CREATE TABLE TblClientes(
-		PKDocumento VARCHAR(11) PRIMARY KEY,
-		Nombres VARCHAR(200) not null,
-		Telefono VARCHAR(10) not null
-	);
-	
 	CREATE TABLE TblMercadoNacional(
 		PKId INTEGER PRIMARY KEY AUTO_INCREMENT,
 		Total_Elaborado INT not null
@@ -194,21 +188,19 @@
 	CREATE TABLE TblCargue(
 		PKId_Cargue INTEGER PRIMARY KEY AUTO_INCREMENT,
 		FKIbm_TblFincas VARCHAR(5) not null,
-		FKDocumento_TblClientes VARCHAR(11) not null,
+		Cliente VARCHAR(200) not null,
 		Fecha_Cargue DATE not null,
 		N_Poma VARCHAR(5) not null,
+		DedoSuelto INT,
+		Cluster INT,
+		ManoEntera INT,
+		Especial INT,
+		Bolsa20Kilos INT,
+		Bolsa25Kilos INT,
+		Total INT,
 		Placa_Vehiculo VARCHAR(8) not null,
 		Conductor VARCHAR(200) not null,
-		FOREIGN KEY (FKIbm_TblFincas) REFERENCES TblFincas(PKIbm),
-		FOREIGN KEY (FKDocumento_TblClientes) REFERENCES TblClientes(PKDocumento)	
-	);
-
-	CREATE TABLE TblDet_TblCargue(
-		PKId INTEGER PRIMARY KEY AUTO_INCREMENT,
-		FKId_Cargue_TblCargue INT not null,
-		FKId_TblMercadoNacional INT not null,
-	        FOREIGN KEY (FKId_Cargue_TblCargue) REFERENCES TblCargue(PKId_Cargue),
-		FOREIGN KEY (FKId_TblMercadoNacional) REFERENCES TblMercadoNacional(PKId)
+		FOREIGN KEY (FKIbm_TblFincas) REFERENCES TblFincas(PKIbm)	
 	);
 	
 	/* PRODUCCIÓN */

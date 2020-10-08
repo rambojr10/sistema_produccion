@@ -226,14 +226,16 @@
                 })
                 .then(response => {
                     if (response.ok)
-                        return response.text();
+                        return response.json();
                     else
                         throw "No se ha podido guardar los datos correctamente IP";
                 })
                 .then(res => {
+                    console.log(res);
                     $(".osc").fadeOut();
                     $("#loader").fadeOut();
                     if (res == "") {
+                        console.log("Todo guarda melo mi pana, usted es la VERGA parcero, siga así que va es pa alante a terminar esta mondá")
                         $.notify({
                             icon: 'fa fa-check-circle',
                             message: 'Datos guardados correctamente.',
@@ -257,7 +259,7 @@
         });
     });
 
-    // Script de carga de tablas
+    // Script de carga de tablas & verifica si existen datos previos para cargalos
     const op = new FormData();
     op.append("op", "codEmbarque_verificar");
     op.append("key", cod_embarque);
@@ -276,20 +278,28 @@
     .then(res => {
         if (res[0].PKCod == cod_embarque) {
             $("#cod_embarque_ip").data("idSemana_ip", res[0].FKId_TblSemanas);
-            fetch(`../logica/contenido.php?op=cargar_produccion_ip&cod_embarque=${cod_embarque}&ibm_finca=${80074}`)
-            .then(response => response.json())
+            fetch(`../logica/contenido.php?op=cargar_produccion_ip&cod_embarque=${cod_embarque}`)
+            .then(response => {
+                if (response.ok) 
+                    return response.json()
+                else
+                    throw 'No se ha podido cargar los datos'
+            })
             .then(datosProduccion => {
-                console.log(datosProduccion);
-                if (datosProduccion == false) {
+                if (datosProduccion.result == false) {
                     cargar_tabla_racimos_ip(res[0].FKId_TblSemanas, false);
                     cargar_tabla_cajas_ip(false);
                     cargar_tabla_nacional_ip(false, false);
                 } else {
+                    $("#txtPresente_ip").val(datosProduccion.embolse.presente);
+                    $("#txtPrematuro_ip").val(datosProduccion.embolse.prematuro);
                     cargar_tabla_racimos_ip(res[0].FKId_TblSemanas, datosProduccion.tblRacimos);
                     cargar_tabla_cajas_ip(datosProduccion.tblCajas);
                     cargar_tabla_nacional_ip(datosProduccion.tblNacional, false);
                 }
             });
+        } else {
+            console.log('res is undefined');
         }
     });
     
@@ -297,7 +307,7 @@
 
 // Tabla racimos ----------------------------------------------------------------------------------------------------------
 
-    function cargar_tabla_racimos_ip(id_semana, exitsTblRacimos) {
+    function cargar_tabla_racimos_ip(id_semana, existsTblRacimos) {
         const op = new FormData();
         op.append("op", "cargardatos_racimos_ip");
         op.append("id_semana", id_semana);
@@ -320,46 +330,47 @@
             $("[name='to_ip']").val(res.semanas[2].fecha_fin);
             $("#pnlPresente").addClass(renderizarEmbolse(res.semanas[1].cinta));
             $("#pnlPrematuro").addClass(renderizarEmbolse(res.semanas[2].cinta));
+           
             let tblRacimos_data = [
                 {
                     descripcion:  `12 Semanas ${res.semanas[0].cinta}` ,
-                    lunes: 0,
-                    martes: 0,
-                    miercoles: 0,
-                    jueves: 0,
-                    viernes: 0,
-                    sabado: 0,
-                    domingo: 0,
+                    lunes: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[0][0],
+                    martes: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[1][0],
+                    miercoles: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[2][0],
+                    jueves: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[3][0],
+                    viernes: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[4][0],
+                    sabado: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[5][0],
+                    domingo: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[6][0],
                     total: "=SUM(B1:H1)"
                 }, {
                     descripcion: `11 Semanas ${res.semanas[1].cinta}`,
-                    lunes: 0,
-                    martes: 0,
-                    miercoles: 0,
-                    jueves: 0,
-                    viernes: 0,
-                    sabado: 0,
-                    domingo: 0,
+                    lunes: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[0][1],
+                    martes: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[1][1],
+                    miercoles: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[2][1],
+                    jueves: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[3][1],
+                    viernes: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[4][1],
+                    sabado: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[5][1],
+                    domingo: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[6][1],
                     total: "=SUM(B2:H2)"
                 }, {
                     descripcion: `10 Semanas ${res.semanas[2].cinta}`,
-                    lunes: 0,
-                    martes: 0,
-                    miercoles: 0,
-                    jueves: 0,
-                    viernes: 0,
-                    sabado: 0,
-                    domingo: 0,
+                    lunes: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[0][2],
+                    martes: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[1][2],
+                    miercoles: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[2][2],
+                    jueves: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[3][2],
+                    viernes: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[4][2],
+                    sabado: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[5][2],
+                    domingo: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[6][2],
                     total: "=SUM(B3:H3)"
                 }, {
                     descripcion: `09 Semanas ${res.semanas[3].cinta}`,
-                    lunes: 0,
-                    martes: 0,
-                    miercoles: 0,
-                    jueves: 0,
-                    viernes: 0,
-                    sabado: 0,
-                    domingo: 0,
+                    lunes: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[0][3],
+                    martes: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[1][3],
+                    miercoles: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[2][3],
+                    jueves: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[3][3],
+                    viernes: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[4][3],
+                    sabado: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[5][3],
+                    domingo: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[6][3],
                     total: "=SUM(B4:H4)"
                 }, {
                     descripcion: "TOTAL",
@@ -373,116 +384,35 @@
                     total: "=SUM(I1:I4)"
                 }, {
                     descripcion: "Total Personas Embarque",
+                    lunes: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[0][4],
+                    martes: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[1][4],
+                    miercoles: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[2][4],
+                    jueves: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[3][4],
+                    viernes: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[4][4],
+                    sabado: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[5][4],
+                    domingo: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[6][4],
                     total: "=SUM(B6:H6)"
                 }, {
                     descripcion: "Trabajadores otras fincas",
+                    lunes: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[0][5],
+                    martes: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[1][5],
+                    miercoles: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[2][5],
+                    jueves: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[3][5],
+                    viernes: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[4][5],
+                    sabado: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[5][5],
+                    domingo: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[6][5],
                     total: "=SUM(B7:H7)"
                 }, {
                     descripcion: "RACIMOS"
                 }, {
                     descripcion: "Rechazados",
-                    lunes: 0,
-                    martes: 0,
-                    miercoles: 0,
-                    jueves: 0,
-                    viernes: 0,
-                    sabado: 0,
-                    domingo: 0,
-                    total: "=SUM(B9:H9)"
-                }, {
-                    descripcion: "Procesados",
-                    lunes: '=SUM(B5;-B9)',
-                    martes: '=SUM(C5;-C9)',
-                    miercoles: '=SUM(D5;-D9)',
-                    jueves: '=SUM(E5;-E9)',
-                    viernes: '=SUM(F5;-F9)',
-                    sabado: '=SUM(G5;-G9)',
-                    domingo: '=SUM(H5;-H9)',
-                    total: "=SUM(B10:H10)"
-                }
-            ];
-            let tblRacimos_data_ifExists = [
-                {
-                    descripcion:  `12 Semanas ${res.semanas[0].cinta}` ,
-                    lunes: exitsTblRacimos[0][0],
-                    martes: exitsTblRacimos[1][0],
-                    miercoles: exitsTblRacimos[2][0],
-                    jueves: exitsTblRacimos[3][0],
-                    viernes: exitsTblRacimos[4][0],
-                    sabado: exitsTblRacimos[5][0],
-                    domingo: exitsTblRacimos[6][0],
-                    total: "=SUM(B1:H1)"
-                }, {
-                    descripcion: `11 Semanas ${res.semanas[1].cinta}`,
-                    lunes: exitsTblRacimos[0][1],
-                    martes: exitsTblRacimos[1][1],
-                    miercoles: exitsTblRacimos[2][1],
-                    jueves: exitsTblRacimos[3][1],
-                    viernes: exitsTblRacimos[4][1],
-                    sabado: exitsTblRacimos[5][1],
-                    domingo: exitsTblRacimos[6][1],
-                    total: "=SUM(B2:H2)"
-                }, {
-                    descripcion: `10 Semanas ${res.semanas[2].cinta}`,
-                    lunes: exitsTblRacimos[0][2],
-                    martes: exitsTblRacimos[1][2],
-                    miercoles: exitsTblRacimos[2][2],
-                    jueves: exitsTblRacimos[3][2],
-                    viernes: exitsTblRacimos[4][2],
-                    sabado: exitsTblRacimos[5][2],
-                    domingo: exitsTblRacimos[6][2],
-                    total: "=SUM(B3:H3)"
-                }, {
-                    descripcion: `09 Semanas ${res.semanas[3].cinta}`,
-                    lunes: exitsTblRacimos[0][3],
-                    martes: exitsTblRacimos[1][3],
-                    miercoles: exitsTblRacimos[2][3],
-                    jueves: exitsTblRacimos[3][3],
-                    viernes: exitsTblRacimos[4][3],
-                    sabado: exitsTblRacimos[5][3],
-                    domingo: exitsTblRacimos[6][3],
-                    total: "=SUM(B4:H4)"
-                }, {
-                    descripcion: "TOTAL",
-                    lunes: "=SUM(B1:B4)",
-                    martes: "=SUM(C1:C4)",
-                    miercoles: "=SUM(D1:D4)",
-                    jueves: "=SUM(E1:E4)",
-                    viernes: "=SUM(F1:F4)",
-                    sabado: "=SUM(G1:G4)",
-                    domingo: "=SUM(H1:H4)",
-                    total: "=SUM(I1:I4)"
-                }, {
-                    descripcion: "Total Personas Embarque",
-                    lunes: exitsTblRacimos[0][4],
-                    martes: exitsTblRacimos[1][4],
-                    miercoles: exitsTblRacimos[2][4],
-                    jueves: exitsTblRacimos[3][4],
-                    viernes: exitsTblRacimos[4][4],
-                    sabado: exitsTblRacimos[5][4],
-                    domingo: exitsTblRacimos[6][4],
-                    total: "=SUM(B6:H6)"
-                }, {
-                    descripcion: "Trabajadores otras fincas",
-                    lunes: exitsTblRacimos[0][5],
-                    martes: exitsTblRacimos[1][5],
-                    miercoles: exitsTblRacimos[2][5],
-                    jueves: exitsTblRacimos[3][5],
-                    viernes: exitsTblRacimos[4][5],
-                    sabado: exitsTblRacimos[5][5],
-                    domingo: exitsTblRacimos[6][5],
-                    total: "=SUM(B7:H7)"
-                }, {
-                    descripcion: "RACIMOS"
-                }, {
-                    descripcion: "Rechazados",
-                    lunes: exitsTblRacimos[0][6],
-                    martes: exitsTblRacimos[1][6],
-                    miercoles: exitsTblRacimos[2][6],
-                    jueves: exitsTblRacimos[3][6],
-                    viernes: exitsTblRacimos[4][6],
-                    sabado: exitsTblRacimos[5][6],
-                    domingo: exitsTblRacimos[6][6],
+                    lunes: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[0][6],
+                    martes: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[1][6],
+                    miercoles: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[2][6],
+                    jueves: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[3][6],
+                    viernes: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[4][6],
+                    sabado: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[5][6],
+                    domingo: (typeof existsTblRacimos) == 'boolean' ? 0 : existsTblRacimos[6][6],
                     total: "=SUM(B9:H9)"
                 }, {
                     descripcion: "Procesados",
@@ -500,7 +430,7 @@
             const tblRacimos = document.querySelector('#tblRacimos_ip');
             let tblSettings_racimos = {
                 licenseKey: 'non-commercial-and-evaluation',
-                data: (exitsTblRacimos != false ? tblRacimos_data_ifExists : tblRacimos_data),
+                data: tblRacimos_data,
                 className: 'htCenter',
                 cell: [
                     {row: 0, col: 0, renderer: renderizarCintas(res.semanas[0].cinta) },
@@ -914,7 +844,7 @@
                     {row: (length-3), col: 0, rowspan: 1, colspan: 3},
                     {row: (length-2), col: 0, rowspan: 1, colspan: 3},
                     {row: (length-1), col: 0, rowspan: 1, colspan: 3},
-                ],
+                ]
             };
             hot2 = new Handsontable(tblCajas, tblSettings_cajas);
             // hot2.setDataAtCell(length-5, 10, `=ROUND(AVERAGE(D${length-4}:J${length-4}), 2)`);
@@ -924,8 +854,6 @@
 
 // Tabla nacional + cargue --------------------------------------------------------------------------------------
     function cargar_tabla_nacional_ip(existsTblNacional, existsTblCargue) {
-        console.log(existsTblNacional);
-        console.log(existsTblCargue);
         let tblNacional_data = [
             {
                 descripcion: 'Dedo suelto cartón',
@@ -1000,43 +928,53 @@
             }
         ];
 
+        console.log(existsTblCargue);
         let tblCargue_data = [
             {   
-                dedoSuelto: 0,
-                cluster: 0,
-                manoEntera: 0,
-                especial: 0,
-                dedoSueltoBolsa20: 0,
-                dedoSueltoBolsa25: 0,
+                fechaCargue: null,
+                cliente: null, 
+                poma: null,
+                dedoSuelto: '',
+                cluster: '',
+                manoEntera: '',
+                especial: '',
+                dedoSueltoBolsa20: '',
+                dedoSueltoBolsa25: '',
                 total: '=SUM(D1:I1)', 
+                placa: null,
+                conductor: null
             }, {
-                dedoSuelto: 0,
-                cluster: 0,
-                manoEntera: 0,
-                especial: 0,
-                dedoSueltoBolsa20: 0,
-                dedoSueltoBolsa25: 0,
+                dedoSuelto: '',
+                cluster: '',
+                manoEntera: '',
+                especial: '',
+                dedoSueltoBolsa20: '',
+                dedoSueltoBolsa25: '',
+                total: '=SUM(D2:I2)'
             }, {
-                dedoSuelto: 0,
-                cluster: 0,
-                manoEntera: 0,
-                especial: 0,
-                dedoSueltoBolsa20: 0,
-                dedoSueltoBolsa25: 0,
+                dedoSuelto: '',
+                cluster: '',
+                manoEntera: '',
+                especial: '',
+                dedoSueltoBolsa20: '',
+                dedoSueltoBolsa25: '',
+                total: '=SUM(D3:I3)'
             }, {
-                dedoSuelto: 0,
-                cluster: 0,
-                manoEntera: 0,
-                especial: 0,
-                dedoSueltoBolsa20: 0,
-                dedoSueltoBolsa25: 0,
+                dedoSuelto: '',
+                cluster: '',
+                manoEntera: '',
+                especial: '',
+                dedoSueltoBolsa20: '',
+                dedoSueltoBolsa25: '',
+                total: '=SUM(D4:I4)'
             }, {
-                dedoSuelto: 0,
-                cluster: 0,
-                manoEntera: 0,
-                especial: 0,
-                dedoSueltoBolsa20: 0,
-                dedoSueltoBolsa25: 0,
+                dedoSuelto: '',
+                cluster: '',
+                manoEntera: '',
+                especial: '',
+                dedoSueltoBolsa20: '',
+                dedoSueltoBolsa25: '',
+                total: '=SUM(D5:I5)'
             }, {
                 fechaCargue: "TOTAL CARGUE DE CAJAS",
                 dedoSuelto: "=SUM(D1:D5)",
@@ -1156,7 +1094,11 @@
                     dateFormat: 'YYYY/MM/DD',
                     correctFormat: true
                 }, {
-                    data: 'cliente'
+                    data: 'cliente',
+                    type: 'autocomplete',
+                    source: ['Nombre cliente1', 'Nombre cliente2', 'Nombre cliente3'],
+                    strict: true,
+                    allowInvalid: false
                 }, {
                     data: 'poma',
                     type: 'numeric'
@@ -1180,7 +1122,8 @@
                     type: 'numeric'
                 }, {
                     data: 'total',
-                    type: 'numeric'
+                    type: 'numeric',
+                    readOnly: true
                 }, {
                     data: 'placa',
                     type: 'text'

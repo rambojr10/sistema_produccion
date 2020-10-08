@@ -11,15 +11,15 @@
         $bruta = $datos_c['bruta'];
         $bruta = $datos_c['bruta'];
         $empresa = $datos_c['empresa'];
-        $bd = conectar();
-        try{
+        try {
+            $bd = conectar();
             $datos = $bd->prepare("INSERT INTO tblfincas VALUES(:ibm, :nombre, :neta, :bruta, :empresa)");
             $datos->bindParam(":ibm", $ibm, PDO::PARAM_STR);
             $datos->bindParam(":nombre", $nombre, PDO::PARAM_STR);
             $datos->bindParam(":neta", $neta, PDO::PARAM_STR);
             $datos->bindParam(":bruta", $bruta, PDO::PARAM_STR);
             $datos->bindParam(":empresa", $empresa, PDO::PARAM_STR);
-            if($datos->execute()){
+            if ($datos->execute()) {
                 foreach ($lotes as $l) {
                     $nom_l = $l[0];
                     $neta_l = $l[1];
@@ -33,7 +33,7 @@
                     $datos->execute();
                 }
                 return true;
-            }else{
+            } else {
                 return false;
             }
         }catch (Exception $e) {
@@ -49,11 +49,10 @@
             $datos->bindParam(":nombre", $empresa['nom'], PDO::PARAM_STR);
             $datos->bindParam(":direccion", $empresa['dir'], PDO::PARAM_STR);
             $datos->bindParam(":telefono", $empresa['tel'], PDO::PARAM_STR);
-            if($datos->execute()){
+            if ($datos->execute())
                 return true;
-            }else{
+            else
                 return false;
-            }
         } catch (Exception $e) {
             echo "Error".$e;
         }
@@ -67,18 +66,17 @@
             $datos->bindParam(":descripcion", $caja['descripcion'], PDO::PARAM_STR);
             $datos->bindParam(":factor", $caja['factor'], PDO::PARAM_STR);
             $datos->bindParam(":tipofruta", $caja['tipofruta'], PDO::PARAM_INT);
-            if ($datos->execute()) {
+            if ($datos->execute())
                 return true;
-            }else{
+            else
                 return false;
-            }
         } catch (Exception $e) {
             echo "Error".$e;
         }
     }
 
     function crearembarque($cod_embarque, $ano, $semana){
-        try{
+        try {
             $bd = conectar();
             $datos = $bd->prepare("INSERT INTO tblembarque VALUES(:cod_embarque, :semana, :ano)");
             $datos->bindParam(":cod_embarque", $cod_embarque, PDO::PARAM_STR);
@@ -95,14 +93,14 @@
 
     //Genera semanas según el año siguiente, recibe la fecha de la primera semana del año próximo y empieza a generar los datos a partír de la primera inserción
     function anhonuevo($fechai, $fechaf, $anho, $cinta){
-        try{
+        try {
             $bd = conectar();
             $datos = $bd->prepare("INSERT INTO tblsemanas VALUES(null, 'SEMANA 1', :fechai, :fechaf, :anho, :cinta)");
             $datos->bindParam(":fechai", $fechai, PDO::PARAM_STR);
             $datos->bindParam(":fechaf", $fechaf, PDO::PARAM_STR);
             $datos->bindParam(":anho", $anho, PDO::PARAM_INT);
             $datos->bindParam(":cinta", $cinta, PDO::PARAM_INT);
-            if($datos->execute()){
+            if ($datos->execute()) {
                 for ($x=2; $x < 53; $x++) { 
                     $datos = $bd->prepare("
                         SELECT  tblsemanas.Fecha_Inicio as fechai, 
@@ -139,10 +137,10 @@
                 $datos->bindParam(":anho", $anho, PDO::PARAM_INT);
                 if ($datos->execute()) {
                     return true;
-                }else {
+                } else {
                     return false;
                 }
-            }else {
+            } else {
                 return false;
             }
         } catch (Exception $e) {
@@ -159,11 +157,10 @@
             $datos->bindParam(":ibm_finca", $ibm_finca, PDO::PARAM_STR);
             $datos->bindParam(":codigo_caja", $codigo_caja, PDO::PARAM_STR);
             $datos->bindParam(":cantidad", $cantidad, PDO::PARAM_INT);
-            if($datos->execute()) {
+            if($datos->execute())
                 return true;
-            }else {
+            else
                 return false;
-            }
         } catch (Exception $e) {
             echo "Error".$e;
         }
@@ -188,190 +185,219 @@
         }
     }
 
-    // Guarda los datos del embolse de la semana
-    function guardarembolse($id_semana, $presente, $prematuro) {
-        try {
-            $bd = conectar();
-            $datos = $bd->prepare("INSERT INTO TblEmbolse VALUES(null, :id_semana, :presente, :prematuro)");
-            $datos->bindParam(':id_semana', $id_semana, PDO::PARAM_INT);
-            $datos->bindParam(':presente', $presente, PDO::PARAM_INT);
-            $datos->bindParam(':prematuro', $prematuro, PDO::PARAM_INT);
-            if ($datos->execute())
-                return $bd->lastInsertId();
-            else 
-                return false;
-        } catch (Exception $e) {
-            echo "Error".$e;
-        }
-    }
+    // Funciones que guardan los datos del módulo ingresar produccion, llenando todas las tablas 
 
-    // Guarda los datos del total de racimos cortados y rechazados durante la semana
-    function guardarracimos($id_semana, $totalRacimosCortados, $totalRacimosRechazados) {
-        try {
-            $bd = conectar();
-            $datos = $bd->prepare("INSERT INTO TblRacimos VALUES(null, :id_semana, :totalRacimosCortados, :totalRacimosRechazados);");
-            $datos->bindParam(':id_semana', $id_semana, PDO::PARAM_INT);
-            $datos->bindParam(':totalRacimosCortados', $totalRacimosCortados, PDO::PARAM_INT);
-            $datos->bindParam(':totalRacimosRechazados', $totalRacimosRechazados, PDO::PARAM_INT);
-            if  ($datos->execute()) 
-                return $bd->lastInsertId();
-            else
-                return false;
-        } catch (Exception $e) {
-            echo "Error".$e;
-        }
-    }
-
-    // 
-    function guardarracimos_detalle($lastIdRacimos, $idTblDias, 
-                                    $racimosCortadosDia, $racimosRechazadosDia, 
-                                    $totalPersonasEmbarque, $totalPersonasOtrasFincas ) {
-        try {
-            $bd = conectar();
-            $datos = $bd->prepare("
-                INSERT INTO TblDet_TblRacimos_TblDias VALUES(
-                null, :lastIdRacimos, :idTblDias, :racimosCortadosDia, :racimosRechazadosDia, 
-                :totalPersonasEmbarque, :totalPersonasOtrasFincas);
-            ");
-            $datos->bindParam(":lastIdRacimos", $lastIdRacimos, PDO::PARAM_INT);
-            $datos->bindParam(":idTblDias", $idTblDias, PDO::PARAM_INT);
-            $datos->bindParam(":racimosCortadosDia", $racimosCortadosDia, PDO::PARAM_INT);
-            $datos->bindParam(":racimosRechazadosDia", $racimosRechazadosDia, PDO::PARAM_INT);
-            $datos->bindParam(":totalPersonasEmbarque", $totalPersonasEmbarque, PDO::PARAM_INT);
-            $datos->bindParam(":totalPersonasOtrasFincas", $totalPersonasOtrasFincas, PDO::PARAM_INT);
-            if ($datos->execute())
-                return $bd->lastInsertId();
-            else 
-                return false;
-        } catch (Exception $e) {
-            echo "Error".$e;
-        }
-    }
-
-    //
-    function guardarracimos_detalle_detalle($idRacimosDetalle, $idCinta, $racimosCortadosCinta) {
-        try {
-            $bd = conectar();
-            $datos = $bd->prepare("INSERT INTO TblDet_TblDet_TblRacimos_TblDias VALUES(null, :idRacimosDetalle, :idCinta, :racimosCortadosCinta);");
-            $datos->bindParam(":idRacimosDetalle", $idRacimosDetalle, PDO::PARAM_INT);
-            $datos->bindParam(":idCinta", $idCinta, PDO::PARAM_INT);
-            $datos->bindParam(":racimosCortadosCinta", $racimosCortadosCinta, PDO::PARAM_INT);
-            $datos->execute();
-        } catch (Exception $e) {
-            echo "Error".$e;
-        }
-    }
-
-    //
-    function guardarnacional($totalElaborado) {
-        try {
-            $bd = conectar();
-            $datos = $bd->prepare("INSERT INTO TblMercadoNacional VALUES(null, :totalElaborado)");
-            $datos->bindParam(':totalElaborado', $totalElaborado, PDO::PARAM_INT);
-            if ($datos->execute()) 
-                return $bd->lastInsertId();
-            else 
-                return false;
-        } catch (Exception $e) {
-            echo "Error".$e;
+        // Guarda los datos del embolse de la semana
+        function guardarembolse($id_semana, $presente, $prematuro) {
+            try {
+                $bd = conectar();
+                $datos = $bd->prepare("INSERT INTO TblEmbolse VALUES(null, :id_semana, :presente, :prematuro)");
+                $datos->bindParam(':id_semana', $id_semana, PDO::PARAM_INT);
+                $datos->bindParam(':presente', $presente, PDO::PARAM_INT);
+                $datos->bindParam(':prematuro', $prematuro, PDO::PARAM_INT);
+                if ($datos->execute())
+                    return $bd->lastInsertId();
+                else 
+                    return false;
+            } catch (Exception $e) {
+                echo "Error".$e;
+            }
         }
 
-    }
-
-    //
-    function guardarnacional_detalle($idNacional, $idTblDias, $idCajasNacional, $cantidadElaborado) {
-        try {
-            $bd = conectar();
-            $datos = $bd->prepare("INSERT INTO TblDet_TblMercadoNacional VALUES(
-                null, :idNacional, :idTblDias, :idCajasNacional, :cantidadElaborado)");
-            $datos->bindParam(':idNacional', $idNacional, PDO::PARAM_INT);
-            $datos->bindParam(':idTblDias', $idTblDias, PDO::PARAM_INT);
-            $datos->bindParam(':idCajasNacional', $idCajasNacional, PDO::PARAM_INT);
-            $datos->bindParam(':cantidadElaborado', $cantidadElaborado, PDO::PARAM_INT);
-            $datos->execute();
-        } catch (Exception $e) {
-            echo "Error".$e;
+        // Guarda los datos del total de racimos cortados y rechazados durante la semana
+        function guardarracimos($id_semana, $totalRacimosCortados, $totalRacimosRechazados) {
+            try {
+                $bd = conectar();
+                $datos = $bd->prepare("INSERT INTO TblRacimos VALUES(null, :id_semana, :totalRacimosCortados, :totalRacimosRechazados);");
+                $datos->bindParam(':id_semana', $id_semana, PDO::PARAM_INT);
+                $datos->bindParam(':totalRacimosCortados', $totalRacimosCortados, PDO::PARAM_INT);
+                $datos->bindParam(':totalRacimosRechazados', $totalRacimosRechazados, PDO::PARAM_INT);
+                if  ($datos->execute()) 
+                    return $bd->lastInsertId();
+                else
+                    return false;
+            } catch (Exception $e) {
+                echo "Error".$e;
+            }
         }
 
-    }
-
-    //
-    function guardarproduccion(
-        $ibmFinca, $idEmbolse, $idRacimos, $idSemana, $idNacional, $codEmbarque, $totalCajasElaboradas, $totalCajasRechazadas, 
-        $totalCajasExportadas, $ratio, $merma, $pesoRacimos, $areaRecorrida, $pesoVastago, $anhoProduccion) {
-        try {
-            $bd = conectar();
-            $datos = $bd->prepare("INSERT INTO TblProduccion VALUES(
-                null, :ibmFinca, :idEmbolse, :idRacimos, :idSemana, :idNacional, :codEmbarque, :totalCajasElaboradas, :totalCajasRechazadas, 
-                :totalCajasExportadas, :ratio, :merma, :pesoRacimos, :areaRecorrida, :pesoVastago, :anhoProduccion);");
-            $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
-            $datos->bindParam(':idEmbolse', $idEmbolse, PDO::PARAM_INT);
-            $datos->bindParam(':idRacimos', $idRacimos, PDO::PARAM_INT);
-            $datos->bindParam(':idSemana', $idSemana, PDO::PARAM_INT);
-            $datos->bindParam(':idNacional', $idNacional, PDO::PARAM_INT);
-            $datos->bindParam(':codEmbarque', $codEmbarque, PDO::PARAM_STR);
-            $datos->bindParam(':totalCajasElaboradas', $totalCajasElaboradas, PDO::PARAM_INT);
-            $datos->bindParam(':totalCajasRechazadas', $totalCajasRechazadas, PDO::PARAM_INT);
-            $datos->bindParam(':totalCajasExportadas', $totalCajasExportadas, PDO::PARAM_INT);
-            $datos->bindParam(':ratio', $ratio, PDO::PARAM_STR);
-            $datos->bindParam(':merma', $merma, PDO::PARAM_STR);
-            $datos->bindParam(':pesoRacimos', $pesoRacimos, PDO::PARAM_STR);
-            $datos->bindParam(':areaRecorrida', $areaRecorrida, PDO::PARAM_STR);
-            $datos->bindParam(':pesoVastago', $pesoVastago, PDO::PARAM_STR);
-            $datos->bindParam(':anhoProduccion', $anhoProduccion, PDO::PARAM_INT);
-            if ($datos->execute())
-                return $bd->lastInsertId();
-            else 
-                return false;
-        } catch (Exception $e) {
-            echo "Error".$e;
+        // Guardar detalle racimos
+        function guardarracimos_detalle($lastIdRacimos, $idTblDias, 
+                                        $racimosCortadosDia, $racimosRechazadosDia, 
+                                        $totalPersonasEmbarque, $totalPersonasOtrasFincas ) {
+            try {
+                $bd = conectar();
+                $datos = $bd->prepare("
+                    INSERT INTO TblDet_TblRacimos_TblDias VALUES(
+                    null, :lastIdRacimos, :idTblDias, :racimosCortadosDia, :racimosRechazadosDia, 
+                    :totalPersonasEmbarque, :totalPersonasOtrasFincas);
+                ");
+                $datos->bindParam(":lastIdRacimos", $lastIdRacimos, PDO::PARAM_INT);
+                $datos->bindParam(":idTblDias", $idTblDias, PDO::PARAM_INT);
+                $datos->bindParam(":racimosCortadosDia", $racimosCortadosDia, PDO::PARAM_INT);
+                $datos->bindParam(":racimosRechazadosDia", $racimosRechazadosDia, PDO::PARAM_INT);
+                $datos->bindParam(":totalPersonasEmbarque", $totalPersonasEmbarque, PDO::PARAM_INT);
+                $datos->bindParam(":totalPersonasOtrasFincas", $totalPersonasOtrasFincas, PDO::PARAM_INT);
+                if ($datos->execute())
+                    return $bd->lastInsertId();
+                else 
+                    return false;
+            } catch (Exception $e) {
+                echo "Error".$e;
+            }
         }
-    }
 
-    //
-    function guardarproduccion_detalle(
-        $idTblProduccion, $idTblDias, $cajasElaboradasDia, 
-        $cajasRechazadasDia, $cajasExportadasDia, $ratioDia, 
-        $mermaDia, $pesoRacimosDia, $areaRecorridaDia, $pesoVastagoDia) {
-        try {
-            $bd = conectar();
-            $datos = $bd->prepare("INSERT INTO TblDet_TblProduccion VALUES(
-                null, :idTblProduccion, :idTblDias, :cajasElaboradasDia, 
-                :cajasRechazadasDia, :cajasExportadasDia, :ratioDia, 
-                :mermaDia, :pesoRacimosDia, :areaRecorridaDia, :pesoVastagoDia);");
-            $datos->bindParam(':idTblProduccion', $idTblProduccion, PDO::PARAM_INT);
-            $datos->bindParam(':idTblDias', $idTblDias, PDO::PARAM_INT);
-            $datos->bindParam(':cajasElaboradasDia', $cajasElaboradasDia, PDO::PARAM_INT);
-            $datos->bindParam(':cajasRechazadasDia', $cajasRechazadasDia, PDO::PARAM_INT);
-            $datos->bindParam(':cajasExportadasDia', $cajasExportadasDia, PDO::PARAM_INT);
-            $datos->bindParam(':ratioDia', $ratioDia, PDO::PARAM_STR);
-            $datos->bindParam(':mermaDia', $mermaDia, PDO::PARAM_STR);
-            $datos->bindParam(':pesoRacimosDia', $pesoRacimosDia, PDO::PARAM_STR);
-            $datos->bindParam(':areaRecorridaDia', $areaRecorridaDia, PDO::PARAM_INT);
-            $datos->bindParam(':pesoVastagoDia', $pesoVastagoDia, PDO::PARAM_STR);
-            if ($datos->execute())
-                return $bd->lastInsertId();
-            else 
-                return false;
-        } catch (Exception $e) {
-            echo "Error".$e;
+        // Guardar detalle - detalle racimos
+        function guardarracimos_detalle_detalle($idRacimosDetalle, $idCinta, $racimosCortadosCinta) {
+            try {
+                $bd = conectar();
+                $datos = $bd->prepare("INSERT INTO TblDet_TblDet_TblRacimos_TblDias VALUES(null, :idRacimosDetalle, :idCinta, :racimosCortadosCinta);");
+                $datos->bindParam(":idRacimosDetalle", $idRacimosDetalle, PDO::PARAM_INT);
+                $datos->bindParam(":idCinta", $idCinta, PDO::PARAM_INT);
+                $datos->bindParam(":racimosCortadosCinta", $racimosCortadosCinta, PDO::PARAM_INT);
+                $datos->execute();
+            } catch (Exception $e) {
+                echo "Error".$e;
+            }
         }
-    }
 
-    //
-    function guardarproduccion_detalle_detalle($idProduccionDetalle, $codigoTblCajasProduccion, $cantidadProducidas) {
-        try {
-            $bd = conectar();
-            $datos = $bd->prepare("INSERT INTO TblDet_TblDet_TblProduccion VALUES(
-                null, :idProduccionDetalle, :codigoTblCajasProduccion, :cantidadProducidas);");
-            $datos->bindParam(':idProduccionDetalle', $idProduccionDetalle, PDO::PARAM_INT);
-            $datos->bindParam(':codigoTblCajasProduccion', $codigoTblCajasProduccion, PDO::PARAM_INT);
-            $datos->bindParam(':cantidadProducidas', $cantidadProducidas, PDO::PARAM_INT);
-            $datos->execute();
-        } catch (Exception $e) {
-            echo "Error".$e;
+        // Guardar mercado nacional
+        function guardarnacional($totalElaborado) {
+            try {
+                $bd = conectar();
+                $datos = $bd->prepare("INSERT INTO TblMercadoNacional VALUES(null, :totalElaborado)");
+                $datos->bindParam(':totalElaborado', $totalElaborado, PDO::PARAM_INT);
+                if ($datos->execute()) 
+                    return $bd->lastInsertId();
+                else 
+                    return false;
+            } catch (Exception $e) {
+                echo "Error".$e;
+            }
+
         }
-    }
+
+        // Guardar detalle mercado nacional
+        function guardarnacional_detalle($idNacional, $idTblDias, $idCajasNacional, $cantidadElaborado) {
+            try {
+                $bd = conectar();
+                $datos = $bd->prepare("INSERT INTO TblDet_TblMercadoNacional VALUES(
+                    null, :idNacional, :idTblDias, :idCajasNacional, :cantidadElaborado)");
+                $datos->bindParam(':idNacional', $idNacional, PDO::PARAM_INT);
+                $datos->bindParam(':idTblDias', $idTblDias, PDO::PARAM_INT);
+                $datos->bindParam(':idCajasNacional', $idCajasNacional, PDO::PARAM_INT);
+                $datos->bindParam(':cantidadElaborado', $cantidadElaborado, PDO::PARAM_INT);
+                $datos->execute();
+            } catch (Exception $e) {
+                echo "Error".$e;
+            }
+        }
+
+        // Guardar tblcargue
+        function guardarcargue($datosCargue) {
+            try {
+                $bd = conectar();
+                $datos = $bd->prepare("INSERT INTO TblCargue VALUES(
+                    null, :ibmFinca, :cliente, :fechaCargue, :numeroPoma, :dedoSuelto, :cluster, :manoEntera, :especial, 
+                    :bolsa20Kilos, :bolsa25Kilos, :total, :placa, :conductor, :codEmbarque)");
+                $datos->bindParam(':ibmFinca', $datosCargue->ibmFinca, PDO::PARAM_STR);
+                $datos->bindParam(':cliente', $datosCargue->cliente, PDO::PARAM_STR);
+                $datos->bindParam(':fechaCargue', $datosCargue->fechaCargue, PDO::PARAM_STR);
+                $datos->bindParam(':numeroPoma', $datosCargue->numeroPoma, PDO::PARAM_STR);
+                $datos->bindParam(':dedoSuelto', $datosCargue->dedoSuelto, PDO::PARAM_INT);
+                $datos->bindParam(':cluster', $datosCargue->cluster, PDO::PARAM_INT);
+                $datos->bindParam(':manoEntera', $datosCargue->manoEntera, PDO::PARAM_INT);
+                $datos->bindParam(':especial', $datosCargue->especial, PDO::PARAM_INT);
+                $datos->bindParam(':bolsa20Kilos', $datosCargue->bolsa20Kilos, PDO::PARAM_INT);
+                $datos->bindParam(':bolsa25Kilos', $datosCargue->bolsa25Kilos, PDO::PARAM_INT);
+                $datos->bindParam(':placa', $datosCargue->placa, PDO::PARAM_STR);
+                $datos->bindParam(':conductor', $datosCargue->conductor, PDO::PARAM_STR);
+                $datos->bindParam(':codEmbarque', $datosCargue->codEmbarque, PDO::PARAM_STR);
+                $datos->execute();
+            } catch (Exception $e) {
+                echo "Error".$e;
+            }
+        }
+
+        // Guardar tblproduccion
+        function guardarproduccion(
+            $ibmFinca, $idEmbolse, $idRacimos, $idSemana, $idNacional, $codEmbarque, $totalCajasElaboradas, $totalCajasRechazadas, 
+            $totalCajasExportadas, $ratio, $merma, $pesoRacimos, $areaRecorrida, $pesoVastago, $anhoProduccion) {
+            try {
+                $bd = conectar();
+                $datos = $bd->prepare("INSERT INTO TblProduccion VALUES(
+                    null, :ibmFinca, :idEmbolse, :idRacimos, :idSemana, :idNacional, :codEmbarque, :totalCajasElaboradas, :totalCajasRechazadas, 
+                    :totalCajasExportadas, :ratio, :merma, :pesoRacimos, :areaRecorrida, :pesoVastago, :anhoProduccion);");
+                $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
+                $datos->bindParam(':idEmbolse', $idEmbolse, PDO::PARAM_INT);
+                $datos->bindParam(':idRacimos', $idRacimos, PDO::PARAM_INT);
+                $datos->bindParam(':idSemana', $idSemana, PDO::PARAM_INT);
+                $datos->bindParam(':idNacional', $idNacional, PDO::PARAM_INT);
+                $datos->bindParam(':codEmbarque', $codEmbarque, PDO::PARAM_STR);
+                $datos->bindParam(':totalCajasElaboradas', $totalCajasElaboradas, PDO::PARAM_INT);
+                $datos->bindParam(':totalCajasRechazadas', $totalCajasRechazadas, PDO::PARAM_INT);
+                $datos->bindParam(':totalCajasExportadas', $totalCajasExportadas, PDO::PARAM_INT);
+                $datos->bindParam(':ratio', $ratio, PDO::PARAM_STR);
+                $datos->bindParam(':merma', $merma, PDO::PARAM_STR);
+                $datos->bindParam(':pesoRacimos', $pesoRacimos, PDO::PARAM_STR);
+                $datos->bindParam(':areaRecorrida', $areaRecorrida, PDO::PARAM_STR);
+                $datos->bindParam(':pesoVastago', $pesoVastago, PDO::PARAM_STR);
+                $datos->bindParam(':anhoProduccion', $anhoProduccion, PDO::PARAM_INT);
+                if ($datos->execute())
+                    return $bd->lastInsertId();
+                else 
+                    return false;
+            } catch (Exception $e) {
+                echo "Error".$e;
+            }
+        }
+
+        // Guardar detalle tblproduccion
+        function guardarproduccion_detalle(
+            $idTblProduccion, $idTblDias, $cajasElaboradasDia, 
+            $cajasRechazadasDia, $cajasExportadasDia, $ratioDia, 
+            $mermaDia, $pesoRacimosDia, $areaRecorridaDia, $pesoVastagoDia) {
+            try {
+                $bd = conectar();
+                $datos = $bd->prepare("INSERT INTO TblDet_TblProduccion VALUES(
+                    null, :idTblProduccion, :idTblDias, :cajasElaboradasDia, 
+                    :cajasRechazadasDia, :cajasExportadasDia, :ratioDia, 
+                    :mermaDia, :pesoRacimosDia, :areaRecorridaDia, :pesoVastagoDia);");
+                $datos->bindParam(':idTblProduccion', $idTblProduccion, PDO::PARAM_INT);
+                $datos->bindParam(':idTblDias', $idTblDias, PDO::PARAM_INT);
+                $datos->bindParam(':cajasElaboradasDia', $cajasElaboradasDia, PDO::PARAM_INT);
+                $datos->bindParam(':cajasRechazadasDia', $cajasRechazadasDia, PDO::PARAM_INT);
+                $datos->bindParam(':cajasExportadasDia', $cajasExportadasDia, PDO::PARAM_INT);
+                $datos->bindParam(':ratioDia', $ratioDia, PDO::PARAM_STR);
+                $datos->bindParam(':mermaDia', $mermaDia, PDO::PARAM_STR);
+                $datos->bindParam(':pesoRacimosDia', $pesoRacimosDia, PDO::PARAM_STR);
+                $datos->bindParam(':areaRecorridaDia', $areaRecorridaDia, PDO::PARAM_INT);
+                $datos->bindParam(':pesoVastagoDia', $pesoVastagoDia, PDO::PARAM_STR);
+                if ($datos->execute())
+                    return $bd->lastInsertId();
+                else 
+                    return false;
+            } catch (Exception $e) {
+                echo "Error".$e;
+            }
+        }
+
+        // Guardar detalle - detalle tblproduccion 
+        function guardarproduccion_detalle_detalle($idProduccionDetalle, $codigoTblCajasProduccion, $cantidadProducidas) {
+            try {
+                $bd = conectar();
+                $datos = $bd->prepare("INSERT INTO TblDet_TblDet_TblProduccion VALUES(
+                    null, :idProduccionDetalle, :codigoTblCajasProduccion, :cantidadProducidas);");
+                $datos->bindParam(':idProduccionDetalle', $idProduccionDetalle, PDO::PARAM_INT);
+                $datos->bindParam(':codigoTblCajasProduccion', $codigoTblCajasProduccion, PDO::PARAM_INT);
+                $datos->bindParam(':cantidadProducidas', $cantidadProducidas, PDO::PARAM_INT);
+                $datos->execute();
+            } catch (Exception $e) {
+                echo "Error".$e;
+            }
+        }
+
+    // --------------------------------------------------------------------------
 
     
     
@@ -388,7 +414,7 @@
         return $datos->fetchAll();
     }
 
-    function ingreso($usuario, $password){
+    function ingreso($usuario, $password) {
         $bd = conectar();
         $datos = $bd->prepare("SELECT * FROM tblusuarios INNER JOIN tblfincas 
                                 ON tblusuarios.FKIbm_TblFincas = tblfincas.PKIbm 
@@ -400,7 +426,7 @@
         return $datos->fetchAll();
     }
 
-    function listarfincas(){
+    function listarfincas() {
         $bd = conectar();
         $datos = $bd->prepare("SELECT f.PKIbm, f.Nombre, 
                                 (SELECT ROUND(SUM(Area_Neta), 2) FROM tbllotes WHERE FKIbm_TblFincas = f.PKIbm) as area_neta, 
@@ -410,14 +436,14 @@
         return $datos->fetchAll();
     }
 
-    function listarempresas(){
+    function listarempresas() {
         $bd = conectar();
         $datos = $bd->prepare("SELECT * FROM tblempresas");
         $datos->execute();
         return $datos->fetchAll();
     }
 
-    function cajasproduccion(){
+    function cajasproduccion() {
         $bd = conectar();
         $datos = $bd->prepare("SELECT c.PKCodigo, c.Descripcion, c.FactorConversion, t.Descripcion TipoFruta
                                 FROM tblcajasproduccion c, tbltipofruta t
@@ -426,7 +452,7 @@
         return $datos->fetchAll();
     }
 
-    function listarlotes($ibm_l){
+    function listarlotes($ibm_l) {
         $bd = conectar();
         $datos = $bd->prepare("SELECT * FROM tbllotes WHERE FKIbm_TblFincas = :ibm_l");
         $datos->bindParam(":ibm_l", $ibm_l, PDO::PARAM_STR);
@@ -434,7 +460,7 @@
         return $datos->fetchAll();
     }
 
-    function buscarfinca($ibm_f){
+    function buscarfinca($ibm_f) {
         $bd = conectar();
         $datos = $bd->prepare("SELECT tblfincas.Nombre FROM TblFincas WHERE PKIbm = :ibm_f");
         $datos->bindParam(":ibm_f", $ibm_f, PDO::PARAM_STR);
@@ -442,7 +468,7 @@
         return $datos->fetch();
     }
 
-    function buscarlote($id_lote){
+    function buscarlote($id_lote) {
         $bd = conectar();
         $datos = $bd->prepare("SELECT * FROM tbllotes WHERE PKId = :id_lote");
         $datos->bindParam(":id_lote", $id_lote, PDO::PARAM_INT);
@@ -450,7 +476,7 @@
         return $datos->fetch();
     }
 
-    function buscarempresa($ibm_e){
+    function buscarempresa($ibm_e) {
         $bd = conectar();
         $datos = $bd->prepare("SELECT e.PKNit, e.Nombre, e.Direccion, e.Telefono 
                                 FROM tblempresas as e, tblfincas as f 
@@ -460,7 +486,7 @@
         return $datos->fetch();
     }
 
-    function editarempresa($nit){
+    function editarempresa($nit) {
         $bd = conectar();
         $datos = $bd->prepare("SELECT * FROM tblempresas WHERE PKNit = :nit");
         $datos->bindParam(":nit", $nit, PDO::PARAM_STR);
@@ -468,7 +494,7 @@
         return $datos->fetch();
     }
 
-    function buscarcaja($codigo){
+    function buscarcaja($codigo) {
         $bd = conectar();
         $datos = $bd->prepare("SELECT * FROM tblcajasproduccion WHERE PKCodigo = :codigo");
         $datos->bindParam(":codigo", $codigo, PDO::PARAM_STR);
@@ -476,7 +502,7 @@
         return $datos->fetch();
     }
 
-    function cargarsemanaspa($anho){
+    function cargarsemanaspa($anho) {
         $bd = conectar();
         $datos = $bd->prepare("SELECT * FROM tblsemanas WHERE Anho = :anho");
         $datos->bindParam(":anho", $anho, PDO::PARAM_STR);
@@ -485,7 +511,7 @@
     }
 
     //Funciones de ver elaboración de acuerdo al tipo de filtro
-        function verelaboracion_s($finca, $semana, $ano, $codigocaja){
+        function verelaboracion_s($finca, $semana, $ano, $codigocaja) {
             $bd = conectar();
             $datos = $bd->prepare("
                 SELECT  (SELECT DATE_ADD(s.Fecha_Inicio, INTERVAL (di.PKId-1) DAY)) as Fecha, 
@@ -522,7 +548,7 @@
             return $datos->fetchAll();
         }
 
-        function verelaboracion_a($finca, $ano, $codigocaja){
+        function verelaboracion_a($finca, $ano, $codigocaja) {
             $bd = conectar();
             $datos = $bd->prepare("
                 SELECT SUM(dd.N_CajasProducidas_Dia) as total_anual 
@@ -550,7 +576,7 @@
             return $datos->fetch();
         }
 
-        function verelaboracion_h($finca, $codigocaja){
+        function verelaboracion_h($finca, $codigocaja) {
             $bd = conectar();
             $datos = $bd->prepare("
                 SELECT SUM(dd.N_CajasProducidas_Dia) as total_historico
@@ -577,7 +603,7 @@
     // End funciones de ver elaboración --------------------------------------------------
 
     //
-    function cargarsemanas_pe($ano_pe){
+    function cargarsemanas_pe($ano_pe) {
         $bd = conectar();
         $datos = $bd->prepare("
             SELECT s.PKId, s.N_Semana
@@ -593,7 +619,7 @@
     }
 
     //
-    function tipofrutaselect(){
+    function tipofrutaselect() {
         $bd = conectar();
         $datos = $bd->prepare("SELECT * FROM TblTipoFruta");
         $datos->execute();
@@ -601,7 +627,7 @@
     }
 
     //
-    function cargarcintas($ids){
+    function cargarcintas($ids) {
         $bd = conectar();
         $datos = $bd->prepare("SELECT c.PKId as id_cinta, c.Descripcion as cinta, s.PKId as id_semana, s.N_Semana as semana, 
                                 s.Fecha_Inicio as fecha_inicio, s.Fecha_Fin as fecha_fin  
@@ -651,11 +677,10 @@
             AND em.PKCod = :cod_embarque
         ");
         $datos->bindParam(":cod_embarque", $cod_embarque, PDO::PARAM_STR);
-        if ($datos->execute()) {
+        if ($datos->execute())
             return $datos->fetch();
-        }else {
+        else
             return false;
-        }
     }
 
     //
@@ -678,7 +703,7 @@
 //Sentencias de actualización------------------------------------------------------------------------------------------------------------
 
     //Recibe arreglo de php para actualizar los datos
-    function actualizarempresa($empresa){
+    function actualizarempresa($empresa) {
         try {
             $bd = conectar();
             $datos = $bd->prepare("UPDATE tblempresas SET Nombre = :nom, Direccion = :dir, Telefono = :tel WHERE PKNit = :nit");

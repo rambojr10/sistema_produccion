@@ -68,9 +68,9 @@
 
     //generar semanas
     function anho_nuevo(){
-        $anhos = buscarregistro("SEMANA 52", "N_Semana", "tblsemanas");
+        $anhos = buscarregistro("SEMANA 52", "N_Semana", "tblsemanas", false);
         $ultimo_anho = end($anhos);
-        $verificar_anho = buscarregistro($_POST["anhonuevo"]+1, "Anho_generado", "tblregistrosemanas");
+        $verificar_anho = buscarregistro($_POST["anhonuevo"]+1, "Anho_generado", "tblregistrosemanas", false);
         if (isset($verificar_anho[0])) {
             echo "No se creó";
         }else {
@@ -99,14 +99,13 @@
         echo $result;
     }
 
-    //
+    // Guarda los datos de la vista insertar produccion llenando todas las tablas 
     function guardar_produccion() {
         
         $datosProduccion = json_decode($_POST['datosProduccionGuardar']);
         $validarCantidadesCajas = false;
         foreach ($datosProduccion->tblCajas as $caja) {
             if ($caja[1] != null){
-                // print_r(compararEmbarqueAndProduccion($_SESSION['conectado']->PKIbm, $caja[1], $datosProduccion->cod_embarque));
                 $cantidadEmbarque = compararEmbarqueAndProduccion($_SESSION['conectado']->PKIbm, $caja[1], $datosProduccion->cod_embarque);
                 if ($caja[10] > $cantidadEmbarque->Cantidad)
                     break;
@@ -120,7 +119,7 @@
             $lastIdEmbolse = guardarembolse(
                 $datosProduccion->embolse->id_semana, 
                 ($datosProduccion->embolse->presente == null ? 0 : $datosProduccion->embolse->presente), 
-                ($datosProduccion->embolse->prematuro == null ? 0: $datosProduccion->embolse->prematuro)
+                ($datosProduccion->embolse->prematuro == null ? 0 : $datosProduccion->embolse->prematuro)
             );
 
         // TblRacimos ---------------------------
@@ -167,6 +166,29 @@
                 for ($x=1; $x < 8; $x++) {
                     for ($y=1; $y < 7; $y++) {
                         guardarnacional_detalle($lastIdNacional, $x, $y, $datosProduccion->tblNacional[$x-1][$y]);
+                    }
+                }
+
+                // TblCargue - se ubica aquí para verificar que exista mercado nacional para realizar cargue
+                foreach ($datosProduccion->tblCargue as $c) {
+                    if ($c[9] > 0 && $c[0] != null && $c[1] != null && $c[2] != null && $c[10] != null && $c[11] != null) {
+                        $datosCargue = [
+                            'ibmFinca' => $_SESSION['conectado']->PKIbm,
+                            'cliente' => $c[1],
+                            'fechaCargue' => $c[0],
+                            'numeroPoma' => $c[2],
+                            'dedoSuelto' => $c[3],
+                            'cluster' => $c[4],
+                            'manoEntera' => $c[5],
+                            'especial' => $c[6],
+                            'bolsa20Kilos' => $c[7],
+                            'bolsa25Kilos' => $c[8],
+                            'total' => $c[9],
+                            'placa' => $c[10],
+                            'conductor' => $c[11],
+                            'codEmbarque' => $datosProduccion->cod_embarque
+                        ];
+                        guardarcargue($datosCargue);
                     }
                 }
             } else {
@@ -216,6 +238,7 @@
             }
 
         // End TblCajas --------------------------------------------
+
         } else {
             echo 22; //response 22 is a error code for limit of elaboration
         }
@@ -350,7 +373,7 @@
     //Buscar Finca por ibm o por nombre
     function buscar_finca(){
         if (isset($_GET['nombre_finca'])){
-            $finca = buscarregistro($_GET['nombre_finca'], "Nombre", "TblFincas");
+            $finca = buscarregistro($_GET['nombre_finca'], "Nombre", "TblFincas", false);
             echo $finca[0]->PKIbm;
         }else if (isset($_POST['ibm_f'])){
             $finca = buscarfinca($_POST['ibm_f']);
@@ -610,9 +633,9 @@
     //
     function cargar_produccion_ip() {
         $cod_embarque = $_GET['cod_embarque'];
-        // $tblProduccion = buscarregistro($cod_embarque, 'Cod_Embarque', 'TblProduccion', 'AND FKIbm_TblFincas = '.$_SESSION['conectado']->PKIbm);
-        $tblProduccion = buscarregistro($cod_embarque, "Cod_Embarque", "TblProduccion", "FKIbm_TblFincas = '".$_GET['ibm_finca']."';");
-        $tblProduccion = (count($tblProduccion) > 0 ? $tblProduccion[0] : ""); // == 1 pero lo pongo temporalmente así porque hay 2 registros en la bd
+        $tblProduccion = buscarregistro($cod_embarque, 'Cod_Embarque', 'TblProduccion', 'FKIbm_TblFincas = '.$_SESSION['conectado']->PKIbm);
+        // $tblProduccion = buscarregistro($cod_embarque, "Cod_Embarque", "TblProduccion", "FKIbm_TblFincas = '".$_GET['ibm_finca']."';");
+        $tblProduccion = (count($tblProduccion) == 1 ? $tblProduccion[0] : ""); // == 1 pero lo pongo temporalmente ( > 0 ) porque hay 2 registros en la bd
         if ($tblProduccion != "") {
 
             $tblEmbolse = buscarregistro($tblProduccion->FKId_TblEmbolse, "PKId", "TblEmbolse", false);
@@ -705,7 +728,7 @@
             ];
             echo json_encode($datosProduccion);
         } else {
-            echo false;
+            echo json_encode(['result' => false]);
         }
     }
 
