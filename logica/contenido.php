@@ -104,6 +104,8 @@
         
         $datosProduccion = json_decode($_POST['datosProduccionGuardar']);
         $validarCantidadesCajas = false;
+
+        //Compara la cantidad de cajas a ingresar no sea mayor a la programada
         foreach ($datosProduccion->tblCajas as $caja) {
             if ($caja[1] != null){
                 $cantidadEmbarque = compararEmbarqueAndProduccion($_SESSION['conectado']->PKIbm, $caja[1], $datosProduccion->cod_embarque);
@@ -115,7 +117,7 @@
                 break;
             }
         }
-        if ($validarCantidadesCajas) {
+        if ($validarCantidadesCajas) { 
             $lastIdEmbolse = guardarembolse(
                 $datosProduccion->embolse->id_semana, 
                 ($datosProduccion->embolse->presente == null ? 0 : $datosProduccion->embolse->presente), 
@@ -143,7 +145,7 @@
                     // Validar los campos a ingresar si son los campos de los usuarios
                     $idRacimosDetalle = guardarracimos_detalle(
                         $lastIdRacimos, $x, 
-                        ($datosProduccion->tblRacimos[4][$x] == null ? 0 : $datosProduccion->tblRacimos[4][$x]), 
+                        ($datosProduccion->tblRacimos[4][$x] == null ? 0 : $datosProduccion->tblRacimos[4][$x]),
                         ($datosProduccion->tblRacimos[8][$x] == null ? 0 : $datosProduccion->tblRacimos[8][$x]),
                         ($datosProduccion->tblRacimos[5][$x] == null ? 0 : $datosProduccion->tblRacimos[5][$x]), 
                         ($datosProduccion->tblRacimos[6][$x] == null ? 0 : $datosProduccion->tblRacimos[6][$x])
@@ -165,11 +167,12 @@
             if ($lastIdNacional != false) {
                 for ($x=1; $x < 8; $x++) {
                     for ($y=1; $y < 7; $y++) {
-                        guardarnacional_detalle($lastIdNacional, $x, $y, $datosProduccion->tblNacional[$x-1][$y]);
+                        guardarnacional_detalle($lastIdNacional, $x, $y, $datosProduccion->tblNacional[$y-1][$x]);
                     }
                 }
 
                 // TblCargue - se ubica aquí para verificar que exista mercado nacional para realizar cargue
+                $datosCargue = array();
                 foreach ($datosProduccion->tblCargue as $c) {
                     if ($c[9] > 0 && $c[0] != null && $c[1] != null && $c[2] != null && $c[10] != null && $c[11] != null) {
                         $datosCargue = [
@@ -238,7 +241,6 @@
             }
 
         // End TblCajas --------------------------------------------
-
         } else {
             echo 22; //response 22 is a error code for limit of elaboration
         }
@@ -633,8 +635,8 @@
     //
     function cargar_produccion_ip() {
         $cod_embarque = $_GET['cod_embarque'];
-        $tblProduccion = buscarregistro($cod_embarque, 'Cod_Embarque', 'TblProduccion', 'FKIbm_TblFincas = '.$_SESSION['conectado']->PKIbm);
-        // $tblProduccion = buscarregistro($cod_embarque, "Cod_Embarque", "TblProduccion", "FKIbm_TblFincas = '".$_GET['ibm_finca']."';");
+        // $tblProduccion = buscarregistro($cod_embarque, 'Cod_Embarque', 'TblProduccion', 'FKIbm_TblFincas = '.$_SESSION['conectado']->PKIbm);
+        $tblProduccion = buscarregistro($cod_embarque, "Cod_Embarque", "TblProduccion", "FKIbm_TblFincas = '".$_GET['ibm_finca']."';");
         $tblProduccion = (count($tblProduccion) == 1 ? $tblProduccion[0] : ""); // == 1 pero lo pongo temporalmente ( > 0 ) porque hay 2 registros en la bd
         if ($tblProduccion != "") {
 

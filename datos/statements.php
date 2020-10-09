@@ -300,19 +300,20 @@
                 $datos = $bd->prepare("INSERT INTO TblCargue VALUES(
                     null, :ibmFinca, :cliente, :fechaCargue, :numeroPoma, :dedoSuelto, :cluster, :manoEntera, :especial, 
                     :bolsa20Kilos, :bolsa25Kilos, :total, :placa, :conductor, :codEmbarque)");
-                $datos->bindParam(':ibmFinca', $datosCargue->ibmFinca, PDO::PARAM_STR);
-                $datos->bindParam(':cliente', $datosCargue->cliente, PDO::PARAM_STR);
-                $datos->bindParam(':fechaCargue', $datosCargue->fechaCargue, PDO::PARAM_STR);
-                $datos->bindParam(':numeroPoma', $datosCargue->numeroPoma, PDO::PARAM_STR);
-                $datos->bindParam(':dedoSuelto', $datosCargue->dedoSuelto, PDO::PARAM_INT);
-                $datos->bindParam(':cluster', $datosCargue->cluster, PDO::PARAM_INT);
-                $datos->bindParam(':manoEntera', $datosCargue->manoEntera, PDO::PARAM_INT);
-                $datos->bindParam(':especial', $datosCargue->especial, PDO::PARAM_INT);
-                $datos->bindParam(':bolsa20Kilos', $datosCargue->bolsa20Kilos, PDO::PARAM_INT);
-                $datos->bindParam(':bolsa25Kilos', $datosCargue->bolsa25Kilos, PDO::PARAM_INT);
-                $datos->bindParam(':placa', $datosCargue->placa, PDO::PARAM_STR);
-                $datos->bindParam(':conductor', $datosCargue->conductor, PDO::PARAM_STR);
-                $datos->bindParam(':codEmbarque', $datosCargue->codEmbarque, PDO::PARAM_STR);
+                $datos->bindParam(':ibmFinca', $datosCargue['ibmFinca'], PDO::PARAM_STR);
+                $datos->bindParam(':cliente', $datosCargue['cliente'], PDO::PARAM_STR);
+                $datos->bindParam(':fechaCargue', $datosCargue['fechaCargue'], PDO::PARAM_STR);
+                $datos->bindParam(':numeroPoma', $datosCargue['numeroPoma'], PDO::PARAM_STR);
+                $datos->bindParam(':dedoSuelto', $datosCargue['dedoSuelto'], PDO::PARAM_INT);
+                $datos->bindParam(':cluster', $datosCargue['cluster'], PDO::PARAM_INT);
+                $datos->bindParam(':manoEntera', $datosCargue['manoEntera'], PDO::PARAM_INT);
+                $datos->bindParam(':especial', $datosCargue['especial'], PDO::PARAM_INT);
+                $datos->bindParam(':bolsa20Kilos', $datosCargue['bolsa20Kilos'], PDO::PARAM_INT);
+                $datos->bindParam(':bolsa25Kilos', $datosCargue['bolsa25Kilos'], PDO::PARAM_INT);
+                $datos->bindParam(':total', $datosCargue['total'], PDO::PARAM_INT);
+                $datos->bindParam(':placa', $datosCargue['placa'], PDO::PARAM_STR);
+                $datos->bindParam(':conductor', $datosCargue['conductor'], PDO::PARAM_STR);
+                $datos->bindParam(':codEmbarque', $datosCargue['codEmbarque'], PDO::PARAM_STR);
                 $datos->execute();
             } catch (Exception $e) {
                 echo "Error".$e;
