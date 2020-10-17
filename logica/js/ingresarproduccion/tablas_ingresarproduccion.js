@@ -241,7 +241,7 @@
                         }, {
                             type: 'success'
                         });
-                        console.log("Todo guarda melo mi pana, usted es la VERGA parcero, siga así que va es pa alante a terminar esta mondá")
+                        console.log("Todo guarda melo mi pana, usted es la VERGA parcero, siga así que va es pa alante a terminar su mayor reto")
                     } else if (res == 22) { //response 22 is a error code for limit of elaboration
                         setTimeout(func => {swal('Guardar producción', '¡Los datos superan el límite de elaboración!', 'error')}, 1000);
                     } else {
@@ -276,7 +276,7 @@
     })
     .then(res => {
         if (res[0].PKCod == cod_embarque) {
-            $("#cod_embarque_ip").data("idSemana_ip", res[0].FKId_TblSemanas);
+            $("#cod_embarque_ip").data('idSemana_ip', res[0].FKId_TblSemanas);
             fetch(`../logica/contenido.php?op=cargar_produccion_ip&cod_embarque=${cod_embarque}&ibm_finca=80074`)
             .then(response => {
                 if (response.ok) 
@@ -294,7 +294,7 @@
                     $("#txtPrematuro_ip").val(datosProduccion.embolse.prematuro);
                     cargar_tabla_racimos_ip(res[0].FKId_TblSemanas, datosProduccion.tblRacimos);
                     cargar_tabla_cajas_ip(datosProduccion.tblCajas);
-                    cargar_tabla_nacional_ip(datosProduccion.tblNacional, false);
+                    cargar_tabla_nacional_ip(datosProduccion.tblNacional, datosProduccion.tblCargue);
                 }
             });
         } else {
@@ -322,17 +322,17 @@
         })
         .then(res => {
             //Guarda el id de la cinta para guardar los datos de los racimos en la tabla tblDet_tblDet_tblRacimos_tblDias
-            $("#cod_embarque_ip").data("idCinta_ip", res.semanas[2].id_cinta)
+            $("#cod_embarque_ip").data("idCinta_ip", res.semana.FKId_TblCintas)
 
-            $("[name='semana_ip']").val(res.semanas[2].semana);
-            $("[name='from_ip']").val(res.semanas[2].fecha_inicio);
-            $("[name='to_ip']").val(res.semanas[2].fecha_fin);
-            $("#pnlPresente").addClass(renderizarEmbolse(res.semanas[1].cinta));
-            $("#pnlPrematuro").addClass(renderizarEmbolse(res.semanas[2].cinta));
+            $("[name='semana_ip']").val(res.semana.N_Semana);
+            $("[name='from_ip']").val(res.semana.Fecha_Inicio);
+            $("[name='to_ip']").val(res.semana.Fecha_Fin);
+            $("#pnlPresente").addClass(renderizarEmbolse(res.cintas[1].Descripcion));
+            $("#pnlPrematuro").addClass(renderizarEmbolse(res.cintas[2].Descripcion));
            
             let tblRacimos_data = [
                 {
-                    descripcion:  `12 Semanas ${res.semanas[0].cinta}` ,
+                    descripcion:  `12 Semanas ${res.cintas[0].Descripcion}` ,
                     lunes: (typeof existsTblRacimos) == 'boolean' ? '' : existsTblRacimos[0][0],
                     martes: (typeof existsTblRacimos) == 'boolean' ? '' : existsTblRacimos[1][0],
                     miercoles: (typeof existsTblRacimos) == 'boolean' ? '' : existsTblRacimos[2][0],
@@ -342,7 +342,7 @@
                     domingo: (typeof existsTblRacimos) == 'boolean' ? '' : existsTblRacimos[6][0],
                     total: "=SUM(B1:H1)"
                 }, {
-                    descripcion: `11 Semanas ${res.semanas[1].cinta}`,
+                    descripcion: `11 Semanas ${res.cintas[1].Descripcion}`,
                     lunes: (typeof existsTblRacimos) == 'boolean' ? '' : existsTblRacimos[0][1],
                     martes: (typeof existsTblRacimos) == 'boolean' ? '' : existsTblRacimos[1][1],
                     miercoles: (typeof existsTblRacimos) == 'boolean' ? '' : existsTblRacimos[2][1],
@@ -352,7 +352,7 @@
                     domingo: (typeof existsTblRacimos) == 'boolean' ? '' : existsTblRacimos[6][1],
                     total: "=SUM(B2:H2)"
                 }, {
-                    descripcion: `10 Semanas ${res.semanas[2].cinta}`,
+                    descripcion: `10 Semanas ${res.cintas[2].Descripcion}`,
                     lunes: (typeof existsTblRacimos) == 'boolean' ? '' : existsTblRacimos[0][2],
                     martes: (typeof existsTblRacimos) == 'boolean' ? '' : existsTblRacimos[1][2],
                     miercoles: (typeof existsTblRacimos) == 'boolean' ? '' : existsTblRacimos[2][2],
@@ -362,7 +362,7 @@
                     domingo: (typeof existsTblRacimos) == 'boolean' ? '' : existsTblRacimos[6][2],
                     total: "=SUM(B3:H3)"
                 }, {
-                    descripcion: `09 Semanas ${res.semanas[3].cinta}`,
+                    descripcion: `09 Semanas ${res.cintas[3].Descripcion}`,
                     lunes: (typeof existsTblRacimos) == 'boolean' ? '' : existsTblRacimos[0][3],
                     martes: (typeof existsTblRacimos) == 'boolean' ? '' : existsTblRacimos[1][3],
                     miercoles: (typeof existsTblRacimos) == 'boolean' ? '' : existsTblRacimos[2][3],
@@ -432,10 +432,10 @@
                 data: tblRacimos_data,
                 className: 'htCenter',
                 cell: [
-                    {row: 0, col: 0, renderer: renderizarCintas(res.semanas[0].cinta) },
-                    {row: 1, col: 0, renderer: renderizarCintas(res.semanas[1].cinta) },
-                    {row: 2, col: 0, renderer: renderizarCintas(res.semanas[2].cinta) },
-                    {row: 3, col: 0, renderer: renderizarCintas(res.semanas[3].cinta) },
+                    {row: 0, col: 0, renderer: renderizarCintas(res.cintas[0].Descripcion) },
+                    {row: 1, col: 0, renderer: renderizarCintas(res.cintas[1].Descripcion) },
+                    {row: 2, col: 0, renderer: renderizarCintas(res.cintas[2].Descripcion) },
+                    {row: 3, col: 0, renderer: renderizarCintas(res.cintas[3].Descripcion) },
                     {row: 4, col: 0, renderer: titleRenderer},
                     {row: 7, col: 0, renderer: titleRenderer},
                     // ReadOnly
@@ -928,11 +928,24 @@
         ];
 
         console.log(existsTblCargue);
+        let controladorJsonCargue = 0;
         let tblCargue_data = [
             {   
-                fechaCargue: null,
-                cliente: null, 
-                poma: null,
+                fechaCargue: '',
+                    /* (existsTblCargue != false ? 
+                        (typeof existsTblCargue[controladorJsonCargue] == 'object' ?
+                            `${ 
+                                function() { 
+                                    controladorJsonCargue = controladorJsonCargue + 1; 
+                                    return existsTblCargue[controladorJsonCargue].Fecha_Cargue; 
+                                }()
+                            }`
+                            : null
+                        )
+                        : null
+                    ) */
+                cliente: '', 
+                poma: '',
                 dedoSuelto: '',
                 cluster: '',
                 manoEntera: '',

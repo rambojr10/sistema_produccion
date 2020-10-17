@@ -610,18 +610,25 @@
     //
     function cargardatos_racimos_ip() {
         // Obtiene y cambia los números de acuerdo a los ids de las cintas en la tabla que van de 1 a 10
-        $id4 = $_POST['id_semana']-2;
-        if ($id4 == -1) 
-            $id4 = 9;
-        else if ($id4 == 0)
-            $id4 = 10;
-        $ids = array(
-            'id1' => $_POST['id_semana']+0,
-            'id2' => (($_POST['id_semana']+1) == 11 ? 1 : ($_POST['id_semana']+1)),
-            'id3' => (($_POST['id_semana']-1) == 0 ? 10 : ($_POST['id_semana']-1)),
-            'id4' => ($id4) 
-        );
-        $datos['semanas'] = cargarcintas($ids);
+        $semana = buscarregistro($_POST['id_semana'], 'PKId', 'TblSemanas', false);
+        $datos['semana'] = $semana[0];
+        $ids[] = buscarregistro(
+            (($semana[0]->FKId_TblCintas-2 == -1 ? 9 : ($semana[0]->FKId_TblCintas-2 == 0 ? 10 : $semana[0]->FKId_TblCintas-2))),
+            'PKId', 'TblCintas', false
+        )[0];
+        $ids[] = buscarregistro(
+            (($semana[0]->FKId_TblCintas-1) == 0 ? 10 : ($semana[0]->FKId_TblCintas-1)),
+            'PKId', 'TblCintas', false
+        )[0];
+        $ids[] = buscarregistro(
+            $semana[0]->FKId_TblCintas+0,
+            'PKId', 'TblCintas', false
+        )[0];
+        $ids[] = buscarregistro(
+            (($semana[0]->FKId_TblCintas+1) == 11 ? 1 : ($semana[0]->FKId_TblCintas+1)),
+            'PKId', 'TblCintas', false
+        )[0];
+        $datos['cintas'] = $ids;
         echo json_encode($datos);
     }
 
@@ -637,7 +644,7 @@
         $cod_embarque = $_GET['cod_embarque'];
         // $tblProduccion = buscarregistro($cod_embarque, 'Cod_Embarque', 'TblProduccion', 'FKIbm_TblFincas = '.$_SESSION['conectado']->PKIbm);
         $tblProduccion = buscarregistro($cod_embarque, "Cod_Embarque", "TblProduccion", "FKIbm_TblFincas = '".$_GET['ibm_finca']."';");
-        $tblProduccion = (count($tblProduccion) == 1 ? $tblProduccion[0] : ""); // == 1 pero lo pongo temporalmente ( > 0 ) porque hay 2 registros en la bd
+        $tblProduccion = (count($tblProduccion) >= 1 ? $tblProduccion[0] : ""); // == 1 pero lo pongo temporalmente ( > 0 ) porque hay 2 registros en la bd
         if ($tblProduccion != "") {
 
             $tblEmbolse = buscarregistro($tblProduccion->FKId_TblEmbolse, "PKId", "TblEmbolse", false);
@@ -714,7 +721,10 @@
             }
 
             //TblCargue
+            // $infoCargue = buscarregistro($tblProduccion->Cod_Embarque, "FKCod_TblEmbarque", "TblCargue", 'FKIbm_TblFincas = '.$_SESSION['conectado']->PKIbm);
+            $infoCargue = buscarregistro($tblProduccion->Cod_Embarque, "FKCod_TblEmbarque", "TblCargue", "FKIbm_TblFincas = '".$_GET['ibm_finca']."';");
 
+            //Result
             $datosProduccion = [
                 'cod_embarque' => $cod_embarque,
                 'embolse' => [
@@ -726,7 +736,7 @@
                 'tblRacimos' => $infoRacimos,
                 'tblCajas' => $infoCajas,
                 'tblNacional' => $infoNacional,
-                'tblCargue' => []
+                'tblCargue' => $infoCargue
             ];
             echo json_encode($datosProduccion);
         } else {
