@@ -355,15 +355,15 @@
 
         // Guardar detalle tblproduccion
         function guardarproduccion_detalle(
-            $idTblProduccion, $idTblDias, $cajasElaboradasDia, 
-            $cajasRechazadasDia, $cajasExportadasDia, $ratioDia, 
-            $mermaDia, $pesoRacimosDia, $areaRecorridaDia, $pesoVastagoDia) {
+            $idTblProduccion, $idTblDias, $cajasElaboradasDia, $cajasRechazadasDia, 
+            $cajasExportadasDia, $ratioDia, $mermaDia, $pesoRacimosDia, $areaRecorridaDia, 
+            $pesoVastagoDia, $lotesCortadosDia, $lotesIniciadosDia) {
             try {
                 $bd = conectar();
                 $datos = $bd->prepare("INSERT INTO TblDet_TblProduccion VALUES(
                     null, :idTblProduccion, :idTblDias, :cajasElaboradasDia, 
                     :cajasRechazadasDia, :cajasExportadasDia, :ratioDia, 
-                    :mermaDia, :pesoRacimosDia, :areaRecorridaDia, :pesoVastagoDia);");
+                    :mermaDia, :pesoRacimosDia, :areaRecorridaDia, :pesoVastagoDia, :lotesCortadosDia, :lotesIniciadosDia);");
                 $datos->bindParam(':idTblProduccion', $idTblProduccion, PDO::PARAM_INT);
                 $datos->bindParam(':idTblDias', $idTblDias, PDO::PARAM_INT);
                 $datos->bindParam(':cajasElaboradasDia', $cajasElaboradasDia, PDO::PARAM_INT);
@@ -372,8 +372,10 @@
                 $datos->bindParam(':ratioDia', $ratioDia, PDO::PARAM_STR);
                 $datos->bindParam(':mermaDia', $mermaDia, PDO::PARAM_STR);
                 $datos->bindParam(':pesoRacimosDia', $pesoRacimosDia, PDO::PARAM_STR);
-                $datos->bindParam(':areaRecorridaDia', $areaRecorridaDia, PDO::PARAM_INT);
+                $datos->bindParam(':areaRecorridaDia', $areaRecorridaDia, PDO::PARAM_STR);
                 $datos->bindParam(':pesoVastagoDia', $pesoVastagoDia, PDO::PARAM_STR);
+                $datos->bindParam(':lotesCortadosDia', $lotesCortadosDia, PDO::PARAM_STR);
+                $datos->bindParam(':lotesIniciadosDia', $lotesIniciadosDia, PDO::PARAM_STR);
                 if ($datos->execute())
                     return $bd->lastInsertId();
                 else 

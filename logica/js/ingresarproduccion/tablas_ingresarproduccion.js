@@ -428,7 +428,6 @@
 
             const tblRacimos = document.querySelector('#tblRacimos_ip');
             let tblSettings_racimos = {
-                licenseKey: 'non-commercial-and-evaluation',
                 data: tblRacimos_data,
                 className: 'htCenter',
                 cell: [
@@ -631,39 +630,39 @@
                     caja: 'Ratio 1a. / 2a.',
                     codigo: null,
                     factor: null,
-                    lunes: (existsTblCajas != false ? existsTblCajas[0].ratio : ''),
-                    martes: (existsTblCajas != false ? existsTblCajas[1].ratio : ''),
-                    miercoles: (existsTblCajas != false ? existsTblCajas[2].ratio : ''),
-                    jueves: (existsTblCajas != false ? existsTblCajas[3].ratio : ''),
-                    viernes: (existsTblCajas != false ? existsTblCajas[4].ratio : ''),
-                    sabado: (existsTblCajas != false ? existsTblCajas[5].ratio : ''),
-                    domingo: (existsTblCajas != false ? existsTblCajas[6].ratio : ''),
+                    lunes: (existsTblCajas != false ? (existsTblCajas[0].ratio == 0 ? null : existsTblCajas[0].ratio) : null),
+                    martes: (existsTblCajas != false ? (existsTblCajas[1].ratio == 0 ? null : existsTblCajas[1].ratio) : null),
+                    miercoles: (existsTblCajas != false ? (existsTblCajas[2].ratio == 0 ? null : existsTblCajas[2].ratio) : null),
+                    jueves: (existsTblCajas != false ? (existsTblCajas[3].ratio == 0 ? null : existsTblCajas[3].ratio) : null),
+                    viernes: (existsTblCajas != false ? (existsTblCajas[4].ratio == 0 ? null : existsTblCajas[4].ratio) : null),
+                    sabado: (existsTblCajas != false ? (existsTblCajas[5].ratio == 0 ? null : existsTblCajas[5].ratio) : null),
+                    domingo: (existsTblCajas != false ? (existsTblCajas[6].ratio == 0 ? null : existsTblCajas[6].ratio) : null),
                     total: `=ROUND(AVERAGE(D${tblCajas_data.length+4}:J${tblCajas_data.length+4}), 2)`,
                     conversion: null
                 }, {
                     caja: '% Merma',
                     codigo: null,
                     factor: null,
-                    lunes: (existsTblCajas != false ? existsTblCajas[0].merma : ''),
-                    martes: (existsTblCajas != false ? existsTblCajas[1].merma : ''),
-                    miercoles: (existsTblCajas != false ? existsTblCajas[2].merma : ''),
-                    jueves: (existsTblCajas != false ? existsTblCajas[3].merma : ''),
-                    viernes: (existsTblCajas != false ? existsTblCajas[4].merma : ''),
-                    sabado: (existsTblCajas != false ? existsTblCajas[5].merma : ''),
-                    domingo: (existsTblCajas != false ? existsTblCajas[6].merma : ''),
+                    lunes: (existsTblCajas != false ? (existsTblCajas[0].merma == 0 ? null : existsTblCajas[0].merma) : null),
+                    martes: (existsTblCajas != false ? (existsTblCajas[1].merma == 0 ? null : existsTblCajas[1].merma) : null),
+                    miercoles: (existsTblCajas != false ? (existsTblCajas[2].merma == 0 ? null : existsTblCajas[2].merma) : null),
+                    jueves: (existsTblCajas != false ? (existsTblCajas[3].merma == 0 ? null : existsTblCajas[3].merma) : null),
+                    viernes: (existsTblCajas != false ? (existsTblCajas[4].merma == 0 ? null : existsTblCajas[4].merma) : null),
+                    sabado: (existsTblCajas != false ? (existsTblCajas[5].merma == 0 ? null : existsTblCajas[5].merma) : null),
+                    domingo: (existsTblCajas != false ? (existsTblCajas[6].merma == 0 ? null : existsTblCajas[6].merma) : null),
                     total: `=ROUND(AVERAGE(D${tblCajas_data.length+5}:J${tblCajas_data.length+5}), 2)`,
                     conversion: null
                 }, {
                     caja: 'Peso Racimos',
                     codigo: null,
                     factor: null,
-                    lunes: (existsTblCajas != false ? existsTblCajas[0].pesoRacimos : ''),
-                    martes: (existsTblCajas != false ? existsTblCajas[1].pesoRacimos : ''),
-                    miercoles: (existsTblCajas != false ? existsTblCajas[2].pesoRacimos : ''),
-                    jueves: (existsTblCajas != false ? existsTblCajas[3].pesoRacimos : ''),
-                    viernes: (existsTblCajas != false ? existsTblCajas[4].pesoRacimos : ''),
-                    sabado: (existsTblCajas != false ? existsTblCajas[5].pesoRacimos : ''),
-                    domingo: (existsTblCajas != false ? existsTblCajas[6].pesoRacimos : ''),
+                    lunes: (existsTblCajas != false ? (existsTblCajas[0].pesoRacimos == 0 ? null : existsTblCajas[0].pesoRacimos) : null),
+                    martes: (existsTblCajas != false ? (existsTblCajas[1].pesoRacimos == 0 ? null : existsTblCajas[1].pesoRacimos) : null),
+                    miercoles: (existsTblCajas != false ? (existsTblCajas[2].pesoRacimos == 0 ? null : existsTblCajas[2].pesoRacimos) : null),
+                    jueves: (existsTblCajas != false ? (existsTblCajas[3].pesoRacimos == 0 ? null : existsTblCajas[3].pesoRacimos) : null),
+                    viernes: (existsTblCajas != false ? (existsTblCajas[4].pesoRacimos == 0 ? null : existsTblCajas[4].pesoRacimos) : null),
+                    sabado: (existsTblCajas != false ? (existsTblCajas[5].pesoRacimos == 0 ? null : existsTblCajas[5].pesoRacimos) : null),
+                    domingo: (existsTblCajas != false ? (existsTblCajas[6].pesoRacimos == 0 ? null : existsTblCajas[6].pesoRacimos) : null),
                     total: `=ROUND(AVERAGE(D${tblCajas_data.length+6}:J${tblCajas_data.length+6}), 2)`,
                 }, {
                     caja: 'Area Recorrida',
@@ -682,16 +681,42 @@
                     caja: 'Peso Vástago',
                     codigo: null,
                     factor: null,
-                    lunes: (existsTblCajas != false ? existsTblCajas[0].pesoVastago : ''),
-                    martes: (existsTblCajas != false ? existsTblCajas[1].pesoVastago : ''),
-                    miercoles: (existsTblCajas != false ? existsTblCajas[2].pesoVastago : ''),
-                    jueves: (existsTblCajas != false ? existsTblCajas[3].pesoVastago : ''),
-                    viernes: (existsTblCajas != false ? existsTblCajas[4].pesoVastago : ''),
-                    sabado: (existsTblCajas != false ? existsTblCajas[5].pesoVastago : ''),
-                    domingo: (existsTblCajas != false ? existsTblCajas[6].pesoVastago : ''),
+                    lunes: (existsTblCajas != false ? (existsTblCajas[0].pesoVastago == 0 ? null : existsTblCajas[0].pesoVastago) : null),
+                    martes: (existsTblCajas != false ? (existsTblCajas[1].pesoVastago == 0 ? null : existsTblCajas[1].pesoVastago) : null),
+                    miercoles: (existsTblCajas != false ? (existsTblCajas[2].pesoVastago == 0 ? null : existsTblCajas[2].pesoVastago) : null),
+                    jueves: (existsTblCajas != false ? (existsTblCajas[3].pesoVastago == 0 ? null : existsTblCajas[3].pesoVastago) : null),
+                    viernes: (existsTblCajas != false ? (existsTblCajas[4].pesoVastago == 0 ? null : existsTblCajas[4].pesoVastago) : null),
+                    sabado: (existsTblCajas != false ? (existsTblCajas[5].pesoVastago == 0 ? null : existsTblCajas[5].pesoVastago) : null),
+                    domingo: (existsTblCajas != false ? (existsTblCajas[6].pesoVastago == 0 ? null : existsTblCajas[6].pesoVastago) : null),
                     total: `=ROUND(AVERAGE(D${tblCajas_data.length+8}:J${tblCajas_data.length+8}), 2)`,
                     conversion: null
-                },
+                }, {
+                    caja: 'Lotes CORTADOS',
+                    codigo: null,
+                    factor: null,
+                    lunes: (existsTblCajas != false ? existsTblCajas[0].lotesCortados : ''),
+                    martes: (existsTblCajas != false ? existsTblCajas[1].lotesCortados : ''),
+                    miercoles: (existsTblCajas != false ? existsTblCajas[2].lotesCortados : ''),
+                    jueves: (existsTblCajas != false ? existsTblCajas[3].lotesCortados : ''),
+                    viernes: (existsTblCajas != false ? existsTblCajas[4].lotesCortados : ''),
+                    sabado: (existsTblCajas != false ? existsTblCajas[5].lotesCortados : ''),
+                    domingo: (existsTblCajas != false ? existsTblCajas[6].lotesCortados : ''),
+                    total: null,
+                    conversion: null
+                }, {
+                    caja: 'Lotes INICIADOS',
+                    codigo: null,
+                    factor: null,
+                    lunes: (existsTblCajas != false ? existsTblCajas[0].lotesIniciados : ''),
+                    martes: (existsTblCajas != false ? existsTblCajas[1].lotesIniciados : ''),
+                    miercoles: (existsTblCajas != false ? existsTblCajas[2].lotesIniciados : ''),
+                    jueves: (existsTblCajas != false ? existsTblCajas[3].lotesIniciados : ''),
+                    viernes: (existsTblCajas != false ? existsTblCajas[4].lotesIniciados : ''),
+                    sabado: (existsTblCajas != false ? existsTblCajas[5].lotesIniciados : ''),
+                    domingo: (existsTblCajas != false ? existsTblCajas[6].lotesIniciados : ''),
+                    total: null,
+                    conversion: null
+                }
             ];
             filas.forEach(element => {
                 tblCajas_data.push(element);
@@ -702,7 +727,6 @@
 
             const tblCajas = document.querySelector('#tblCajas_ip');
             let tblSettings_cajas = {
-                licenseKey: 'non-commercial-and-evaluation',
                 data: tblCajas_data,
                 stretchH: 'all',
                 formulas: true,
@@ -810,15 +834,24 @@
                 ],
                 colWidths: [120, 30, 30],
                 cell: [
+                    {row: (length-10), col: 0, renderer: subtitleRenderer, className: 'htCenter'},
+                    {row: (length-9), col: 0, renderer: subtitleRenderer, className: 'htCenter'},
                     {row: (length-8), col: 0, renderer: subtitleRenderer, className: 'htCenter'},
-                    {row: (length-7), col: 0, renderer: subtitleRenderer, className: 'htCenter'},
-                    {row: (length-6), col: 0, renderer: subtitleRenderer, className: 'htCenter'},
+                    {row: (length-7), col: 0, renderer: compRenderer, className: 'htCenter'},
+                    {row: (length-6), col: 0, renderer: compRenderer, className: 'htCenter'},
                     {row: (length-5), col: 0, renderer: compRenderer, className: 'htCenter'},
                     {row: (length-4), col: 0, renderer: compRenderer, className: 'htCenter'},
                     {row: (length-3), col: 0, renderer: compRenderer, className: 'htCenter'},
-                    {row: (length-2), col: 0, renderer: compRenderer, className: 'htCenter'},
-                    {row: (length-1), col: 0, renderer: compRenderer, className: 'htCenter'},
+                    {row: (length-2), col: 0, renderer: subtitleRenderer, className: 'htCenter'},
+                    {row: (length-1), col: 0, renderer: subtitleRenderer, className: 'htCenter'},
                     // ReadOnly
+                    {row: (length-10), col: 3, readOnly: true},
+                    {row: (length-10), col: 4, readOnly: true},
+                    {row: (length-10), col: 5, readOnly: true},
+                    {row: (length-10), col: 6, readOnly: true},
+                    {row: (length-10), col: 7, readOnly: true},
+                    {row: (length-10), col: 8, readOnly: true},
+                    {row: (length-10), col: 9, readOnly: true},
                     {row: (length-8), col: 3, readOnly: true},
                     {row: (length-8), col: 4, readOnly: true},
                     {row: (length-8), col: 5, readOnly: true},
@@ -826,15 +859,25 @@
                     {row: (length-8), col: 7, readOnly: true},
                     {row: (length-8), col: 8, readOnly: true},
                     {row: (length-8), col: 9, readOnly: true},
-                    {row: (length-6), col: 3, readOnly: true},
-                    {row: (length-6), col: 4, readOnly: true},
-                    {row: (length-6), col: 5, readOnly: true},
-                    {row: (length-6), col: 6, readOnly: true},
-                    {row: (length-6), col: 7, readOnly: true},
-                    {row: (length-6), col: 8, readOnly: true},
-                    {row: (length-6), col: 9, readOnly: true},
+                    // Custom cells
+                    {row: (length-2), col: 3, type: 'text', className: 'htCenter'},
+                    {row: (length-2), col: 4, type: 'text', className: 'htCenter'},
+                    {row: (length-2), col: 5, type: 'text', className: 'htCenter'},
+                    {row: (length-2), col: 6, type: 'text', className: 'htCenter'},
+                    {row: (length-2), col: 7, type: 'text', className: 'htCenter'},
+                    {row: (length-2), col: 8, type: 'text', className: 'htCenter'},
+                    {row: (length-2), col: 9, type: 'text', className: 'htCenter'},
+                    {row: (length-1), col: 3, type: 'text', className: 'htCenter'},
+                    {row: (length-1), col: 4, type: 'text', className: 'htCenter'},
+                    {row: (length-1), col: 5, type: 'text', className: 'htCenter'},
+                    {row: (length-1), col: 6, type: 'text', className: 'htCenter'},
+                    {row: (length-1), col: 7, type: 'text', className: 'htCenter'},
+                    {row: (length-1), col: 8, type: 'text', className: 'htCenter'},
+                    {row: (length-1), col: 9, type: 'text', className: 'htCenter'},
                 ],
                 mergeCells: [
+                    {row: (length-10), col: 0, rowspan: 1, colspan: 3},
+                    {row: (length-9), col: 0, rowspan: 1, colspan: 3},
                     {row: (length-8), col: 0, rowspan: 1, colspan: 3},
                     {row: (length-7), col: 0, rowspan: 1, colspan: 3},
                     {row: (length-6), col: 0, rowspan: 1, colspan: 3},
@@ -843,6 +886,8 @@
                     {row: (length-3), col: 0, rowspan: 1, colspan: 3},
                     {row: (length-2), col: 0, rowspan: 1, colspan: 3},
                     {row: (length-1), col: 0, rowspan: 1, colspan: 3},
+                    // 
+                    {row: (length-7), col: 11, rowspan: 7, colspan: 1}
                 ]
             };
             hot2 = new Handsontable(tblCajas, tblSettings_cajas);
@@ -1006,7 +1051,6 @@
         const tblCargue = document.querySelector('#tblCargue_ip');
 
         let tblSettings_nacional = {
-            licenseKey: 'non-commercial-and-evaluation',
             data: tblNacional_data,
             stretchH: 'all',
             formulas: true,
@@ -1092,7 +1136,6 @@
         };
 
         let tblSettings_cargue = {
-            licenseKey: 'non-commercial-and-evaluation',
             data: tblCargue_data,
             className: 'htCenter',
             cell: [

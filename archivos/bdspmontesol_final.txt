@@ -241,6 +241,8 @@
 		Peso_Racimos FLOAT,
 		Area_Recorrida FLOAT,
 		Peso_Vastago FLOAT,
+		Lotes_Cortados VARCHAR(50),
+		Lotes_Iniciados VARCHAR(50),
 		FOREIGN KEY (FKId_TblProduccion) REFERENCES TblProduccion(PKId),
 		FOREIGN KEY (FKId_TblDias) REFERENCES TblDias(PKId)	
 	);
@@ -250,7 +252,7 @@
 		PKId INTEGER PRIMARY KEY AUTO_INCREMENT,
 		FKId_TblDet_TblProduccion INT not null,
 		FKCodigo_TblCajasProduccion VARCHAR(5) not null,
-		N_CajasProducidas_Dia INT not null,
+		N_CajasProducidas_Dia INT,
 		FOREIGN KEY (FKId_TblDet_TblProduccion) REFERENCES TblDet_TblProduccion(PKId),
 		FOREIGN KEY (FKCodigo_TblCajasProduccion) REFERENCES TblCajasProduccion(PKCodigo)
 	);

@@ -111,7 +111,7 @@
                 $cantidadEmbarque = compararEmbarqueAndProduccion($_SESSION['conectado']->PKIbm, $caja[1], $datosProduccion->cod_embarque);
                 if ($caja[10] > $cantidadEmbarque->Cantidad)
                     break;
-                else
+                else 
                     $validarCantidadesCajas = true;
             } else {
                 break;
@@ -145,10 +145,10 @@
                     // Validar los campos a ingresar si son los campos de los usuarios
                     $idRacimosDetalle = guardarracimos_detalle(
                         $lastIdRacimos, $x, 
-                        ($datosProduccion->tblRacimos[4][$x] == null ? 0 : $datosProduccion->tblRacimos[4][$x]),
-                        ($datosProduccion->tblRacimos[8][$x] == null ? 0 : $datosProduccion->tblRacimos[8][$x]),
-                        ($datosProduccion->tblRacimos[5][$x] == null ? 0 : $datosProduccion->tblRacimos[5][$x]), 
-                        ($datosProduccion->tblRacimos[6][$x] == null ? 0 : $datosProduccion->tblRacimos[6][$x])
+                        $datosProduccion->tblRacimos[4][$x],
+                        $datosProduccion->tblRacimos[8][$x],
+                        $datosProduccion->tblRacimos[5][$x], 
+                        $datosProduccion->tblRacimos[6][$x]
                     );
                     if  ($idRacimosDetalle != false) {
                         for ($y=0; $y < 4; $y++) { 
@@ -206,30 +206,32 @@
             $maxItems = count($datosProduccion->tblCajas);
             $lastIdProduccion = guardarproduccion(
                 $_SESSION['conectado']->PKIbm, $lastIdEmbolse, $lastIdRacimos, $datosProduccion->embolse->id_semana, $lastIdNacional, $datosProduccion->cod_embarque,
-                $datosProduccion->tblCajas[$maxItems-8][10], $datosProduccion->tblCajas[$maxItems-7][10], $datosProduccion->tblCajas[$maxItems-6][10],
-                ($datosProduccion->tblCajas[$maxItems-5][10] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-5][10]), 
-                ($datosProduccion->tblCajas[$maxItems-4][10] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-4][10]),
-                ($datosProduccion->tblCajas[$maxItems-3][10] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-3][10]),
-                $datosProduccion->tblCajas[$maxItems-2][10], 
-                ($datosProduccion->tblCajas[$maxItems-1][10] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-1][10]),
+                $datosProduccion->tblCajas[$maxItems-10][10], $datosProduccion->tblCajas[$maxItems-9][10], $datosProduccion->tblCajas[$maxItems-8][10],
+                ($datosProduccion->tblCajas[$maxItems-7][10] == '#VALUE!' ? null : $datosProduccion->tblCajas[$maxItems-7][10]), 
+                ($datosProduccion->tblCajas[$maxItems-6][10] == '#VALUE!' ? null : $datosProduccion->tblCajas[$maxItems-6][10]),
+                ($datosProduccion->tblCajas[$maxItems-5][10] == '#VALUE!' ? null : $datosProduccion->tblCajas[$maxItems-5][10]),
+                $datosProduccion->tblCajas[$maxItems-4][10], 
+                ($datosProduccion->tblCajas[$maxItems-3][10] == '#VALUE!' ? null : $datosProduccion->tblCajas[$maxItems-3][10]),
                 substr($datosProduccion->cod_embarque, 4,4)
             );
             if ($lastIdProduccion != false) {
                 for ($x = 1; $x < 8; $x++) {
                     $idProduccionDetalle = guardarproduccion_detalle(
-                        $lastIdProduccion, $x, $datosProduccion->tblCajas[$maxItems-8][$x+2], $datosProduccion->tblCajas[$maxItems-7][$x+2],
-                        $datosProduccion->tblCajas[$maxItems-6][$x+2],
-                        ($datosProduccion->tblCajas[$maxItems-5][$x+2] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-5][$x+2]),
-                        ($datosProduccion->tblCajas[$maxItems-4][$x+2] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-4][$x+2]),
-                        ($datosProduccion->tblCajas[$maxItems-3][$x+2] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-3][$x+2]),
+                        $lastIdProduccion, $x, $datosProduccion->tblCajas[$maxItems-10][$x+2], $datosProduccion->tblCajas[$maxItems-9][$x+2],
+                        $datosProduccion->tblCajas[$maxItems-8][$x+2],
+                        ($datosProduccion->tblCajas[$maxItems-7][$x+2]),
+                        ($datosProduccion->tblCajas[$maxItems-6][$x+2]),
+                        ($datosProduccion->tblCajas[$maxItems-5][$x+2]),
+                        $datosProduccion->tblCajas[$maxItems-4][$x+2],
+                        ($datosProduccion->tblCajas[$maxItems-3][$x+2]),
                         $datosProduccion->tblCajas[$maxItems-2][$x+2],
-                        ($datosProduccion->tblCajas[$maxItems-1][$x+2] == '#VALUE!' ? 0 : $datosProduccion->tblCajas[$maxItems-1][$x+2])
+                        $datosProduccion->tblCajas[$maxItems-1][$x+2]
                     );
                     if  ($idProduccionDetalle != false) {
-                        for ($y = 0; $y < $maxItems-8; $y++) {
+                        for ($y = 0; $y < $maxItems-10; $y++) {
                             guardarproduccion_detalle_detalle(
                                 $idProduccionDetalle, $datosProduccion->tblCajas[$y][1], 
-                                ($datosProduccion->tblCajas[$y][$x+2] >= 0 ? $datosProduccion->tblCajas[$y][$x+2] : 0)
+                                ($datosProduccion->tblCajas[$y][$x+2] > 0 ? $datosProduccion->tblCajas[$y][$x+2] : null)
                             );
                         }
                     } else {
@@ -609,7 +611,7 @@
 
     //
     function cargardatos_racimos_ip() {
-        // Obtiene y cambia los números de acuerdo a los ids de las cintas en la tabla que van de 1 a 10
+        // Obtiene y cambia los números de acuerdo a los ids de las cintas en la tabla que van de 1 a 10, los retorna en orden de 12 a 9 semanas
         $semana = buscarregistro($_POST['id_semana'], 'PKId', 'TblSemanas', false);
         $datos['semana'] = $semana[0];
         $ids[] = buscarregistro(
@@ -670,7 +672,11 @@
             $tblCajas = buscarregistro($tblProduccion->PKId, "FKId_TblProduccion", "TblDet_TblProduccion", false);
             $infoCajas = array();
             foreach ($tblCajas as $dc) {
-                $pushDetalle = ["cajasRechazadas" => $dc->Total_CR_Dia, "ratio" => $dc->Ratio, "merma" => $dc->Merma, "pesoRacimos" => $dc->Peso_Racimos, "areaRecorrida" => $dc->Area_Recorrida, "pesoVastago" => $dc->Peso_Vastago];
+                $pushDetalle = [
+                    "cajasRechazadas" => $dc->Total_CR_Dia, "ratio" => $dc->Ratio, "merma" => $dc->Merma, 
+                    "pesoRacimos" => $dc->Peso_Racimos, "areaRecorrida" => $dc->Area_Recorrida, 
+                    "pesoVastago" => $dc->Peso_Vastago, "lotesCortados" => $dc->Lotes_Cortados, "lotesIniciados" => $dc->Lotes_Iniciados
+                ];
                 $datosDia = buscarregistro($dc->PKId, "FKId_TblDet_TblProduccion", "TblDet_TblDet_TblProduccion", false);
                 $pushDetalleDetalle = [];
                 foreach ($datosDia as $ddd) {

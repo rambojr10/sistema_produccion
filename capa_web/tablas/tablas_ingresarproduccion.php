@@ -12,7 +12,9 @@
             outline: none;
             margin: .5em 6em .5em;
             position: relative;
-            content: attr(data-symbol);
+        }
+        input:disabled {
+            opacity: .9 !important;
         }
     </style>
     <div class="container">
