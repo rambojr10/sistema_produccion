@@ -217,13 +217,15 @@
             if ($lastIdProduccion != false) {
                 for ($x = 1; $x < 8; $x++) {
                     $idProduccionDetalle = guardarproduccion_detalle(
-                        $lastIdProduccion, $x, $datosProduccion->tblCajas[$maxItems-10][$x+2], $datosProduccion->tblCajas[$maxItems-9][$x+2],
+                        $lastIdProduccion, $x, 
+                        $datosProduccion->tblCajas[$maxItems-10][$x+2], 
+                        $datosProduccion->tblCajas[$maxItems-9][$x+2],
                         $datosProduccion->tblCajas[$maxItems-8][$x+2],
-                        ($datosProduccion->tblCajas[$maxItems-7][$x+2]),
-                        ($datosProduccion->tblCajas[$maxItems-6][$x+2]),
-                        ($datosProduccion->tblCajas[$maxItems-5][$x+2]),
+                        $datosProduccion->tblCajas[$maxItems-7][$x+2],
+                        $datosProduccion->tblCajas[$maxItems-6][$x+2],
+                        $datosProduccion->tblCajas[$maxItems-5][$x+2],
                         $datosProduccion->tblCajas[$maxItems-4][$x+2],
-                        ($datosProduccion->tblCajas[$maxItems-3][$x+2]),
+                        $datosProduccion->tblCajas[$maxItems-3][$x+2],
                         $datosProduccion->tblCajas[$maxItems-2][$x+2],
                         $datosProduccion->tblCajas[$maxItems-1][$x+2]
                     );

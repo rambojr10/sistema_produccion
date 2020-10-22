@@ -972,23 +972,9 @@
             }
         ];
 
-        console.log(existsTblCargue);
-        let controladorJsonCargue = 0;
         let tblCargue_data = [
             {   
                 fechaCargue: '',
-                    /* (existsTblCargue != false ? 
-                        (typeof existsTblCargue[controladorJsonCargue] == 'object' ?
-                            `${ 
-                                function() { 
-                                    controladorJsonCargue = controladorJsonCargue + 1; 
-                                    return existsTblCargue[controladorJsonCargue].Fecha_Cargue; 
-                                }()
-                            }`
-                            : null
-                        )
-                        : null
-                    ) */
                 cliente: '', 
                 poma: '',
                 dedoSuelto: '',
@@ -1046,6 +1032,66 @@
                 total: "=SUM(D7:I7)"
             }
         ];
+
+        let tblCargue_IfExists = [];
+        let filasComplemento = [
+            {
+                fechaCargue: "TOTAL CARGUE DE CAJAS",
+                dedoSuelto: "=SUM(D1:D5)",
+                cluster: "=SUM(E1:E5)",
+                manoEntera: "=SUM(F1:F5)",
+                especial: "=SUM(G1:G5)",
+                dedoSueltoBolsa20: "=SUM(H1:H5)",
+                dedoSueltoBolsa25: "=SUM(I1:I5)",
+                total: "=SUM(J1:J5)",
+            }, {
+                fechaCargue: "CAJAS EN PLATAFORMA",
+                total: "=SUM(D7:I7)"
+            }
+        ];
+        if (existsTblCargue != false ) {
+            existsTblCargue.forEach( function(element, index) {
+                let object = {
+                    fechaCargue: element.Fecha_Cargue,
+                    cliente: element.Cliente, 
+                    poma: element.N_Poma,
+                    dedoSuelto: element.DedoSuelto,
+                    cluster: element.Cluster,
+                    manoEntera: element.ManoEntera,
+                    especial: element.Especial,
+                    dedoSueltoBolsa20: element.Bolsa20Kilos,
+                    dedoSueltoBolsa25: element.Bolsa25Kilos,
+                    total: `=SUM(D${index+1}:I${index+1})`, 
+                    placa: element.Placa_Vehiculo,
+                    conductor: element.Conductor
+                }
+                tblCargue_IfExists.push(object); 
+            })
+            if (tblCargue_IfExists.length < 6) {
+                for( var x = tblCargue_IfExists.length; x < 5; x++ ) {
+                    let object = {
+                        fechaCargue: '',
+                        cliente: '', 
+                        poma: '',
+                        dedoSuelto: '',
+                        cluster: '',
+                        manoEntera: '',
+                        especial: '',
+                        dedoSueltoBolsa20: '',
+                        dedoSueltoBolsa25: '',
+                        total: `=SUM(D${x+1}:I${x+1})`, 
+                        placa: null,
+                        conductor: null
+                    }
+                    tblCargue_IfExists.push(object);
+                }
+                tblCargue_IfExists.push(filasComplemento[0]);
+                tblCargue_IfExists.push(filasComplemento[1]);
+            } else {
+                tblCargue_IfExists.push(filasComplemento[0]);
+                tblCargue_IfExists.push(filasComplemento[1]);
+            }
+        }
 
         const tblNacional = document.querySelector('#tblNacional_ip');
         const tblCargue = document.querySelector('#tblCargue_ip');
@@ -1136,11 +1182,17 @@
         };
 
         let tblSettings_cargue = {
-            data: tblCargue_data,
+            data: (tblCargue_IfExists[0] != undefined ? tblCargue_IfExists : tblCargue_data),
             className: 'htCenter',
             cell: [
                 {row: 5, col: 0, className: 'htCenter', type: 'text', readOnly: true},
-                {row: 6, col: 0, className: 'htCenter', type: 'text', readOnly: true}
+                {row: 5, col: 3, className: 'htCenter', type: 'text', readOnly: true},
+                {row: 5, col: 4, className: 'htCenter', type: 'text', readOnly: true},
+                {row: 5, col: 5, className: 'htCenter', type: 'text', readOnly: true},
+                {row: 5, col: 6, className: 'htCenter', type: 'text', readOnly: true},
+                {row: 5, col: 7, className: 'htCenter', type: 'text', readOnly: true},
+                {row: 5, col: 8, className: 'htCenter', type: 'text', readOnly: true},
+                {row: 6, col: 0, className: 'htCenter', type: 'text', readOnly: true},
             ],
             columns: [
                 {
@@ -1190,6 +1242,7 @@
             mergeCells: [
                 {row: 5, col: 0, rowspan: 1, colspan: 3},
                 {row: 6, col: 0, rowspan: 1, colspan: 3},
+                {row: 5, col: 10, rowspan: 2, colspan: 2}
             ],
             formulas: true,
             stretchH: 'all',
