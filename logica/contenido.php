@@ -101,7 +101,9 @@
 
     // Guarda los datos de la vista insertar produccion llenando todas las tablas 
     function guardar_produccion() {
-        
+        // Controla el estado de la producción
+        $state = null; //Cambia el estado si, los registros son actualizados, si superan el límite de producción y si sólo guardan por primera vez
+        echo $state;
         $datosProduccion = json_decode($_POST['datosProduccionGuardar']);
         $validarCantidadesCajas = false;
 
@@ -118,6 +120,13 @@
             }
         }
         if ($validarCantidadesCajas) { 
+        
+            //Verifica si existe una producción previa y la elimina 
+            $existsProduccion = buscarregistro($datosProduccion->cod_embarque, 'Cod_Embarque', 'TblProduccion', 'FKIbm_TblFincas = '.$_SESSION['conectado']->PKIbm);
+            if (isset($existsProduccion[0])) {
+                $state = (eliminar_produccion($datosProduccion->cod_embarque, $_SESSION['conectado']->PKIbm) == true ? 21 : null);
+            }
+
             $lastIdEmbolse = guardarembolse(
                 $datosProduccion->embolse->id_semana, 
                 ($datosProduccion->embolse->presente == null ? 0 : $datosProduccion->embolse->presente), 
@@ -229,7 +238,7 @@
                         $datosProduccion->tblCajas[$maxItems-2][$x+2],
                         $datosProduccion->tblCajas[$maxItems-1][$x+2]
                     );
-                    if  ($idProduccionDetalle != false) {
+                    if ($idProduccionDetalle != false) {
                         for ($y = 0; $y < $maxItems-10; $y++) {
                             guardarproduccion_detalle_detalle(
                                 $idProduccionDetalle, $datosProduccion->tblCajas[$y][1], 
@@ -240,14 +249,15 @@
                         echo false;
                     }
                 }
+                $state = ($state == 21 ? $state : 20);
             } else {
                 echo false;
             }
-
         // End TblCajas --------------------------------------------
         } else {
-            echo 22; //response 22 is a error code for limit of elaboration
+            $state = 22; //response 22 is a error code for limit of elaboration
         }
+        echo $state;
     } 
 
 //  BUSCAR =================================================================================================================
@@ -646,8 +656,8 @@
     //
     function cargar_produccion_ip() {
         $cod_embarque = $_GET['cod_embarque'];
-        // $tblProduccion = buscarregistro($cod_embarque, 'Cod_Embarque', 'TblProduccion', 'FKIbm_TblFincas = '.$_SESSION['conectado']->PKIbm);
-        $tblProduccion = buscarregistro($cod_embarque, "Cod_Embarque", "TblProduccion", "FKIbm_TblFincas = '".$_GET['ibm_finca']."';");
+        $tblProduccion = buscarregistro($cod_embarque, 'Cod_Embarque', 'TblProduccion', 'FKIbm_TblFincas = '.$_SESSION['conectado']->PKIbm);
+        // $tblProduccion = buscarregistro($cod_embarque, "Cod_Embarque", "TblProduccion", "FKIbm_TblFincas = '".$_GET['ibm_finca']."';");
         $tblProduccion = (count($tblProduccion) >= 1 ? $tblProduccion[0] : ""); // == 1 pero lo pongo temporalmente ( > 0 ) porque hay 2 registros en la bd
         if ($tblProduccion != "") {
 
@@ -661,7 +671,7 @@
             $infoRacimos = array();
             foreach ($tblRacimos as $dr) {
                 $pushDetalle = [$dr->N_RacimosR_Dia, $dr->Total_PEmbarque, $dr->Total_POtrasFincas];
-                $datosDia = buscarregistro($dr->PKId, "FKId_TblDet_TblRacimos_TblDias", "TblDet_TblDet_TblRacimos_tblDias", false);
+                $datosDia = buscarregistro($dr->PKId, "FKId_TblDet_TblRacimos_TblDias", "TblDet_TblDet_TblRacimos_TblDias", false);
                 $pushDetalleDetalle = [];
                 foreach ($datosDia as $dd) {
                     $pushDetalleDetalle[] = $dd->N_RacimosC_Cintas;
@@ -729,8 +739,8 @@
             }
 
             //TblCargue
-            // $infoCargue = buscarregistro($tblProduccion->Cod_Embarque, "FKCod_TblEmbarque", "TblCargue", 'FKIbm_TblFincas = '.$_SESSION['conectado']->PKIbm);
-            $infoCargue = buscarregistro($tblProduccion->Cod_Embarque, "FKCod_TblEmbarque", "TblCargue", "FKIbm_TblFincas = '".$_GET['ibm_finca']."';");
+            $infoCargue = buscarregistro($tblProduccion->Cod_Embarque, "FKCod_TblEmbarque", "TblCargue", 'FKIbm_TblFincas = '.$_SESSION['conectado']->PKIbm);
+            // $infoCargue = buscarregistro($tblProduccion->Cod_Embarque, "FKCod_TblEmbarque", "TblCargue", "FKIbm_TblFincas = '".$_GET['ibm_finca']."';");
 
             //Result
             $datosProduccion = [
@@ -795,8 +805,44 @@
         echo $eliminar;
     }   
 
+    // elimina toda la producción y sus detalles
+    function eliminar_produccion($codEmbarque, $ibmFinca) {
+        $tblProduccion = buscarregistro($codEmbarque, 'Cod_Embarque', 'TblProduccion', "FKIbm_TblFincas = $ibmFinca");
+        // $tblProduccion = buscarregistro($codEmbarque, 'Cod_Embarque', 'TblProduccion', 'FKIbm_TblFincas = '.$_POST['ibmFinca']);
+        $tblProduccion = (count($tblProduccion) >= 1 ? $tblProduccion[0] : null);
+        
+        // Eliminar racimos y sus detalles
+            $tblRacimos = buscarregistro($tblProduccion->FKId_TblRacimos, 'PKId', 'TblRacimos', false)[0];
+            $tblDet_TblRacimos = buscarregistro($tblRacimos->PKId, 'FKId_TblRacimos', 'TblDet_TblRacimos_TblDias', false);
+            foreach ($tblDet_TblRacimos as $dr) {
+                eliminar_s($dr->PKId, 'FKId_TblDet_TblRacimos_TblDias', 'TblDet_TblDet_TblRacimos_TblDias');
+            }
+            eliminar_s($tblRacimos->PKId, 'FKId_TblRacimos', 'TblDet_TblRacimos_TblDias');
+        // Eliminar mercado nacional - cargue y sus detalles
+            $tblNacional = buscarregistro($tblProduccion->FKId_TblMercadoNacional, 'PKId', 'TblMercadoNacional', false)[0];
+            eliminar_s($tblNacional->PKId, 'FKId_TblMercadoNacional', 'TblDet_TblMercadoNacional');
 
-    //valida el ingreso al archivo desde la petición del archivo logica/contenido.js 
+            $tblCargue = buscarregistro($tblProduccion->Cod_Embarque, 'FKCod_TblEmbarque', 'TblCargue', "FKIbm_TblFincas = $ibmFinca");
+            foreach ($tblCargue as $c) {
+                eliminar_s($c->PKId_Cargue, 'PKId_Cargue', 'TblCargue');
+            }
+        // Eliminar producción y sus detalles
+            $tblDet_TblProduccion = buscarregistro($tblProduccion->PKId, 'FKId_TblProduccion', 'TblDet_TblProduccion', false);
+            foreach ($tblDet_TblProduccion as $dp) {
+                eliminar_s($dp->PKId, 'FKId_TblDet_TblProduccion', 'TblDet_TblDet_TblProduccion');
+            }
+            eliminar_s($tblProduccion->PKId, 'FKId_TblProduccion', 'TblDet_TblProduccion');
+
+        // Eliminar claves principales
+            eliminar_s($tblProduccion->PKId, 'PKId', 'TblProduccion');
+            eliminar_s($tblProduccion->FKId_TblEmbolse, 'PKId', 'TblEmbolse');
+            eliminar_s($tblRacimos->PKId, 'PKId', 'TblRacimos');
+            eliminar_s($tblNacional->PKId, 'PKId', 'TblMercadoNacional');
+        
+            return true;
+    }
+
+//valida el ingreso al archivo desde la petición del archivo logica/contenido.js 
     if(isset($_REQUEST['op'])){
         $op = $_REQUEST['op'];
         switch ($op) {
@@ -961,6 +1007,9 @@
                 eliminar();
                 break;
 
+            case 'eliminarproduccion':
+                eliminar_produccion($_POST['codEmbarque'], $_SESSION['conectado']->FKIbm);
+                break;
 
     // Defecto
             default:

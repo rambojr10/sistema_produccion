@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 23-09-2020 a las 19:14:02
+-- Tiempo de generación: 22-10-2020 a las 22:08:11
 -- Versión del servidor: 10.4.11-MariaDB
 -- Versión de PHP: 7.4.1
 
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de datos: `bdspmontesol2`
+-- Base de datos: `bdspmontesol`
 --
 
 -- --------------------------------------------------------
@@ -438,12 +438,29 @@ INSERT INTO `tblcajasproduccion` (`PKCodigo`, `Descripcion`, `FactorConversion`,
 CREATE TABLE `tblcargue` (
   `PKId_Cargue` int(11) NOT NULL,
   `FKIbm_TblFincas` varchar(5) NOT NULL,
-  `FKDocumento_TblClientes` varchar(11) NOT NULL,
+  `Cliente` varchar(200) NOT NULL,
   `Fecha_Cargue` date NOT NULL,
   `N_Poma` varchar(5) NOT NULL,
+  `DedoSuelto` int(11) DEFAULT NULL,
+  `Cluster` int(11) DEFAULT NULL,
+  `ManoEntera` int(11) DEFAULT NULL,
+  `Especial` int(11) DEFAULT NULL,
+  `Bolsa20Kilos` int(11) DEFAULT NULL,
+  `Bolsa25Kilos` int(11) DEFAULT NULL,
+  `Total` int(11) DEFAULT NULL,
   `Placa_Vehiculo` varchar(8) NOT NULL,
-  `Conductor` varchar(200) NOT NULL
+  `Conductor` varchar(200) NOT NULL,
+  `FKCod_TblEmbarque` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Volcado de datos para la tabla `tblcargue`
+--
+
+INSERT INTO `tblcargue` (`PKId_Cargue`, `FKIbm_TblFincas`, `Cliente`, `Fecha_Cargue`, `N_Poma`, `DedoSuelto`, `Cluster`, `ManoEntera`, `Especial`, `Bolsa20Kilos`, `Bolsa25Kilos`, `Total`, `Placa_Vehiculo`, `Conductor`, `FKCod_TblEmbarque`) VALUES
+(1, '80074', 'Nombre cliente1', '2020-10-21', '1010', 25, 0, 0, 0, 0, 0, 25, 'ABC123', 'No hay', 'EMB-202010'),
+(2, '80074', 'Nombre cliente2', '2020-10-22', '1011', 26, 0, 0, 0, 0, 0, 26, 'ABC124', 'Si hubo', 'EMB-202010'),
+(3, '80074', 'Nombre cliente3', '2020-10-23', '1012', 27, 0, 0, 0, 0, 0, 27, 'ABC125', 'El mismo', 'EMB-202010');
 
 -- --------------------------------------------------------
 
@@ -475,30 +492,6 @@ INSERT INTO `tblcintas` (`PKId`, `Descripcion`) VALUES
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `tblclientes`
---
-
-CREATE TABLE `tblclientes` (
-  `PKDocumento` varchar(11) NOT NULL,
-  `Nombres` varchar(200) NOT NULL,
-  `Telefono` varchar(10) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `tbldet_tblcargue`
---
-
-CREATE TABLE `tbldet_tblcargue` (
-  `PKId` int(11) NOT NULL,
-  `FKId_Cargue_TblCargue` int(11) NOT NULL,
-  `FKId_TblMercadoNacional` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `tbldet_tbldet_tblproduccion`
 --
 
@@ -506,7 +499,7 @@ CREATE TABLE `tbldet_tbldet_tblproduccion` (
   `PKId` int(11) NOT NULL,
   `FKId_TblDet_TblProduccion` int(11) NOT NULL,
   `FKCodigo_TblCajasProduccion` varchar(5) NOT NULL,
-  `N_CajasProducidas_Dia` int(11) NOT NULL
+  `N_CajasProducidas_Dia` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -514,34 +507,62 @@ CREATE TABLE `tbldet_tbldet_tblproduccion` (
 --
 
 INSERT INTO `tbldet_tbldet_tblproduccion` (`PKId`, `FKId_TblDet_TblProduccion`, `FKCodigo_TblCajasProduccion`, `N_CajasProducidas_Dia`) VALUES
-(1, 1, '1043', 0),
-(2, 1, '1044', 0),
-(3, 2, '1043', 0),
-(4, 2, '1044', 0),
-(5, 3, '1043', 0),
-(6, 3, '1044', 0),
-(7, 4, '1043', 0),
-(8, 4, '1044', 0),
-(9, 5, '1043', 0),
-(10, 5, '1044', 0),
-(11, 6, '1043', 0),
-(12, 6, '1044', 0),
-(13, 7, '1043', 0),
-(14, 7, '1044', 0),
-(15, 8, '1043', 0),
-(16, 8, '1044', 0),
-(17, 9, '1043', 0),
-(18, 9, '1044', 0),
-(19, 10, '1043', 0),
-(20, 10, '1044', 0),
-(21, 11, '1043', 0),
-(22, 11, '1044', 0),
-(23, 12, '1043', 0),
-(24, 12, '1044', 0),
-(25, 13, '1043', 0),
-(26, 13, '1044', 0),
-(27, 14, '1043', 0),
-(28, 14, '1044', 0);
+(1, 1, '1103', 5),
+(2, 1, '1114', NULL),
+(3, 1, '1313', NULL),
+(4, 2, '1103', NULL),
+(5, 2, '1114', NULL),
+(6, 2, '1313', NULL),
+(7, 3, '1103', NULL),
+(8, 3, '1114', NULL),
+(9, 3, '1313', NULL),
+(10, 4, '1103', NULL),
+(11, 4, '1114', NULL),
+(12, 4, '1313', NULL),
+(13, 5, '1103', NULL),
+(14, 5, '1114', NULL),
+(15, 5, '1313', NULL),
+(16, 6, '1103', NULL),
+(17, 6, '1114', NULL),
+(18, 6, '1313', NULL),
+(19, 7, '1103', NULL),
+(20, 7, '1114', NULL),
+(21, 7, '1313', NULL),
+(22, 8, '1298', NULL),
+(23, 8, '1304', NULL),
+(24, 8, '1313', NULL),
+(25, 8, '1333', NULL),
+(26, 8, '200', NULL),
+(27, 9, '1298', NULL),
+(28, 9, '1304', NULL),
+(29, 9, '1313', NULL),
+(30, 9, '1333', NULL),
+(31, 9, '200', NULL),
+(32, 10, '1298', NULL),
+(33, 10, '1304', NULL),
+(34, 10, '1313', NULL),
+(35, 10, '1333', NULL),
+(36, 10, '200', NULL),
+(37, 11, '1298', NULL),
+(38, 11, '1304', NULL),
+(39, 11, '1313', NULL),
+(40, 11, '1333', NULL),
+(41, 11, '200', NULL),
+(42, 12, '1298', NULL),
+(43, 12, '1304', NULL),
+(44, 12, '1313', NULL),
+(45, 12, '1333', NULL),
+(46, 12, '200', NULL),
+(47, 13, '1298', NULL),
+(48, 13, '1304', NULL),
+(49, 13, '1313', NULL),
+(50, 13, '1333', NULL),
+(51, 13, '200', NULL),
+(52, 14, '1298', NULL),
+(53, 14, '1304', NULL),
+(54, 14, '1313', NULL),
+(55, 14, '1333', NULL),
+(56, 14, '200', NULL);
 
 -- --------------------------------------------------------
 
@@ -561,62 +582,62 @@ CREATE TABLE `tbldet_tbldet_tblracimos_tbldias` (
 --
 
 INSERT INTO `tbldet_tbldet_tblracimos_tbldias` (`PKId`, `FKId_TblDet_TblRacimos_TblDias`, `FKId_TblCintas`, `N_RacimosC_Cintas`) VALUES
-(1, 1, 1, 0),
-(2, 1, 2, 0),
-(3, 1, 3, 0),
-(4, 1, 4, 0),
-(5, 2, 1, 0),
-(6, 2, 2, 0),
-(7, 2, 3, 0),
-(8, 2, 4, 0),
-(9, 3, 1, 0),
-(10, 3, 2, 0),
-(11, 3, 3, 0),
-(12, 3, 4, 0),
-(13, 4, 1, 0),
-(14, 4, 2, 0),
-(15, 4, 3, 0),
-(16, 4, 4, 0),
-(17, 5, 1, 0),
-(18, 5, 2, 0),
-(19, 5, 3, 0),
-(20, 5, 4, 0),
-(21, 6, 1, 0),
-(22, 6, 2, 0),
-(23, 6, 3, 0),
-(24, 6, 4, 0),
-(25, 7, 1, 0),
-(26, 7, 2, 0),
-(27, 7, 3, 0),
-(28, 7, 4, 0),
-(29, 8, 1, 0),
-(30, 8, 2, 0),
-(31, 8, 3, 0),
-(32, 8, 4, 0),
-(33, 9, 1, 0),
-(34, 9, 2, 0),
-(35, 9, 3, 0),
-(36, 9, 4, 0),
-(37, 10, 1, 0),
-(38, 10, 2, 0),
-(39, 10, 3, 0),
-(40, 10, 4, 0),
-(41, 11, 1, 0),
-(42, 11, 2, 0),
-(43, 11, 3, 0),
-(44, 11, 4, 0),
-(45, 12, 1, 0),
-(46, 12, 2, 0),
-(47, 12, 3, 0),
-(48, 12, 4, 0),
-(49, 13, 1, 0),
-(50, 13, 2, 0),
-(51, 13, 3, 0),
-(52, 13, 4, 0),
-(53, 14, 1, 0),
-(54, 14, 2, 0),
-(55, 14, 3, 0),
-(56, 14, 4, 0);
+(1, 1, 5, 0),
+(2, 1, 6, 0),
+(3, 1, 7, 0),
+(4, 1, 8, 0),
+(5, 2, 5, 0),
+(6, 2, 6, 0),
+(7, 2, 7, 0),
+(8, 2, 8, 0),
+(9, 3, 5, 0),
+(10, 3, 6, 0),
+(11, 3, 7, 0),
+(12, 3, 8, 0),
+(13, 4, 5, 0),
+(14, 4, 6, 55),
+(15, 4, 7, 0),
+(16, 4, 8, 0),
+(17, 5, 5, 0),
+(18, 5, 6, 0),
+(19, 5, 7, 0),
+(20, 5, 8, 0),
+(21, 6, 5, 0),
+(22, 6, 6, 0),
+(23, 6, 7, 0),
+(24, 6, 8, 0),
+(25, 7, 5, 0),
+(26, 7, 6, 0),
+(27, 7, 7, 0),
+(28, 7, 8, 0),
+(29, 8, 10, 0),
+(30, 8, 1, 0),
+(31, 8, 2, 0),
+(32, 8, 3, 0),
+(33, 9, 10, 0),
+(34, 9, 1, 0),
+(35, 9, 2, 0),
+(36, 9, 3, 0),
+(37, 10, 10, 0),
+(38, 10, 1, 0),
+(39, 10, 2, 0),
+(40, 10, 3, 0),
+(41, 11, 10, 0),
+(42, 11, 1, 0),
+(43, 11, 2, 0),
+(44, 11, 3, 0),
+(45, 12, 10, 0),
+(46, 12, 1, 0),
+(47, 12, 2, 0),
+(48, 12, 3, 0),
+(49, 13, 10, 0),
+(50, 13, 1, 0),
+(51, 13, 2, 0),
+(52, 13, 3, 0),
+(53, 14, 10, 0),
+(54, 14, 1, 0),
+(55, 14, 2, 0),
+(56, 14, 3, 0);
 
 -- --------------------------------------------------------
 
@@ -637,18 +658,54 @@ CREATE TABLE `tbldet_tblembarque` (
 --
 
 INSERT INTO `tbldet_tblembarque` (`PKId`, `FKCod_TblEmbarque`, `FKIbm_TblFincas`, `FKCodigo_TblCajasProduccion`, `Cantidad`) VALUES
-(1, 'EMB-20201', '80009', '1043', 55),
-(2, 'EMB-20201', '85747', '1043', 0),
-(3, 'EMB-20201', '80004', '1043', 0),
-(4, 'EMB-20201', '80075', '1043', 0),
-(5, 'EMB-20201', '80074', '1043', 50),
-(6, 'EMB-20201', '80008', '1043', 0),
-(7, 'EMB-20201', '80009', '1044', 0),
-(8, 'EMB-20201', '85747', '1044', 0),
-(9, 'EMB-20201', '80004', '1044', 0),
-(10, 'EMB-20201', '80075', '1044', 0),
-(11, 'EMB-20201', '80074', '1044', 0),
-(12, 'EMB-20201', '80008', '1044', 0);
+(1, 'EMB-20205', '80009', '1103', 900),
+(2, 'EMB-20205', '85747', '1103', 900),
+(3, 'EMB-20205', '80004', '1103', 900),
+(4, 'EMB-20205', '80075', '1103', 900),
+(5, 'EMB-20205', '80074', '1103', 900),
+(6, 'EMB-20205', '80008', '1103', 900),
+(7, 'EMB-20205', '80009', '1114', 800),
+(8, 'EMB-20205', '85747', '1114', 800),
+(9, 'EMB-20205', '80004', '1114', 800),
+(10, 'EMB-20205', '80075', '1114', 800),
+(11, 'EMB-20205', '80074', '1114', 800),
+(12, 'EMB-20205', '80008', '1114', 800),
+(13, 'EMB-20205', '80009', '1313', 200),
+(14, 'EMB-20205', '85747', '1313', 200),
+(15, 'EMB-20205', '80004', '1313', 200),
+(16, 'EMB-20205', '80075', '1313', 200),
+(17, 'EMB-20205', '80074', '1313', 200),
+(18, 'EMB-20205', '80008', '1313', 200),
+(19, 'EMB-202010', '80009', '1298', 900),
+(20, 'EMB-202010', '85747', '1298', 900),
+(21, 'EMB-202010', '80004', '1298', 900),
+(22, 'EMB-202010', '80075', '1298', 900),
+(23, 'EMB-202010', '80074', '1298', 900),
+(24, 'EMB-202010', '80008', '1298', 900),
+(25, 'EMB-202010', '80009', '1304', 800),
+(26, 'EMB-202010', '85747', '1304', 800),
+(27, 'EMB-202010', '80004', '1304', 800),
+(28, 'EMB-202010', '80075', '1304', 800),
+(29, 'EMB-202010', '80074', '1304', 800),
+(30, 'EMB-202010', '80008', '1304', 800),
+(31, 'EMB-202010', '80009', '1313', 700),
+(32, 'EMB-202010', '85747', '1313', 700),
+(33, 'EMB-202010', '80004', '1313', 700),
+(34, 'EMB-202010', '80075', '1313', 700),
+(35, 'EMB-202010', '80074', '1313', 700),
+(36, 'EMB-202010', '80008', '1313', 700),
+(37, 'EMB-202010', '80009', '1333', 600),
+(38, 'EMB-202010', '85747', '1333', 600),
+(39, 'EMB-202010', '80004', '1333', 600),
+(40, 'EMB-202010', '80075', '1333', 600),
+(41, 'EMB-202010', '80074', '1333', 600),
+(42, 'EMB-202010', '80008', '1333', 600),
+(43, 'EMB-202010', '80009', '200', 50),
+(44, 'EMB-202010', '85747', '200', 50),
+(45, 'EMB-202010', '80004', '200', 50),
+(46, 'EMB-202010', '80075', '200', 50),
+(47, 'EMB-202010', '80074', '200', 0),
+(48, 'EMB-202010', '80008', '200', 50);
 
 -- --------------------------------------------------------
 
@@ -771,28 +828,30 @@ CREATE TABLE `tbldet_tblproduccion` (
   `Merma` float DEFAULT NULL,
   `Peso_Racimos` float DEFAULT NULL,
   `Area_Recorrida` float DEFAULT NULL,
-  `Peso_Vastago` float DEFAULT NULL
+  `Peso_Vastago` float DEFAULT NULL,
+  `Lotes_Cortados` varchar(50) NOT NULL,
+  `Lotes_Iniciados` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `tbldet_tblproduccion`
 --
 
-INSERT INTO `tbldet_tblproduccion` (`PKId`, `FKId_TblProduccion`, `FKId_TblDias`, `Total_CE_Dia`, `Total_CR_Dia`, `Total_CEx_Dia`, `Ratio`, `Merma`, `Peso_Racimos`, `Area_Recorrida`, `Peso_Vastago`) VALUES
-(1, 1, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
-(2, 1, 2, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
-(3, 1, 3, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
-(4, 1, 4, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
-(5, 1, 5, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
-(6, 1, 6, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
-(7, 1, 7, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
-(8, 2, 1, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
-(9, 2, 2, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
-(10, 2, 3, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
-(11, 2, 4, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
-(12, 2, 5, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
-(13, 2, 6, 0, 0, 0, NULL, NULL, NULL, NULL, NULL),
-(14, 2, 7, 0, 0, 0, NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `tbldet_tblproduccion` (`PKId`, `FKId_TblProduccion`, `FKId_TblDias`, `Total_CE_Dia`, `Total_CR_Dia`, `Total_CEx_Dia`, `Ratio`, `Merma`, `Peso_Racimos`, `Area_Recorrida`, `Peso_Vastago`, `Lotes_Cortados`, `Lotes_Iniciados`) VALUES
+(1, 1, 1, 5, 2, 3, NULL, NULL, NULL, 0, NULL, '1-2-3-4-5', ''),
+(2, 1, 2, 0, 0, 0, NULL, NULL, NULL, 0, NULL, '', ''),
+(3, 1, 3, 0, 0, 0, NULL, NULL, NULL, 0, NULL, '', ''),
+(4, 1, 4, 0, 0, 0, NULL, NULL, NULL, 0, NULL, '', ''),
+(5, 1, 5, 0, 0, 0, NULL, NULL, NULL, 0, NULL, '', ''),
+(6, 1, 6, 0, 0, 0, NULL, NULL, NULL, 0, NULL, '', ''),
+(7, 1, 7, 0, 0, 0, NULL, NULL, NULL, 0, NULL, '', ''),
+(8, 2, 1, 0, 0, 0, NULL, NULL, NULL, 0, NULL, '', ''),
+(9, 2, 2, 0, 0, 0, NULL, NULL, NULL, 0, NULL, '', ''),
+(10, 2, 3, 0, 0, 0, NULL, NULL, NULL, 0, NULL, '', ''),
+(11, 2, 4, 0, 0, 0, NULL, NULL, NULL, 0, NULL, '', ''),
+(12, 2, 5, 0, 0, 0, NULL, NULL, NULL, 0, NULL, '', ''),
+(13, 2, 6, 0, 0, 0, NULL, NULL, NULL, 0, NULL, '', ''),
+(14, 2, 7, 0, 0, 0, NULL, NULL, NULL, 0, NULL, '', '');
 
 -- --------------------------------------------------------
 
@@ -818,7 +877,7 @@ INSERT INTO `tbldet_tblracimos_tbldias` (`PKId`, `FKId_TblRacimos`, `FKId_TblDia
 (1, 1, 1, 0, 0, 0, 0),
 (2, 1, 2, 0, 0, 0, 0),
 (3, 1, 3, 0, 0, 0, 0),
-(4, 1, 4, 0, 0, 0, 0),
+(4, 1, 4, 55, 0, 0, 0),
 (5, 1, 5, 0, 0, 0, 0),
 (6, 1, 6, 0, 0, 0, 0),
 (7, 1, 7, 0, 0, 0, 0),
@@ -871,7 +930,8 @@ CREATE TABLE `tblembarque` (
 --
 
 INSERT INTO `tblembarque` (`PKCod`, `FKId_TblSemanas`, `Anho`) VALUES
-('EMB-20201', 53, '2020');
+('EMB-202010', 10, '2020'),
+('EMB-20205', 5, '2020');
 
 -- --------------------------------------------------------
 
@@ -882,17 +942,17 @@ INSERT INTO `tblembarque` (`PKCod`, `FKId_TblSemanas`, `Anho`) VALUES
 CREATE TABLE `tblembolse` (
   `PKId` int(11) NOT NULL,
   `FKId_TblSemanas` int(11) NOT NULL,
-  `N_PlantasPrematuro` int(11) NOT NULL,
-  `N_PlantasPresente` int(11) NOT NULL
+  `N_PlantasPresente` int(11) NOT NULL,
+  `N_PlantasPrematuro` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Volcado de datos para la tabla `tblembolse`
 --
 
-INSERT INTO `tblembolse` (`PKId`, `FKId_TblSemanas`, `N_PlantasPrematuro`, `N_PlantasPresente`) VALUES
-(1, 53, 0, 0),
-(2, 53, 0, 0);
+INSERT INTO `tblembolse` (`PKId`, `FKId_TblSemanas`, `N_PlantasPresente`, `N_PlantasPrematuro`) VALUES
+(1, 5, 0, 0),
+(2, 10, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -955,12 +1015,18 @@ CREATE TABLE `tblestimativo` (
 --
 
 INSERT INTO `tblestimativo` (`PKId`, `Finca`, `Premiun`, `Especial`, `FKCod_TblEmbarque`) VALUES
-(1, 'ZARZAMORA', 30, 20, 'EMB-20201'),
-(2, 'GUAIMARAL', 0, 0, 'EMB-20201'),
-(3, 'TAIWÁN', 0, 0, 'EMB-20201'),
-(4, 'CANDELARIA', 0, 0, 'EMB-20201'),
-(5, 'ÁLAMOS', 0, 0, 'EMB-20201'),
-(6, 'KALAMARÍ', 0, 0, 'EMB-20201');
+(1, 'ZARZAMORA', 20, 10, 'EMB-20205'),
+(2, 'GUAIMARAL', 20, 10, 'EMB-20205'),
+(3, 'TAIWÁN', 20, 10, 'EMB-20205'),
+(4, 'CANDELARIA', 20, 10, 'EMB-20205'),
+(5, 'ÁLAMOS', 20, 10, 'EMB-20205'),
+(6, 'KALAMARÍ', 20, 10, 'EMB-20205'),
+(7, 'ZARZAMORA', 90, 50, 'EMB-202010'),
+(8, 'GUAIMARAL', 90, 50, 'EMB-202010'),
+(9, 'TAIWÁN', 90, 50, 'EMB-202010'),
+(10, 'CANDELARIA', 90, 50, 'EMB-202010'),
+(11, 'ÁLAMOS', 90, 50, 'EMB-202010'),
+(12, 'KALAMARÍ', 90, 50, 'EMB-202010');
 
 -- --------------------------------------------------------
 
@@ -1177,8 +1243,8 @@ CREATE TABLE `tblproduccion` (
 --
 
 INSERT INTO `tblproduccion` (`PKId`, `FKIbm_TblFincas`, `FKId_TblEmbolse`, `FKId_TblRacimos`, `FKId_TblSemanas`, `FKId_TblMercadoNacional`, `Cod_Embarque`, `Total_CElaboradas`, `Total_CREchazadas`, `Total_CExportadas`, `Ratio`, `Merma`, `Peso_Racimos`, `Area_Recorrida`, `Peso_Vastago`, `Anho_Produccion`) VALUES
-(1, '80074', 1, 1, 53, 1, 'EMB-20201', 0, 0, 0, 0, 0, 0, 0, 0, '2020'),
-(2, '80074', 2, 2, 53, 2, 'EMB-20201', 0, 0, 0, 0, 0, 0, 0, 0, '2020');
+(1, '80074', 1, 1, 5, 1, 'EMB-20205', 5, 2, 3, NULL, NULL, NULL, 0, NULL, '2020'),
+(2, '80074', 2, 2, 10, 2, 'EMB-202010', 0, 0, 0, NULL, NULL, NULL, 0, NULL, '2020');
 
 -- --------------------------------------------------------
 
@@ -1198,8 +1264,8 @@ CREATE TABLE `tblracimos` (
 --
 
 INSERT INTO `tblracimos` (`PKId`, `FKId_TblSemanas`, `N_RacimosC`, `N_RacimosR`) VALUES
-(1, 53, 0, 0),
-(2, 53, 0, 0);
+(1, 5, 55, 0),
+(2, 10, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -1211,14 +1277,6 @@ CREATE TABLE `tblregistrosemanas` (
   `PKId` int(11) NOT NULL,
   `Anho_generado` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Volcado de datos para la tabla `tblregistrosemanas`
---
-
-INSERT INTO `tblregistrosemanas` (`PKId`, `Anho_generado`) VALUES
-(1, 2019),
-(2, 2020);
 
 -- --------------------------------------------------------
 
@@ -1240,110 +1298,58 @@ CREATE TABLE `tblsemanas` (
 --
 
 INSERT INTO `tblsemanas` (`PKId`, `N_Semana`, `Fecha_Inicio`, `Fecha_Fin`, `Anho`, `FKId_TblCintas`) VALUES
-(1, 'SEMANA 1', '2018-12-31', '2019-01-06', 2019, 1),
-(2, 'SEMANA 2', '2019-01-07', '2019-01-13', 2019, 2),
-(3, 'SEMANA 3', '2019-01-14', '2019-01-20', 2019, 3),
-(4, 'SEMANA 4', '2019-01-21', '2019-01-27', 2019, 4),
-(5, 'SEMANA 5', '2019-01-28', '2019-02-03', 2019, 5),
-(6, 'SEMANA 6', '2019-02-04', '2019-02-10', 2019, 6),
-(7, 'SEMANA 7', '2019-02-11', '2019-02-17', 2019, 7),
-(8, 'SEMANA 8', '2019-02-18', '2019-02-24', 2019, 8),
-(9, 'SEMANA 9', '2019-02-25', '2019-03-03', 2019, 9),
-(10, 'SEMANA 10', '2019-03-04', '2019-03-10', 2019, 10),
-(11, 'SEMANA 11', '2019-03-11', '2019-03-17', 2019, 1),
-(12, 'SEMANA 12', '2019-03-18', '2019-03-24', 2019, 2),
-(13, 'SEMANA 13', '2019-03-25', '2019-03-31', 2019, 3),
-(14, 'SEMANA 14', '2019-04-01', '2019-04-07', 2019, 4),
-(15, 'SEMANA 15', '2019-04-08', '2019-04-14', 2019, 5),
-(16, 'SEMANA 16', '2019-04-15', '2019-04-21', 2019, 6),
-(17, 'SEMANA 17', '2019-04-22', '2019-04-28', 2019, 7),
-(18, 'SEMANA 18', '2019-04-29', '2019-05-05', 2019, 8),
-(19, 'SEMANA 19', '2019-05-06', '2019-05-12', 2019, 9),
-(20, 'SEMANA 20', '2019-05-13', '2019-05-19', 2019, 10),
-(21, 'SEMANA 21', '2019-05-20', '2019-05-26', 2019, 1),
-(22, 'SEMANA 22', '2019-05-27', '2019-06-02', 2019, 2),
-(23, 'SEMANA 23', '2019-06-03', '2019-06-09', 2019, 3),
-(24, 'SEMANA 24', '2019-06-10', '2019-06-16', 2019, 4),
-(25, 'SEMANA 25', '2019-06-17', '2019-06-23', 2019, 5),
-(26, 'SEMANA 26', '2019-06-24', '2019-06-30', 2019, 6),
-(27, 'SEMANA 27', '2019-07-01', '2019-07-07', 2019, 7),
-(28, 'SEMANA 28', '2019-07-08', '2019-07-14', 2019, 8),
-(29, 'SEMANA 29', '2019-07-15', '2019-07-21', 2019, 9),
-(30, 'SEMANA 30', '2019-07-22', '2019-07-28', 2019, 10),
-(31, 'SEMANA 31', '2019-07-29', '2019-08-04', 2019, 1),
-(32, 'SEMANA 32', '2019-08-05', '2019-08-11', 2019, 2),
-(33, 'SEMANA 33', '2019-08-12', '2019-08-18', 2019, 3),
-(34, 'SEMANA 34', '2019-08-19', '2019-08-25', 2019, 4),
-(35, 'SEMANA 35', '2019-08-26', '2019-09-01', 2019, 5),
-(36, 'SEMANA 36', '2019-09-02', '2019-09-08', 2019, 6),
-(37, 'SEMANA 37', '2019-09-09', '2019-09-15', 2019, 7),
-(38, 'SEMANA 38', '2019-09-16', '2019-09-22', 2019, 8),
-(39, 'SEMANA 39', '2019-09-23', '2019-09-29', 2019, 9),
-(40, 'SEMANA 40', '2019-09-30', '2019-10-06', 2019, 10),
-(41, 'SEMANA 41', '2019-10-07', '2019-10-13', 2019, 1),
-(42, 'SEMANA 42', '2019-10-14', '2019-10-20', 2019, 2),
-(43, 'SEMANA 43', '2019-10-21', '2019-10-27', 2019, 3),
-(44, 'SEMANA 44', '2019-10-28', '2019-11-03', 2019, 4),
-(45, 'SEMANA 45', '2019-11-04', '2019-11-10', 2019, 5),
-(46, 'SEMANA 46', '2019-11-11', '2019-11-17', 2019, 6),
-(47, 'SEMANA 47', '2019-11-18', '2019-11-24', 2019, 7),
-(48, 'SEMANA 48', '2019-11-25', '2019-12-01', 2019, 8),
-(49, 'SEMANA 49', '2019-12-02', '2019-12-08', 2019, 9),
-(50, 'SEMANA 50', '2019-12-09', '2019-12-15', 2019, 10),
-(51, 'SEMANA 51', '2019-12-16', '2019-12-22', 2019, 1),
-(52, 'SEMANA 52', '2019-12-23', '2019-12-29', 2019, 2),
-(53, 'SEMANA 1', '2019-12-30', '2020-01-05', 2020, 3),
-(54, 'SEMANA 2', '2020-01-06', '2020-01-12', 2020, 4),
-(55, 'SEMANA 3', '2020-01-13', '2020-01-19', 2020, 5),
-(56, 'SEMANA 4', '2020-01-20', '2020-01-26', 2020, 6),
-(57, 'SEMANA 5', '2020-01-27', '2020-02-02', 2020, 7),
-(58, 'SEMANA 6', '2020-02-03', '2020-02-09', 2020, 8),
-(59, 'SEMANA 7', '2020-02-10', '2020-02-16', 2020, 9),
-(60, 'SEMANA 8', '2020-02-17', '2020-02-23', 2020, 10),
-(61, 'SEMANA 9', '2020-02-24', '2020-03-01', 2020, 1),
-(62, 'SEMANA 10', '2020-03-02', '2020-03-08', 2020, 2),
-(63, 'SEMANA 11', '2020-03-09', '2020-03-15', 2020, 3),
-(64, 'SEMANA 12', '2020-03-16', '2020-03-22', 2020, 4),
-(65, 'SEMANA 13', '2020-03-23', '2020-03-29', 2020, 5),
-(66, 'SEMANA 14', '2020-03-30', '2020-04-05', 2020, 6),
-(67, 'SEMANA 15', '2020-04-06', '2020-04-12', 2020, 7),
-(68, 'SEMANA 16', '2020-04-13', '2020-04-19', 2020, 8),
-(69, 'SEMANA 17', '2020-04-20', '2020-04-26', 2020, 9),
-(70, 'SEMANA 18', '2020-04-27', '2020-05-03', 2020, 10),
-(71, 'SEMANA 19', '2020-05-04', '2020-05-10', 2020, 1),
-(72, 'SEMANA 20', '2020-05-11', '2020-05-17', 2020, 2),
-(73, 'SEMANA 21', '2020-05-18', '2020-05-24', 2020, 3),
-(74, 'SEMANA 22', '2020-05-25', '2020-05-31', 2020, 4),
-(75, 'SEMANA 23', '2020-06-01', '2020-06-07', 2020, 5),
-(76, 'SEMANA 24', '2020-06-08', '2020-06-14', 2020, 6),
-(77, 'SEMANA 25', '2020-06-15', '2020-06-21', 2020, 7),
-(78, 'SEMANA 26', '2020-06-22', '2020-06-28', 2020, 8),
-(79, 'SEMANA 27', '2020-06-29', '2020-07-05', 2020, 9),
-(80, 'SEMANA 28', '2020-07-06', '2020-07-12', 2020, 10),
-(81, 'SEMANA 29', '2020-07-13', '2020-07-19', 2020, 1),
-(82, 'SEMANA 30', '2020-07-20', '2020-07-26', 2020, 2),
-(83, 'SEMANA 31', '2020-07-27', '2020-08-02', 2020, 3),
-(84, 'SEMANA 32', '2020-08-03', '2020-08-09', 2020, 4),
-(85, 'SEMANA 33', '2020-08-10', '2020-08-16', 2020, 5),
-(86, 'SEMANA 34', '2020-08-17', '2020-08-23', 2020, 6),
-(87, 'SEMANA 35', '2020-08-24', '2020-08-30', 2020, 7),
-(88, 'SEMANA 36', '2020-08-31', '2020-09-06', 2020, 8),
-(89, 'SEMANA 37', '2020-09-07', '2020-09-13', 2020, 9),
-(90, 'SEMANA 38', '2020-09-14', '2020-09-20', 2020, 10),
-(91, 'SEMANA 39', '2020-09-21', '2020-09-27', 2020, 1),
-(92, 'SEMANA 40', '2020-09-28', '2020-10-04', 2020, 2),
-(93, 'SEMANA 41', '2020-10-05', '2020-10-11', 2020, 3),
-(94, 'SEMANA 42', '2020-10-12', '2020-10-18', 2020, 4),
-(95, 'SEMANA 43', '2020-10-19', '2020-10-25', 2020, 5),
-(96, 'SEMANA 44', '2020-10-26', '2020-11-01', 2020, 6),
-(97, 'SEMANA 45', '2020-11-02', '2020-11-08', 2020, 7),
-(98, 'SEMANA 46', '2020-11-09', '2020-11-15', 2020, 8),
-(99, 'SEMANA 47', '2020-11-16', '2020-11-22', 2020, 9),
-(100, 'SEMANA 48', '2020-11-23', '2020-11-29', 2020, 10),
-(101, 'SEMANA 49', '2020-11-30', '2020-12-06', 2020, 1),
-(102, 'SEMANA 50', '2020-12-07', '2020-12-13', 2020, 2),
-(103, 'SEMANA 51', '2020-12-14', '2020-12-20', 2020, 3),
-(104, 'SEMANA 52', '2020-12-21', '2020-12-27', 2020, 4);
+(1, 'SEMANA 1', '2019-12-30', '2020-01-05', 2020, 3),
+(2, 'SEMANA 2', '2020-01-06', '2020-01-12', 2020, 4),
+(3, 'SEMANA 3', '2020-01-13', '2020-01-19', 2020, 5),
+(4, 'SEMANA 4', '2020-01-20', '2020-01-26', 2020, 6),
+(5, 'SEMANA 5', '2020-01-27', '2020-02-02', 2020, 7),
+(6, 'SEMANA 6', '2020-02-03', '2020-02-09', 2020, 8),
+(7, 'SEMANA 7', '2020-02-10', '2020-02-16', 2020, 9),
+(8, 'SEMANA 8', '2020-02-17', '2020-02-23', 2020, 10),
+(9, 'SEMANA 9', '2020-02-24', '2020-03-01', 2020, 1),
+(10, 'SEMANA 10', '2020-03-02', '2020-03-08', 2020, 2),
+(11, 'SEMANA 11', '2020-03-09', '2020-03-15', 2020, 3),
+(12, 'SEMANA 12', '2020-03-16', '2020-03-22', 2020, 4),
+(13, 'SEMANA 13', '2020-03-23', '2020-03-29', 2020, 5),
+(14, 'SEMANA 14', '2020-03-30', '2020-04-05', 2020, 6),
+(15, 'SEMANA 15', '2020-04-06', '2020-04-12', 2020, 7),
+(16, 'SEMANA 16', '2020-04-13', '2020-04-19', 2020, 8),
+(17, 'SEMANA 17', '2020-04-20', '2020-04-26', 2020, 9),
+(18, 'SEMANA 18', '2020-04-27', '2020-05-03', 2020, 10),
+(19, 'SEMANA 19', '2020-05-04', '2020-05-10', 2020, 1),
+(20, 'SEMANA 20', '2020-05-11', '2020-05-17', 2020, 2),
+(21, 'SEMANA 21', '2020-05-18', '2020-05-24', 2020, 3),
+(22, 'SEMANA 22', '2020-05-25', '2020-05-31', 2020, 4),
+(23, 'SEMANA 23', '2020-06-01', '2020-06-07', 2020, 5),
+(24, 'SEMANA 24', '2020-06-08', '2020-06-14', 2020, 6),
+(25, 'SEMANA 25', '2020-06-15', '2020-06-21', 2020, 7),
+(26, 'SEMANA 26', '2020-06-22', '2020-06-28', 2020, 8),
+(27, 'SEMANA 27', '2020-06-29', '2020-07-05', 2020, 9),
+(28, 'SEMANA 28', '2020-07-06', '2020-07-12', 2020, 10),
+(29, 'SEMANA 29', '2020-07-13', '2020-07-19', 2020, 1),
+(30, 'SEMANA 30', '2020-07-20', '2020-07-26', 2020, 2),
+(31, 'SEMANA 31', '2020-07-27', '2020-08-02', 2020, 3),
+(32, 'SEMANA 32', '2020-08-03', '2020-08-09', 2020, 4),
+(33, 'SEMANA 33', '2020-08-10', '2020-08-16', 2020, 5),
+(34, 'SEMANA 34', '2020-08-17', '2020-08-23', 2020, 6),
+(35, 'SEMANA 35', '2020-08-24', '2020-08-30', 2020, 7),
+(36, 'SEMANA 36', '2020-08-31', '2020-09-06', 2020, 8),
+(37, 'SEMANA 37', '2020-09-07', '2020-09-13', 2020, 9),
+(38, 'SEMANA 38', '2020-09-14', '2020-09-20', 2020, 10),
+(39, 'SEMANA 39', '2020-09-21', '2020-09-27', 2020, 1),
+(40, 'SEMANA 40', '2020-09-28', '2020-10-04', 2020, 2),
+(41, 'SEMANA 41', '2020-10-05', '2020-10-11', 2020, 3),
+(42, 'SEMANA 42', '2020-10-12', '2020-10-18', 2020, 4),
+(43, 'SEMANA 43', '2020-10-19', '2020-10-25', 2020, 5),
+(44, 'SEMANA 44', '2020-10-26', '2020-11-01', 2020, 6),
+(45, 'SEMANA 45', '2020-11-02', '2020-11-08', 2020, 7),
+(46, 'SEMANA 46', '2020-11-09', '2020-11-15', 2020, 8),
+(47, 'SEMANA 47', '2020-11-16', '2020-11-22', 2020, 9),
+(48, 'SEMANA 48', '2020-11-23', '2020-11-29', 2020, 10),
+(49, 'SEMANA 49', '2020-11-30', '2020-12-06', 2020, 1),
+(50, 'SEMANA 50', '2020-12-07', '2020-12-13', 2020, 2),
+(51, 'SEMANA 51', '2020-12-14', '2020-12-20', 2020, 3),
+(52, 'SEMANA 52', '2020-12-21', '2020-12-27', 2020, 4);
 
 -- --------------------------------------------------------
 
@@ -1436,27 +1442,13 @@ ALTER TABLE `tblcajasproduccion`
 ALTER TABLE `tblcargue`
   ADD PRIMARY KEY (`PKId_Cargue`),
   ADD KEY `FKIbm_TblFincas` (`FKIbm_TblFincas`),
-  ADD KEY `FKDocumento_TblClientes` (`FKDocumento_TblClientes`);
+  ADD KEY `FKCod_TblEmbarque` (`FKCod_TblEmbarque`);
 
 --
 -- Indices de la tabla `tblcintas`
 --
 ALTER TABLE `tblcintas`
   ADD PRIMARY KEY (`PKId`);
-
---
--- Indices de la tabla `tblclientes`
---
-ALTER TABLE `tblclientes`
-  ADD PRIMARY KEY (`PKDocumento`);
-
---
--- Indices de la tabla `tbldet_tblcargue`
---
-ALTER TABLE `tbldet_tblcargue`
-  ADD PRIMARY KEY (`PKId`),
-  ADD KEY `FKId_Cargue_TblCargue` (`FKId_Cargue_TblCargue`),
-  ADD KEY `FKId_TblMercadoNacional` (`FKId_TblMercadoNacional`);
 
 --
 -- Indices de la tabla `tbldet_tbldet_tblproduccion`
@@ -1633,7 +1625,7 @@ ALTER TABLE `tblcajasmercadonacional`
 -- AUTO_INCREMENT de la tabla `tblcargue`
 --
 ALTER TABLE `tblcargue`
-  MODIFY `PKId_Cargue` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `PKId_Cargue` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `tblcintas`
@@ -1642,16 +1634,10 @@ ALTER TABLE `tblcintas`
   MODIFY `PKId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
--- AUTO_INCREMENT de la tabla `tbldet_tblcargue`
---
-ALTER TABLE `tbldet_tblcargue`
-  MODIFY `PKId` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT de la tabla `tbldet_tbldet_tblproduccion`
 --
 ALTER TABLE `tbldet_tbldet_tblproduccion`
-  MODIFY `PKId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `PKId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT de la tabla `tbldet_tbldet_tblracimos_tbldias`
@@ -1663,7 +1649,7 @@ ALTER TABLE `tbldet_tbldet_tblracimos_tbldias`
 -- AUTO_INCREMENT de la tabla `tbldet_tblembarque`
 --
 ALTER TABLE `tbldet_tblembarque`
-  MODIFY `PKId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `PKId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 
 --
 -- AUTO_INCREMENT de la tabla `tbldet_tblmercadonacional`
@@ -1705,7 +1691,7 @@ ALTER TABLE `tblestadousuario`
 -- AUTO_INCREMENT de la tabla `tblestimativo`
 --
 ALTER TABLE `tblestimativo`
-  MODIFY `PKId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `PKId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `tbllotes`
@@ -1735,13 +1721,13 @@ ALTER TABLE `tblracimos`
 -- AUTO_INCREMENT de la tabla `tblregistrosemanas`
 --
 ALTER TABLE `tblregistrosemanas`
-  MODIFY `PKId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `PKId` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `tblsemanas`
 --
 ALTER TABLE `tblsemanas`
-  MODIFY `PKId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
+  MODIFY `PKId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT de la tabla `tbltipofruta`
@@ -1776,14 +1762,7 @@ ALTER TABLE `tblcajasproduccion`
 --
 ALTER TABLE `tblcargue`
   ADD CONSTRAINT `tblcargue_ibfk_1` FOREIGN KEY (`FKIbm_TblFincas`) REFERENCES `tblfincas` (`PKIbm`),
-  ADD CONSTRAINT `tblcargue_ibfk_2` FOREIGN KEY (`FKDocumento_TblClientes`) REFERENCES `tblclientes` (`PKDocumento`);
-
---
--- Filtros para la tabla `tbldet_tblcargue`
---
-ALTER TABLE `tbldet_tblcargue`
-  ADD CONSTRAINT `tbldet_tblcargue_ibfk_1` FOREIGN KEY (`FKId_Cargue_TblCargue`) REFERENCES `tblcargue` (`PKId_Cargue`),
-  ADD CONSTRAINT `tbldet_tblcargue_ibfk_2` FOREIGN KEY (`FKId_TblMercadoNacional`) REFERENCES `tblmercadonacional` (`PKId`);
+  ADD CONSTRAINT `tblcargue_ibfk_2` FOREIGN KEY (`FKCod_TblEmbarque`) REFERENCES `tblembarque` (`PKCod`);
 
 --
 -- Filtros para la tabla `tbldet_tbldet_tblproduccion`

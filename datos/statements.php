@@ -740,7 +740,6 @@
     
 //Sentencias de eliminación ----------------------------------------------------------------------------------------
     //Esta función recibe la llave primaria y la tabla como referencia de eliminación (eliminar_s = método Eliminar del archivo statements)
-    //sirve para eliminar datos de un único registro
     function eliminar_s($key, $campo, $tabla){
         try {
             $bd = conectar();

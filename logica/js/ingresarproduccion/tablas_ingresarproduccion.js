@@ -231,17 +231,26 @@
                         throw "No se ha podido guardar los datos correctamente IP";
                 })
                 .then(res => {
+                    console.log(res);
+
                     $(".osc").fadeOut();
                     $("#loader").fadeOut();
-                    if (res == "") {
+                    if (res == 20) { // response 20 is a code for save data
                         $.notify({
                             icon: 'fa fa-check-circle',
-                            message: 'Datos guardados correctamente.',
+                            message: 'Datos <strong>GUARDADOS</strong> correctamente.',
                             title: '<strong>Producción: </strong>'
                         }, {
                             type: 'success'
                         });
-                        console.log("Todo guarda melo mi pana, usted es la VERGA parcero, siga así que va es pa alante a terminar su mayor reto")
+                    } else if (res == 21) { //response 21 is a code for update data
+                        $.notify({
+                            icon: '',
+                            message: 'Datos <strong>ACTUALIZADOS</strong> correctamente.',
+                            title: '<strong>Producción: </strong>'
+                        }, {
+                            type: 'info'
+                        });
                     } else if (res == 22) { //response 22 is a error code for limit of elaboration
                         setTimeout(func => {swal('Guardar producción', '¡Los datos superan el límite de elaboración!', 'error')}, 1000);
                     } else {
@@ -277,7 +286,7 @@
     .then(res => {
         if (res[0].PKCod == cod_embarque) {
             $("#cod_embarque_ip").data('idSemana_ip', res[0].FKId_TblSemanas);
-            fetch(`../logica/contenido.php?op=cargar_produccion_ip&cod_embarque=${cod_embarque}&ibm_finca=80074`)
+            fetch(`../logica/contenido.php?op=cargar_produccion_ip&cod_embarque=${cod_embarque}`)
             .then(response => {
                 if (response.ok) 
                     return response.json()
@@ -428,6 +437,7 @@
 
             const tblRacimos = document.querySelector('#tblRacimos_ip');
             let tblSettings_racimos = {
+                licenseKey: 'non-commercial-and-evaluation',
                 data: tblRacimos_data,
                 className: 'htCenter',
                 cell: [
@@ -727,6 +737,7 @@
 
             const tblCajas = document.querySelector('#tblCajas_ip');
             let tblSettings_cajas = {
+                licenseKey: 'non-commercial-and-evaluation',
                 data: tblCajas_data,
                 stretchH: 'all',
                 formulas: true,
@@ -1097,6 +1108,7 @@
         const tblCargue = document.querySelector('#tblCargue_ip');
 
         let tblSettings_nacional = {
+            licenseKey: 'non-commercial-and-evaluation',
             data: tblNacional_data,
             stretchH: 'all',
             formulas: true,
@@ -1182,6 +1194,7 @@
         };
 
         let tblSettings_cargue = {
+            licenseKey: 'non-commercial-and-evaluation',
             data: (tblCargue_IfExists[0] != undefined ? tblCargue_IfExists : tblCargue_data),
             className: 'htCenter',
             cell: [
