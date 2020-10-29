@@ -809,8 +809,8 @@
     function eliminar_produccion($codEmbarque, $ibmFinca) {
         $tblProduccion = buscarregistro($codEmbarque, 'Cod_Embarque', 'TblProduccion', "FKIbm_TblFincas = $ibmFinca");
         // $tblProduccion = buscarregistro($codEmbarque, 'Cod_Embarque', 'TblProduccion', 'FKIbm_TblFincas = '.$_POST['ibmFinca']);
-        $tblProduccion = (count($tblProduccion) >= 1 ? $tblProduccion[0] : null);
-        
+        $tblProduccion = (count($tblProduccion) == 1 ? $tblProduccion[0] : null);
+        if ($tblProduccion != null) {
         // Eliminar racimos y sus detalles
             $tblRacimos = buscarregistro($tblProduccion->FKId_TblRacimos, 'PKId', 'TblRacimos', false)[0];
             $tblDet_TblRacimos = buscarregistro($tblRacimos->PKId, 'FKId_TblRacimos', 'TblDet_TblRacimos_TblDias', false);
@@ -838,8 +838,11 @@
             eliminar_s($tblProduccion->FKId_TblEmbolse, 'PKId', 'TblEmbolse');
             eliminar_s($tblRacimos->PKId, 'PKId', 'TblRacimos');
             eliminar_s($tblNacional->PKId, 'PKId', 'TblMercadoNacional');
-        
+
             return true;
+        } else {
+            return false;
+        }
     }
 
 //valida el ingreso al archivo desde la petición del archivo logica/contenido.js 
@@ -1008,7 +1011,7 @@
                 break;
 
             case 'eliminarproduccion':
-                eliminar_produccion($_POST['codEmbarque'], $_SESSION['conectado']->FKIbm);
+                echo (eliminar_produccion($_POST['codEmbarque'], $_SESSION['conectado']->PKIbm));
                 break;
 
     // Defecto

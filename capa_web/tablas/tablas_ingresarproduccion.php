@@ -1,4 +1,7 @@
 <?php
+
+    include_once '../../capa_web/modals/veralineacion.php';
+
     if (isset($_GET['cod_embarque'])) {
         $cod_embarque = $_GET['cod_embarque'];
     }
@@ -20,14 +23,21 @@
     <div class="container">
 
         <div class="ui segment animated bounceInRight">
+
             <div class="row">
                 <div class="col-lg-6 col-md-6">
                     <p>Código de embarque: <span class="badge" id="cod_embarque_ip"><?php echo $cod_embarque; ?></span></p>
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <div style="text-align: right;">
+                        <button id="" class="btn btn-default btn-icon-notika" data-tooltip="Ver alineación" data-position="top center" data-toggle="modal" data-target="#modal-va">
+                            <i class="fa fa-th-large"></i>
+                        </button>
                         <button id="btnGuardar_ip" class="btn btn-default btn-icon-notika" data-tooltip="Guardar" data-position="top center">
                             <i class="fa fa-save"></i>
+                        </button>
+                        <button id="btnEliminar_ip" class="btn btn-default btn-icon-notika" data-tooltip="Eliminar" data-position="top center">
+                            <i class="fa fa-trash"></i>
                         </button>
                         <button id="btnVolver_ip" class="btn btn-default btn-icon-notika" data-tooltip="Inicio" data-position="top center">
                             <i class="fa fa-home"></i>
@@ -80,6 +90,7 @@
                 </div>
 
             </div>
+            
         </div>
 
     </div>

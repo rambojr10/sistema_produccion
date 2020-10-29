@@ -231,7 +231,6 @@
                         throw "No se ha podido guardar los datos correctamente IP";
                 })
                 .then(res => {
-                    console.log(res);
 
                     $(".osc").fadeOut();
                     $("#loader").fadeOut();
@@ -245,7 +244,7 @@
                         });
                     } else if (res == 21) { //response 21 is a code for update data
                         $.notify({
-                            icon: '',
+                            icon: 'fa fa-info-circle',
                             message: 'Datos <strong>ACTUALIZADOS</strong> correctamente.',
                             title: '<strong>Producción: </strong>'
                         }, {
@@ -255,7 +254,7 @@
                         setTimeout(func => {swal('Guardar producción', '¡Los datos superan el límite de elaboración!', 'error')}, 1000);
                     } else {
                         $.notify({
-                            icon: 'fa fa-times',
+                            icon: 'fa fa-times-circle',
                             message: 'Ha ocurrido un error, verifica los datos.',
                             title: '<strong>Producción: </strong>'
                         }, {
@@ -265,6 +264,64 @@
                 });
             }
         });
+    });
+
+    //Elimina los datos de una producción
+    $(document).on('click', '#btnEliminar_ip', () => {
+        swal({
+            title: '¡Eliminar producción!',
+            text: '¿Desea eliminar los datos?, no podrá recuperarlos más tarde.',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Estoy seguro!',
+            cancelButtonText: 'No, cancelar!'
+        }).then((isConfirm) => {
+            if (isConfirm) {
+                //Loader
+                $('.osc').fadeIn();
+                $('#loader').fadeIn();
+
+                const op = new FormData();
+                op.append('op', 'eliminarproduccion');
+                op.append('codEmbarque', cod_embarque);
+                fetch('../logica/contenido.php', {
+                    method: 'POST',
+                    body: op
+                })
+                .then(response => {
+                    if (response.ok)
+                        return response.text()
+                    else
+                        throw "No es posible realizar esta acción"
+                })
+                .then(res => {
+                    if (res == true) {
+                        //Loader
+                        $('.osc').fadeOut();
+                        $('#loader').fadeOut();
+                        $.notify({
+                            icon: 'fa fa-check',
+                            message: 'Datos <strong>ELIMINADOS</strong> correctamente.',
+                            title: '<strong>Producción: </strong>'
+                        }, {
+                            type: 'warning'
+                        });
+                        $("a[href='#ingresarproduccion']").trigger('click');
+                    } else if (res == false) {
+                        // Loader
+                        $('.osc').fadeOut();
+                        $('#loader').fadeOut();
+                        $.notify({
+                            icon: 'fa fa-times',
+                            message: 'Acción inválida.',
+                            title: '<strong>Producción: </strong>'
+                        }, {
+                            type: 'danger'
+                        });
+                    }
+                });
+            }
+        })
     });
 
     // Script de carga de tablas & verifica si existen datos previos para cargalos
@@ -307,7 +364,7 @@
                 }
             });
         } else {
-            console.log('res is undefined');
+            console.log('undefined');
         }
     });
     

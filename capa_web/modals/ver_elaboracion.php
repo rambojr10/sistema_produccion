@@ -4,24 +4,27 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
+
             <div class="modal-body">
                 <div class="header">
                     <h3>Elaboración Caja</h3>
                     <div>
                         <h4 class="text-muted">Codigo: <span class="ui blue circular label" id="codigo_ve"></span></h4>
-                        <!-- <label for="fincas_ve" class="form-control">Finca: </label> -->
                         <select name="fincas_ve" class="form-control">
                             
                         </select>
                     </div>
                     <hr>
                 </div>
+
                 <div class="row">
+
                     <div class="col-6 col-md-6 col-sm-6 col-xs-12">
                         <div class="panel panel-primary">
                             <div class="panel-heading text-center">
                                 Filtros
                             </div>
+
                             <div class="panel-body">
                                 <div class="toggle-select-act fm-cmp-mg">
                                     <div class="nk-toggle-switch" data-ts-color="red">
@@ -47,6 +50,7 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="col-6 col-md-6 col-sm-6 col-xs-12">
                         <div class="panel panel-info">
                             <div class="panel-heading text-center">
@@ -60,6 +64,7 @@
                             </div>
                         </div>
                     </div>
+                    
                 </div>
                 <br>
                 <div class="panel-group">
@@ -77,6 +82,7 @@
                     </table>
                 </div>
             </div>
+
             <div class="modal-footer">
                 <hr>
                 <h5>Grupo Montesol</h5>
@@ -84,5 +90,4 @@
             </div>
         </div>
     </div>
-
 </div>
