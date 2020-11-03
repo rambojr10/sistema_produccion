@@ -700,6 +700,23 @@
         return $datos->fetchAll();
     }
 
+    //
+    function cajassemanaanterior($codEmbarque) {
+        $bd = conectar();
+        $datos = $bd->prepare("
+            SELECT cp.PKCodigo
+            FROM tblcajasproduccion as cp, tblembarque as e, tbldet_tblembarque as de, tblfincas as f
+            WHERE cp.PKCodigo = de.FKCodigo_TblCajasProduccion
+            AND f.PKIbm = de.FKIbm_TblFincas
+            AND e.PKCod = de.FKCod_TblEmbarque
+            AND e.PKCod = :codEmbarque
+            AND f.PKIbm = (SELECT tblfincas.PKIbm FROM tblfincas LIMIT 1)
+        ");
+        $datos->bindParam(':codEmbarque', $codEmbarque, PDO::PARAM_STR);
+        $datos->execute();
+        return $datos->fetchAll();
+    }
+
 // Sentencias de actualización------------------------------------------------------------------------------------------------------------
 
     //Recibe arreglo de php para actualizar los datos

@@ -777,6 +777,12 @@
         }
     }
 
+    //
+    function cajas_semana_anterior() {
+        $result = cajassemanaanterior($_POST['codEmbarque']);
+        echo json_encode($result);
+    }
+
 //  ACTUALIZAR ==================================================================================================================
     
     //
@@ -998,6 +1004,11 @@
             // 
             case 'ver_alineacion':
                 ver_alineacion();
+                break;
+
+            //
+            case 'cajas_semana_anterior':
+                cajas_semana_anterior();
                 break;
 
     //Metodos de actualizar            

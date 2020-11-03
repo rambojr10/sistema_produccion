@@ -39,9 +39,3 @@
         </div>
     </div>
 </div>
-
-<!-- SELECT de.FKCodigo_TblCajasProduccion as Código, cp.Descripcion as Caja, de.Cantidad as Cantidad
-FROM tbldet_tblembarque as de, tblcajasproduccion as cp
-WHERE de.FKCodigo_TblCajasProduccion = cp.PKCodigo
-AND de.FKIbm_TblFincas = '80074'
-AND de.FKCod_TblEmbarque = 'EMB-202010' -->

@@ -26,6 +26,8 @@
             })
             .then(res => {
                 if (res.length > 0) {
+
+                    console.log(res);
                     swal({
                         title: "¡Datos pendientes!",
                         text: "El embarque ya existe, ¿desea cargarlo?",
@@ -38,10 +40,9 @@
                             //FALTA RECIBIR PETICIÓN Y PROCESARLA
                         }
                     });
-                    console.log(res);
                 } else {
                     $("#seleccion-pe").removeAttr("hidden");
-                    cargar_cajas_pe();
+                    cargar_cajas_pe(false);
                 }
             });
         }else {
@@ -100,10 +101,59 @@
         }
     });
 
+    // Agrega las cajas seleccionadas de la semana anterior
+    $(document).on('click', "[href='#semana_anterior_pe']", function(e) {
+        e.preventDefault();
+        if ($("#semanas_pe").val() != null) {
+            let semana_pe = $("#semanas_pe option:selected").text();
+            let num_semana_pe = semana_pe.split(" ");
+            let anho_pe = $("#ano_pe").val();
+            let cod_embarque = `EMB-${anho_pe+num_semana_pe[1]-1}`;
+
+            const op = new FormData();
+            op.append("op", "codEmbarque_verificar");
+            op.append("key", cod_embarque);
+            op.append("campo", "PKCod");
+            op.append("tabla", "TblEmbarque");
+            fetch('../logica/contenido.php', {
+                method: 'POST',
+                body: op
+            })
+            .then(response => {
+                if (response.ok) 
+                    return response.json()
+                else
+                    throw "No se ha podido cargar los datos SA"
+            })
+            .then(res => {
+                if (res.length > 0) {
+                    const op = new FormData();
+                    op.append('op', 'cajas_semana_anterior');
+                    op.append('codEmbarque', res[0].PKCod);
+                    fetch('../logica/contenido.php', {
+                        method: 'POST',
+                        body: op
+                    })
+                    .then(response => {return response.json()})
+                    .then(res => {
+                        console.log(res);
+                        $("#seleccion-pe").removeAttr("hidden");
+                        let cajasSemanaAnterior = [];
+                        res.forEach((element) => {
+                            cajasSemanaAnterior.push(element.PKCodigo)
+                        });
+                        cargar_cajas_pe(cajasSemanaAnterior)
+                    });
+                } else {
+                    swal('Programar embarque', 'No existe una selección anterior', 'error');
+                }
+            });
+        }
+    });
 //MOSTRAR DATOS -----------------------------------------------------------------------------------------------    
     
     //Carga las cajas para mostrarlas en el select de programar embarque
-    function cargar_cajas_pe(){
+    function cargar_cajas_pe(cajasSemanaAnterior){
         const op = new FormData();
         op.append("op", "cargarcajas_select");
         fetch('../logica/contenido.php', {
@@ -119,6 +169,7 @@
         })
         .then(res => {
             $("#select-sc-pe").html(res);
+            $("#select-sc-pe").val((cajasSemanaAnterior != false ? cajasSemanaAnterior : ''));
             $("#select-sc-pe").select2();
         });
     }
@@ -156,18 +207,17 @@
             body: op
         })
         .then(response => {
-            if (response.ok) {
+            if (response.ok)
                 return response.json();
-            }else {
+            else
                 throw "No se pueden cargar los datos";
-            }
         })
         .then(res => {
             $("#cod_embarque-pe").text(res.cod_embarque); //asigna en pantalla el código de embarque
             $("#cod_embarque-pe").data("cod_embarque", res.cod_embarque); //guarda el código de embarque
             $("#descripcion_embarque-pe").text(res.embarque); //asigna en pantalla la descripcion del embarque
             tabla_body.innerHTML = ""; // Limpia el body de la tabla 
-            let x=0; //Se usa para asignar el número de cada caja en la tabla
+            let x = 0; //Se usa para asignar el número de cada caja en la tabla
             //recorre el objeto para llenar la tabla
             for (const data_cajas_pe of res.cajas) {
                 let tipofruta;
