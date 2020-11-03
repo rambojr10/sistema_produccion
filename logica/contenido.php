@@ -762,6 +762,21 @@
         }
     }
 
+    //
+    function ver_alineacion() {
+        $codEmbarque = $_POST['codEmbarque'];
+        $datos = veralineacion($codEmbarque, $_SESSION['conectado']->PKIbm);
+        foreach ($datos as $d) {
+            echo "
+                <tr>
+                    <td>$d->Codigo</td>
+                    <td>$d->Caja</td>
+                    <td>$d->Cantidad</td>
+                </tr>
+            ";
+        }
+    }
+
 //  ACTUALIZAR ==================================================================================================================
     
     //
@@ -978,6 +993,11 @@
             // 
             case 'cargar_produccion_ip':
                 cargar_produccion_ip();
+                break;
+
+            // 
+            case 'ver_alineacion':
+                ver_alineacion();
                 break;
 
     //Metodos de actualizar            

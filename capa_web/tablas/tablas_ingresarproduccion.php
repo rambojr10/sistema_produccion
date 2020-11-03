@@ -30,7 +30,7 @@
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <div style="text-align: right;">
-                        <button id="" class="btn btn-default btn-icon-notika" data-tooltip="Ver alineación" data-position="top center" data-toggle="modal" data-target="#modal-va">
+                        <button id="btnVerAlineacion" class="btn btn-default btn-icon-notika" data-tooltip="Ver alineación" data-position="top center" data-toggle="modal" data-target="#modal-va">
                             <i class="fa fa-th-large"></i>
                         </button>
                         <button id="btnGuardar_ip" class="btn btn-default btn-icon-notika" data-tooltip="Guardar" data-position="top center">

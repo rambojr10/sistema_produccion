@@ -2,7 +2,7 @@
     require_once 'conexion.php';
     //Orden crud
     
-//Sentencias de creación =========================================================================================
+// Sentencias de creación =========================================================================================
 
     function nuevafinca($datos_c, $lotes){
         $ibm = $datos_c['ibm'];
@@ -684,7 +684,23 @@
             return false;
     }
 
-//Sentencias de actualización------------------------------------------------------------------------------------------------------------
+    //
+    function veralineacion($codEmbarque, $ibmFinca) {
+        $bd = conectar();
+        $datos = $bd->prepare("
+            SELECT de.FKCodigo_TblCajasProduccion as Codigo, cp.Descripcion as Caja, de.Cantidad as Cantidad 
+            FROM tbldet_tblembarque as de, tblcajasproduccion as cp
+            WHERE de.FKCodigo_TblCajasProduccion = cp.PKCodigo
+            AND de.FKIbm_TblFincas = :ibmFinca
+            AND de.FKCod_TblEmbarque = :codEmbarque
+        ");
+        $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
+        $datos->bindParam(':codEmbarque', $codEmbarque, PDO::PARAM_STR);
+        $datos->execute();
+        return $datos->fetchAll();
+    }
+
+// Sentencias de actualización------------------------------------------------------------------------------------------------------------
 
     //Recibe arreglo de php para actualizar los datos
     function actualizarempresa($empresa) {
@@ -738,7 +754,7 @@
         }
     }
     
-//Sentencias de eliminación ----------------------------------------------------------------------------------------
+// Sentencias de eliminación ----------------------------------------------------------------------------------------
     //Esta función recibe la llave primaria y la tabla como referencia de eliminación (eliminar_s = método Eliminar del archivo statements)
     function eliminar_s($key, $campo, $tabla){
         try {

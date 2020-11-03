@@ -6,188 +6,188 @@
     const cod_embarque = $("#cod_embarque_ip").text();
     
 
-    // Renderers Here ----------------------------------------------------------------------------------
+// Renderers Here ----------------------------------------------------------------------------------------------------------------------------------------
         
-        coffeeRenderer = function(instance, td, row, col, prop, value, cellProperties) {
-            Handsontable.renderers.TextRenderer.apply(this, arguments);
-            td.style.backgroundColor = '#79422d';
-            td.style.color = 'white';
-            td.style.fontWeight = 'normal';
-        };
+    coffeeRenderer = function(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.backgroundColor = '#79422d';
+        td.style.color = 'white';
+        td.style.fontWeight = 'normal';
+    };
 
-        blackRenderer = function(instance, td, row, col, prop, value, cellProperties) {
-            Handsontable.renderers.TextRenderer.apply(this, arguments);
-            td.style.backgroundColor = 'black';
-            td.style.color = 'white';
-            td.style.fontWeight = 'normal';
-        };
+    blackRenderer = function(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.backgroundColor = 'black';
+        td.style.color = 'white';
+        td.style.fontWeight = 'normal';
+    };
 
-        orangeRenderer = function(instance, td, row, col, prop, value, cellProperties) {
-            Handsontable.renderers.TextRenderer.apply(this, arguments);
-            td.style.backgroundColor = '#da930c';
-            td.style.color = 'white';
-            td.style.fontWeight = 'normal';
-        };
-        
-        greenRenderer = function(instance, td, row, col, prop, value, cellProperties) {
-            Handsontable.renderers.TextRenderer.apply(this, arguments);
-            td.style.backgroundColor = '#197054';
-            td.style.fontWeight = 'normal';
-            td.style.color = '#fff';
-        };
+    orangeRenderer = function(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.backgroundColor = '#da930c';
+        td.style.color = 'white';
+        td.style.fontWeight = 'normal';
+    };
+    
+    greenRenderer = function(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.backgroundColor = '#197054';
+        td.style.fontWeight = 'normal';
+        td.style.color = '#fff';
+    };
 
-        yellowRenderer = function(instance, td, row, col, prop, value, cellProperties) {
-            Handsontable.renderers.TextRenderer.apply(this, arguments);
-            td.style.backgroundColor = 'yellow';
-            td.style.fontWeight = 'normal';
-            td.style.color = '#000'
-        };
+    yellowRenderer = function(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.backgroundColor = 'yellow';
+        td.style.fontWeight = 'normal';
+        td.style.color = '#000'
+    };
 
-        whiteRenderer = function(instance, td, row, col, prop, value, cellProperties) {
-            Handsontable.renderers.TextRenderer.apply(this, arguments);
-            td.style.backgroundColor = 'white';
-            td.style.color = '#545454';
-            td.style.fontWeight = 'normal';
-        };
-        
-        blueRenderer = function(instance, td, row, col, prop, value, cellProperties) {
-            Handsontable.renderers.TextRenderer.apply(this, arguments);
-            td.style.backgroundColor = '#1683bd';
-            td.style.fontWeight = 'normal';
-            td.style.color = '#fff';
-        };
+    whiteRenderer = function(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.backgroundColor = 'white';
+        td.style.color = '#545454';
+        td.style.fontWeight = 'normal';
+    };
+    
+    blueRenderer = function(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.backgroundColor = '#1683bd';
+        td.style.fontWeight = 'normal';
+        td.style.color = '#fff';
+    };
 
-        grayRenderer = function(instance, td, row, col, prop, value, cellProperties) {
-            Handsontable.renderers.TextRenderer.apply(this, arguments);
-            td.style.backgroundColor = 'gray';
-            td.style.color = 'white';
-            td.style.fontWeight = 'normal';
-        };
+    grayRenderer = function(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.backgroundColor = 'gray';
+        td.style.color = 'white';
+        td.style.fontWeight = 'normal';
+    };
 
-        purpleRenderer = function(instance, td, row, col, prop, value, cellProperties) {
-            Handsontable.renderers.TextRenderer.apply(this, arguments);
-            td.style.backgroundColor = '#9a2be2';
-            td.style.color = 'white';
-            td.style.fontWeight = 'normal';
-        };
+    purpleRenderer = function(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.backgroundColor = '#9a2be2';
+        td.style.color = 'white';
+        td.style.fontWeight = 'normal';
+    };
 
-        redRenderer = function(instance, td, row, col, prop, value, cellProperties) {
-            Handsontable.renderers.TextRenderer.apply(this, arguments);
-            td.style.backgroundColor = 'red';
-            td.style.color = 'white';
-            td.style.fontWeight = 'normal';
-        };
+    redRenderer = function(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.backgroundColor = 'red';
+        td.style.color = 'white';
+        td.style.fontWeight = 'normal';
+    };
 
-        titleRenderer = function(instance, td, row, col, prop, value, cellProperties) {
-            Handsontable.renderers.TextRenderer.apply(this, arguments);
-            td.style.backgroundColor = '#ccc';
-            td.style.fontWeight = 'bold';
+    titleRenderer = function(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.backgroundColor = '#ccc';
+        td.style.fontWeight = 'bold';
+    }
+
+    boldRenderer = function(instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.fontWeight = 'bold';
+        td.style.textAlign = 'center';
+        td.style.color = "black";
+    }
+
+    // Recibe las cintas y semanas para clasificarlas según el color y así renderizarlas en los td
+    function renderizarCintas(cinta) {
+        switch (cinta) {
+            case 'CAFÉ':
+                return coffeeRenderer;
+                break;
+            case 'NEGRA':
+                return blackRenderer;
+                break;
+            case 'NARANJA':
+                return orangeRenderer;
+                break;
+            case 'VERDE':
+                return greenRenderer;
+                break;
+            case 'AMARILLA':
+                return yellowRenderer;
+                break;
+            case 'BLANCA':
+                return whiteRenderer;
+                break;
+            case 'AZUL':
+                return blueRenderer;
+                break;
+            case 'GRIS':
+                return grayRenderer;
+                break;
+            case 'MORADA':
+                return purpleRenderer;
+                break;
+            case 'ROJA':
+                return redRenderer;
+                break;
+            default:
+                break;
         }
+    }
 
-        boldRenderer = function(instance, td, row, col, prop, value, cellProperties) {
-            Handsontable.renderers.TextRenderer.apply(this, arguments);
-            td.style.fontWeight = 'bold';
-            td.style.textAlign = 'center';
-            td.style.color = "black";
+    // recibe el embolse y renderiza la clase al panel
+    function renderizarEmbolse(cinta) {
+        switch (cinta) {
+            case 'CAFÉ':
+                return "embolseCoffee";
+                break;
+            case 'NEGRA':
+                return "embolseBlack";
+                break;
+            case 'NARANJA':
+                return "embolseOrange";
+                break;
+            case 'VERDE':
+                return "embolseGreen";
+                break;
+            case 'AMARILLA':
+                return "embolseYellow";
+                break;
+            case 'BLANCA':
+                return "embolseWhite";
+                break;
+            case 'AZUL':
+                return "embolseBlue";
+                break;
+            case 'GRIS':
+                return "embolseGray";
+                break;
+            case 'MORADA':
+                return "embolsePurple";
+                break;
+            case 'ROJA':
+                return "embolseRed";
+                break;
+            default:
+                break;
         }
+    }
 
-        // Recibe las cintas y semanas para clasificarlas según el color y así renderizarlas en los td
-        function renderizarCintas(cinta) {
-            switch (cinta) {
-                case 'CAFÉ':
-                    return coffeeRenderer;
-                    break;
-                case 'NEGRA':
-                    return blackRenderer;
-                    break;
-                case 'NARANJA':
-                    return orangeRenderer;
-                    break;
-                case 'VERDE':
-                    return greenRenderer;
-                    break;
-                case 'AMARILLA':
-                    return yellowRenderer;
-                    break;
-                case 'BLANCA':
-                    return whiteRenderer;
-                    break;
-                case 'AZUL':
-                    return blueRenderer;
-                    break;
-                case 'GRIS':
-                    return grayRenderer;
-                    break;
-                case 'MORADA':
-                    return purpleRenderer;
-                    break;
-                case 'ROJA':
-                    return redRenderer;
-                    break;
-                default:
-                    break;
-            }
-        }
+    subtitleRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.fontWeight = 'bold';
+        td.style.fontSize = '11px';
+    }
 
-        // recibe el embolse y renderiza la clase al panel
-        function renderizarEmbolse(cinta) {
-            switch (cinta) {
-                case 'CAFÉ':
-                    return "embolseCoffee";
-                    break;
-                case 'NEGRA':
-                    return "embolseBlack";
-                    break;
-                case 'NARANJA':
-                    return "embolseOrange";
-                    break;
-                case 'VERDE':
-                    return "embolseGreen";
-                    break;
-                case 'AMARILLA':
-                    return "embolseYellow";
-                    break;
-                case 'BLANCA':
-                    return "embolseWhite";
-                    break;
-                case 'AZUL':
-                    return "embolseBlue";
-                    break;
-                case 'GRIS':
-                    return "embolseGray";
-                    break;
-                case 'MORADA':
-                    return "embolsePurple";
-                    break;
-                case 'ROJA':
-                    return "embolseRed";
-                    break;
-                default:
-                    break;
-            }
-        }
+    compRenderer = function (instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.backgroundColor = '#f5f5f5';
+        td.style.fontSize = '12px';
+        td.style.fontWeight = '400';
+    }
 
-        subtitleRenderer = function (instance, td, row, col, prop, value, cellProperties) {
-            Handsontable.renderers.TextRenderer.apply(this, arguments);
-            td.style.fontWeight = 'bold';
-            td.style.fontSize = '11px';
-        }
+    subTitleRenderer2 = function (instance, td, row, col, prop, value, cellProperties) {
+        Handsontable.renderers.TextRenderer.apply(this, arguments);
+        td.style.backgroundColor = '#f5f5f5';
+        td.style.fontWeight = 'bold';
+        td.style.fontSize = '12px';
+    }
 
-        compRenderer = function (instance, td, row, col, prop, value, cellProperties) {
-            Handsontable.renderers.TextRenderer.apply(this, arguments);
-            td.style.backgroundColor = '#f5f5f5';
-            td.style.fontSize = '12px';
-            td.style.fontWeight = '400';
-        }
-
-        subTitleRenderer2 = function (instance, td, row, col, prop, value, cellProperties) {
-            Handsontable.renderers.TextRenderer.apply(this, arguments);
-            td.style.backgroundColor = '#f5f5f5';
-            td.style.fontWeight = 'bold';
-            td.style.fontSize = '12px';
-        }
-
-    // End renderers -----------------------------------------------------------------------------------
+// End renderers ---------------------------------------------------------------------------------------------------------------------------------------------
 
 // Cinta de opciones ------------------------------------------------------------------------------------------------------------
 
@@ -322,6 +322,32 @@
                 });
             }
         })
+    });
+
+    //Ver alineación: || muestra el modal desde el evento del botón || - sólo es informativo
+    $(document).on('click', '#btnVerAlineacion', function() {
+        const op = new FormData();
+        op.append('op', 'ver_alineacion');
+        op.append('codEmbarque', cod_embarque);
+        fetch('../logica/contenido.php', {
+            method: 'POST',
+            body: op
+        })
+        .then(response => {
+            if (response.ok) 
+                return response.text()
+            else
+                throw "No se ha podido cargar los datos VA"
+        })
+        .then(res => {
+            console.log(res)
+            $('#veralineacion').html(res);
+        })
+    });
+
+    //Inicio 
+    $(document).on('click', '#btnVolver_ip', () => {
+        window.location.href = 'index.php';
     });
 
     // Script de carga de tablas & verifica si existen datos previos para cargalos
