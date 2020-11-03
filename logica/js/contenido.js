@@ -22,11 +22,10 @@
                 body: op
             })
             .then(response => {
-                if (response.ok) {
+                if (response.ok)
                     return response.text();
-                }else {
+                else
                     throw "No se pueden cargar los datos";
-                }
             })
             .then(res => {
                 console.log(res);
@@ -57,14 +56,12 @@
     $(document).on("click", "[href='#programarembarque']", function(e){
         e.preventDefault();
         $(".contenido").load("../capa_web/programarembarque.php");
-        // $(".contenido").hide().show("blind", 1500);
     });
     
     //Mostrar empresas
     $(document).on("click", "[href='#listarempresas']", function(e){
         e.preventDefault();
         $(".contenido").load("../capa_web/empresas.php");
-        // $("#listarempresas").html("");
         //pertenece a empresas.js
         listarempresas();
     });
@@ -80,15 +77,25 @@
             body: op
         })
         .then(response => {
-            if (response.ok) {
+            if (response.ok)
                 return response.text()
-            }else{
+            else
                 throw "No se han cargado los datos..."
-            }
         })
         .then(res => {
             $("#cajasproduccion").html(res);
             data_cajas();
+        });
+    });
+
+    // Carga vista usuarios
+    $(document).on('click', "[href='#listarusuarios']", function(e) {
+        e.preventDefault();
+        $('.contenido').load('../capa_web/usuarios.php');
+        fetch('../logica/contenido.php?op=listar_usuarios')
+        .then(response => response.text())
+        .then(res => {
+            $('#containerUsuarios').html(res);
         });
     });
 

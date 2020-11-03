@@ -26,8 +26,6 @@
             })
             .then(res => {
                 if (res.length > 0) {
-
-                    console.log(res);
                     swal({
                         title: "¡Datos pendientes!",
                         text: "El embarque ya existe, ¿desea cargarlo?",
@@ -136,7 +134,6 @@
                     })
                     .then(response => {return response.json()})
                     .then(res => {
-                        console.log(res);
                         $("#seleccion-pe").removeAttr("hidden");
                         let cajasSemanaAnterior = [];
                         res.forEach((element) => {
@@ -150,6 +147,7 @@
             });
         }
     });
+
 //MOSTRAR DATOS -----------------------------------------------------------------------------------------------    
     
     //Carga las cajas para mostrarlas en el select de programar embarque
@@ -161,11 +159,10 @@
             body: op
         })
         .then(response => {
-            if (response.ok) {
+            if (response.ok)
                 return response.text();
-            }else {
+            else
                 throw "No se ha podido cargar los datos";
-            }
         })
         .then(res => {
             $("#select-sc-pe").html(res);

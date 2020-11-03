@@ -783,6 +783,38 @@
         echo json_encode($result);
     }
 
+    //
+    function listar_usuarios() {
+        if ($_SESSION['conectado']->FKId_TblTipoUsuario == 1) {
+            $datos = listarusuarios();
+            foreach ($datos as $d) {
+                echo "
+                    <div class='col-lg-4 col-md-4 col-sm-6 col-xs-12'>
+                        <div class='contact-list mg-t-30'>
+                            <div class='contact-win'>
+                                <div class='contact-img'>
+                                    <h1>$d->Nombre</h1>
+                                </div>
+                                <div class='conct-sc-ic'>
+                                    <a class='btn' href='#' data-tooltip='Change password' data-position='right center'><i class='notika-icon notika-facebook'></i></a>
+                                    <a class='btn' href='#' data-tooltip='Change privileges' data-position='right center'><i class='notika-icon notika-twitter'></i></a>
+                                    <a class='btn' href='#' data-tooltip='Change status' data-position='right center'><i class='notika-icon notika-pinterest'></i></a>
+                                </div>
+                            </div>
+                            <div class='contact-ctn'>
+                                <div class='contact-ad-hd'>
+                                    <h2>$d->Usuario</h2>
+                                    <p class='ctn-ads'>$d->EstadoUsuario</p>
+                                    <p class='ctn-ads'>$d->TipoUsuario</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                ";
+            }
+        }
+    }
+
 //  ACTUALIZAR ==================================================================================================================
     
     //
@@ -1009,6 +1041,11 @@
             //
             case 'cajas_semana_anterior':
                 cajas_semana_anterior();
+                break;
+
+            //
+            case 'listar_usuarios':
+                listar_usuarios();
                 break;
 
     //Metodos de actualizar            

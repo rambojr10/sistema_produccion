@@ -717,6 +717,20 @@
         return $datos->fetchAll();
     }
 
+    //
+    function listarusuarios() {
+        $bd = conectar();
+        $datos = $bd->prepare("
+            SELECT u.FKIbm_TblFincas as Usuario, f.Nombre as Nombre, eu.Descripcion as EstadoUsuario, tp.Descripcion as TipoUsuario
+            FROM tblusuarios as u, tblfincas as f, tblestadousuario as eu, tbltipousuario as tp
+            WHERE u.FKIbm_TblFincas = f.PKIbm
+            AND u.FKId_TblTipoUsuario = tp.PKId
+            AND u.FKId_TblEstadoUsuario = eu.PKId
+        ");
+        $datos->execute();
+        return $datos->fetchAll();
+    }
+
 // Sentencias de actualización------------------------------------------------------------------------------------------------------------
 
     //Recibe arreglo de php para actualizar los datos

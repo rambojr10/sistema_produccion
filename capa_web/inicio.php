@@ -133,66 +133,6 @@
     </div>
     <!-- End Header Top Area -->
 
-    <!-- Mobile Menu start -->
-    <!-- <div class="mobile-menu-area">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                    <div class="mobile-menu">
-                        <nav id="dropdown">
-                            <ul class="mobile-menu-nav">
-                                <li>
-                                    <a data-toggle="collapse" data-target="#Charts" href="../index.php">Inicio</a>
-                                </li>
-
-                                <?php if ($_SESSION['conectado']->FKId_TblTipoUsuario == 1) : ?>
-                                <li>
-                                    <a data-toggle="collapse" data-target="#Charts" href="#">Fincas</a>
-                                    <ul>
-                                        <li><a href="#listarfincas">Listar Fincas</a></li>
-                                        <li><a href="#listarempresas">Razones Sociales</a></li>
-                                    </ul>
-                                </li>
-                                <?php endif; ?>
-
-                                <li>
-                                    <a data-toggle="collapse" data-target="#Charts" href="#">Producción</a>
-                                    <ul>
-                                        <li><a href="#ingresarproduccion">Ingresar Producción</a></li>
-
-                                        <?php if ($_SESSION['conectado']->FKId_TblTipoUsuario == 1) : ?>
-                                        <li><a href="#cajasproduccion">Cajas Producción</a></li>
-                                        <li><a href="#programarembarque">Programar Embarque</a></li>
-                                        <li><a href="#generarsemanas">Generar Semanas</a></li>
-                                        <?php endif; ?>
-
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a data-toggle="collapse" data-target="#Charts" href="#">Reportes</a>
-                                    <ul>
-                                        <li><a href="#">Reporte Global</a></li>
-                                        <li><a href="#">Reporte Semanal</a></li>
-
-                                        <?php if ($_SESSION['conectado']->FKId_TblTipoUsuario == 1 && $_SESSION['conectado']->FKId_TblEstadoUsuario == 1 ) : ?>
-                                        <li><a href="#">Reporte por Fincas</a></li>
-                                        <?php endif; ?>
-
-                                        <li><a href="#">Reporte por Cajas </a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a data-toggle="collapse" data-target="#Charts" href="#">Usuarios</a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-    <!-- Mobile Menu end -->
-
     <!-- Main Menu area start-->
     <div class="main-menu-area mg-tb-40">
         <div class="container">
@@ -251,10 +191,6 @@
                                 <li>
                                     <a href="#programarembarque">Programar Embarque</a>
                                 </li>
-                                <!-- <li>
-                                    <a href="#handsontable">Handsontable</a>
-                                </li> -->
-
                                 <?php endif; ?>
 
                             </ul>
@@ -267,8 +203,8 @@
                                 </li>
 
                                 <?php if ($_SESSION['conectado']->FKId_TblTipoUsuario == 1) : ?> 
-                                    <li><a href="#">Ver Reporte por Fincas</a>
-                                    </li>
+                                <li><a href="#">Ver Reporte por Fincas</a>
+                                </li>
                                 <?php endif; ?>
 
                                 <li><a href="#">Ver Reporte por Cajas</a>
@@ -277,8 +213,10 @@
                         </div>
                         <div id="usuarios" class="tab-pane notika-tab-menu-bg animated flipInX">
                             <ul class="notika-main-menu-dropdown">
-                                <li><a href="#">Usuarios</a>
+                                <?php if ($_SESSION['conectado']->FKId_TblTipoUsuario == 1) : ?> 
+                                <li><a href="#listarusuarios">Usuarios</a>
                                 </li>
+                                <?php endif; ?>
                             </ul>
                         </div>
                     </div>

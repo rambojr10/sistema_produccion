@@ -57,13 +57,11 @@
 		Area_Neta FLOAT not null,
 		Area_Bruta FLOAT not null,
 		FKIbm_TblFincas VARCHAR(5) not null,
-SELECT cp.PKCodigo, cp.Descripcion 
-FROM tblcajasproduccion as cp, tblembarque as e, tbldet_tblembarque as de, tblfincas as f
-WHERE cp.PKCodigo = de.FKCodigo_TblCajasProduccion
-AND f.PKIbm = de.FKIbm_TblFincas
-AND e.PKCod = de.FKCod_TblEmbarque
-AND e.PKCod = 'EMB-202010'
-AND f.PKIbm = '80074'	
+SELECT u.FKIbm_TblFincas as Usuario, f.Nombre as Nombre, eu.Descripcion as EstadoUsuario, tp.Descripcion as TipoUsuario
+FROM tblusuarios as u, tblfincas as f, tblestadousuario as eu, tbltipousuario as tp
+WHERE u.FKIbm_TblFincas = f.PKIbm
+AND u.FKId_TblTipoUsuario = eu.PKId
+AND u.FKId_TblEstadoUsuario = tp.PKId
 		FOREIGN KEY (FKIbm_TblFincas) REFERENCES TblFincas(PKIbm)	
 	);
 
