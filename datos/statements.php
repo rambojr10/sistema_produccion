@@ -419,10 +419,14 @@
 
     function ingreso($usuario, $password) {
         $bd = conectar();
-        $datos = $bd->prepare("SELECT * FROM tblusuarios INNER JOIN tblfincas 
-                                ON tblusuarios.FKIbm_TblFincas = tblfincas.PKIbm 
-                                WHERE tblusuarios.FKIbm_TblFincas = :usuario 
-                                AND tblusuarios.Password = :password");
+        $datos = $bd->prepare("
+            SELECT u.Usuario, f.PKIbm as FKIbm_TblFincas, u.FKId_TblTipoUsuario, u.FKId_TblEstadoUsuario, f.Nombre,
+                f.Area_Neta, f.Area_Bruta, f.FKNit_TblEmpresas
+            FROM tblusuarios as u LEFT JOIN tblfincas as f
+            ON u.Ibm_Finca = f.PKIbm
+            WHERE u.Usuario = :usuario
+            AND u.Password = :password
+        ");
         $datos->bindParam(":usuario", $usuario, PDO::PARAM_STR);
         $datos->bindParam(":password", $password, PDO::PARAM_STR);
         $datos->execute();
@@ -431,10 +435,12 @@
 
     function listarfincas() {
         $bd = conectar();
-        $datos = $bd->prepare("SELECT f.PKIbm, f.Nombre, 
-                                (SELECT ROUND(SUM(Area_Neta), 2) FROM tbllotes WHERE FKIbm_TblFincas = f.PKIbm) as area_neta, 
-                                (SELECT ROUND(SUM(Area_Bruta), 2) FROM tbllotes WHERE FKIbm_TblFincas = f.PKIbm) as area_bruta
-                                FROM tblfincas as f");
+        $datos = $bd->prepare("
+            SELECT f.PKIbm, f.Nombre, 
+            (SELECT ROUND(SUM(Area_Neta), 2) FROM tbllotes WHERE FKIbm_TblFincas = f.PKIbm) as area_neta, 
+            (SELECT ROUND(SUM(Area_Bruta), 2) FROM tbllotes WHERE FKIbm_TblFincas = f.PKIbm) as area_bruta
+            FROM tblfincas as f
+        ");
         $datos->execute();
         return $datos->fetchAll();
     }
@@ -721,11 +727,12 @@
     function listarusuarios() {
         $bd = conectar();
         $datos = $bd->prepare("
-            SELECT u.FKIbm_TblFincas as Usuario, f.Nombre as Nombre, eu.Descripcion as EstadoUsuario, tp.Descripcion as TipoUsuario
-            FROM tblusuarios as u, tblfincas as f, tblestadousuario as eu, tbltipousuario as tp
-            WHERE u.FKIbm_TblFincas = f.PKIbm
-            AND u.FKId_TblTipoUsuario = tp.PKId
-            AND u.FKId_TblEstadoUsuario = eu.PKId
+            SELECT u.PKId, u.Usuario, f.Nombre as Nombre, eu.Descripcion as EstadoUsuario, tu.Descripcion as TipoUsuario, 
+                u.FKId_TblEstadoUsuario, u.FKId_TblTipoUsuario
+            FROM tblusuarios as u
+            LEFT JOIN tblfincas as f ON u.Ibm_Finca = f.PKIbm
+            LEFT JOIN tblestadousuario as eu ON u.FKId_TblEstadoUsuario = eu.PKId
+            LEFT JOIN tbltipousuario as tu ON u.FKId_TblTipoUsuario = tu.PKId
         ");
         $datos->execute();
         return $datos->fetchAll();
@@ -781,6 +788,38 @@
                 return false;
             }
         }catch (Exception $e) {
+            echo "Error".$e;
+        }
+    }
+
+    // Cambia los privilegios de usuario en base a estandar o admin
+    function changeprivilegesuser($idUser, $value) {
+        try {
+            $bd = conectar(); 
+            $datos = $bd->prepare("UPDATE tblusuarios as u SET u.FKId_TblTipoUsuario = :value WHERE u.PKId = :idUser");
+            $datos->bindParam(':idUser', $idUser, PDO::PARAM_INT);
+            $datos->bindParam(':value', $value, PDO::PARAM_INT);
+            if ($datos->execute())
+                return true;
+            else 
+                return false;
+        } catch (Exception $e) {
+            echo "Error".$e;
+        }
+    }
+
+    // Cambia el estado de un usuario en base a activo o inactivo
+    function changestatussuser($idUser, $value) {
+        try {
+            $bd = conectar(); 
+            $datos = $bd->prepare("UPDATE tblusuarios as u SET u.FKId_TblEstadoUsuario = :value WHERE u.PKId = :idUser");
+            $datos->bindParam(':idUser', $idUser, PDO::PARAM_INT);
+            $datos->bindParam(':value', $value, PDO::PARAM_INT);
+            if ($datos->execute())
+                return true;
+            else 
+                return false;
+        } catch (Exception $e) {
             echo "Error".$e;
         }
     }

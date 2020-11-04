@@ -57,11 +57,6 @@
 		Area_Neta FLOAT not null,
 		Area_Bruta FLOAT not null,
 		FKIbm_TblFincas VARCHAR(5) not null,
-SELECT u.FKIbm_TblFincas as Usuario, f.Nombre as Nombre, eu.Descripcion as EstadoUsuario, tp.Descripcion as TipoUsuario
-FROM tblusuarios as u, tblfincas as f, tblestadousuario as eu, tbltipousuario as tp
-WHERE u.FKIbm_TblFincas = f.PKIbm
-AND u.FKId_TblTipoUsuario = eu.PKId
-AND u.FKId_TblEstadoUsuario = tp.PKId
 		FOREIGN KEY (FKIbm_TblFincas) REFERENCES TblFincas(PKIbm)	
 	);
 
@@ -118,11 +113,11 @@ AND u.FKId_TblEstadoUsuario = tp.PKId
 	/* USUARIOS */
 	CREATE TABLE TblUsuarios(
 		PKId INTEGER PRIMARY KEY AUTO_INCREMENT,
-		FKIbm_TblFincas VARCHAR(5) not null,
+		Usuario VARCHAR(50) not null,
 		Password VARCHAR(255) not null,
+		Ibm_Finca VARCHAR(5),
 		FKId_TblTipoUsuario INT not null,
 		FKId_TblEstadoUsuario INT not null,
-		FOREIGN KEY (FKIbm_TblFincas) REFERENCES TblFincas(PKIbm),
 		FOREIGN KEY (FKId_TblTipoUsuario) REFERENCES TblTipoUsuario(PKId),
 		FOREIGN KEY (FKId_TblEstadoUsuario) REFERENCES TblEstadoUsuario(PKId)	
 	);
@@ -922,13 +917,14 @@ AND u.FKId_TblEstadoUsuario = tp.PKId
 
 
 	/* USUARIOS */
-	INSERT INTO `tblusuarios` (`PKId`, `FKIbm_TblFincas`, `Password`, `FKId_TblTipoUsuario`, `FKId_TblEstadoUsuario`) VALUES
-	(1, '80074', 'valencia', 1, 1),
-	(2, '80004', 'taiwan123', 2, 1),
-	(3, '80008', 'kalamari123', 2, 1),
-	(4, '80009', 'zarzamora123', 2, 1),
-	(5, '80075', 'candelaria123', 2, 1),
-	(6, '85747', 'guaimaral123', 2, 1);
+	INSERT INTO `tblusuarios` (`PKId`, `Usuario`, `Password`, `Ibm_Finca`, `FKId_TblTipoUsuario`, `FKId_TblEstadoUsuario`) VALUES
+	(1, '80074', 'alamos123', '80074', 2, 1),
+	(2, '80004', 'taiwan123', '80004', 2, 1),
+	(3, '80008', 'kalamari123', '80008', 2, 1),
+	(4, '80009', 'zarzamora123', '80009', 2, 1),
+	(5, '80075', 'candelaria123', '80075', 2, 1),
+	(6, '85747', 'guaimaral123', '85747', 2, 1),
+	(7, 'admin', 'valencia', null, 2, 1);
 
 
 	/* CLASIFICACION 

@@ -594,9 +594,6 @@
         <script src="../assets/plugins/handsontable/handsontable.full.min.js"></script>
         <script src="../assets/plugins/handsontable/moment/moment.js"></script>
         <script src="../assets/plugins/handsontable/pikaday/pikaday.js"></script>
-        <!-- <script src="../assets/plugins/handsontable/hot-formula-parser/formula-parser.js"></script>
-        <script src="../assets/plugins/ruleJs.all.full.min.js"></script>
-        <script src="../assets/plugins/handsontable/formula.js"></script> -->
 
     <!-- Controlador de contenido, según menú 
         ============================================ -->
@@ -607,6 +604,7 @@
     <script src="../logica/js/lotes.js"></script>
     <script src="../logica/js/programarembarque.js"></script>
     <script src="../logica/js/ingresarproduccion/ingresarproduccion.js"></script>
+    <script src="../logica/js/usuarios.js"></script>
     
 </body>
 

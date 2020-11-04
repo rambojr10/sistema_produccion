@@ -63,17 +63,17 @@
                 body: op
             })
             .then(response => {
-                if (response.ok) {
+                if (response.ok)
                     return response.text();
-                }else{
+                else
                     throw "Error al cargar los datos";
-                }
             })
             .then(res => {
                 if (res != ""){
                     $("#semanas_pe").html(res);
                     $.notify({
                         icon: "fa fa-check-circle",
+                        title: "<strong>Buscar semanas: </strong>",
                         message: "Semanas cargadas correctamente"
                     },{
                         type: "success"

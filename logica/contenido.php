@@ -788,23 +788,26 @@
         if ($_SESSION['conectado']->FKId_TblTipoUsuario == 1) {
             $datos = listarusuarios();
             foreach ($datos as $d) {
+                $controlEstadoUsuario = $d->EstadoUsuario == 'ACTIVO' ? 'success' : 'danger';
+                $controlTipoUsuario = $d->TipoUsuario == 'ADMINISTRADOR' ? 'success' : 'danger';
+                $controlTipoUsuarioIcono = $d->TipoUsuario == 'ADMINISTRADOR' ? 'unlock' : 'lock';
                 echo "
                     <div class='col-lg-4 col-md-4 col-sm-6 col-xs-12'>
-                        <div class='contact-list mg-t-30'>
+                        <div class='contact-list mg-t-15'>
                             <div class='contact-win'>
                                 <div class='contact-img'>
-                                    <h1>$d->Nombre</h1>
+                                    <h2>". ($d->Nombre == '' ? strtoupper($d->Usuario) : $d->Nombre) ."</h2>
+                                    <button class='btn btn-$controlEstadoUsuario btn-xs notika-btn-$controlEstadoUsuario waves-effect'>$d->EstadoUsuario</button>
                                 </div>
                                 <div class='conct-sc-ic'>
-                                    <a class='btn' href='#' data-tooltip='Change password' data-position='right center'><i class='notika-icon notika-facebook'></i></a>
-                                    <a class='btn' href='#' data-tooltip='Change privileges' data-position='right center'><i class='notika-icon notika-twitter'></i></a>
-                                    <a class='btn' href='#' data-tooltip='Change status' data-position='right center'><i class='notika-icon notika-pinterest'></i></a>
+                                    <a class='btn btn-orange orange-icon-notika btn-reco-mg btn-button-mg' onclick='changePassword($d->PKId)' data-tooltip='Change password' data-position='right center'><i class='fa fa-key'></i></a>
+                                    <a class='btn btn-$controlTipoUsuario $controlTipoUsuario-icon-notika btn-reco-mg btn-button-mg' onclick='changePrivileges($d->PKId, $d->FKId_TblTipoUsuario)' data-tooltip='Change privileges' data-position='right center'><i class='fa fa-$controlTipoUsuarioIcono'></i></a>
+                                    <a class='btn btn-$controlEstadoUsuario $controlEstadoUsuario-icon-notika btn-reco-mg btn-button-mg' onclick='changeStatus($d->PKId, $d->FKId_TblEstadoUsuario)' data-tooltip='Change status' data-position='right center'><i class='fa fa-ban'></i></a>
                                 </div>
                             </div>
                             <div class='contact-ctn'>
                                 <div class='contact-ad-hd'>
                                     <h2>$d->Usuario</h2>
-                                    <p class='ctn-ads'>$d->EstadoUsuario</p>
                                     <p class='ctn-ads'>$d->TipoUsuario</p>
                                 </div>
                             </div>
@@ -845,6 +848,22 @@
     //
     function editar_lote(){
         $result = editarlote($_POST['id_lote'], $_POST['area_neta'], $_POST['area_bruta']);
+        echo $result;
+    }
+
+    //
+    function change_privileges_user() {
+        $idUser = $_POST['idUser'];
+        $value = ($_POST['value'] == 1 ? 2 : 1);
+        $result = changeprivilegesuser($idUser, $value);
+        echo $result;
+    }
+    
+    //
+    function change_status_user() {
+        $idUser = $_POST['idUser'];
+        $value = ($_POST['value'] == 1 ? 2 : 1);
+        $result = changestatussuser($idUser, $value);
         echo $result;
     }
     
@@ -1061,6 +1080,14 @@
                 editar_lote();
                 break;
 
+            case 'change_privileges_user':
+                change_privileges_user();
+                break;
+                
+            case 'change_status_user':
+                change_status_user();
+                break;
+            
     //Métodos de eliminar
             case 'eliminar':
                 eliminar();
