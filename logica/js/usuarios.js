@@ -1,7 +1,8 @@
     //Administración de usuarios
     
-    function changePassword(idUser, value) {
+    function changePassword(idUser) {
         console.log('changePassword', idUser)
+        //asignar un modal para el cambio de password en el html
     }
 
     function changePrivileges(idUser, value) {
@@ -81,5 +82,3 @@
             }
         });
     }
-
-    //asignar un modal para el cambio de password en el html

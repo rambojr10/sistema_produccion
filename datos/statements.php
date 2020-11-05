@@ -420,7 +420,7 @@
     function ingreso($usuario, $password) {
         $bd = conectar();
         $datos = $bd->prepare("
-            SELECT u.Usuario, f.PKIbm as FKIbm_TblFincas, u.FKId_TblTipoUsuario, u.FKId_TblEstadoUsuario, f.Nombre,
+            SELECT u.Usuario, f.PKIbm, u.FKId_TblTipoUsuario, u.FKId_TblEstadoUsuario, f.Nombre,
                 f.Area_Neta, f.Area_Bruta, f.FKNit_TblEmpresas
             FROM tblusuarios as u LEFT JOIN tblfincas as f
             ON u.Ibm_Finca = f.PKIbm

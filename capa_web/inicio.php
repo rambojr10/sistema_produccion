@@ -154,9 +154,12 @@
                         <li>
                             <a data-toggle="tab" href="#reportes"><i class="notika-icon notika-bar-chart"></i> Reportes</a>
                         </li>
+
+                        <?php if ($_SESSION['conectado']->FKId_TblTipoUsuario == 1) : ?> 
                         <li>
                             <a data-toggle="tab" href="#usuarios"><i class="notika-icon notika-social"></i> Usuarios</a>
                         </li>
+                        <?php endif; ?>
                     </ul>
                     <div class="tab-content custom-menu-content">
                         <div id="inicio" class="tab-pane in active notika-tab-menu-bg animated flipInX">

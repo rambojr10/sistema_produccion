@@ -185,24 +185,6 @@
 		FOREIGN KEY (FKId_TblCajasMercadoNacional) REFERENCES TblCajasMercadoNacional(PKId)
 	);
 	
-	CREATE TABLE TblCargue(
-		PKId_Cargue INTEGER PRIMARY KEY AUTO_INCREMENT,
-		FKIbm_TblFincas VARCHAR(5) not null,
-		Cliente VARCHAR(200) not null,
-		Fecha_Cargue DATE not null,
-		N_Poma VARCHAR(5) not null,
-		DedoSuelto INT,
-		Cluster INT,
-		ManoEntera INT,
-		Especial INT,
-		Bolsa20Kilos INT,
-		Bolsa25Kilos INT,
-		Total INT,
-		Placa_Vehiculo VARCHAR(8) not null,
-		Conductor VARCHAR(200) not null,
-		FOREIGN KEY (FKIbm_TblFincas) REFERENCES TblFincas(PKIbm)	
-	);
-	
 	/* PRODUCCIÓN */
 	CREATE TABLE TblProduccion(
 		PKId INTEGER PRIMARY KEY AUTO_INCREMENT,
@@ -291,7 +273,29 @@
     		Especial INT,
     		FKCod_TblEmbarque VARCHAR(10) not null,
     		FOREIGN KEY (FKCod_TblEmbarque) REFERENCES TblEmbarque(PKCod)
-	); 
+	);
+
+	/* TABLA CARGUE */
+	CREATE TABLE TblCargue(
+		PKId_Cargue INTEGER PRIMARY KEY AUTO_INCREMENT,
+		FKIbm_TblFincas VARCHAR(5) not null,
+		Cliente VARCHAR(200) not null,
+		Fecha_Cargue DATE not null,
+		N_Poma VARCHAR(5) not null,
+		DedoSuelto INT,
+		Cluster INT,
+		ManoEntera INT,
+		Especial INT,
+		Bolsa20Kilos INT,
+		Bolsa25Kilos INT,
+		Total INT,
+		Placa_Vehiculo VARCHAR(8) not null,
+		Conductor VARCHAR(200) not null,
+		FKCod_TblEmbarque VARCHAR(10) not null,
+		FOREIGN KEY (FKIbm_TblFincas) REFERENCES TblFincas(PKIbm),
+		FOREIGN KEY (FKCod_TblEmbarque) REFERENCES TblEmbarque(PKCod)
+	);
+
 /*******************************************************************************************************/
 
 /* STATEMENTS PARA LLENAR TABLAS*/

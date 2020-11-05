@@ -69,8 +69,10 @@
                     throw "Error al cargar los datos";
             })
             .then(res => {
-                if (res != ""){
+                if (res != "") {
                     $("#semanas_pe").html(res);
+                    //Seteo el año 
+                    $("#ano_pe").data("ano", ano_pe);
                     $.notify({
                         icon: "fa fa-check-circle",
                         title: "<strong>Buscar semanas: </strong>",
@@ -78,7 +80,7 @@
                     },{
                         type: "success"
                     });
-                }else {
+                } else {
                     $.notify({
                         icon: "fa fa-times",
                         title: "<strong>Buscar semanas: </strong>",
@@ -88,7 +90,7 @@
                     });
                 }
             });
-        }else {
+        } else {
             $.notify({
                 icon: "fa fa-times",
                 title: "<strong>Buscar semanas: </strong>",
@@ -180,8 +182,7 @@
         $("#estimativo-pe").prop("hidden", false);
         $("#opciones-pe").prop("hidden", false);
         let tabla_body = document.querySelector("#data_cajas_pe"); 
-        let ano = $("#ano_pe").val();
-        $("#ano_pe").data("ano", ano);
+        let ano = $("#ano_pe").data("ano");
         let id_semana = $("#semanas_pe").val();
         $("#semanas_pe").data("id_semana", id_semana);
         let descripcion_semana = $("#semanas_pe option:selected").text();

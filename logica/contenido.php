@@ -73,15 +73,14 @@
         $verificar_anho = buscarregistro($_POST["anhonuevo"]+1, "Anho_generado", "tblregistrosemanas", false);
         if (isset($verificar_anho[0])) {
             echo "No se creó";
-        }else {
+        } else {
             $fechai = date('Y-m-d', strtotime($ultimo_anho->Fecha_Inicio.'+ 1 week'));
             $fechaf = date('Y-m-d', strtotime($ultimo_anho->Fecha_Fin.'+ 1 week'));
             $result = anhonuevo($fechai, $fechaf, $ultimo_anho->Anho+1, $ultimo_anho->FKId_TblCintas+1);
-            if ($result === true) {
+            if ($result === true)
                 echo "Ok";
-            }else {
+            else
                 echo "Err";
-            }
         }
     }
 
@@ -109,7 +108,7 @@
 
         //Compara la cantidad de cajas a ingresar no sea mayor a la programada
         foreach ($datosProduccion->tblCajas as $caja) {
-            if ($caja[1] != null){
+            if ($caja[1] != null) {
                 $cantidadEmbarque = compararEmbarqueAndProduccion($_SESSION['conectado']->PKIbm, $caja[1], $datosProduccion->cod_embarque);
                 if ($caja[10] > $cantidadEmbarque->Cantidad)
                     break;
@@ -658,11 +657,11 @@
         $cod_embarque = $_GET['cod_embarque'];
         $tblProduccion = buscarregistro($cod_embarque, 'Cod_Embarque', 'TblProduccion', 'FKIbm_TblFincas = '.$_SESSION['conectado']->PKIbm);
         // $tblProduccion = buscarregistro($cod_embarque, "Cod_Embarque", "TblProduccion", "FKIbm_TblFincas = '".$_GET['ibm_finca']."';");
-        $tblProduccion = (count($tblProduccion) >= 1 ? $tblProduccion[0] : ""); // == 1 pero lo pongo temporalmente ( > 0 ) porque hay 2 registros en la bd
+        $tblProduccion = (count($tblProduccion) == 1 ? $tblProduccion[0] : ""); 
         if ($tblProduccion != "") {
 
             $tblEmbolse = buscarregistro($tblProduccion->FKId_TblEmbolse, "PKId", "TblEmbolse", false);
-            $tblEmbolse = (count($tblEmbolse) > 0 ? $tblEmbolse[0] : "");
+            $tblEmbolse = (count($tblEmbolse) == 1 ? $tblEmbolse[0] : "");
             $idCinta = buscarregistro($tblProduccion->FKId_TblSemanas, "PKId", "TblSemanas", false);
 
             //TblRacimos
@@ -877,7 +876,7 @@
         echo $eliminar;
     }   
 
-    // elimina toda la producción y sus detalles
+    // Elimina toda la producción y sus detalles
     function eliminar_produccion($codEmbarque, $ibmFinca) {
         $tblProduccion = buscarregistro($codEmbarque, 'Cod_Embarque', 'TblProduccion', "FKIbm_TblFincas = $ibmFinca");
         // $tblProduccion = buscarregistro($codEmbarque, 'Cod_Embarque', 'TblProduccion', 'FKIbm_TblFincas = '.$_POST['ibmFinca']);

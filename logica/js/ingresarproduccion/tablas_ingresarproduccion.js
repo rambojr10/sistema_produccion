@@ -340,9 +340,8 @@
                 throw "No se ha podido cargar los datos VA"
         })
         .then(res => {
-            console.log(res)
             $('#veralineacion').html(res);
-        })
+        });
     });
 
     //Inicio 
@@ -393,8 +392,6 @@
             console.log('undefined');
         }
     });
-    
-    
 
 // Tabla racimos ----------------------------------------------------------------------------------------------------------
 
