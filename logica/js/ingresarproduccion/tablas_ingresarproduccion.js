@@ -215,6 +215,7 @@
                     tblNacional: hot3.getData(),
                     tblCargue: hot4.getData()
                 };
+                // Loader
                 $(".osc").fadeIn();
                 $("#loader").fadeIn();
                 const op = new FormData();

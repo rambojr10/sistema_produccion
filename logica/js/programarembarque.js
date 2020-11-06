@@ -1,6 +1,6 @@
 //CONTROL DE VISTAS EN PROGRAMAR EMBARQUE --------------------------------------------------------------------
     
-    //Muestra la vista para seleccionar las cajas del embarque y verifica si el embarque a generar ya existe...
+    //Muestra la vista para seleccionar las cajas del embarque y verifica si el embarque a generar ya existe...+
     $(document).on("click", "[href='#seleccionar_pe']", function(e) {
         e.preventDefault();
         if ($("#semanas_pe").val() != null) {

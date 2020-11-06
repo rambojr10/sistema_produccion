@@ -271,6 +271,11 @@
         echo json_encode($result);
     }
 
+    // Retorna el ibm de la finca conectada o controla la finca conectada según el usuario
+    function verify_ibmfinca() {
+        echo json_encode(['ibmFinca' => $_SESSION['conectado']->PKIbm]);
+    }
+
     //Obtiene los datos de las fincas desde el archivo /datos/statements.php para enviarlos de vuelta al archivo contenido.js
     function listar_fincas(){
         $fincas = listarfincas();
@@ -954,6 +959,10 @@
                 break;
 
     //Métodos de mostrar
+            case 'verify_ibmfinca':
+                verify_ibmfinca();
+                break;
+
             case 'listarfincas':
                 listar_fincas();
                 break;

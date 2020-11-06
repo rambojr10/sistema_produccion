@@ -1,4 +1,4 @@
-//Función de carga  
+
     //Asigna fecha y semana al inicio
     $(document).ready(function() {
         Date.prototype.getWeekNumber = function () {
@@ -8,9 +8,8 @@
             //Finalmente, calculamos redondeando y ajustando por la naturaleza de los números en JS:
             return Math.ceil((((d - new Date(d.getFullYear(), 0, 1)) / 8.64e7) + 1) / 7);
         };
-        var x = new Date();
-        var fecha = (`${x.getMonth()+1}/${x.getDate()}/${x.getFullYear()}`);
-        hoy = new Date(fecha);
+        const objectDate = new Date();
+        let hoy = new Date( (`${objectDate.getMonth()+1}/${objectDate.getDate()}/${objectDate.getFullYear()}`) );
         $("#lblsemana").text(hoy.getWeekNumber());
         $("#lblfecha").text(`${hoy.getDate()}/${hoy.getMonth()+1}/${hoy.getFullYear()}`);
         if (hoy.getWeekNumber() == '52') {
@@ -32,10 +31,6 @@
             });
         }
     });
-
-//Controla el contenido sin recargar la página de inicio interactúa con el archivo contenido.php para la obtención de datos
-
-    //Envía los datos de la tabla fincas a el archivo fincas.php para ser incluido en el inicio, obtiene los datos en el archivo, listas fincas.    
 
 /* Mostrar datos ================================================================================*/ 
     
@@ -101,6 +96,7 @@
     });
 
 // COMPLEMENTOS --------------------------------------------------------------------------------------------------------
+    
     //Valida campos de ingreso de sólo número
     $(document).on("input", ".valida", function () {
         this.value = this.value.replace(/[^0-9]/g,'');

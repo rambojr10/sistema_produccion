@@ -22,8 +22,20 @@
             //si existe carga el módulo de insertar racimos, enviando un parámetro por get para pintar el valor en la vista
             if (res[0].PKCod == CodEmbarque_ip){
                 $("#btnCancelar_ip").trigger('click');
-                $('.contenido').load(`../capa_web/tablas/tablas_ingresarproduccion.php?cod_embarque=${CodEmbarque_ip}`);
-                swal("Cargar embarque, insertar producción", "¡Datos cargados correctamente!", "success");
+
+                //Control user
+                const ibmFinca = [];
+                (async function getIbmFinca() {
+                    const response = await fetch('../logica/contenido.php?op=verify_ibmfinca');
+                    const data = await response.json()
+                    ibmFinca.push(data.ibmFinca)
+                })()
+                if (ibmFinca[0] == null) {
+                    
+                } else {
+                    $('.contenido').load(`../capa_web/tablas/tablas_ingresarproduccion.php?cod_embarque=${CodEmbarque_ip}`);
+                    swal("Cargar embarque, insertar producción", "¡Datos cargados correctamente!", "success");
+                }
             }
             else{
                 swal("Cargar embarque, insertar racimos", "¡No existe el registro!", "error");
