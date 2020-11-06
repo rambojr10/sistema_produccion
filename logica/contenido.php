@@ -273,7 +273,24 @@
 
     // Retorna el ibm de la finca conectada o controla la finca conectada según el usuario
     function verify_ibmfinca() {
-        echo json_encode(['ibmFinca' => $_SESSION['conectado']->PKIbm]);
+        if ($_SESSION['conectado']->PKIbm == null or $_SESSION['conectado']->Nombre == null) {
+            $fincasList = listarfincas();
+            $result = [];
+            foreach ($fincasList as $fl) {
+                $result += [$fl->PKIbm => $fl->Nombre];
+            }
+            echo json_encode($result);
+        } else {
+            echo json_encode([
+                'ibmFinca' => $_SESSION['conectado']->PKIbm,
+                'nombreFinca' => $_SESSION['conectado']->Nombre
+            ]);
+        }
+    }
+
+    // Asigna el ibm de la finca en caso del perfíl ser administrador
+    function assign_ibmfinca() {
+
     }
 
     //Obtiene los datos de las fincas desde el archivo /datos/statements.php para enviarlos de vuelta al archivo contenido.js
@@ -1118,6 +1135,13 @@
                 break;
 
     // Defecto
+
+            // Método de asignación de ibmFinca
+            case 'assign_ibmfinca':
+                $_SESSION['conectado']->PKIbm = $_GET['ibmFinca'];
+                echo $_SESSION['conectado']->PKIbm;
+                break;
+
             default:
                 header("Location:../index.php");
                 break;
