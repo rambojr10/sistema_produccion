@@ -1,13 +1,14 @@
 //CONTROL DE VISTAS EN PROGRAMAR EMBARQUE --------------------------------------------------------------------
-    
+
     //Muestra la vista para seleccionar las cajas del embarque y verifica si el embarque a generar ya existe...+
     $(document).on("click", "[href='#seleccionar_pe']", function(e) {
         e.preventDefault();
         if ($("#semanas_pe").val() != null) {
             let semana_pe = $("#semanas_pe option:selected").text();
             let num_semana_pe = semana_pe.split(" ");
-            let anho_pe = $("#ano_pe").val();
+            let anho_pe = $('#anho_pe').data('anho');
             let cod_embarque = `EMB-${anho_pe+num_semana_pe[1]}`;
+
             // -------------------------------------------------------------------------
             const op = new FormData();
             op.append("op", "codEmbarque_verificar");
@@ -25,17 +26,23 @@
                     throw "No se puede obtener los datos";
             })
             .then(res => {
+
+                console.log(res)
+
                 if (res.length > 0) {
                     swal({
                         title: "¡Datos pendientes!",
                         text: "El embarque ya existe, ¿desea cargarlo?",
-                        type: "info",
+                        type: "question",
                         showCancelButton: true,
                         confirmButtonText: "Si, cargar!",
-                        cancelButtonText: "No, cancelar!"
-                    }).then(function(isConfirm) {
+                        cancelButtonText: "No, cancelar!",
+                        reverseButtons: true
+                    }).then((isConfirm) => {
                         if(isConfirm){
-                            //FALTA RECIBIR PETICIÓN Y PROCESARLA
+                            console.log(res);
+                            // Ejecutar una función que también se utiliza en seleccionar semana anterior
+                            // cargar_programacion()
                         }
                     });
                 } else {
@@ -51,13 +58,13 @@
     //Mostrar vista con semanas disponibles para programar embarque
     $(document).on("click", "#btnBuscar_pe", function (e) {
         e.preventDefault();
-        $("#semanas_pe").html("");
-        let ano_pe = $("#ano_pe").val();
-        let ano_posible = new Date();
-        if  (ano_pe == ano_posible.getFullYear() || ano_pe == (ano_posible.getFullYear()+1)) {
+        $('#semanas_pe').html('');
+        let anho_pe = $('#anho_pe').val();
+        let anho_posible = new Date();
+        if  (anho_pe == anho_posible.getFullYear() || anho_pe == (anho_posible.getFullYear()+1)) {
             const op = new FormData();
-            op.append("op", "semanaspe");
-            op.append("ano_pe", ano_pe);
+            op.append('op', 'cargarsemanaspa');
+            op.append('anho', anho_pe);
             fetch('../logica/contenido.php', {
                 method: 'POST',
                 body: op
@@ -72,7 +79,7 @@
                 if (res != "") {
                     $("#semanas_pe").html(res);
                     //Seteo el año 
-                    $("#ano_pe").data("ano", ano_pe);
+                    $("#anho_pe").data("anho", anho_pe);
                     $.notify({
                         icon: "fa fa-check-circle",
                         title: "<strong>Buscar semanas: </strong>",
@@ -107,8 +114,8 @@
         if ($("#semanas_pe").val() != null) {
             let semana_pe = $("#semanas_pe option:selected").text();
             let num_semana_pe = semana_pe.split(" ");
-            let anho_pe = $("#ano_pe").val();
-            let cod_embarque = `EMB-${anho_pe+num_semana_pe[1]-1}`;
+            let anho_pe = $("#anho_pe").data('anho');
+            let cod_embarque = `EMB-${anho_pe+num_semana_pe[1]}`;
 
             const op = new FormData();
             op.append("op", "codEmbarque_verificar");
@@ -126,25 +133,31 @@
                     throw "No se ha podido cargar los datos SA"
             })
             .then(res => {
-                if (res.length > 0) {
+
+                if (res.length == 0) {
                     const op = new FormData();
                     op.append('op', 'cajas_semana_anterior');
-                    op.append('codEmbarque', res[0].PKCod);
+                    op.append('codEmbarque', `EMB-${anho_pe+num_semana_pe[1]-1}`);
                     fetch('../logica/contenido.php', {
                         method: 'POST',
                         body: op
                     })
                     .then(response => {return response.json()})
                     .then(res => {
-                        $("#seleccion-pe").removeAttr("hidden");
-                        let cajasSemanaAnterior = [];
-                        res.forEach((element) => {
-                            cajasSemanaAnterior.push(element.PKCodigo)
-                        });
-                        cargar_cajas_pe(cajasSemanaAnterior)
+                        if (res.length > 0) {
+                            $("#seleccion-pe").removeAttr("hidden");
+                            let cajasSemanaAnterior = [];
+                            res.forEach((element) => {
+                                cajasSemanaAnterior.push(element.PKCodigo)
+                            });
+                            cargar_cajas_pe(cajasSemanaAnterior);
+                        } else {
+                            swal('Seleccionar cajas', 'No existe una selección anterior', 'error')
+                        }
                     });
                 } else {
-                    swal('Programar embarque', 'No existe una selección anterior', 'error');
+                    // cargar_programacion()
+                    console.log('resExiste', res)
                 }
             });
         }
@@ -154,24 +167,16 @@
     
     //Carga las cajas para mostrarlas en el select de programar embarque
     function cargar_cajas_pe(cajasSemanaAnterior){
-        const op = new FormData();
-        op.append("op", "cargarcajas_select");
-        fetch('../logica/contenido.php', {
-            method: 'POST',
-            body: op
-        })
-        .then(response => {
-            if (response.ok)
-                return response.text();
-            else
-                throw "No se ha podido cargar los datos";
-        })
+        fetch('../logica/contenido.php?op=cargarcajas_select')
+        .then(response => response.text())
         .then(res => {
             $("#select-sc-pe").html(res);
             $("#select-sc-pe").val((cajasSemanaAnterior != false ? cajasSemanaAnterior : ''));
             $("#select-sc-pe").select2();
         });
     }
+
+    //
 
 // GUARDAR DATOS ----------------------------------------------------------------------------------------------
     
@@ -182,17 +187,17 @@
         $("#estimativo-pe").prop("hidden", false);
         $("#opciones-pe").prop("hidden", false);
         let tabla_body = document.querySelector("#data_cajas_pe"); 
-        let ano = $("#ano_pe").data("ano");
+        let anho = $("#anho_pe").data("anho");
         let id_semana = $("#semanas_pe").val();
         $("#semanas_pe").data("id_semana", id_semana);
         let descripcion_semana = $("#semanas_pe option:selected").text();
         let codigocajas = $("#select-sc-pe").val();
         let num_semana = descripcion_semana.split(" ");
-        let cod_embarque = `EMB-${ano+num_semana[1]}`;
+        let cod_embarque = `EMB-${anho+num_semana[1]}`;
         //obtiene los datos a necesitar para enviar a contenido.php para ser procesados y devueltos
         let datos = {
             cod_embarque: cod_embarque,
-            ano: ano,
+            anho: anho,
             id_semana: id_semana,
             descripcion_semana: descripcion_semana,
             codigocajas: codigocajas
@@ -278,11 +283,11 @@
         .then(function(isConfirm) {
             if(isConfirm) {
                 let cod_embarque = $("#cod_embarque-pe").data("cod_embarque");
-                let ano = $("#ano_pe").data("ano");
+                let anho = $("#anho_pe").data("anho");
                 let id_semana = $("#semanas_pe").data("id_semana");
                 var detalles = {
                     cod_embarque: cod_embarque,
-                    ano: ano,
+                    anho: anho,
                     id_semana: id_semana,
                     cajas: [],
                     estimativo: [
@@ -377,7 +382,7 @@
                     });
                 });
                 
-                if(validar_datos()){
+                if (validar_datos()) {
                     $(".osc").fadeIn();
                     $("#loader").fadeIn();
                     const op = new FormData();
@@ -395,14 +400,16 @@
                     })
                     .then(res => {
                         if (res == true) {
+                            // Loader
                             $(".osc").fadeOut();
                             $("#loader").fadeOut();
-                            swal("Guardar programación de embarque", "Programación guardada satisfactoriamente", "success");
+
+                            swal("Programar embarque", "Programación guardada satisfactoriamente", "success");
                             $("[href='#programarembarque']").trigger("click");
                         }
                     });
-                }else{
-                    swal("Guardar programación de embarque", "Por favor complete los datos", "error");
+                } else {
+                    swal("Programar embarque", "Por favor complete los datos", "error");
                 }
             }
         })
@@ -433,16 +440,14 @@
                     body: op
                 })
                 .then(response => {
-                    if (response.ok) {
+                    if (response.ok)
                         return response.text();
-                    }else {
+                    else
                         throw "No se ha podido completar la acción";
-                    }
                 })
                 .then(res => {
-                    console.log(res);
                     if (res == true) {
-                        swal("Eliminar embarque", "Acción completada, "+cod_embarque+" eliminado", "success");
+                        swal('Programar embarque', 'Acción completada', `${cod_embarque} eliminado`, 'success');
                         $("[href='#programarembarque']").trigger("click");
                     }
                 })

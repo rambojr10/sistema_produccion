@@ -48,20 +48,18 @@
     //Crea embarque según datos y consulta cajas para cargar la vista 
     function crear_embarque(){
         $datos = json_decode($_POST['datos']);
-        $result = crearembarque($datos->cod_embarque, $datos->ano, $datos->id_semana);
-        // print_r($result);
+        $result = crearembarque($datos->cod_embarque, $datos->anho, $datos->id_semana);
         $vista = array();
         if ($result == true) {
             //aquí va todo lo que se va poner en la vista para asignar las cajas
-            $vista['embarque'] = $datos->descripcion_semana . " del " . $datos->ano;
+            $vista['embarque'] = $datos->descripcion_semana . " del " . $datos->anho;
             $vista['cod_embarque'] = $datos->cod_embarque;
             //Tabla cajas lleva todos los campos a usar en la tabla
             for ($x=0; $x < count($datos->codigocajas) ; $x++) { 
                 $vista['cajas'][$x] = buscarcaja($datos->codigocajas[$x]);
             }
-            // $vista['cod_embarque'] = "EMB-202001";
             echo json_encode($vista);
-        }else {
+        } else {
             echo $result;
         }
     }
@@ -288,11 +286,6 @@
         }
     }
 
-    // Asigna el ibm de la finca en caso del perfíl ser administrador
-    function assign_ibmfinca() {
-
-    }
-
     //Obtiene los datos de las fincas desde el archivo /datos/statements.php para enviarlos de vuelta al archivo contenido.js
     function listar_fincas(){
         $fincas = listarfincas();
@@ -502,7 +495,7 @@
                         </div>
                         <input type='text' class='form-control' name='ano_anual'>
                     ";
-                    break;
+                break;
                 
                 default:
                     break;
@@ -511,7 +504,7 @@
     }
 
     //
-    function fincas_ve(){
+    function fincas_ve() {
         $fincas = listarfincas();
         echo "<option value='0'>SELECCIONE LA FINCA...</option>";
         foreach($fincas as $f){
@@ -522,7 +515,7 @@
     }
 
     //Muestra los datos del modal ver_elaboracion en base al filtro
-    function ver_elaboracion(){
+    function ver_elaboracion() {
         //decodifica el json y lo convierte en un array para controlarlo desde php
         $filtros = (json_decode($_POST['filtros']));
         //inicializa una variable para controlar el contenido obtenido de statements.php
@@ -554,10 +547,10 @@
                 }
                 echo "</tbody>";
             //Si no encuentra datos imprime false, lo que se interpreta en un swal en cajasproduccion.js
-            }else{
+            } else {
                 echo false;
             }
-        }else if ($filtros->tipo == 'anual') {
+        } else if ($filtros->tipo == 'anual') {
             $result = verelaboracion_a($filtros->finca, $filtros->ano, $filtros->codigocaja);
             if (!empty($result->total_anual)) {
                 echo"
@@ -572,10 +565,10 @@
                         </div>
                     </div>
                 ";
-            }else{
+            } else {
                 echo false;
             }
-        }else if ($filtros->tipo == 'historico') {
+        } else if ($filtros->tipo == 'historico') {
             $result = verelaboracion_h($filtros->finca, $filtros->codigocaja);
             if (!empty($result->total_historico)) {
                 echo"
@@ -590,17 +583,9 @@
                         </div>
                     </div>
                 ";
-            }else{
+            } else {
                 echo false;
             }
-        }
-    }
-
-    //Carga los option con las semanas para el select en programar embarque
-    function semanas_pe(){
-        $semanas = cargarsemanas_pe($_POST['ano_pe']);
-        foreach ($semanas as $s) {
-            echo "<option value='$s->PKId'>$s->N_Semana</option>";
         }
     }
 
@@ -1040,11 +1025,6 @@
             //Carga la elaboración de cajas de acuerdo a los filtros
             case 'verelaboracion':
                 ver_elaboracion();
-                break;
-            
-            //Carga las semanas para el select de programarmebarque
-            case 'semanaspe':
-                semanas_pe();
                 break;
                 
             //Carga cajas para select de programarembarque

@@ -113,7 +113,7 @@
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon bg-primary">Año</div>
-                                        <input type="number" class="valida form-control" id="ano_pe">
+                                        <input type="number" class="valida form-control" id="anho_pe">
                                     </div>
                                     <div class="input-group">
                                         <button class="btn btn-default notika-btn-default waves-effect" id="btnBuscar_pe">

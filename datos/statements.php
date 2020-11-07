@@ -612,22 +612,6 @@
     // End funciones de ver elaboración --------------------------------------------------
 
     //
-    function cargarsemanas_pe($ano_pe) {
-        $bd = conectar();
-        $datos = $bd->prepare("
-            SELECT s.PKId, s.N_Semana
-            FROM tblsemanas as s
-            WHERE NOT EXISTS (SELECT NULL
-                                FROM tblembarque as e
-                                WHERE s.PKId = e.FKId_TblSemanas
-                                AND e.anho = :ano)
-            AND s.Anho = :ano");
-        $datos->bindParam(":ano", $ano_pe, PDO::PARAM_STR);
-        $datos->execute();
-        return $datos->fetchAll();
-    }
-
-    //
     function tipofrutaselect() {
         $bd = conectar();
         $datos = $bd->prepare("SELECT * FROM TblTipoFruta");
