@@ -7,12 +7,12 @@
             let semana_pe = $("#semanas_pe option:selected").text();
             let num_semana_pe = semana_pe.split(" ");
             let anho_pe = $('#anho_pe').data('anho');
-            let cod_embarque = `EMB-${anho_pe+num_semana_pe[1]}`;
+            let codEmbarque = `EMB-${anho_pe+num_semana_pe[1]}`;
 
             // -------------------------------------------------------------------------
             const op = new FormData();
             op.append("op", "codEmbarque_verificar");
-            op.append("key", cod_embarque);
+            op.append("key", codEmbarque);
             op.append("campo", "PKCod");
             op.append("tabla", "TblEmbarque");
             fetch('../logica/contenido.php', {
@@ -40,9 +40,9 @@
                         reverseButtons: true
                     }).then((isConfirm) => {
                         if(isConfirm){
-                            console.log(res);
+                            console.log('resExiste', res);
                             // Ejecutar una función que también se utiliza en seleccionar semana anterior
-                            // cargar_programacion()
+                            cargar_embarque(codEmbarque, semana_pe, anho_pe);
                         }
                     });
                 } else {
@@ -115,11 +115,11 @@
             let semana_pe = $("#semanas_pe option:selected").text();
             let num_semana_pe = semana_pe.split(" ");
             let anho_pe = $("#anho_pe").data('anho');
-            let cod_embarque = `EMB-${anho_pe+num_semana_pe[1]}`;
+            let codEmbarque = `EMB-${anho_pe+num_semana_pe[1]}`;
 
             const op = new FormData();
             op.append("op", "codEmbarque_verificar");
-            op.append("key", cod_embarque);
+            op.append("key", codEmbarque);
             op.append("campo", "PKCod");
             op.append("tabla", "TblEmbarque");
             fetch('../logica/contenido.php', {
@@ -155,9 +155,10 @@
                             swal('Seleccionar cajas', 'No existe una selección anterior', 'error')
                         }
                     });
-                } else {
-                    // cargar_programacion()
+                } else { //si el embarque ya existe, se carga
                     console.log('resExiste', res)
+                    // Envía el código del embarque y la descripción de la semana
+                    cargar_embarque(codEmbarque, semana_pe, anho_pe);
                 }
             });
         }
@@ -177,6 +178,72 @@
     }
 
     //
+    function cargar_embarque(...valuesInvoice) {
+        fetch(`../logica/contenido.php?op=cargar_programacion&codEmbarque=${valuesInvoice[0]}`)
+        .then(response => response.json())
+        .then(datos => {
+            console.log('datos', datos);
+            // localStorage.setItem('embarqueStateEdit', codEmbarque); usarlo en caso de update pero voy a eliminar y crear nuevamente
+            $("#alineacion-pe").prop("hidden", false);
+            $("#estimativo-pe").prop("hidden", false);
+            $("#opciones-pe").prop("hidden", false);
+            $('#cod_embarque-pe').text(valuesInvoice[0]); //asigna en pantalla el código de embarque
+            $('#cod_embarque-pe').data('codEmbarque', valuesInvoice[0]); //guarda el código de embarque
+            $('#descripcion_embarque-pe').text(`${valuesInvoice[1]} del ${valuesInvoice[2]}`); //asigna en pantalla la descripcion del embarque
+
+            let tablaBody = document.querySelector("#data_cajas_pe"); 
+            tablaBody.innerHTML = ""; // Limpia el body de la tabla 
+            let x = 0; //Se usa para asignar el número de cada caja en la tabla
+            //recorre el objeto para llenar la tabla
+            datos.listaCajas.forEach( (element, index) => {
+                console.log(datos.infoCajas[index].FKId_TblTipoFruta)
+                console.log('element', element);
+                let tipoFruta;
+                switch (datos.infoCajas[index].FKId_TblTipoFruta) { 
+                    case "1":
+                        tipoFruta = "yellow";
+                        break;
+                    case "2":
+                        tipoFruta = "green";
+                        break;
+                    case "3":
+                        tipoFruta = "gray";
+                        break;
+                    case "4":
+                        tipoFruta = "gray";
+                        break;
+                    case "5":
+                        tipoFruta = "gray";
+                        break;
+                    case "6":
+                        tipoFruta = "blue";
+                        break;
+                
+                    default:
+                        break;
+                }
+
+                //id= ic -> InputCajas se usa como identificador para obtener sus valores
+                tablaBody.innerHTML += `
+                    <tr>
+                        <td>${x+=1}</td>
+                        <td id="datos"><span class="ui ${tipoFruta} label" title="${datos.infoCajas[index].Descripcion}">${datos.infoCajas[index].PKCodigo}</span></td>
+                        <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_zz" style="width:80px" value="0"></td>
+                        <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_gm" style="width:80px" value="0"></td>
+                        <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_tw" style="width:80px" value="0"></td>
+                        <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_cn" style="width:80px" value="0"></td>
+                        <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_al" style="width:80px" value="0"></td>
+                        <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_kl" style="width:80px" value="0"></td>
+                        <td align="center"><input type="text" class="valida text-center" id="tcj_h" style="width:80px" value="0" disabled></td>
+                        <td align="center"><input type="text" class="valida text-center" id="tcj_pm" style="width:80px" factor_con="${datos.infoCajas[index].FactorConversion}" value="0" disabled></td>
+                        <td align="center"><input type="text" class="valida text-center" style="width:80px" value="0" disabled></td>
+                    </tr>
+                `;
+                //añadir nueva caja sin alterar las actuales
+                //validar campos */
+            });
+        });
+    }
 
 // GUARDAR DATOS ----------------------------------------------------------------------------------------------
     
@@ -186,25 +253,24 @@
         $("#alineacion-pe").prop("hidden", false);
         $("#estimativo-pe").prop("hidden", false);
         $("#opciones-pe").prop("hidden", false);
-        let tabla_body = document.querySelector("#data_cajas_pe"); 
         let anho = $("#anho_pe").data("anho");
-        let id_semana = $("#semanas_pe").val();
-        $("#semanas_pe").data("id_semana", id_semana);
-        let descripcion_semana = $("#semanas_pe option:selected").text();
-        let codigocajas = $("#select-sc-pe").val();
-        let num_semana = descripcion_semana.split(" ");
-        let cod_embarque = `EMB-${anho+num_semana[1]}`;
+        let idSemana = $("#semanas_pe").val();
+        $("#semanas_pe").data("idSemana", idSemana);
+        let descripcionSemana = $("#semanas_pe option:selected").text();
+        let codigoCajas = $("#select-sc-pe").val();
+        let numSemana = descripcionSemana.split(" ");
+        let codEmbarque = `EMB-${anho+numSemana[1]}`;
         //obtiene los datos a necesitar para enviar a contenido.php para ser procesados y devueltos
         let datos = {
-            cod_embarque: cod_embarque,
+            codEmbarque: codEmbarque,
             anho: anho,
-            id_semana: id_semana,
-            descripcion_semana: descripcion_semana,
-            codigocajas: codigocajas
+            idSemana: idSemana,
+            descripcionSemana: descripcionSemana,
+            codigoCajas: codigoCajas
         };
         const op = new FormData();
-        op.append("op", "crearembarque");
-        op.append("datos", JSON.stringify(datos));
+        op.append('op', 'crear_embarque');
+        op.append('datos', JSON.stringify(datos));
         fetch('../logica/contenido.php', {
             method: 'POST',
             body: op
@@ -213,60 +279,10 @@
             if (response.ok)
                 return response.json();
             else
-                throw "No se pueden cargar los datos";
+                throw "No se ha podido completar la petición PE";
         })
-        .then(res => {
-            $("#cod_embarque-pe").text(res.cod_embarque); //asigna en pantalla el código de embarque
-            $("#cod_embarque-pe").data("cod_embarque", res.cod_embarque); //guarda el código de embarque
-            $("#descripcion_embarque-pe").text(res.embarque); //asigna en pantalla la descripcion del embarque
-            tabla_body.innerHTML = ""; // Limpia el body de la tabla 
-            let x = 0; //Se usa para asignar el número de cada caja en la tabla
-            //recorre el objeto para llenar la tabla
-            for (const data_cajas_pe of res.cajas) {
-                let tipofruta;
-                switch (data_cajas_pe.FKId_TblTipoFruta) {
-                    case "1":
-                        tipofruta = "yellow";
-                        break;
-                    case "2":
-                        tipofruta = "green";
-                        break;
-                    case "3":
-                        tipofruta = "gray";
-                        break;
-                    case "4":
-                        tipofruta = "gray";
-                        break;
-                    case "5":
-                        tipofruta = "gray";
-                        break;
-                    case "6":
-                        tipofruta = "blue";
-                        break;
-                
-                    default:
-                        break;
-                }
-
-                //id= ic -> InputCajas se usa como identificador para obtener sus valores
-                tabla_body.innerHTML += `
-                    <tr>
-                        <td>${x+=1}</td>
-                        <td id="datos"  ><span class="ui ${tipofruta} label" title="${data_cajas_pe.Descripcion}">${data_cajas_pe.PKCodigo}</span></td>
-                        <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_zz" style="width:80px" value="0"></td>
-                        <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_gm" style="width:80px" value="0"></td>
-                        <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_tw" style="width:80px" value="0"></td>
-                        <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_cn" style="width:80px" value="0"></td>
-                        <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_al" style="width:80px" value="0"></td>
-                        <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_kl" style="width:80px" value="0"></td>
-                        <td align="center"><input type="text" class="valida text-center" id="tcj_h" style="width:80px" value="0" disabled></td>
-                        <td align="center"><input type="text" class="valida text-center" id="tcj_pm" style="width:80px" factor_con="${data_cajas_pe.FactorConversion}" value="0" disabled></td>
-                        <td align="center"><input type="text" class="valida text-center" style="width:80px" value="0" disabled></td>
-                    </tr>
-                `;
-                //añadir nueva caja sin alterar las actuales
-                //validar campos
-            }
+        .then(datosTablas => {
+            generar_tablas_pe(datosTablas);
         });
     });
 
@@ -282,13 +298,13 @@
         })
         .then(function(isConfirm) {
             if(isConfirm) {
-                let cod_embarque = $("#cod_embarque-pe").data("cod_embarque");
+                let codEmbarque = $("#cod_embarque-pe").data("codEmbarque");
                 let anho = $("#anho_pe").data("anho");
-                let id_semana = $("#semanas_pe").data("id_semana");
+                let idSemana = $("#semanas_pe").data("idSemana");
                 var detalles = {
-                    cod_embarque: cod_embarque,
+                    codEmbarque: codEmbarque,
                     anho: anho,
-                    id_semana: id_semana,
+                    idSemana: idSemana,
                     cajas: [],
                     estimativo: [
                         {
@@ -325,34 +341,34 @@
                 }
                 //Recorre la tabla obteniendo los datos de cada fila 
                 $("#tblAlineacion-pe tbody tr").each( function() {
-                    let codigo_caja;
-                    $(this).find("td").each(function(index){
+                    let codigoCaja;
+                    $(this).find("td").each(function(index) {
                         let cantidad;
-                        if($(this).attr("id") == "datos"){
-                            if(index === 1){
-                                codigo_caja = $(this).text();
-                            }else{
+                        if ($(this).attr("id") == "datos") {
+                            if (index === 1) {
+                                codigoCaja = $(this).text();
+                            } else {
                                 cantidad = $(this).find("input[type='text']").val();
-                                let nom_finca = $(this).find("input[type='text']").attr("ident");
+                                let nomFinca = $(this).find("input[type='text']").attr("ident");
                                 //De acuerdo al abreviado de la finca se usa para enviarlo a una función y buscar el ibm
-                                switch (nom_finca) {
+                                switch (nomFinca) {
                                     case "t_zz":
-                                        nom_finca = "zarzamora";
+                                        nomFinca = "zarzamora";
                                         break;
                                     case "t_gm":
-                                        nom_finca = "guaimaral";
+                                        nomFinca = "guaimaral";
                                         break;
                                     case "t_tw":
-                                        nom_finca = "taiwan";
+                                        nomFinca = "taiwan";
                                         break;
                                     case "t_cn":
-                                        nom_finca = "candelaria";
+                                        nomFinca = "candelaria";
                                         break;
                                     case "t_kl":
-                                        nom_finca = "kalamari";
+                                        nomFinca = "kalamari";
                                         break;
                                     case "t_al":
-                                        nom_finca = "alamos";
+                                        nomFinca = "alamos";
                                         break;
                                 
                                     default:
@@ -364,14 +380,14 @@
                                     dataType: 'JSON',
                                     data: {
                                         op: 'buscarfinca',
-                                        nombre_finca: nom_finca
+                                        nombreFinca: nomFinca
                                     },
                                     type: 'GET',
                                     url: '../logica/contenido.php',
-                                    success: (res_ibmfinca) => {
-                                        item = {
-                                            codigo_caja: codigo_caja,
-                                            ibm_finca: res_ibmfinca,
+                                    success: (resIbmFinca) => {
+                                        let item = {
+                                            codigoCaja: codigoCaja,
+                                            ibmFinca: resIbmFinca,
                                             cantidad: cantidad
                                         }
                                         detalles.cajas.push(item);
@@ -415,6 +431,61 @@
         })
     });
 
+    // Genera las tablas después de crear el embarque
+    function generar_tablas_pe(datos) {
+        let tablaBody = document.querySelector("#data_cajas_pe"); 
+        $("#cod_embarque-pe").text(datos.codEmbarque); //asigna en pantalla el código de embarque
+        $("#cod_embarque-pe").data("codEmbarque", datos.codEmbarque); //guarda el código de embarque
+        $("#descripcion_embarque-pe").text(datos.embarque); //asigna en pantalla la descripcion del embarque
+        tablaBody.innerHTML = ""; // Limpia el body de la tabla 
+        let x = 0; //Se usa para asignar el número de cada caja en la tabla
+        //recorre el objeto para llenar la tabla
+        for (const dataCajasPe of datos.cajas) {
+            let tipoFruta;
+            switch (dataCajasPe.FKId_TblTipoFruta) {
+                case "1":
+                    tipoFruta = "yellow";
+                    break;
+                case "2":
+                    tipoFruta = "green";
+                    break;
+                case "3":
+                    tipoFruta = "gray";
+                    break;
+                case "4":
+                    tipoFruta = "gray";
+                    break;
+                case "5":
+                    tipoFruta = "gray";
+                    break;
+                case "6":
+                    tipoFruta = "blue";
+                    break;
+            
+                default:
+                    break;
+            }
+
+            //id= ic -> InputCajas se usa como identificador para obtener sus valores
+            tablaBody.innerHTML += `
+                <tr>
+                    <td>${x+=1}</td>
+                    <td id="datos"  ><span class="ui ${tipoFruta} label" title="${dataCajasPe.Descripcion}">${dataCajasPe.PKCodigo}</span></td>
+                    <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_zz" style="width:80px" value="0"></td>
+                    <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_gm" style="width:80px" value="0"></td>
+                    <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_tw" style="width:80px" value="0"></td>
+                    <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_cn" style="width:80px" value="0"></td>
+                    <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_al" style="width:80px" value="0"></td>
+                    <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_kl" style="width:80px" value="0"></td>
+                    <td align="center"><input type="text" class="valida text-center" id="tcj_h" style="width:80px" value="0" disabled></td>
+                    <td align="center"><input type="text" class="valida text-center" id="tcj_pm" style="width:80px" factor_con="${dataCajasPe.FactorConversion}" value="0" disabled></td>
+                    <td align="center"><input type="text" class="valida text-center" style="width:80px" value="0" disabled></td>
+                </tr>
+            `;
+            //añadir nueva caja sin alterar las actuales
+            //validar campos
+        }
+    }
 // Eliminar datos
 
     // Elimina un embarque generado en el módulo programar embarque (previo a guardarlo)
@@ -422,17 +493,18 @@
         swal({
             title: "Está seguro?",
             text: "El embarque se eliminará, podrá crearlo nuevamente cuando desee",
-            type: "warning",
+            type: "question",
             showCancelButton: true,
             confirmButtonText: "Si, eliminar!",
-            cancelButtonText: "No, cancelar!"
+            cancelButtonText: "No, cancelar!",
+            reverseButtons: true
         })
         .then(isConfirm => {
             if (isConfirm){
                 const op = new FormData();
-                let cod_embarque = $("#cod_embarque-pe").data("cod_embarque")
+                let codEmbarque = $("#cod_embarque-pe").data("codEmbarque")
                 op.append("op", "eliminarembarque");
-                op.append("key", cod_embarque);
+                op.append("key", codEmbarque);
                 op.append("tabla", "tblembarque");
                 op.append("campo", "PKCod");
                 fetch("../logica/contenido.php", {
@@ -447,7 +519,6 @@
                 })
                 .then(res => {
                     if (res == true) {
-                        swal('Programar embarque', 'Acción completada', `${cod_embarque} eliminado`, 'success');
                         $("[href='#programarembarque']").trigger("click");
                     }
                 })
@@ -482,7 +553,6 @@
             return (campo_cajas*factorsito.attr("factor_con"));
         });
 
-
         //llena el total_cajas en columna
         let total_cajas_h = 0;
         [...document.querySelectorAll("#tcj_h")].forEach( element => {
@@ -506,8 +576,6 @@
         let ident = $(this).attr("ident");
         let suma_final = 0;
         $(`[ident='${ident}']`).each(function (){
-            // var valor = $(this).val();
-            // var valor2 = (valor == null || valor == undefined || valor == "") ? 0 : valor;
             suma_final += parseInt($(this).val());
         });
         $(`#${ident}`).html(r => {
@@ -517,13 +585,12 @@
 
     // Validar datos
     function validar_datos(){
-        let tblalineacion = $("#t_cj").text(); 
-        let tblestimativo_premiun = $("#t_premiun").text();
-        let tblestimativo_especial = $("#t_especial").text();
+        let tblAlineacion = $("#t_cj").text(); 
+        let tblEstimativoPremiun = $("#t_premiun").text();
+        let tblEstimativoEspecial = $("#t_especial").text();
         let retorno = false;
-        if(tblalineacion > 1 && tblestimativo_premiun > 1 && tblestimativo_especial > 1){
+        if(tblAlineacion > 1 && tblEstimativoPremiun > 1 && tblEstimativoEspecial > 1){
             retorno = true;
         }
         return retorno;
     } 
-

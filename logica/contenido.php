@@ -48,15 +48,15 @@
     //Crea embarque según datos y consulta cajas para cargar la vista 
     function crear_embarque(){
         $datos = json_decode($_POST['datos']);
-        $result = crearembarque($datos->cod_embarque, $datos->anho, $datos->id_semana);
+        $result = crearembarque($datos->codEmbarque, $datos->anho, $datos->idSemana);
         $vista = array();
         if ($result == true) {
             //aquí va todo lo que se va poner en la vista para asignar las cajas
-            $vista['embarque'] = $datos->descripcion_semana . " del " . $datos->anho;
-            $vista['cod_embarque'] = $datos->cod_embarque;
+            $vista['embarque'] = $datos->descripcionSemana . " del " . $datos->anho;
+            $vista['codEmbarque'] = $datos->codEmbarque;
             //Tabla cajas lleva todos los campos a usar en la tabla
-            for ($x=0; $x < count($datos->codigocajas) ; $x++) { 
-                $vista['cajas'][$x] = buscarcaja($datos->codigocajas[$x]);
+            for ($x=0; $x < count($datos->codigoCajas) ; $x++) { 
+                $vista['cajas'][$x] = buscarcaja($datos->codigoCajas[$x]);
             }
             echo json_encode($vista);
         } else {
@@ -88,10 +88,10 @@
         $datos = array();
         $datos = json_decode($_POST['jsonprogramacion']);
         foreach ($datos->cajas as $c){
-            $result = guardarprogramacion($datos->cod_embarque, $c->ibm_finca, $c->codigo_caja, $c->cantidad);
+            $result = guardarprogramacion($datos->codEmbarque, $c->ibmFinca, $c->codigoCaja, $c->cantidad);
         }
         foreach ($datos->estimativo as $e){
-            $result = guardarestimativo($e->finca, $e->premiun, $e->especial, $datos->cod_embarque);
+            $result = guardarestimativo($e->finca, $e->premiun, $e->especial, $datos->codEmbarque);
         }
         echo $result;
     }
@@ -402,10 +402,10 @@
     
     //Buscar Finca por ibm o por nombre
     function buscar_finca(){
-        if (isset($_GET['nombre_finca'])){
-            $finca = buscarregistro($_GET['nombre_finca'], "Nombre", "TblFincas", false);
-            echo $finca[0]->PKIbm;
-        }else if (isset($_POST['ibm_f'])){
+        if ( isset($_GET['nombreFinca']) ) {
+            $finca = buscarregistro($_GET['nombreFinca'], "Nombre", "TblFincas", false)[0];
+            echo $finca->PKIbm;
+        } else if ( isset($_POST['ibm_f']) ) {
             $finca = buscarfinca($_POST['ibm_f']);
             echo $finca->Nombre;
         }
@@ -824,6 +824,26 @@
         }
     }
 
+    //
+    function cargar_programacion() {
+        $codEmbarque = $_GET['codEmbarque'];
+        $listaCajas = buscarregistro($codEmbarque, 'FKCod_TblEmbarque', 'TblDet_TblEmbarque', 'FKIbm_TblFincas = (SELECT PKIbm FROM tblfincas LIMIT 1);');
+        $result = ['listaCajas' => [], 'estimativo' => [], 'infoCajas' => []];
+        foreach ($listaCajas as $index => $lc) {
+            $listaPorCaja = buscarregistro($lc->FKCodigo_TblCajasProduccion, 'FKCodigo_TblCajasProduccion', 'TblDet_TblEmbarque', "FKCod_TblEmbarque = '$codEmbarque'");
+            array_push($result['listaCajas'], [$lc->FKCodigo_TblCajasProduccion => $listaPorCaja]);
+            
+            $caja = buscarcaja($lc->FKCodigo_TblCajasProduccion);
+            array_push($result['infoCajas'], $caja);
+        }
+        $estimativo = buscarregistro($codEmbarque, 'FKCod_TblEmbarque', 'TblEstimativo', false);
+        foreach($estimativo as $index => $value) {
+            array_push($result['estimativo'], $estimativo[$index]);
+        }
+        echo json_encode($result);
+    }
+
+
 //  ACTUALIZAR ==================================================================================================================
     
     //
@@ -942,7 +962,7 @@
                 break;
 
             //Crea embarque y muestra las cajas en la vista de programar embarque
-            case 'crearembarque':
+            case 'crear_embarque':
                 crear_embarque();
                 break;
             
@@ -1070,6 +1090,11 @@
             //
             case 'listar_usuarios':
                 listar_usuarios();
+                break;
+
+            //
+            case 'cargar_programacion':
+                cargar_programacion();
                 break;
 
     //Metodos de actualizar            

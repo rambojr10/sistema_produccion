@@ -14,6 +14,7 @@
 		-webkit-border-radius: 3px; 
 		-moz-border-radius: 3px; 
 		border-radius: 3px; 
+        overflow: auto;
 	}
 	.datagrid table td, .datagrid table th { 
 		padding: 3px 10px; 
@@ -283,7 +284,7 @@
                 </div>
                 <hr>
                 <div class="ui mini form">
-                    <div class="fields container" id="estimativoVue">
+                    <div class="fields" id="estimativoVue">
                         <div class="field text-center">
                             <label>ZARZAMORA</label>
                             <input type="number" class="valida" v-model.number="premiun_zz" id="premiun_zz" placeholder="Premiun">
