@@ -86,7 +86,7 @@
     function guardar_programacion(){
         $result = false;
         $datos = array();
-        $datos = json_decode($_POST['jsonprogramacion']);
+        $datos = json_decode($_POST['jsonProgramacion']);
         foreach ($datos->cajas as $c){
             $result = guardarprogramacion($datos->codEmbarque, $c->ibmFinca, $c->codigoCaja, $c->cantidad);
         }
@@ -828,18 +828,16 @@
     function cargar_programacion() {
         $codEmbarque = $_GET['codEmbarque'];
         $listaCajas = buscarregistro($codEmbarque, 'FKCod_TblEmbarque', 'TblDet_TblEmbarque', 'FKIbm_TblFincas = (SELECT PKIbm FROM tblfincas LIMIT 1);');
-        $result = ['listaCajas' => [], 'estimativo' => [], 'infoCajas' => []];
+        $result = [ 'infoCajas' => [], 'estimativo' => [] ];
         foreach ($listaCajas as $index => $lc) {
-            $listaPorCaja = buscarregistro($lc->FKCodigo_TblCajasProduccion, 'FKCodigo_TblCajasProduccion', 'TblDet_TblEmbarque', "FKCod_TblEmbarque = '$codEmbarque'");
-            array_push($result['listaCajas'], [$lc->FKCodigo_TblCajasProduccion => $listaPorCaja]);
-            
-            $caja = buscarcaja($lc->FKCodigo_TblCajasProduccion);
-            array_push($result['infoCajas'], $caja);
+            $infoCaja = buscarcaja($lc->FKCodigo_TblCajasProduccion);
+            $infoCaja->Programacion = buscarprogramacion($lc->FKCodigo_TblCajasProduccion, $codEmbarque);
+            array_push($result['infoCajas'], $infoCaja);
         }
+
         $estimativo = buscarregistro($codEmbarque, 'FKCod_TblEmbarque', 'TblEstimativo', false);
-        foreach($estimativo as $index => $value) {
-            array_push($result['estimativo'], $estimativo[$index]);
-        }
+        array_push($result['estimativo'], $estimativo);           
+
         echo json_encode($result);
     }
 
@@ -943,7 +941,7 @@
         }
     }
 
-//valida el ingreso al archivo desde la petición del archivo logica/contenido.js 
+// ------------------------------------------------------------------------------------------
     if(isset($_REQUEST['op'])){
         $op = $_REQUEST['op'];
         switch ($op) {
@@ -971,7 +969,7 @@
                 break;
             
             //Guarda los datos de la programación y el estimativo de la semana
-            case 'guardarprogramacion':
+            case 'guardar_programacion':
                 guardar_programacion();
                 break;
 
@@ -1097,7 +1095,7 @@
                 cargar_programacion();
                 break;
 
-    //Metodos de actualizar            
+    //Metodos de actualizar
             case 'actualizarempresa':
                 actualizar_empresa();
                 break;

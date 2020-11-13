@@ -98,6 +98,7 @@
 
 </style>
 
+ <?php print_r($_GET) ?>
 <!-- Contenedor principal -->
 <div class="container">
 

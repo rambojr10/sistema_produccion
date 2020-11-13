@@ -27,7 +27,7 @@
             })
             .then(res => {
 
-                console.log(res)
+                console.log('seleccionar', res)
 
                 if (res.length > 0) {
                     swal({
@@ -42,7 +42,7 @@
                         if(isConfirm){
                             console.log('resExiste', res);
                             // Ejecutar una función que también se utiliza en seleccionar semana anterior
-                            cargar_embarque(codEmbarque, semana_pe, anho_pe);
+                            cargar_embarque_pe(codEmbarque, semana_pe, anho_pe);
                         }
                     });
                 } else {
@@ -113,6 +113,7 @@
         e.preventDefault();
         if ($("#semanas_pe").val() != null) {
             let semana_pe = $("#semanas_pe option:selected").text();
+            $('#semanas_pe').data('idSemana', $('#semanas_pe').val());
             let num_semana_pe = semana_pe.split(" ");
             let anho_pe = $("#anho_pe").data('anho');
             let codEmbarque = `EMB-${anho_pe+num_semana_pe[1]}`;
@@ -156,9 +157,8 @@
                         }
                     });
                 } else { //si el embarque ya existe, se carga
-                    console.log('resExiste', res)
                     // Envía el código del embarque y la descripción de la semana
-                    cargar_embarque(codEmbarque, semana_pe, anho_pe);
+                    cargar_embarque_pe(codEmbarque, semana_pe, anho_pe);
                 }
             });
         }
@@ -178,11 +178,10 @@
     }
 
     //
-    function cargar_embarque(...valuesInvoice) {
+    function cargar_embarque_pe(...valuesInvoice) {
         fetch(`../logica/contenido.php?op=cargar_programacion&codEmbarque=${valuesInvoice[0]}`)
         .then(response => response.json())
         .then(datos => {
-            console.log('datos', datos);
             // localStorage.setItem('embarqueStateEdit', codEmbarque); usarlo en caso de update pero voy a eliminar y crear nuevamente
             $("#alineacion-pe").prop("hidden", false);
             $("#estimativo-pe").prop("hidden", false);
@@ -195,11 +194,9 @@
             tablaBody.innerHTML = ""; // Limpia el body de la tabla 
             let x = 0; //Se usa para asignar el número de cada caja en la tabla
             //recorre el objeto para llenar la tabla
-            datos.listaCajas.forEach( (element, index) => {
-                console.log(datos.infoCajas[index].FKId_TblTipoFruta)
-                console.log('element', element);
+            for (const infoCajas of datos.infoCajas) {
                 let tipoFruta;
-                switch (datos.infoCajas[index].FKId_TblTipoFruta) { 
+                switch (infoCajas.FKId_TblTipoFruta) { 
                     case "1":
                         tipoFruta = "yellow";
                         break;
@@ -223,25 +220,28 @@
                         break;
                 }
 
-                //id= ic -> InputCajas se usa como identificador para obtener sus valores
+                let totalCajas = 0;
+                infoCajas.Programacion.forEach(element => {
+                    totalCajas += (element.Cantidad*1)
+                });
+                // ic -> InputCajas se usa como identificador para obtener sus valores
                 tablaBody.innerHTML += `
                     <tr>
                         <td>${x+=1}</td>
-                        <td id="datos"><span class="ui ${tipoFruta} label" title="${datos.infoCajas[index].Descripcion}">${datos.infoCajas[index].PKCodigo}</span></td>
-                        <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_zz" style="width:80px" value="0"></td>
-                        <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_gm" style="width:80px" value="0"></td>
-                        <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_tw" style="width:80px" value="0"></td>
-                        <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_cn" style="width:80px" value="0"></td>
-                        <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_al" style="width:80px" value="0"></td>
-                        <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_kl" style="width:80px" value="0"></td>
-                        <td align="center"><input type="text" class="valida text-center" id="tcj_h" style="width:80px" value="0" disabled></td>
-                        <td align="center"><input type="text" class="valida text-center" id="tcj_pm" style="width:80px" factor_con="${datos.infoCajas[index].FactorConversion}" value="0" disabled></td>
+                        <td idTd="datos"><span class="ui ${tipoFruta} label" title="${infoCajas.Descripcion}">${infoCajas.PKCodigo}</span></td>
+                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_zz" style="width:80px" value="${infoCajas.Programacion[0].Cantidad}"></td>
+                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_gm" style="width:80px" value="${infoCajas.Programacion[1].Cantidad}"></td>
+                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_tw" style="width:80px" value="${infoCajas.Programacion[2].Cantidad}"></td>
+                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_cn" style="width:80px" value="${infoCajas.Programacion[3].Cantidad}"></td>
+                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_al" style="width:80px" value="${infoCajas.Programacion[4].Cantidad}"></td>
+                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_kl" style="width:80px" value="${infoCajas.Programacion[5].Cantidad}"></td>
+                        <td align="center"><input type="text" class="valida text-center tcj_h" style="width:80px" value="${totalCajas}" disabled></td>
+                        <td align="center"><input type="text" class="valida text-center tcj_pm" style="width:80px" factor_con="${infoCajas.FactorConversion}" value="${totalCajas * infoCajas.FactorConversion}" disabled></td>
                         <td align="center"><input type="text" class="valida text-center" style="width:80px" value="0" disabled></td>
                     </tr>
-                `;
-                //añadir nueva caja sin alterar las actuales
-                //validar campos */
-            });
+                `; 
+            };
+            // fetch(`../capa_web/programarembarque.php?var=${'Esto es una variable desde js'}`)
         });
     }
 
@@ -344,7 +344,7 @@
                     let codigoCaja;
                     $(this).find("td").each(function(index) {
                         let cantidad;
-                        if ($(this).attr("id") == "datos") {
+                        if ($(this).attr("idTd") == "datos") {
                             if (index === 1) {
                                 codigoCaja = $(this).text();
                             } else {
@@ -402,8 +402,8 @@
                     $(".osc").fadeIn();
                     $("#loader").fadeIn();
                     const op = new FormData();
-                    op.append("op", "guardarprogramacion");
-                    op.append("jsonprogramacion", JSON.stringify(detalles));
+                    op.append("op", "guardar_programacion");
+                    op.append("jsonProgramacion", JSON.stringify(detalles));
                     fetch('../logica/contenido.php', {
                         method: "POST",
                         body: op
@@ -466,27 +466,26 @@
                     break;
             }
 
-            //id= ic -> InputCajas se usa como identificador para obtener sus valores
+            // ic -> InputCajas se usa como identificador para obtener sus valores
             tablaBody.innerHTML += `
                 <tr>
                     <td>${x+=1}</td>
-                    <td id="datos"  ><span class="ui ${tipoFruta} label" title="${dataCajasPe.Descripcion}">${dataCajasPe.PKCodigo}</span></td>
-                    <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_zz" style="width:80px" value="0"></td>
-                    <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_gm" style="width:80px" value="0"></td>
-                    <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_tw" style="width:80px" value="0"></td>
-                    <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_cn" style="width:80px" value="0"></td>
-                    <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_al" style="width:80px" value="0"></td>
-                    <td id="datos" align="center"><input type="text" class="valida text-center" id="ic" ident="t_kl" style="width:80px" value="0"></td>
-                    <td align="center"><input type="text" class="valida text-center" id="tcj_h" style="width:80px" value="0" disabled></td>
-                    <td align="center"><input type="text" class="valida text-center" id="tcj_pm" style="width:80px" factor_con="${dataCajasPe.FactorConversion}" value="0" disabled></td>
+                    <td idTd="datos"><span class="ui ${tipoFruta} label" title="${dataCajasPe.Descripcion}">${dataCajasPe.PKCodigo}</span></td>
+                    <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_zz" style="width:80px" value="0"></td>
+                    <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_gm" style="width:80px" value="0"></td>
+                    <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_tw" style="width:80px" value="0"></td>
+                    <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_cn" style="width:80px" value="0"></td>
+                    <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_al" style="width:80px" value="0"></td>
+                    <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_kl" style="width:80px" value="0"></td>
+                    <td align="center"><input type="text" class="valida text-center tcj_h" style="width:80px" value="0" disabled></td>
+                    <td align="center"><input type="text" class="valida text-center tcj_pm" style="width:80px" factor_con="${dataCajasPe.FactorConversion}" value="0" disabled></td>
                     <td align="center"><input type="text" class="valida text-center" style="width:80px" value="0" disabled></td>
                 </tr>
             `;
-            //añadir nueva caja sin alterar las actuales
-            //validar campos
         }
     }
-// Eliminar datos
+
+// Eliminar datos ---------------------------------------------------------------------------------------------
 
     // Elimina un embarque generado en el módulo programar embarque (previo a guardarlo)
     $(document).on("click", "#btnEliminar-pe", function() {
@@ -526,10 +525,10 @@
         });
     });
 
-// COMPLEMENTOS ----------------------------------------------------------------------------------------------
+// COMPLEMENTOS -----------------------------------------------------------------------------------------------
 
     //Quita el select de las cajasproduccion
-    $(document).on("click", "#btnCancelar-sc", function (e){
+    $(document).on("click", "#btnCancelar-sc", function(e) {
         e.preventDefault();
         $("#seleccion-pe").attr("hidden", "true");
         $("#alineacion-pe").attr("hidden", "true");
@@ -538,7 +537,7 @@
     });
 
     //sumar campos deshabilitados de acuerdo a lo que se va digitando
-    $(document).on("input", "#ic", function () {
+    $(document).on("input", ".ic", function() {
         let campo_cajas = 0;
         for (x=2; x < 8; x++) {
             campo_cajas += parseInt($(this).parents("tr").find("td").eq(x).find("input[type='text']").val());
@@ -555,7 +554,7 @@
 
         //llena el total_cajas en columna
         let total_cajas_h = 0;
-        [...document.querySelectorAll("#tcj_h")].forEach( element => {
+        [...document.querySelectorAll(".tcj_h")].forEach( element => {
             total_cajas_h += parseInt(element.value);
         });
         $("#t_cj").html(r => {
@@ -564,7 +563,7 @@
 
         //llena el total_cajas en columna de PREMIUN 20.KLS
         let total_cajas_pm = 0;
-        [...document.querySelectorAll("#tcj_pm")].forEach( element => {
+        [...document.querySelectorAll(".tcj_pm")].forEach( element => {
             total_cajas_pm += parseInt(element.value);
         });
         $("#t_pm").html(r => {
@@ -584,7 +583,7 @@
     });
 
     // Validar datos
-    function validar_datos(){
+    function validar_datos() {
         let tblAlineacion = $("#t_cj").text(); 
         let tblEstimativoPremiun = $("#t_premiun").text();
         let tblEstimativoEspecial = $("#t_especial").text();
@@ -593,4 +592,4 @@
             retorno = true;
         }
         return retorno;
-    } 
+    }

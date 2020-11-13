@@ -722,6 +722,22 @@
         return $datos->fetchAll();
     }
 
+    //
+    function buscarprogramacion($codigoCaja, $codEmbarque) {
+        $bd = conectar();
+        $datos = $bd->prepare("
+            SELECT f.Nombre, de.Cantidad 
+            FROM tbldet_tblembarque as de, tblfincas as f
+            WHERE de.FKIbm_TblFincas = f.PKIbm
+            AND de.FKCodigo_TblCajasProduccion = :codigoCaja
+            AND de.FKCod_TblEmbarque = :codEmbarque
+        ");
+        $datos->bindParam(':codigoCaja', $codigoCaja, PDO::PARAM_STR);
+        $datos->bindParam(':codEmbarque', $codEmbarque, PDO::PARAM_STR);
+        $datos->execute();
+        return $datos->fetchAll();
+    }
+
 // Sentencias de actualización------------------------------------------------------------------------------------------------------------
 
     //Recibe arreglo de php para actualizar los datos
