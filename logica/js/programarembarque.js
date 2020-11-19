@@ -1,56 +1,5 @@
 //CONTROL DE VISTAS EN PROGRAMAR EMBARQUE --------------------------------------------------------------------
 
-    //Muestra la vista para seleccionar las cajas del embarque y verifica si el embarque a generar ya existe...+
-    $(document).on("click", "[href='#seleccionar_pe']", function(e) {
-        e.preventDefault();
-        if ($("#semanas_pe").val() != null) {
-            let semana_pe = $("#semanas_pe option:selected").text();
-            let num_semana_pe = semana_pe.split(" ");
-            let anho_pe = $('#anho_pe').data('anho');
-            let codEmbarque = `EMB-${anho_pe+num_semana_pe[1]}`;
-
-            // -------------------------------------------------------------------------
-            const op = new FormData();
-            op.append("op", "codEmbarque_verificar");
-            op.append("key", codEmbarque);
-            op.append("campo", "PKCod");
-            op.append("tabla", "TblEmbarque");
-            fetch('../logica/contenido.php', {
-                method: 'POST',
-                body: op
-            })
-            .then(response => {
-                if (response.ok)
-                    return response.json();
-                else
-                    throw "No se puede obtener los datos";
-            })
-            .then(res => {
-                
-                if (res.length > 0) {
-                    swal({
-                        title: "¡Datos pendientes!",
-                        text: "El embarque ya existe, ¿desea cargarlo?",
-                        type: "question",
-                        showCancelButton: true,
-                        confirmButtonText: "Si, cargar!",
-                        cancelButtonText: "No, cancelar!",
-                        reverseButtons: true
-                    }).then(isConfirm => {
-                        if(isConfirm){
-                            cargar_embarque_pe(codEmbarque, semana_pe, anho_pe);
-                        }
-                    });
-                } else {
-                    $("#seleccion-pe").removeAttr("hidden");
-                    cargar_cajas_pe();
-                }
-            });
-        }else {
-            swal("Seleccionar Cajas", "Debe seleccionar una semana a programar", "error");
-        }
-    });
-
     //Mostrar vista con semanas disponibles para programar embarque
     $(document).on("click", "#btnBuscar_pe", function (e) {
         e.preventDefault();
@@ -106,6 +55,56 @@
         }
     });
 
+    //Muestra la vista para seleccionar las cajas del embarque y verifica si el embarque a generar ya existe...+
+    $(document).on("click", "[href='#seleccionar_pe']", function(e) {
+        e.preventDefault();
+        if ($("#semanas_pe").val() != null) {
+            let semana_pe = $("#semanas_pe option:selected").text();
+            let num_semana_pe = semana_pe.split(" ");
+            let anho_pe = $('#anho_pe').data('anho');
+            let codEmbarque = `EMB-${anho_pe+num_semana_pe[1]}`;
+
+            // -------------------------------------------------------------------------
+            const op = new FormData();
+            op.append("op", "codEmbarque_verificar");
+            op.append("key", codEmbarque);
+            op.append("campo", "PKCod");
+            op.append("tabla", "TblEmbarque");
+            fetch('../logica/contenido.php', {
+                method: 'POST',
+                body: op
+            })
+            .then(response => {
+                if (response.ok)
+                    return response.json();
+                else
+                    throw "No se puede obtener los datos";
+            })
+            .then(res => {
+                if (res.length > 0) {
+                    swal({
+                        title: "¡Datos pendientes!",
+                        text: "El embarque ya existe, ¿desea cargarlo?",
+                        type: "question",
+                        showCancelButton: true,
+                        confirmButtonText: "Si, cargar!",
+                        cancelButtonText: "No, cancelar!",
+                        reverseButtons: true
+                    }).then(isConfirm => {
+                        if(isConfirm){
+                            cargar_embarque_pe(codEmbarque, semana_pe, anho_pe);
+                        }
+                    });
+                } else {
+                    $("#seleccion-pe").removeAttr("hidden");
+                    cargar_cajas_pe();
+                }
+            });
+        }else {
+            swal("Seleccionar Cajas", "Debe seleccionar una semana a programar", "error");
+        }
+    });
+    
     // Agrega las cajas seleccionadas de la semana anterior
     $(document).on('click', "[href='#semana_anterior_pe']", function(e) {
         e.preventDefault();
@@ -153,9 +152,21 @@
                             swal('Seleccionar cajas', 'No existe una selección anterior', 'error')
                         }
                     });
-                } else { //si el embarque ya existe, se carga
-                    // Envía el código del embarque y la descripción de la semana
-                    cargar_embarque_pe(codEmbarque, semana_pe, anho_pe);
+                } else { 
+                    //si el embarque ya existe, se carga. Envía el código del embarque y la descripción de la semana
+                    swal({
+                        title: "¡Datos pendientes!",
+                        text: "El embarque ya existe, ¿desea cargarlo?",
+                        type: "question",
+                        showCancelButton: true,
+                        confirmButtonText: "Si, cargar!",
+                        cancelButtonText: "No, cancelar!",
+                        reverseButtons: true
+                    }).then(isConfirm => {
+                        if(isConfirm){
+                            cargar_embarque_pe(codEmbarque, semana_pe, anho_pe);
+                        }
+                    });
                 }
             });
         }
@@ -179,101 +190,113 @@
         fetch(`../logica/contenido.php?op=cargar_programacion&codEmbarque=${valuesInvoice[0]}`)
         .then(response => response.json())
         .then(datos => {
-            // localStorage.setItem('embarqueStateEdit', codEmbarque); usarlo en caso de update pero voy a eliminar y crear nuevamente
-            $("#alineacion-pe").prop("hidden", false);
-            $("#estimativo-pe").prop("hidden", false);
-            $("#opciones-pe").prop("hidden", false);
-            $('#cod_embarque-pe').text(valuesInvoice[0]); //asigna en pantalla el código de embarque
-            $('#cod_embarque-pe').data('codEmbarque', valuesInvoice[0]); //guarda el código de embarque
-            $('#descripcion_embarque-pe').text(`${valuesInvoice[1]} del ${valuesInvoice[2]}`); //asigna en pantalla la descripcion del embarque
+            if (datos.infoCajas.length > 0 && datos.estimativo[0].length > 0) {
+                $("#alineacion-pe").prop("hidden", false);
+                $("#estimativo-pe").prop("hidden", false);
+                $("#opciones-pe").prop("hidden", false);
+                $('#cod_embarque-pe').text(valuesInvoice[0]); //asigna en pantalla el código de embarque
+                $('#cod_embarque-pe').data('codEmbarque', valuesInvoice[0]); //guarda el código de embarque
+                $('#descripcion_embarque-pe').text(`${valuesInvoice[1]} del ${valuesInvoice[2]}`); //asigna en pantalla la descripcion del embarque
 
-            $("#seleccion-pe").removeAttr("hidden");
-            let existsCodigoCajas = [];
-            datos.infoCajas.forEach(element => {
-                existsCodigoCajas.push(element.PKCodigo);
-            });
-            cargar_cajas_pe(existsCodigoCajas);
-
-            let tablaBody = document.querySelector("#data_cajas_pe"); 
-            tablaBody.innerHTML = ""; // Limpia el body de la tabla 
-            let x = 0; //Se usa para asignar el número de cada caja en la tabla
-            //recorre el objeto para llenar la tabla
-            for (const infoCajas of datos.infoCajas) {
-                let tipoFruta;
-                switch (infoCajas.FKId_TblTipoFruta) { 
-                    case "1":
-                        tipoFruta = "yellow";
-                        break;
-                    case "2":
-                        tipoFruta = "green";
-                        break;
-                    case "3":
-                        tipoFruta = "gray";
-                        break;
-                    case "4":
-                        tipoFruta = "gray";
-                        break;
-                    case "5":
-                        tipoFruta = "gray";
-                        break;
-                    case "6":
-                        tipoFruta = "blue";
-                        break;
-                
-                    default:
-                        break;
-                }
-
-                let totalCajas = 0;
-                infoCajas.Programacion.forEach(element => {
-                    totalCajas += parseInt(element.Cantidad == null ? 0 : element.Cantidad);
+                $("#seleccion-pe").removeAttr("hidden");
+                let existsCodigoCajas = [];
+                datos.infoCajas.forEach(element => {
+                    existsCodigoCajas.push(element.PKCodigo);
                 });
-                // ic -> InputCajas se usa como identificador para obtener sus valores
-                tablaBody.innerHTML += `
-                    <tr>
-                        <td>${x+=1}</td>
-                        <td idTd="datos"><span class="ui ${tipoFruta} label" title="${infoCajas.Descripcion}">${infoCajas.PKCodigo}</span></td>
-                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_zz" style="width:80px" value="${infoCajas.Programacion[0].Cantidad === null ? '' : infoCajas.Programacion[0].Cantidad}"></td>
-                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_gm" style="width:80px" value="${infoCajas.Programacion[1].Cantidad === null ? '' : infoCajas.Programacion[1].Cantidad}"></td>
-                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_tw" style="width:80px" value="${infoCajas.Programacion[2].Cantidad === null ? '' : infoCajas.Programacion[2].Cantidad}"></td>
-                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_cn" style="width:80px" value="${infoCajas.Programacion[3].Cantidad === null ? '' : infoCajas.Programacion[3].Cantidad}"></td>
-                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_al" style="width:80px" value="${infoCajas.Programacion[4].Cantidad === null ? '' : infoCajas.Programacion[4].Cantidad}"></td>
-                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_kl" style="width:80px" value="${infoCajas.Programacion[5].Cantidad === null ? '' : infoCajas.Programacion[5].Cantidad}"></td>
-                        <td align="center"><input type="text" class="valida text-center tcj_h" style="width:80px" value="${totalCajas}" disabled></td>
-                        <td align="center"><input type="text" class="valida text-center tcj_pm" style="width:80px" factor_con="${infoCajas.FactorConversion}" value="${totalCajas * infoCajas.FactorConversion}" disabled></td>
-                        <td align="center"><input type="text" class="valida text-center" style="width:80px" value="0" disabled></td>
-                    </tr>
-                `; 
-            };
-            let totalPremiun = 0;
-            let totalEspecial = 0;
-            datos.estimativo[0].forEach(element => {
-                totalPremiun += parseInt(element.Premiun);
-                totalEspecial += parseInt(element.Especial);
-            });
-            (function(datos) {
-                $("#premiun_zz").val(datos[0].Premiun);
-                $("#especial_zz").val(datos[0].Especial);
+                cargar_cajas_pe(existsCodigoCajas);
 
-                $("#premiun_gm").val(datos[1].Premiun);
-                $("#especial_gm").val(datos[1].Especial);
+                let tablaBody = document.querySelector("#data_cajas_pe"); 
+                tablaBody.innerHTML = ""; // Limpia el body de la tabla 
+                let x = 0; //Se usa para asignar el número de cada caja en la tabla
+                //recorre el objeto para llenar la tabla
+                for (const infoCajas of datos.infoCajas) {
+                    let tipoFruta;
+                    switch (infoCajas.FKId_TblTipoFruta) { 
+                        case "1":
+                            tipoFruta = "yellow";
+                            break;
+                        case "2":
+                            tipoFruta = "green";
+                            break;
+                        case "3":
+                            tipoFruta = "gray";
+                            break;
+                        case "4":
+                            tipoFruta = "gray";
+                            break;
+                        case "5":
+                            tipoFruta = "gray";
+                            break;
+                        case "6":
+                            tipoFruta = "blue";
+                            break;
+                    
+                        default:
+                            break;
+                    }
 
-                $("#premiun_tw").val(datos[2].Premiun);
-                $("#especial_tw").val(datos[2].Especial);
+                    let totalCajas = 0;
+                    infoCajas.Programacion.forEach(element => {
+                        totalCajas += parseInt(element.Cantidad == null ? 0 : element.Cantidad);
+                    });
+                    // ic -> InputCajas se usa como identificador para obtener sus valores
+                    tablaBody.innerHTML += `
+                        <tr>
+                            <td>${x+=1}</td>
+                            <td idTd="datos"><span class="ui ${tipoFruta} label" title="${infoCajas.Descripcion}">${infoCajas.PKCodigo}</span></td>
+                            <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_zz" style="width:80px" value="${infoCajas.Programacion[0].Cantidad === null ? '' : infoCajas.Programacion[0].Cantidad}"></td>
+                            <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_gm" style="width:80px" value="${infoCajas.Programacion[1].Cantidad === null ? '' : infoCajas.Programacion[1].Cantidad}"></td>
+                            <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_tw" style="width:80px" value="${infoCajas.Programacion[2].Cantidad === null ? '' : infoCajas.Programacion[2].Cantidad}"></td>
+                            <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_cn" style="width:80px" value="${infoCajas.Programacion[3].Cantidad === null ? '' : infoCajas.Programacion[3].Cantidad}"></td>
+                            <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_al" style="width:80px" value="${infoCajas.Programacion[4].Cantidad === null ? '' : infoCajas.Programacion[4].Cantidad}"></td>
+                            <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_kl" style="width:80px" value="${infoCajas.Programacion[5].Cantidad === null ? '' : infoCajas.Programacion[5].Cantidad}"></td>
+                            <td align="center"><input type="text" class="valida text-center tcj_h" style="width:80px" value="${totalCajas}" disabled></td>
+                            <td align="center"><input type="text" class="valida text-center tcj_pm" style="width:80px" factor_con="${infoCajas.FactorConversion}" value="${totalCajas * infoCajas.FactorConversion}" disabled></td>
+                            <td align="center"><input type="text" class="valida text-center" style="width:80px" value="0" disabled></td>
+                        </tr>
+                    `; 
+                };
+                let totalPremiun = 0;
+                let totalEspecial = 0;
+                datos.estimativo[0].forEach(element => {
+                    totalPremiun += parseInt(element.Premiun);
+                    totalEspecial += parseInt(element.Especial);
+                });
+                (function(datos) {
+                    
+                    $("#premiun_zz").val(datos[0].Premiun);
+                    $("#especial_zz").val(datos[0].Especial);
 
-                $("#premiun_cn").val(datos[3].Premiun);
-                $("#especial_cn").val(datos[3].Especial);
+                    $("#premiun_gm").val(datos[1].Premiun);
+                    $("#especial_gm").val(datos[1].Especial);
 
-                $("#premiun_al").val(datos[4].Premiun);
-                $("#especial_al").val(datos[4].Especial);
+                    $("#premiun_tw").val(datos[2].Premiun);
+                    $("#especial_tw").val(datos[2].Especial);
 
-                $("#premiun_kl").val(datos[5].Premiun);
-                $("#especial_kl").val(datos[5].Especial);
-                
-                window.t_premiun.textContent = totalPremiun;
-                window.t_especial.textContent = totalEspecial;
-            })(datos.estimativo[0])
+                    $("#premiun_cn").val(datos[3].Premiun);
+                    $("#especial_cn").val(datos[3].Especial);
 
+                    $("#premiun_al").val(datos[4].Premiun);
+                    $("#especial_al").val(datos[4].Especial);
+
+                    $("#premiun_kl").val(datos[5].Premiun);
+                    $("#especial_kl").val(datos[5].Especial);
+                    
+                    window.t_premiun.textContent = totalPremiun;
+                    window.t_especial.textContent = totalEspecial;
+
+                })(datos.estimativo[0])
+            } else {
+                swal('Programar embarque', `El código: ${valuesInvoice[0]} no posee datos, se eliminará para mejorar su experiencia, podrá usarlo más adelante`, 'error');
+                const op = new FormData();
+                op.append("op", "eliminarembarque");
+                op.append("codEmbarque", valuesInvoice[0]);
+                fetch("../logica/contenido.php", {
+                    method: "POST",
+                    body: op
+                })
+                .then(response => {return response.text()});
+            }
             // es probable que deba meter el tfoot aquí para asignar los datos
         }); 
     }
@@ -306,6 +329,7 @@
             descripcionSemana: descripcionSemana,
             codigoCajas: codigoCajas
         };
+
         const op = new FormData();
         op.append('op', 'crear_embarque');
         op.append('datos', JSON.stringify(datos));
@@ -389,7 +413,6 @@
                             if (index === 1) {
                                 codigoCaja = $(this).text();
                             } else {
-                                console.log('valor', $(this).find("input[type='text']").val());
                                 cantidad = ($(this).find("input[type='text']").val() == '' ? null : $(this).find("input[type='text']").val());
                                 let nomFinca = $(this).find("input[type='text']").attr("ident");
                                 //De acuerdo al abreviado de la finca se usa para enviarlo a una función y buscar el ibm
@@ -533,7 +556,7 @@
     // Elimina un embarque generado en el módulo programar embarque (previo a guardarlo)
     $(document).on("click", "#btnEliminar-pe", function() {
         swal({
-            title: "Está seguro?",
+            title: "¿Está seguro?",
             text: "El embarque se eliminará, podrá crearlo nuevamente cuando desee",
             type: "question",
             showCancelButton: true,
@@ -558,7 +581,6 @@
                         throw "No se ha podido completar la acción";
                 })
                 .then(res => {
-                    console.log(res)
                     if (res == true) {
                         swal('Programar embarque', `Acción completada, ${codEmbarque} eliminado`, 'success');
                         $("[href='#programarembarque']").trigger("click");
@@ -571,13 +593,16 @@
     });
 
     //Limpiar pantalla
-    function limpiar_pantalla_pe() {
+    function limpiar_pantalla_pe(state = true) {
         $('#select-sc-pe').val('');
 
         let tablaBody = document.querySelector("#data_cajas_pe");
         tablaBody.innerHTML = "";
 
         $('#cod_embarque-pe').text('');
+        if ($('#cod_embarque-pe').data('codEmbarque') !== undefined) {
+            $('#cod_embarque-pe').data('codEmbarque', undefined);
+        }
         $('#descripcion_embarque-pe').text('');
         
         $('#t_premiun').html('');
@@ -590,13 +615,16 @@
             $(element).val('');
         });
 
-        $('#btnCancelar-sc').trigger('click');
+        if (state) {
+            $('#btnCancelar-sc').trigger('click');
+        }
     }
 // COMPLEMENTOS -----------------------------------------------------------------------------------------------
 
     //Quita el select de las cajasproduccion
     $(document).on("click", "#btnCancelar-sc", function(e) {
         e.preventDefault();
+        limpiar_pantalla_pe(false);
         $("#seleccion-pe").attr("hidden", "true");
         $("#alineacion-pe").attr("hidden", "true");
         $("#estimativo-pe").attr("hidden", "true");
@@ -685,86 +713,84 @@
                     throw "No se ha podido completar la petición PE";
             })
             .then(res => {
-            let tablaBody = document.querySelector("#data_cajas_pe"); 
-            tablaBody.innerHTML = "";
-            let x = 0;
-            for (const infoCajas of res) {
-                let tipoFruta;
-                switch (infoCajas.FKId_TblTipoFruta) { 
-                    case "1":
-                        tipoFruta = "yellow";
-                        break;
-                    case "2":
-                        tipoFruta = "green";
-                        break;
-                    case "3":
-                        tipoFruta = "gray";
-                        break;
-                    case "4":
-                        tipoFruta = "gray";
-                        break;
-                    case "5":
-                        tipoFruta = "gray";
-                        break;
-                    case "6":
-                        tipoFruta = "blue";
-                        break;
-                
-                    default:
-                        break;
+                let tablaBody = document.querySelector("#data_cajas_pe"); 
+                tablaBody.innerHTML = "";
+                let x = 0;
+                for (const infoCajas of res) {
+                    let tipoFruta;
+                    switch (infoCajas.FKId_TblTipoFruta) { 
+                        case "1":
+                            tipoFruta = "yellow";
+                            break;
+                        case "2":
+                            tipoFruta = "green";
+                            break;
+                        case "3":
+                            tipoFruta = "gray";
+                            break;
+                        case "4":
+                            tipoFruta = "gray";
+                            break;
+                        case "5":
+                            tipoFruta = "gray";
+                            break;
+                        case "6":
+                            tipoFruta = "blue";
+                            break;
+                    
+                        default:
+                            break;
+                    }
+
+                    let totalCajas = 0;
+                    infoCajas.Programacion.forEach(element => {
+                        totalCajas += parseInt(element.Cantidad == null ? 0 : element.Cantidad);
+                    });
+                    // ic -> InputCajas se usa como identificador para obtener sus valores
+                    tablaBody.innerHTML += `
+                        <tr>
+                            <td>${x+=1}</td>
+                            <td idTd="datos"><span class="ui ${tipoFruta} label" title="${infoCajas.Descripcion}">${infoCajas.PKCodigo}</span></td>
+                            <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_zz" style="width:80px" value="${
+                                infoCajas.Programacion.length > 0 ? 
+                                    (infoCajas.Programacion[0].Cantidad === null ? '' : infoCajas.Programacion[0].Cantidad) 
+                                    : ''
+                            }"></td>
+                            <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_gm" style="width:80px" value="${
+                                infoCajas.Programacion.length > 0 ? 
+                                    (infoCajas.Programacion[1].Cantidad === null ? '' : infoCajas.Programacion[1].Cantidad) 
+                                    : ''
+                            }"></td>
+                            <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_tw" style="width:80px" value="${
+                                infoCajas.Programacion.length > 0 ? 
+                                    (infoCajas.Programacion[2].Cantidad === null ? '' : infoCajas.Programacion[2].Cantidad) 
+                                    : ''
+                            }"></td>
+                            <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_cn" style="width:80px" value="${
+                                infoCajas.Programacion.length > 0 ? 
+                                    (infoCajas.Programacion[3].Cantidad === null ? '' : infoCajas.Programacion[3].Cantidad) 
+                                    : ''
+                            }"></td>
+                            <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_al" style="width:80px" value="${
+                                infoCajas.Programacion.length > 0 ? 
+                                    (infoCajas.Programacion[4].Cantidad === null ? '' : infoCajas.Programacion[4].Cantidad) 
+                                    : ''
+                            }"></td>
+                            <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_kl" style="width:80px" value="${
+                                infoCajas.Programacion.length > 0 ? 
+                                    (infoCajas.Programacion[5].Cantidad === null ? '' : infoCajas.Programacion[5].Cantidad) 
+                                    : ''
+                            }"></td>
+                            <td align="center"><input type="text" class="valida text-center tcj_h" style="width:80px" value="${totalCajas}" disabled></td>
+                            <td align="center"><input type="text" class="valida text-center tcj_pm" style="width:80px" factor_con="${infoCajas.FactorConversion}" value="${totalCajas * infoCajas.FactorConversion}" disabled></td>
+                            <td align="center"><input type="text" class="valida text-center" style="width:80px" value="0" disabled></td>
+                        </tr>
+                    `;
                 }
-
-                let totalCajas = 0;
-                infoCajas.Programacion.forEach(element => {
-                    console.log(element.Cantidad)
-                    totalCajas += parseInt(element.Cantidad == null ? 0 : element.Cantidad);
-                });
-                // ic -> InputCajas se usa como identificador para obtener sus valores
-                tablaBody.innerHTML += `
-                    <tr>
-                        <td>${x+=1}</td>
-                        <td idTd="datos"><span class="ui ${tipoFruta} label" title="${infoCajas.Descripcion}">${infoCajas.PKCodigo}</span></td>
-                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_zz" style="width:80px" value="${
-                            infoCajas.Programacion.length > 0 ? 
-                                (infoCajas.Programacion[0].Cantidad === null ? '' : infoCajas.Programacion[0].Cantidad) 
-                                : ''
-                        }"></td>
-                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_gm" style="width:80px" value="${
-                            infoCajas.Programacion.length > 0 ? 
-                                (infoCajas.Programacion[1].Cantidad === null ? '' : infoCajas.Programacion[1].Cantidad) 
-                                : ''
-                        }"></td>
-                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_tw" style="width:80px" value="${
-                            infoCajas.Programacion.length > 0 ? 
-                                (infoCajas.Programacion[2].Cantidad === null ? '' : infoCajas.Programacion[2].Cantidad) 
-                                : ''
-                        }"></td>
-                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_cn" style="width:80px" value="${
-                            infoCajas.Programacion.length > 0 ? 
-                                (infoCajas.Programacion[3].Cantidad === null ? '' : infoCajas.Programacion[3].Cantidad) 
-                                : ''
-                        }"></td>
-                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_al" style="width:80px" value="${
-                            infoCajas.Programacion.length > 0 ? 
-                                (infoCajas.Programacion[4].Cantidad === null ? '' : infoCajas.Programacion[4].Cantidad) 
-                                : ''
-                        }"></td>
-                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_kl" style="width:80px" value="${
-                            infoCajas.Programacion.length > 0 ? 
-                                (infoCajas.Programacion[5].Cantidad === null ? '' : infoCajas.Programacion[5].Cantidad) 
-                                : ''
-                        }"></td>
-                        <td align="center"><input type="text" class="valida text-center tcj_h" style="width:80px" value="${totalCajas}" disabled></td>
-                        <td align="center"><input type="text" class="valida text-center tcj_pm" style="width:80px" factor_con="${infoCajas.FactorConversion}" value="${totalCajas * infoCajas.FactorConversion}" disabled></td>
-                        <td align="center"><input type="text" class="valida text-center" style="width:80px" value="0" disabled></td>
-                    </tr>
-                `;
-            };
-
-            //Loader
-            $('.osc').fadeOut();
-            $('#loader').fadeOut();
-        });
+                //Loader
+                $('.osc').fadeOut();
+                $('#loader').fadeOut();
+            });
         }
     });
 
