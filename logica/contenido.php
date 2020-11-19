@@ -833,7 +833,7 @@
         $codEmbarque = $_GET['codEmbarque'];
         $listaCajas = buscarregistro($codEmbarque, 'FKCod_TblEmbarque', 'TblDet_TblEmbarque', 'FKIbm_TblFincas = (SELECT PKIbm FROM tblfincas LIMIT 1);');
         $result = [ 'infoCajas' => [], 'estimativo' => [] ];
-        foreach ($listaCajas as $index => $lc) {
+        foreach ($listaCajas as $lc) {
             $infoCaja = buscarcaja($lc->FKCodigo_TblCajasProduccion);
             $infoCaja->Programacion = buscarprogramacion($lc->FKCodigo_TblCajasProduccion, $codEmbarque);
             array_push($result['infoCajas'], $infoCaja);
@@ -893,6 +893,19 @@
         $value = ($_POST['value'] == 1 ? 2 : 1);
         $result = changestatussuser($idUser, $value);
         echo $result;
+    }
+
+    //
+    function nueva_caja_select() {
+        $codEmbarque = $_POST['codEmbarque'];
+        $codigoCajas = json_decode($_POST['codigoCajas']);
+        $result = [];
+        foreach ($codigoCajas as $cc) {
+            $infoCaja = buscarcaja($cc);
+            $infoCaja->Programacion = buscarprogramacion($cc, $codEmbarque);
+            array_push($result, $infoCaja);
+        }
+        echo json_encode($result);
     }
 
 //  ELIMINAR ==================================================================================================================
@@ -1134,6 +1147,10 @@
                 
             case 'change_status_user':
                 change_status_user();
+                break;  
+
+            case 'nueva_caja_select':
+                nueva_caja_select();
                 break;
             
     //Métodos de eliminar
@@ -1159,7 +1176,7 @@
 
     // Defecto
 
-            // Método de asignación de ibmFinca
+            // Método de asignación de ibmFinca only user admin
             case 'assign_ibmfinca':
                 $_SESSION['conectado']->PKIbm = $_GET['ibmFinca'];
                 echo $_SESSION['conectado']->PKIbm;

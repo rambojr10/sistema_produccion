@@ -223,7 +223,7 @@
 
                 let totalCajas = 0;
                 infoCajas.Programacion.forEach(element => {
-                    totalCajas += (element.Cantidad*1)
+                    totalCajas += parseInt(element.Cantidad == null ? 0 : element.Cantidad);
                 });
                 // ic -> InputCajas se usa como identificador para obtener sus valores
                 tablaBody.innerHTML += `
@@ -280,6 +280,11 @@
     //Guardar selección de cajas, crea embarque
     $(document).on("click", "#btnGuardar-sc", function (e) {
         e.preventDefault();
+
+        //loader 
+        $('.osc').fadeIn();
+        $('#loader').fadeIn();
+
         $("#alineacion-pe").prop("hidden", false);
         $("#estimativo-pe").prop("hidden", false);
         $("#opciones-pe").prop("hidden", false);
@@ -313,6 +318,9 @@
         })
         .then(datosTablas => {
             generar_tablas_pe(datosTablas);
+            //loader 
+            $('.osc').fadeOut();
+            $('#loader').fadeOut();
         });
     });
 
@@ -448,7 +456,6 @@
                             throw "No se ha podido guardar los datos";
                     })
                     .then(res => {
-                        console.log(res)
                         if (res == true) {
                             // Loader
                             $(".osc").fadeOut();
@@ -629,6 +636,109 @@
             totalEstimativoPremiun += parseInt(element.value === '' ? '0' : element.value);
         });
         $('#t_premiun').html(r => totalEstimativoPremiun);
+    });
+
+    //
+    $(document).on('change', '#select-sc-pe', function() {
+        //Loader
+        $('.osc').fadeIn();
+        $('#loader').fadeIn();
+
+        const op = new FormData();
+        op.append('op', 'nueva_caja_select');
+        op.append('codEmbarque', $('#cod_embarque-pe').data('codEmbarque'));
+        op.append('codigoCajas', JSON.stringify($(this).val()));
+        fetch('../logica/contenido.php', {
+            method: 'POST',
+            body: op
+        })
+        .then(response => {
+            if (response.ok)
+                return response.json();
+            else
+                throw "No se ha podido completar la petición PE";
+        })
+        .then(res => {
+            let tablaBody = document.querySelector("#data_cajas_pe"); 
+            tablaBody.innerHTML = "";
+            let x = 0;
+            for (const infoCajas of res) {
+                let tipoFruta;
+                switch (infoCajas.FKId_TblTipoFruta) { 
+                    case "1":
+                        tipoFruta = "yellow";
+                        break;
+                    case "2":
+                        tipoFruta = "green";
+                        break;
+                    case "3":
+                        tipoFruta = "gray";
+                        break;
+                    case "4":
+                        tipoFruta = "gray";
+                        break;
+                    case "5":
+                        tipoFruta = "gray";
+                        break;
+                    case "6":
+                        tipoFruta = "blue";
+                        break;
+                
+                    default:
+                        break;
+                }
+
+                let totalCajas = 0;
+                infoCajas.Programacion.forEach(element => {
+                    console.log(element.Cantidad)
+                    totalCajas += parseInt(element.Cantidad == null ? 0 : element.Cantidad);
+                });
+                // ic -> InputCajas se usa como identificador para obtener sus valores
+                tablaBody.innerHTML += `
+                    <tr>
+                        <td>${x+=1}</td>
+                        <td idTd="datos"><span class="ui ${tipoFruta} label" title="${infoCajas.Descripcion}">${infoCajas.PKCodigo}</span></td>
+                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_zz" style="width:80px" value="${
+                            infoCajas.Programacion.length > 0 ? 
+                                (infoCajas.Programacion[0].Cantidad === null ? '' : infoCajas.Programacion[0].Cantidad) 
+                                : ''
+                        }"></td>
+                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_gm" style="width:80px" value="${
+                            infoCajas.Programacion.length > 0 ? 
+                                (infoCajas.Programacion[1].Cantidad === null ? '' : infoCajas.Programacion[1].Cantidad) 
+                                : ''
+                        }"></td>
+                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_tw" style="width:80px" value="${
+                            infoCajas.Programacion.length > 0 ? 
+                                (infoCajas.Programacion[2].Cantidad === null ? '' : infoCajas.Programacion[2].Cantidad) 
+                                : ''
+                        }"></td>
+                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_cn" style="width:80px" value="${
+                            infoCajas.Programacion.length > 0 ? 
+                                (infoCajas.Programacion[3].Cantidad === null ? '' : infoCajas.Programacion[3].Cantidad) 
+                                : ''
+                        }"></td>
+                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_al" style="width:80px" value="${
+                            infoCajas.Programacion.length > 0 ? 
+                                (infoCajas.Programacion[4].Cantidad === null ? '' : infoCajas.Programacion[4].Cantidad) 
+                                : ''
+                        }"></td>
+                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_kl" style="width:80px" value="${
+                            infoCajas.Programacion.length > 0 ? 
+                                (infoCajas.Programacion[5].Cantidad === null ? '' : infoCajas.Programacion[5].Cantidad) 
+                                : ''
+                        }"></td>
+                        <td align="center"><input type="text" class="valida text-center tcj_h" style="width:80px" value="${totalCajas}" disabled></td>
+                        <td align="center"><input type="text" class="valida text-center tcj_pm" style="width:80px" factor_con="${infoCajas.FactorConversion}" value="${totalCajas * infoCajas.FactorConversion}" disabled></td>
+                        <td align="center"><input type="text" class="valida text-center" style="width:80px" value="0" disabled></td>
+                    </tr>
+                `;
+            };
+
+            //Loader
+            $('.osc').fadeOut();
+            $('#loader').fadeOut();
+        });
     });
 
     // Validar datos
