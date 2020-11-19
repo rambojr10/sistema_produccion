@@ -26,6 +26,7 @@
                     throw "No se puede obtener los datos";
             })
             .then(res => {
+                
                 if (res.length > 0) {
                     swal({
                         title: "¡Datos pendientes!",
@@ -53,6 +54,8 @@
     //Mostrar vista con semanas disponibles para programar embarque
     $(document).on("click", "#btnBuscar_pe", function (e) {
         e.preventDefault();
+        limpiar_pantalla_pe();
+        
         $('#semanas_pe').html('');
         let anho_pe = $('#anho_pe').val();
         let anho_posible = new Date();
@@ -567,6 +570,28 @@
         });
     });
 
+    //Limpiar pantalla
+    function limpiar_pantalla_pe() {
+        $('#select-sc-pe').val('');
+
+        let tablaBody = document.querySelector("#data_cajas_pe");
+        tablaBody.innerHTML = "";
+
+        $('#cod_embarque-pe').text('');
+        $('#descripcion_embarque-pe').text('');
+        
+        $('#t_premiun').html('');
+        $('#t_especial').html('');
+
+        [...document.querySelectorAll('.premiun')].forEach(element => {
+            $(element).val('');
+        });
+        [...document.querySelectorAll('.especial')].forEach(element => {
+            $(element).val('');
+        });
+
+        $('#btnCancelar-sc').trigger('click');
+    }
 // COMPLEMENTOS -----------------------------------------------------------------------------------------------
 
     //Quita el select de las cajasproduccion
@@ -640,25 +665,26 @@
 
     //
     $(document).on('change', '#select-sc-pe', function() {
-        //Loader
-        $('.osc').fadeIn();
-        $('#loader').fadeIn();
+        if ($('#cod_embarque-pe').data('codEmbarque') === $('#cod_embarque_pe').text()) {
+            //Loader
+            $('.osc').fadeIn();
+            $('#loader').fadeIn();
 
-        const op = new FormData();
-        op.append('op', 'nueva_caja_select');
-        op.append('codEmbarque', $('#cod_embarque-pe').data('codEmbarque'));
-        op.append('codigoCajas', JSON.stringify($(this).val()));
-        fetch('../logica/contenido.php', {
-            method: 'POST',
-            body: op
-        })
-        .then(response => {
-            if (response.ok)
-                return response.json();
-            else
-                throw "No se ha podido completar la petición PE";
-        })
-        .then(res => {
+            const op = new FormData();
+            op.append('op', 'nueva_caja_select');
+            op.append('codEmbarque', $('#cod_embarque-pe').data('codEmbarque'));
+            op.append('codigoCajas', JSON.stringify($(this).val()));
+            fetch('../logica/contenido.php', {
+                method: 'POST',
+                body: op
+            })
+            .then(response => {
+                if (response.ok)
+                    return response.json();
+                else
+                    throw "No se ha podido completar la petición PE";
+            })
+            .then(res => {
             let tablaBody = document.querySelector("#data_cajas_pe"); 
             tablaBody.innerHTML = "";
             let x = 0;
@@ -739,9 +765,15 @@
             $('.osc').fadeOut();
             $('#loader').fadeOut();
         });
+        }
     });
 
-    // Validar datos
+    //
+    $(document).on('change', '#semanas_pe', function() {
+        limpiar_pantalla_pe();
+    });
+
+    // 
     function validar_datos() {
         let tblAlineacion = $("#t_cj").text(); 
         let tblEstimativoPremiun = $("#t_premiun").text();
