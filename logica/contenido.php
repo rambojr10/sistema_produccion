@@ -4,7 +4,7 @@
     
 //  CREAR ===========================================================================================================
     //
-    function nueva_finca(){
+    function nueva_finca() {
         $datos = array(
             "ibm" => $_GET['data']['ibm'],
             "nombre" => $_GET['data']['nombre'],
@@ -22,7 +22,7 @@
     }
 
     //
-    function nueva_empresa(){
+    function nueva_empresa() {
         $empresa = array(
             'nit' => $_POST['empresa']['nit'],
             'nom' => $_POST['empresa']['nom'],
@@ -34,7 +34,7 @@
     }
 
     // 
-    function guardar_caja(){
+    function guardar_caja() {
         $caja = array(
             'codigo' => $_POST['caja']['codigo'],
             'descripcion' => $_POST['caja']['descripcion'],
@@ -46,7 +46,7 @@
     }
 
     //Crea embarque según datos y consulta cajas para cargar la vista 
-    function crear_embarque(){
+    function crear_embarque() {
         $datos = json_decode($_POST['datos']);
         $result = crearembarque($datos->codEmbarque, $datos->anho, $datos->idSemana);
         $vista = array();
@@ -65,7 +65,7 @@
     }
 
     //generar semanas
-    function anho_nuevo(){
+    function anho_nuevo() {
         $anhos = buscarregistro("SEMANA 52", "N_Semana", "tblsemanas", false);
         $ultimo_anho = end($anhos);
         $verificar_anho = buscarregistro($_POST["anhonuevo"]+1, "Anho_generado", "tblregistrosemanas", false);
@@ -83,17 +83,20 @@
     }
 
     //Guarda la programación y el estimativo de la semana
-    function guardar_programacion(){
+    function guardar_programacion() {
         $result = false;
         $datos = array();
         $datos = json_decode($_POST['jsonProgramacion']);
-        foreach ($datos->cajas as $c){
-            $result = guardarprogramacion($datos->codEmbarque, $c->ibmFinca, $c->codigoCaja, $c->cantidad);
+        $deleteIfExists = eliminar_embarque($datos->codEmbarque);
+        if ($deleteIfExists) {
+            foreach ($datos->cajas as $c){
+                $result = guardarprogramacion($datos->codEmbarque, $c->ibmFinca, $c->codigoCaja, $c->cantidad);
+            }
+            foreach ($datos->estimativo as $e){
+                $result = guardarestimativo($e->finca, $e->premiun, $e->especial, $datos->codEmbarque);
+            }
+            echo $result;
         }
-        foreach ($datos->estimativo as $e){
-            $result = guardarestimativo($e->finca, $e->premiun, $e->especial, $datos->codEmbarque);
-        }
-        echo $result;
     }
 
     // Guarda los datos de la vista insertar produccion llenando todas las tablas 
@@ -287,7 +290,7 @@
     }
 
     //Obtiene los datos de las fincas desde el archivo /datos/statements.php para enviarlos de vuelta al archivo contenido.js
-    function listar_fincas(){
+    function listar_fincas() {
         $fincas = listarfincas();
         foreach ($fincas as $f) {
         echo "<tr>
@@ -319,7 +322,7 @@
     }
 
     //
-    function listar_empresas(){
+    function listar_empresas() {
         $empresas = listarempresas();
         foreach ($empresas as $e) {
         echo "<tr>
@@ -344,7 +347,7 @@
     }
 
     //Busca los datos para cargar el select_rs en la capa web
-    function select_rs(){
+    function select_rs() {
         $select_rs = listarempresas();
         echo "<option value='0'>Seleccione...</option>";
         foreach ($select_rs as $s) {
@@ -353,7 +356,7 @@
     }
 
     //
-    function listar_cajas(){
+    function listar_cajas() {
         $cajas = cajasproduccion();
         foreach ($cajas as $c) {
             echo "<tr>
@@ -378,7 +381,7 @@
     }
 
     //
-    function listar_lotes(){
+    function listar_lotes() {
         $lotes = listarlotes($_POST['ibm_l']);
         foreach ($lotes as $l) {
             echo "
@@ -401,7 +404,7 @@
     }
     
     //Buscar Finca por ibm o por nombre
-    function buscar_finca(){
+    function buscar_finca() {
         if ( isset($_GET['nombreFinca']) ) {
             $finca = buscarregistro($_GET['nombreFinca'], "Nombre", "TblFincas", false)[0];
             echo $finca->PKIbm;
@@ -412,7 +415,7 @@
     }
 
     //Buscar lote por id
-    function buscar_lote(){
+    function buscar_lote() {
         $result = buscarlote($_POST['id_lote']);
         $lote = array(
             'lote' => $result->Lote,
@@ -423,7 +426,7 @@
     }
 
     //Buscar empresa por ibm finca
-    function buscar_empresa(){
+    function buscar_empresa() {
         $result = buscarempresa($_POST['ibm_e']);
         $empresa = array(
             'nit' => $result->PKNit,
@@ -443,7 +446,7 @@
     }
 
     //Buscar empresa por nit para editar
-    function editar_empresa(){
+    function editar_empresa() {
         $result = editarempresa($_POST['nit']);
         $empresa = array(
             'nit' => $result->PKNit,
@@ -455,7 +458,7 @@
     }
 
     //
-    function buscar_caja(){
+    function buscar_caja() {
         $result = buscarcaja($_POST['codigo']);
         $caja = array(
             'codigo' => $result->PKCodigo,
@@ -467,7 +470,7 @@
     }
 
     //
-    function ver_filtrocaja(){
+    function ver_filtrocaja() {
         if (isset($_POST['filtro'])) {
             $filtro = $_POST['filtro'];
             switch ($filtro) {
@@ -590,19 +593,18 @@
     }
 
     //
-    function cargarcajas_select(){
+    function cargarcajas_select() {
         $cajas = cajasproduccion();
         foreach ($cajas as $c) {
             echo "
                 <option value='$c->PKCodigo'>$c->PKCodigo</option>
             ";
         }
-        //aquí mismo cargar cajas en el select de la semana anterior, limpia y llena nuevamente el select con 
-        //las cajas de la semana anterior, 
+        //aquí mismo cargar cajas en el select de la semana anterior y edición de embarque, limpia y llena nuevamente el select
     }
 
     //
-    function tipofruta_select(){
+    function tipofruta_select() {
         $tipofruta = tipofrutaselect();
         //verifica si la petición es editar para enviar los option con el tipo de fruta selected
         if (!isset($_POST['tipofruta_editar'])) {
@@ -653,7 +655,7 @@
     }
 
     // 
-    function cargar_cajas_ip(){
+    function cargar_cajas_ip() {
         $result['cajas'] = cargarcajasip($_POST['cod_embarque'], $_SESSION['conectado']->PKIbm);
         $result['semana'] = semanape($_POST['cod_embarque']);
         echo json_encode($result);
@@ -845,7 +847,7 @@
 //  ACTUALIZAR ==================================================================================================================
     
     //
-    function actualizar_empresa(){
+    function actualizar_empresa() {
         $empresa = array(
             'nit' => $_POST['empresa']['nit'],
             'nom' => $_POST['empresa']['nom'],
@@ -857,7 +859,7 @@
     }
 
     //
-    function actualizar_caja(){
+    function actualizar_caja() {
         $caja = array(
             'codigo_real' => $_POST['caja']['codigo_real'],
             'codigo' => $_POST['caja']['codigo'],
@@ -870,7 +872,7 @@
     }
 
     //
-    function editar_lote(){
+    function editar_lote() {
         $result = editarlote($_POST['id_lote'], $_POST['area_neta'], $_POST['area_bruta']);
         echo $result;
     }
@@ -890,16 +892,32 @@
         $result = changestatussuser($idUser, $value);
         echo $result;
     }
-    
+
 //  ELIMINAR ==================================================================================================================
     //
-    function eliminar(){
+    function eliminar() {
         $key = $_REQUEST['key'];
         $campo = $_REQUEST['campo'];
         $tabla = $_REQUEST['tabla'];
         $eliminar = eliminar_s($key, $campo, $tabla);
         echo $eliminar;
     }   
+
+    //
+    function eliminar_embarque($codEmbarque) {
+        $hasProduccion = buscarregistro($codEmbarque, 'Cod_Embarque', 'TblProduccion', false);
+        $hasDetalleEmbarque = buscarregistro($codEmbarque, 'FKCod_TblEmbarque', 'TblDet_TblEmbarque', false);
+        $hasEstimativo = buscarregistro($codEmbarque, 'FKCod_TblEmbarque', 'TblEstimativo', false);
+        $hasProduccion = count($hasProduccion) > 0 ? false : true;
+        $hasDetalleEmbarque = count($hasDetalleEmbarque) > 0 ? eliminar_s($codEmbarque, 'FKCod_TblEmbarque', 'TblDet_TblEmbarque') : true;
+        $hasEstimativo = count($hasEstimativo) > 0 ? eliminar_s($codEmbarque, 'FKCod_TblEmbarque', 'TblEstimativo') : true;
+        if ($hasProduccion and $hasDetalleEmbarque and $hasEstimativo) {
+            eliminar_s($codEmbarque, 'PKCod', 'TblEmbarque');
+            echo true;
+        } else {
+            echo false;
+        }
+    }
 
     // Elimina toda la producción y sus detalles
     function eliminar_produccion($codEmbarque, $ibmFinca) {
@@ -1130,7 +1148,7 @@
                 break;
 
             case 'eliminarembarque':
-                eliminar();
+                eliminar_embarque($_POST['codEmbarque']);
                 break;
 
             case 'eliminarproduccion':

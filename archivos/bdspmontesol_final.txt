@@ -253,7 +253,7 @@
     		FKCod_TblEmbarque VARCHAR(10) not null, 
     		FKIbm_TblFincas VARCHAR(5) not null,
     		FKCodigo_TblCajasProduccion VARCHAR(5) not null,
-    		Cantidad INT not null,
+    		Cantidad INT,
     		FOREIGN KEY (FKCod_TblEmbarque) REFERENCES tblembarque(PKCod),
     		FOREIGN KEY (FKIbm_TblFincas) REFERENCES tblfincas(PKIbm),
     		FOREIGN KEY (FKCodigo_TblCajasProduccion) REFERENCES tblcajasproduccion(PKCodigo)

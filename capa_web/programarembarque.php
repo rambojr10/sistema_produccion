@@ -95,10 +95,12 @@
         border-radius: 2px;
     }
     
+    input {
+        border-width: 1px;
+    }
 
 </style>
 
- <?php print_r($_GET) ?>
 <!-- Contenedor principal -->
 <div class="container">
 
@@ -219,7 +221,7 @@
                                        <strong class="ui label">Total:</strong>
                                     </div>
                                 </td>
-                                <!-- se usa como identificador la inicial de cada título de fila y las iniciales de la finca en la columna -->
+                                <!-- id_xx se usa como identificador la inicial de cada título de fila y las iniciales de la finca en la columna -->
                                 <td>
                                     <div id="paging" class="text-center">
                                        <label class="ui green label" id="t_zz">0</label> 
@@ -285,49 +287,49 @@
                 </div>
                 <hr>
                 <div class="ui mini form">
-                    <div class="fields" id="estimativoVue">
+                    <div class="fields">
                         <div class="field text-center">
                             <label>ZARZAMORA</label>
-                            <input type="number" class="valida" v-model.number="premiun_zz" id="premiun_zz" placeholder="Premiun">
+                            <input type="number" class="valida premiun" id="premiun_zz" placeholder="Premiun">
                             <hr>
-                            <input type="number" class="valida" v-model.number="especial_zz" id="especial_zz" placeholder="Especial">
+                            <input type="number" class="valida especial" id="especial_zz" placeholder="Especial">
                         </div>
                         <div class="field text-center">
                             <label>GUAIMARAL</label>
-                            <input type="number" class="valida" v-model.number="premiun_gm" id="premiun_gm" placeholder="Premiun">
+                            <input type="number" class="valida premiun" id="premiun_gm" placeholder="Premiun">
                             <hr>
-                            <input type="number" class="valida" v-model.number="especial_gm" id="especial_gm" placeholder="Especial">
+                            <input type="number" class="valida especial" id="especial_gm" placeholder="Especial">
                         </div>
                         <div class="field text-center">
                             <label>TAIWÁN</label>
-                            <input type="number" class="valida" v-model.number="premiun_tw" id="premiun_tw" placeholder="Premiun">
+                            <input type="number" class="valida premiun" id="premiun_tw" placeholder="Premiun">
                             <hr>
-                            <input type="number" class="valida" v-model.number="especial_tw" id="especial_tw" placeholder="Especial">
+                            <input type="number" class="valida especial" id="especial_tw" placeholder="Especial">
                         </div>
                         <div class="field text-center">
                             <label>CANDELARIA</label>
-                            <input type="number" class="valida" v-model.number="premiun_cn" id="premiun_cn" placeholder="Premiun">
+                            <input type="number" class="valida premiun" id="premiun_cn" placeholder="Premiun">
                             <hr>
-                            <input type="number" class="valida" v-model.number="especial_cn" id="especial_cn" placeholder="Especial">
+                            <input type="number" class="valida especial" id="especial_cn" placeholder="Especial">
                         </div>
                         <div class="field text-center">
                             <label>ÁLAMOS</label>
-                            <input type="number" class="valida" v-model.number="premiun_al" id="premiun_al" placeholder="Premiun">
+                            <input type="number" class="valida premiun" id="premiun_al" placeholder="Premiun">
                             <hr>
-                            <input type="number" class="valida" v-model.number="especial_al" id="especial_al" placeholder="Especial">
+                            <input type="number" class="valida especial" id="especial_al" placeholder="Especial">
                         </div>
                         <div class="field text-center">
                             <label>KALAMARÍ</label>
-                            <input type="number" class="valida" v-model.number="premiun_kl" id="premiun_kl" placeholder="Premiun">
+                            <input type="number" class="valida premiun" id="premiun_kl" placeholder="Premiun">
                             <hr>
-                            <input type="number" class="valida" v-model.number="especial_kl" id="especial_kl" placeholder="Especial">
+                            <input type="number" class="valida especial" id="especial_kl" placeholder="Especial">
                         </div>
                         <div class="field text-center">
                             <label>TOTAL</label>
                             <div class="website-traffic-ctn">
-                                <h2><span class="counter" id="t_premiun"> {{ premiun_total() }} </span></h2>
+                                <h2><span class="counter" id="t_premiun">0</span></h2>
                                 <br>
-                                <h2><span class="counter" id="t_especial"> {{ especial_total() }} </span></h2>
+                                <h2><span class="counter" id="t_especial">0</span></h2>
                             </div>
                         </div>
                     </div>
@@ -354,32 +356,6 @@
 
 </div>
 
-    <!-- Método vue -->
-    <script type="text/javascript">
-        $("#semanas_pe").dropdown();
-        new Vue({
-            el: "#estimativoVue",
-            data: {
-                premiun_zz: 0,
-                premiun_gm: 0,
-                premiun_tw: 0,
-                premiun_cn: 0,
-                premiun_al: 0,
-                premiun_kl: 0,
-                especial_zz: 0,
-                especial_gm: 0,
-                especial_tw: 0,
-                especial_cn: 0,
-                especial_al: 0,
-                especial_kl: 0
-            },
-            methods: {
-                premiun_total: function(){
-                    return (new Intl.NumberFormat().format((this.premiun_zz + this.premiun_gm + this.premiun_tw + this.premiun_cn + this.premiun_al + this.premiun_kl)));
-                },
-                especial_total: function(){
-                    return (new Intl.NumberFormat().format((this.especial_zz + this.especial_gm + this.especial_tw + this.especial_cn + this.especial_al + this.especial_kl)));
-                }
-            }
-        });
-    </script>
+<script type="text/javascript">
+    $("#semanas_pe").dropdown();
+</script>

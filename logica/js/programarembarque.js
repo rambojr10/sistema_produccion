@@ -26,9 +26,6 @@
                     throw "No se puede obtener los datos";
             })
             .then(res => {
-
-                console.log('seleccionar', res)
-
                 if (res.length > 0) {
                     swal({
                         title: "¡Datos pendientes!",
@@ -38,16 +35,14 @@
                         confirmButtonText: "Si, cargar!",
                         cancelButtonText: "No, cancelar!",
                         reverseButtons: true
-                    }).then((isConfirm) => {
+                    }).then(isConfirm => {
                         if(isConfirm){
-                            console.log('resExiste', res);
-                            // Ejecutar una función que también se utiliza en seleccionar semana anterior
                             cargar_embarque_pe(codEmbarque, semana_pe, anho_pe);
                         }
                     });
                 } else {
                     $("#seleccion-pe").removeAttr("hidden");
-                    cargar_cajas_pe(false);
+                    cargar_cajas_pe();
                 }
             });
         }else {
@@ -134,7 +129,6 @@
                     throw "No se ha podido cargar los datos SA"
             })
             .then(res => {
-
                 if (res.length == 0) {
                     const op = new FormData();
                     op.append('op', 'cajas_semana_anterior');
@@ -148,7 +142,7 @@
                         if (res.length > 0) {
                             $("#seleccion-pe").removeAttr("hidden");
                             let cajasSemanaAnterior = [];
-                            res.forEach((element) => {
+                            res.forEach(element => {
                                 cajasSemanaAnterior.push(element.PKCodigo)
                             });
                             cargar_cajas_pe(cajasSemanaAnterior);
@@ -167,12 +161,12 @@
 //MOSTRAR DATOS -----------------------------------------------------------------------------------------------    
     
     //Carga las cajas para mostrarlas en el select de programar embarque
-    function cargar_cajas_pe(cajasSemanaAnterior){
+    function cargar_cajas_pe(ifExistsCajas = false){
         fetch('../logica/contenido.php?op=cargarcajas_select')
         .then(response => response.text())
         .then(res => {
             $("#select-sc-pe").html(res);
-            $("#select-sc-pe").val((cajasSemanaAnterior != false ? cajasSemanaAnterior : ''));
+            $("#select-sc-pe").val((ifExistsCajas != false ? ifExistsCajas : ''));
             $("#select-sc-pe").select2();
         });
     }
@@ -189,6 +183,13 @@
             $('#cod_embarque-pe').text(valuesInvoice[0]); //asigna en pantalla el código de embarque
             $('#cod_embarque-pe').data('codEmbarque', valuesInvoice[0]); //guarda el código de embarque
             $('#descripcion_embarque-pe').text(`${valuesInvoice[1]} del ${valuesInvoice[2]}`); //asigna en pantalla la descripcion del embarque
+
+            $("#seleccion-pe").removeAttr("hidden");
+            let existsCodigoCajas = [];
+            datos.infoCajas.forEach(element => {
+                existsCodigoCajas.push(element.PKCodigo);
+            });
+            cargar_cajas_pe(existsCodigoCajas);
 
             let tablaBody = document.querySelector("#data_cajas_pe"); 
             tablaBody.innerHTML = ""; // Limpia el body de la tabla 
@@ -229,20 +230,20 @@
                     <tr>
                         <td>${x+=1}</td>
                         <td idTd="datos"><span class="ui ${tipoFruta} label" title="${infoCajas.Descripcion}">${infoCajas.PKCodigo}</span></td>
-                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_zz" style="width:80px" value="${infoCajas.Programacion[0].Cantidad}"></td>
-                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_gm" style="width:80px" value="${infoCajas.Programacion[1].Cantidad}"></td>
-                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_tw" style="width:80px" value="${infoCajas.Programacion[2].Cantidad}"></td>
-                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_cn" style="width:80px" value="${infoCajas.Programacion[3].Cantidad}"></td>
-                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_al" style="width:80px" value="${infoCajas.Programacion[4].Cantidad}"></td>
-                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_kl" style="width:80px" value="${infoCajas.Programacion[5].Cantidad}"></td>
+                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_zz" style="width:80px" value="${infoCajas.Programacion[0].Cantidad === null ? '' : infoCajas.Programacion[0].Cantidad}"></td>
+                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_gm" style="width:80px" value="${infoCajas.Programacion[1].Cantidad === null ? '' : infoCajas.Programacion[1].Cantidad}"></td>
+                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_tw" style="width:80px" value="${infoCajas.Programacion[2].Cantidad === null ? '' : infoCajas.Programacion[2].Cantidad}"></td>
+                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_cn" style="width:80px" value="${infoCajas.Programacion[3].Cantidad === null ? '' : infoCajas.Programacion[3].Cantidad}"></td>
+                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_al" style="width:80px" value="${infoCajas.Programacion[4].Cantidad === null ? '' : infoCajas.Programacion[4].Cantidad}"></td>
+                        <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_kl" style="width:80px" value="${infoCajas.Programacion[5].Cantidad === null ? '' : infoCajas.Programacion[5].Cantidad}"></td>
                         <td align="center"><input type="text" class="valida text-center tcj_h" style="width:80px" value="${totalCajas}" disabled></td>
                         <td align="center"><input type="text" class="valida text-center tcj_pm" style="width:80px" factor_con="${infoCajas.FactorConversion}" value="${totalCajas * infoCajas.FactorConversion}" disabled></td>
                         <td align="center"><input type="text" class="valida text-center" style="width:80px" value="0" disabled></td>
                     </tr>
                 `; 
             };
-            // fetch(`../capa_web/programarembarque.php?var=${'Esto es una variable desde js'}`)
-        });
+            // es probable que deba meter el tfoot aquí para asignar los datos
+        }); 
     }
 
 // GUARDAR DATOS ----------------------------------------------------------------------------------------------
@@ -287,7 +288,7 @@
     });
 
     //Guardar programación + estimativo
-    $(document).on("click", "#btnGuardar-pe",  () => {
+    $(document).on("click", "#btnGuardar-pe", () => {
         swal({
             title: "Está seguro?",
             text: "¡Se creará permanentemente el embarque!",
@@ -399,8 +400,10 @@
                 });
                 
                 if (validar_datos()) {
+                    //Loader
                     $(".osc").fadeIn();
                     $("#loader").fadeIn();
+                    
                     const op = new FormData();
                     op.append("op", "guardar_programacion");
                     op.append("jsonProgramacion", JSON.stringify(detalles));
@@ -465,18 +468,17 @@
                 default:
                     break;
             }
-
             // ic -> InputCajas se usa como identificador para obtener sus valores
             tablaBody.innerHTML += `
                 <tr>
                     <td>${x+=1}</td>
                     <td idTd="datos"><span class="ui ${tipoFruta} label" title="${dataCajasPe.Descripcion}">${dataCajasPe.PKCodigo}</span></td>
-                    <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_zz" style="width:80px" value="0"></td>
-                    <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_gm" style="width:80px" value="0"></td>
-                    <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_tw" style="width:80px" value="0"></td>
-                    <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_cn" style="width:80px" value="0"></td>
-                    <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_al" style="width:80px" value="0"></td>
-                    <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_kl" style="width:80px" value="0"></td>
+                    <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_zz" style="width:80px"></td>
+                    <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_gm" style="width:80px"></td>
+                    <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_tw" style="width:80px"></td>
+                    <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_cn" style="width:80px"></td>
+                    <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_al" style="width:80px"></td>
+                    <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_kl" style="width:80px"></td>
                     <td align="center"><input type="text" class="valida text-center tcj_h" style="width:80px" value="0" disabled></td>
                     <td align="center"><input type="text" class="valida text-center tcj_pm" style="width:80px" factor_con="${dataCajasPe.FactorConversion}" value="0" disabled></td>
                     <td align="center"><input type="text" class="valida text-center" style="width:80px" value="0" disabled></td>
@@ -499,13 +501,11 @@
             reverseButtons: true
         })
         .then(isConfirm => {
-            if (isConfirm){
+            if (isConfirm) {
                 const op = new FormData();
                 let codEmbarque = $("#cod_embarque-pe").data("codEmbarque")
                 op.append("op", "eliminarembarque");
-                op.append("key", codEmbarque);
-                op.append("tabla", "tblembarque");
-                op.append("campo", "PKCod");
+                op.append("codEmbarque", codEmbarque);
                 fetch("../logica/contenido.php", {
                     method: "POST",
                     body: op
@@ -517,10 +517,14 @@
                         throw "No se ha podido completar la acción";
                 })
                 .then(res => {
+                    console.log(res)
                     if (res == true) {
+                        swal('Programar embarque', `Acción completada, ${codEmbarque} eliminado`, 'success');
                         $("[href='#programarembarque']").trigger("click");
+                    } else {
+                        swal('Programar embarque', `Acción completada, ${codEmbarque} no se ha podido eliminar`, 'error');
                     }
-                })
+                });
             }
         });
     });
@@ -537,14 +541,15 @@
     });
 
     //sumar campos deshabilitados de acuerdo a lo que se va digitando
-    $(document).on("input", ".ic", function() {
+    $(document).on('input', '.ic', function() {
         let campo_cajas = 0;
         for (x=2; x < 8; x++) {
-            campo_cajas += parseInt($(this).parents("tr").find("td").eq(x).find("input[type='text']").val());
+            let cantidadCaja = $(this).parents("tr").find("td").eq(x).find("input[type='text']").val();
+            campo_cajas += parseInt(cantidadCaja === '' ? '0' : cantidadCaja);
         }
-        $(this).parents("tr").find("td").eq(8).find("input[type='text']").val(r => {
-            return campo_cajas;
-        });
+
+        //llena Cajas en columna ------------------------------------------------------------
+        $(this).parents("tr").find("td").eq(8).find("input[type='text']").val(r => campo_cajas);
 
         //llena PRE.20 KLS en columna -------------------------------------------------------
         let factorsito = $(this).parents("tr").find("td").eq(9).find("input[type='text']");
@@ -555,31 +560,44 @@
         //llena el total_cajas en columna
         let total_cajas_h = 0;
         [...document.querySelectorAll(".tcj_h")].forEach( element => {
-            total_cajas_h += parseInt(element.value);
+            total_cajas_h += parseInt(element.value === 'NaN' ? '0' : element.value);
         });
-        $("#t_cj").html(r => {
-            return total_cajas_h;
-        });
+        $("#t_cj").html(r => total_cajas_h);
 
         //llena el total_cajas en columna de PREMIUN 20.KLS
         let total_cajas_pm = 0;
         [...document.querySelectorAll(".tcj_pm")].forEach( element => {
-            total_cajas_pm += parseInt(element.value);
+            total_cajas_pm += parseInt(element.value === 'NaN' ? '0' : element.value);
         });
-        $("#t_pm").html(r => {
-            return total_cajas_pm;
-        });
+        $("#t_pm").html(r => total_cajas_pm);
         //igualar campos totales a cero al cancelar un embarque, e importar el index
 
         //--------------------------------------------
         let ident = $(this).attr("ident");
         let suma_final = 0;
-        $(`[ident='${ident}']`).each(function (){
-            suma_final += parseInt($(this).val());
+        $(`[ident='${ident}']`).each(function() {
+            let value = $(this).val() === '' ? '0' : $(this).val();
+            suma_final += parseInt(value);
         });
-        $(`#${ident}`).html(r => {
-            return suma_final;
+        $(`#${ident}`).html(r => suma_final);
+    });
+
+    //
+    $(document).on('input', '.especial', function() {
+        let totalEstimativoEspecial = 0;
+        [...document.querySelectorAll(".especial")].forEach( element => {
+            totalEstimativoEspecial += parseInt(element.value === '' ? '0' : element.value);
         });
+        $('#t_especial').html(r => totalEstimativoEspecial);
+    });
+
+    //
+    $(document).on('input', '.premiun', function() {
+        let totalEstimativoPremiun = 0;
+        [...document.querySelectorAll(".premiun")].forEach( element => {
+            totalEstimativoPremiun += parseInt(element.value === '' ? '0' : element.value);
+        });
+        $('#t_premiun').html(r => totalEstimativoPremiun);
     });
 
     // Validar datos
@@ -593,3 +611,5 @@
         }
         return retorno;
     }
+
+    

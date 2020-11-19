@@ -77,10 +77,6 @@
     <!-- modernizr JS
 		============================================ -->
     <script src="../assets/js/vendor/modernizr-2.8.3.min.js"></script>
-    <!-- Vue JS
-		============================================ -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
-
     <!-- Handsontable -->
     <link href="../assets/plugins/handsontable/handsontable.full.min.css" rel="stylesheet" media="screen">
     <link href="../assets/plugins/handsontable/pikaday/pikaday.css">
