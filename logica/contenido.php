@@ -87,8 +87,8 @@
         $result = false;
         $datos = array();
         $datos = json_decode($_POST['jsonProgramacion']);
-        $deleteIfExists = eliminar_embarque($datos->codEmbarque);
-        if ($deleteIfExists) {
+        $deleteIfExists = eliminar_embarque($datos->codEmbarque, 'edit');
+        if (!$deleteIfExists) {
             foreach ($datos->cajas as $c){
                 $result = guardarprogramacion($datos->codEmbarque, $c->ibmFinca, $c->codigoCaja, $c->cantidad);
             }
@@ -97,6 +97,8 @@
             }
             echo $result;
         }
+        // elimina el registro al momento de guardar uno nuevo, puedes usar
+        // localstorage para migrar o enviar el estado creando un método de actualización
     }
 
     // Guarda los datos de la vista insertar produccion llenando todas las tablas 
@@ -904,14 +906,14 @@
     }   
 
     //
-    function eliminar_embarque($codEmbarque) {
+    function eliminar_embarque($codEmbarque, $state) {
         $hasProduccion = buscarregistro($codEmbarque, 'Cod_Embarque', 'TblProduccion', false);
         $hasDetalleEmbarque = buscarregistro($codEmbarque, 'FKCod_TblEmbarque', 'TblDet_TblEmbarque', false);
         $hasEstimativo = buscarregistro($codEmbarque, 'FKCod_TblEmbarque', 'TblEstimativo', false);
         $hasProduccion = count($hasProduccion) > 0 ? false : true;
         $hasDetalleEmbarque = count($hasDetalleEmbarque) > 0 ? eliminar_s($codEmbarque, 'FKCod_TblEmbarque', 'TblDet_TblEmbarque') : true;
         $hasEstimativo = count($hasEstimativo) > 0 ? eliminar_s($codEmbarque, 'FKCod_TblEmbarque', 'TblEstimativo') : true;
-        if ($hasProduccion and $hasDetalleEmbarque and $hasEstimativo) {
+        if ($hasProduccion and $hasDetalleEmbarque and $hasEstimativo and $state !== 'edit') {
             eliminar_s($codEmbarque, 'PKCod', 'TblEmbarque');
             echo true;
         } else {
@@ -1148,7 +1150,7 @@
                 break;
 
             case 'eliminarembarque':
-                eliminar_embarque($_POST['codEmbarque']);
+                eliminar_embarque($_POST['codEmbarque'], false);
                 break;
 
             case 'eliminarproduccion':

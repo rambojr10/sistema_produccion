@@ -242,6 +242,35 @@
                     </tr>
                 `; 
             };
+            let totalPremiun = 0;
+            let totalEspecial = 0;
+            datos.estimativo[0].forEach(element => {
+                totalPremiun += parseInt(element.Premiun);
+                totalEspecial += parseInt(element.Especial);
+            });
+            (function(datos) {
+                $("#premiun_zz").val(datos[0].Premiun);
+                $("#especial_zz").val(datos[0].Especial);
+
+                $("#premiun_gm").val(datos[1].Premiun);
+                $("#especial_gm").val(datos[1].Especial);
+
+                $("#premiun_tw").val(datos[2].Premiun);
+                $("#especial_tw").val(datos[2].Especial);
+
+                $("#premiun_cn").val(datos[3].Premiun);
+                $("#especial_cn").val(datos[3].Especial);
+
+                $("#premiun_al").val(datos[4].Premiun);
+                $("#especial_al").val(datos[4].Especial);
+
+                $("#premiun_kl").val(datos[5].Premiun);
+                $("#especial_kl").val(datos[5].Especial);
+                
+                window.t_premiun.textContent = totalPremiun;
+                window.t_especial.textContent = totalEspecial;
+            })(datos.estimativo[0])
+
             // es probable que deba meter el tfoot aquí para asignar los datos
         }); 
     }
@@ -349,7 +378,8 @@
                             if (index === 1) {
                                 codigoCaja = $(this).text();
                             } else {
-                                cantidad = $(this).find("input[type='text']").val();
+                                console.log('valor', $(this).find("input[type='text']").val());
+                                cantidad = ($(this).find("input[type='text']").val() == '' ? null : $(this).find("input[type='text']").val());
                                 let nomFinca = $(this).find("input[type='text']").attr("ident");
                                 //De acuerdo al abreviado de la finca se usa para enviarlo a una función y buscar el ibm
                                 switch (nomFinca) {
@@ -418,6 +448,7 @@
                             throw "No se ha podido guardar los datos";
                     })
                     .then(res => {
+                        console.log(res)
                         if (res == true) {
                             // Loader
                             $(".osc").fadeOut();
@@ -428,7 +459,7 @@
                         }
                     });
                 } else {
-                    swal("Programar embarque", "Por favor complete los datos", "error");
+                    swal('Programar embarque', 'Por favor complete los datos', 'error');
                 }
             }
         })
