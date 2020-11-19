@@ -845,6 +845,39 @@
         echo json_encode($result);
     }
 
+    // retorna los datos a la gráfica principal
+    function datos_flot() {
+        echo json_encode(datosflot());
+    }
+
+    // retorna los dato del home admin
+    function datos_home() {
+        $result = ['cardSemanaRegistrada' => [], 'cardEstimativo' => [], 'cardRechazadas' => [], 'cardComparativa' => [], 'cardProduccion' => []];
+        $fincas = listarfincas();
+        foreach ($fincas as $f) {
+            $item = buscarultimasemana($f->PKIbm);
+            if (count($item) > 0)
+                array_push($result['cardSemanaRegistrada'], $item[0]);
+            else 
+                array_push($result['cardSemanaRegistrada'], $f);
+        }
+
+        $estimativo = buscarultimoestimativo(count($fincas));
+        // $estimativoString = '';
+        $tableHead = '<th>CONCEPTO</th>';
+        $tablePremiun = '<td>PREMIUN</td>';
+        $tableEspecial = '<td>ESPECIAL</td>';
+        foreach ($estimativo as $e) {
+            $tableHead .= "<th>$e->Finca</th>";
+            $tablePremiun .= "<td>$e->Premiun</td>";
+            $tableEspecial .= "<td>$e->Especial</td>";
+        }
+        $result['cardEstimativo']['tableHead'] = $tableHead;
+        $result['cardEstimativo']['tableBody']['premiun'] = $tablePremiun;
+        $result['cardEstimativo']['tableBody']['especial'] = $tableEspecial;
+        echo json_encode($result);
+    }
+
 //  ACTUALIZAR ==================================================================================================================
     
     //
@@ -1125,6 +1158,16 @@
             //
             case 'cargar_programacion':
                 cargar_programacion();
+                break;
+
+            //
+            case 'datos_flot':
+                datos_flot();
+                break;
+
+            //
+            case 'datos_home':
+                datos_home();
                 break;
 
     //Metodos de actualizar

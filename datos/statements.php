@@ -135,11 +135,10 @@
                 }
                 $datos = $bd->prepare("INSERT INTO tblregistrosemanas VALUES (null, :anho)");
                 $datos->bindParam(":anho", $anho, PDO::PARAM_INT);
-                if ($datos->execute()) {
+                if ($datos->execute())
                     return true;
-                } else {
+                else 
                     return false;
-                }
             } else {
                 return false;
             }
@@ -175,11 +174,10 @@
             $datos->bindParam(":premiun", $premiun, PDO::PARAM_INT);
             $datos->bindParam(":especial", $especial, PDO::PARAM_INT);
             $datos->bindParam(":cod_embarque", $cod_embarque, PDO::PARAM_STR);
-            if($datos->execute()) {
+            if($datos->execute())
                 return true;
-            }else {
+            else
                 return false;
-            }
         } catch (Exception $e) {
             echo "Error".$e;
         }
@@ -222,9 +220,9 @@
         }
 
         // Guardar detalle racimos
-        function guardarracimos_detalle($lastIdRacimos, $idTblDias, 
-                                        $racimosCortadosDia, $racimosRechazadosDia, 
-                                        $totalPersonasEmbarque, $totalPersonasOtrasFincas ) {
+        function guardarracimos_detalle(
+            $lastIdRacimos, $idTblDias, $racimosCortadosDia, $racimosRechazadosDia, 
+            $totalPersonasEmbarque, $totalPersonasOtrasFincas ) {
             try {
                 $bd = conectar();
                 $datos = $bd->prepare("
@@ -631,6 +629,7 @@
             AND dem.FKCod_TblEmbarque = :cod_embarque
             AND fi.PKIbm = dem.FKIbm_TblFincas
             AND dem.FKIbm_TblFincas = :ibm_finca
+            AND dem.Cantidad > 0
         ");
         $datos->bindParam(':cod_embarque', $cod_embarque, PDO::PARAM_STR);
         $datos->bindParam(':ibm_finca', $ibm_finca, PDO::PARAM_STR);
@@ -738,6 +737,46 @@
         return $datos->fetchAll();
     }
 
+    //
+    function datosflot() {
+        $bd = conectar();
+        $datos = $bd->prepare("
+            SELECT DISTINCT tblfincas.PKIbm, tblfincas.Nombre, 
+                (SELECT SUM(tblproduccion.Total_CElaboradas) 
+                    FROM tblproduccion 
+                    WHERE tblproduccion.FKIbm_TblFincas = tblfincas.PKIbm)  as totalElaborado
+            FROM tblfincas, tblproduccion
+            WHERE tblfincas.PKIbm = tblproduccion.FKIbm_TblFincas
+        ");
+        $datos->execute();
+        return $datos->fetchAll();
+    }
+
+    //
+    function buscarultimasemana($ibmFinca) {
+        $bd = conectar();
+        $datos = $bd->prepare("
+            SELECT f.PKIbm, f.Nombre, p.FKId_TblSemanas, s.N_Semana
+            FROM tblproduccion as p, tblsemanas as s, tblfincas as f
+            WHERE p.FKIbm_TblFincas = :ibmFinca 
+            AND f.PKIbm = p.FKIbm_TblFincas
+            AND s.PKId = p.FKId_TblSemanas 
+            ORDER BY p.PKId DESC LIMIT 1
+        ");
+        $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
+        $datos->execute();
+        return $datos->fetchAll();
+    }
+
+    //
+    function buscarultimoestimativo($totalFincas) {
+        $bd = conectar();
+        $datos = $bd->prepare("SELECT * FROM TblEstimativo ORDER BY FKCod_TblEmbarque DESC LIMIT :id ");
+        $datos->bindParam(':id', $totalFincas, PDO::PARAM_INT);
+        $datos->execute();
+        return $datos->fetchAll();
+    }
+
 // Sentencias de actualización------------------------------------------------------------------------------------------------------------
 
     //Recibe arreglo de php para actualizar los datos
@@ -760,7 +799,7 @@
     }
 
     //Actualiza con código 
-    function actualizarcaja($caja){
+    function actualizarcaja($caja) {
         try {
             if(eliminar_s($caja['codigo_real'], 'PKCodigo', 'tblcajasproduccion')){
                 $bd = conectar();
@@ -782,11 +821,10 @@
         try {
             $bd = conectar();
             $datos = $bd->prepare("UPDATE tbllotes SET Area_Neta =". $area_neta .", Area_Bruta =". $area_bruta ." WHERE PKId =". $id_lote .";");
-            if ($datos->execute()){
+            if ($datos->execute())
                 return true;
-            }else {
+            else
                 return false;
-            }
         }catch (Exception $e) {
             echo "Error".$e;
         }

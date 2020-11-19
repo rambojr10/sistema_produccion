@@ -693,7 +693,7 @@
 
     //
     $(document).on('change', '#select-sc-pe', function() {
-        if ($('#cod_embarque-pe').data('codEmbarque') === $('#cod_embarque_pe').text()) {
+        if ($('#cod_embarque-pe').data('codEmbarque') === $('#cod_embarque-pe').text()) {
             //Loader
             $('.osc').fadeIn();
             $('#loader').fadeIn();

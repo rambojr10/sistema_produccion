@@ -30,6 +30,9 @@
                 console.log(res);
             });
         }
+
+        // carga las card del home admin
+        cargarHome(hoy.getWeekNumber());
     });
 
 /* Mostrar datos ================================================================================*/ 
@@ -95,6 +98,48 @@
         $(".contenido").hide().show("blind", 1500);
     });
 
+    //
+    function cargarHome(semanaActual) {
+        fetch('../logica/contenido.php?op=datos_home')
+        .then(response => response.json())
+        .then(datos => {
+            console.log(datos);
+            let component = '';
+
+            // cardSemanaRegistrada
+            const cardSemanaRegistrada = document.querySelector('#cardSemanaRegistrada')
+            datos.cardSemanaRegistrada.forEach(element => {
+                let semana = element.N_Semana !== undefined ? element.N_Semana.split(" ") : null;
+                component += `
+                    <tr>
+                        <td>${element.Nombre}</td>
+                        <td class="text-right"><span class="btn-${semanaActual == (semana !== null ? semana[1] : '') ? 'success' : 'danger'}">${(semana !== null ? semana[1] : '')}</span></td>
+                    </tr>
+                `
+            });
+            cardSemanaRegistrada.innerHTML = component += `<tr><td colspan="2"><span class="ui red label">Atrasado</span><span class="ui green label">Al día</span></td></tr>`;
+
+            // cardEstimativo
+            const cardEstimativo = document.querySelector('#cardEstimativo');
+            component = `
+                <thead>
+                    <tr>
+                        ${datos.cardEstimativo.tableHead}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        ${datos.cardEstimativo.tableBody.premiun}
+                    </tr>
+                    <tr>
+                        ${datos.cardEstimativo.tableBody.especial}
+                    </tr>
+                </tbody>
+            `;
+            console.log(component)
+            cardEstimativo.innerHTML = component;
+        });
+    }
 // COMPLEMENTOS --------------------------------------------------------------------------------------------------------
     
     //Valida campos de ingreso de sólo número

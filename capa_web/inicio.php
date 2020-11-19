@@ -281,7 +281,7 @@
                             <div class="visitor-sv-tm-int sm-res-mg-t-30">
                                 <div class="contact-hd mg-bt-ant-inner server-sts-rgt">
                                     <h2>Semana registrada</h2>
-                                    <p>Última semana registrada por cada fincas.</p>
+                                    <p>Última semana registrada por cada finca.</p>
                                 </div>
                                 <div class="search-eg-table">
                                     <table class="table">
@@ -291,36 +291,8 @@
                                                 <th class="text-right">#Semana</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Álamos</td>
-                                                <td class="text-right"><span class="btn-success">50</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Guaimaral</td>
-                                                <td class="text-right"><span class="btn-danger">49</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Taiwán</td>
-                                                <td class="text-right"><span class="btn-danger">49</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Kalamarí</td>
-                                                <td class="text-right"><span class="btn-danger">48</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Zarzamora</td>
-                                                <td class="text-right"><span class="btn-success">51</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="analysis-rd-mg">Candelaria</td>
-                                                <td class="text-right analysis-rd-mg"><span class="btn-success">51</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2">
-                                                    <span class="ui red label">Atrasado</span><span class="ui green label">Al día</span>
-                                                </td>
-                                            </tr>
+                                        <tbody id="cardSemanaRegistrada">
+                                            
                                         </tbody>
                                     </table>
                                 </div>
@@ -333,8 +305,9 @@
                                     <p>Comparativa con el total de producción de las fincas.</p>
                                 </div>
                                 <div class="visitor-st-ch visitor-ov-ct">
-                                    <div id="visit-over-time" class="flot-chart"></div>
-                                    <div class="flc-visits"></div>
+                                    <table class="table table-striped" id="cardEstimativo">
+                                        
+                                    </table>
                                 </div>
                             </div>
                         </div>
