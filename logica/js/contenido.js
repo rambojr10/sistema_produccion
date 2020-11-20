@@ -103,19 +103,19 @@
         fetch('../logica/contenido.php?op=datos_home')
         .then(response => response.json())
         .then(datos => {
-            console.log(datos);
+
             let component = '';
 
             // cardSemanaRegistrada
             const cardSemanaRegistrada = document.querySelector('#cardSemanaRegistrada')
             datos.cardSemanaRegistrada.forEach(element => {
-                let semana = element.N_Semana !== undefined ? element.N_Semana.split(" ") : null;
+                let semana = element.N_Semana ? element.N_Semana.split(" ") : null;
                 component += `
                     <tr>
                         <td>${element.Nombre}</td>
                         <td class="text-right"><span class="btn-${semanaActual == (semana !== null ? semana[1] : '') ? 'success' : 'danger'}">${(semana !== null ? semana[1] : '')}</span></td>
                     </tr>
-                `
+                `;
             });
             cardSemanaRegistrada.innerHTML = component += `<tr><td colspan="2"><span class="ui red label">Atrasado</span><span class="ui green label">Al día</span></td></tr>`;
 
@@ -128,16 +128,49 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    <tr class='warning'>
                         ${datos.cardEstimativo.tableBody.premiun}
                     </tr>
-                    <tr>
+                    <tr class='info'>
                         ${datos.cardEstimativo.tableBody.especial}
                     </tr>
                 </tbody>
+                <tfoot>
+                    <tr class='danger'>
+                        <th>Código:</th>
+                        <th>${datos.cardEstimativo.codEmbarque}</th>
+                    </tr>
+                </tfoot>
             `;
-            console.log(component)
             cardEstimativo.innerHTML = component;
+
+            // Cards Rechazadas y Elaboradas
+            const cardRechazadas = document.querySelector('#cardRechazadas');
+            const cardElaboradas = document.querySelector('#cardElaboradas');
+            let componentRechazadas = '';
+            let componentElaboradas = '';
+            datos.cardRechazadasAndElaboradas.forEach(element => {
+                componentRechazadas += `
+                    <tr>
+                        <td>${element.Nombre}</td>
+                        <td class="text-center">${element.N_Semana ? element.N_Semana : '-'}</td>
+                        <td class="text-right"><span class="btn-${element.Total_CRechazadas > 0 ? 'danger' : 'success'}">${element.Total_CRechazadas ? element.Total_CRechazadas : ''}</span></td>
+                    </tr>
+                `;
+                componentElaboradas += `
+                    <tr>
+                        <td>${element.Nombre}</td>
+                        <td class="text-right">
+                            <h4>${element.Total_CElaboradas ? element.Total_CElaboradas : 0}</h4>
+                        </td>
+                    </tr>
+                `;
+            });
+            cardRechazadas.innerHTML = componentRechazadas;
+            cardElaboradas.innerHTML = componentElaboradas;
+
+            // Card Comparativa
+            const cardComparativa = document.querySelector('#cardComparativa');
         });
     }
 // COMPLEMENTOS --------------------------------------------------------------------------------------------------------

@@ -263,6 +263,8 @@
         <?php if ($_SESSION['conectado']->FKId_TblTipoUsuario == 1) :?>
             <div class="visitor-sv-tm-area">
                 <div class="container">
+
+                    <!-- Flot -->
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="visitor-sv-tm-int">
@@ -277,6 +279,8 @@
                         </div>
                     </div>
                     <div class="row mg-t-30">
+
+                        <!-- Card Semana Registrada -->
                         <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
                             <div class="visitor-sv-tm-int sm-res-mg-t-30">
                                 <div class="contact-hd mg-bt-ant-inner server-sts-rgt">
@@ -298,19 +302,22 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Card Estimativo -->
                         <div class="col-lg-8 col-md-6 col-sm-6 col-xs-12">
-                            <div class="visitor-sv-tm-int sm-res-mg-t-30 tb-res-mg-t-30 tb-res-ds-n dk-res-ds">
+                            <div class="visitor-sv-tm-int sm-res-mg-t-30 tb-res-mg-t-30" style="height: 420px; overflow: auto;">
                                 <div class="contact-hd mg-bt-ant-inner">
-                                    <h2>Producción semanal</h2>
-                                    <p>Comparativa con el total de producción de las fincas.</p>
+                                    <h2>Estimativo</h2>
+                                    <p>Muestra el último estimativo creado para cada finca.</p>
                                 </div>
                                 <div class="visitor-st-ch visitor-ov-ct">
-                                    <table class="table table-striped" id="cardEstimativo">
+                                    <table class="table table-condensed" id="cardEstimativo">
                                         
                                     </table>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -320,6 +327,8 @@
             <div class="search-engine-area mg-t-30">
                 <div class="container">
                     <div class="row">
+
+                        <!-- Card Rechazadas -->
                         <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
                             <div class="search-engine-int">
                                 <div class="contact-hd search-hd-eg">
@@ -331,39 +340,19 @@
                                         <thead>
                                             <tr>
                                                 <th>Finca</th>
-                                                <th class="text-right">Cajas R - Semana</th>
+                                                <th class="text-center">Semana</th>
+                                                <th class="text-right">Cantidad</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Álamos</td>
-                                                <td class="text-right"><span class="btn-danger">120</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Guaimaral</td>
-                                                <td class="text-right"><span class="btn-success">0</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Taiwán</td>
-                                                <td class="text-right"><span class="btn-danger">57</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Kalamarí</td>
-                                                <td class="text-right"><span class="btn-danger">90</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Zarzamora</td>
-                                                <td class="text-right"><span class="btn-danger">156</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="analysis-rd-mg">Candelaria</td>
-                                                <td class="text-right analysis-rd-mg"><span class="btn-success">0</span></td>
-                                            </tr>
+                                        <tbody id="cardRechazadas">
+                                                    
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Card Comparativa -->
                         <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
                             <div class="search-engine-int sm-res-mg-t-30 tb-res-mg-t-30 tb-res-mg-t-0">
                                 <div class="contact-hd search-hd-eg">
@@ -408,8 +397,10 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Card Elaboradas -->
                         <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-                            <div class="search-engine-int sm-res-mg-t-30 tb-res-mg-t-30 tb-res-ds-n dk-res-ds">
+                            <div class="search-engine-int sm-res-mg-t-30 tb-res-mg-t-30">
                                 <div class="contact-hd search-hd-eg">
                                     <h2>Cajas Producidas</h2>
                                     <p>Total de cajas producidas por finca durante la semana.</p>
@@ -419,51 +410,17 @@
                                         <thead>
                                             <tr>
                                                 <th>Fincas</th>
-                                                <th class="text-right">Cajas E - Semana</th>
+                                                <th class="text-right">Cajas Elaboradas</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Álamos</td>
-                                                <td class="text-right">
-                                                    <h4><span class="counter">10,563</span></h4>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Guaimaral</td>
-                                                <td class="text-right">
-                                                    <h4><span class="counter">8,760</span></h4>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Taiwán</td>
-                                                <td class="text-right">
-                                                    <h4><span class="counter">3,490</span></h4>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Kalamarí</td>
-                                                <td class="text-right">
-                                                    <h4><span class="counter">9,789</span></h4>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td>Zarzamora</td>
-                                                <td class="text-right">
-                                                    <h4><span class="counter">12,756</span></h4>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="analysis-rd-mg">Candelaria</td>
-                                                <td class="text-right analysis-rd-mg">
-                                                    <h4><span class="counter">3,650</span></h4>
-                                                </td>
-                                            </tr>
+                                        <tbody id="cardElaboradas">
+                                            
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
                 </div>
             </div>

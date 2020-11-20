@@ -852,18 +852,26 @@
 
     // retorna los dato del home admin
     function datos_home() {
-        $result = ['cardSemanaRegistrada' => [], 'cardEstimativo' => [], 'cardRechazadas' => [], 'cardComparativa' => [], 'cardProduccion' => []];
+        $result = ['cardSemanaRegistrada' => [], 'cardEstimativo' => [], 'cardRechazadasAndElaboradas' => [], 'cardComparativa' => []];
         $fincas = listarfincas();
         foreach ($fincas as $f) {
-            $item = buscarultimasemana($f->PKIbm);
-            if (count($item) > 0)
-                array_push($result['cardSemanaRegistrada'], $item[0]);
+            
+            //cardSemanaRegistrada
+            $itemUltimaSemana = buscarultimasemana($f->PKIbm);
+            if (count($itemUltimaSemana) > 0)
+            array_push($result['cardSemanaRegistrada'], $itemUltimaSemana[0]);
             else 
-                array_push($result['cardSemanaRegistrada'], $f);
+            array_push($result['cardSemanaRegistrada'], $f);
+            
+            //cardRechazadasAndElaboradas
+            $itemUltimaProduccion = buscarultimaproduccion($f->PKIbm);
+            if (count($itemUltimaSemana) > 0)
+                array_push($result['cardRechazadasAndElaboradas'], $itemUltimaProduccion[0]);
+            else 
+                array_push($result['cardRechazadasAndElaboradas'], $f);
         }
 
         $estimativo = buscarultimoestimativo(count($fincas));
-        // $estimativoString = '';
         $tableHead = '<th>CONCEPTO</th>';
         $tablePremiun = '<td>PREMIUN</td>';
         $tableEspecial = '<td>ESPECIAL</td>';
@@ -875,6 +883,9 @@
         $result['cardEstimativo']['tableHead'] = $tableHead;
         $result['cardEstimativo']['tableBody']['premiun'] = $tablePremiun;
         $result['cardEstimativo']['tableBody']['especial'] = $tableEspecial;
+        $result['cardEstimativo']['codEmbarque'] = $estimativo[0]->FKCod_TblEmbarque;
+
+        
         echo json_encode($result);
     }
 
