@@ -405,6 +405,10 @@
             <!-- section of three cards End -->
         <?php endif; ?>
 
+        <?php if ($_SESSION['conectado']->FKId_TblTipoUsuario == 2) :?>
+            <!-- html for the standar user -->
+        <?php endif; ?>
+
     </div>
     <!-- Container initial End-->
 

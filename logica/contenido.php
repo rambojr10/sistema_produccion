@@ -875,6 +875,7 @@
             array_push($result['cardComparativa'], $itemComparativa);
         }
 
+        //cardEstimativo
         $estimativo = buscarultimoestimativo(count($fincas));
         $tableHead = '<th>CONCEPTO</th>';
         $tablePremiun = '<td>PREMIUN</td>';
@@ -888,7 +889,6 @@
         $result['cardEstimativo']['tableBody']['premiun'] = $tablePremiun;
         $result['cardEstimativo']['tableBody']['especial'] = $tableEspecial;
         $result['cardEstimativo']['codEmbarque'] = $estimativo[0]->FKCod_TblEmbarque;
-
         
         echo json_encode($result);
     }
