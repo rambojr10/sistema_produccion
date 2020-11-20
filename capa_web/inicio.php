@@ -364,34 +364,12 @@
                                         <thead>
                                             <tr>
                                                 <th>Finca</th>
+                                                <th class="text-center">Semanas</th>
                                                 <th class="text-right">Diferencia</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>Álamos</td>
-                                                <td class="text-right">1220 <i class="notika-icon notika-up-arrow"></i></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Guaimaral</td>
-                                                <td class="text-right">132 <i class="notika-icon notika-down-arrow"></i></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Taiwán</td>
-                                                <td class="text-right">350 <i class="notika-icon notika-up-arrow"></i></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Kalamarí</td>
-                                                <td class="text-right">298 <i class="notika-icon notika-up-arrow"></i></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Zarzamora</td>
-                                                <td class="text-right">828 <i class="notika-icon notika-down-arrow"></i></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="analysis-rd-mg">Candelaria</td>
-                                                <td class="text-right analysis-rd-mg">212 <i class="notika-icon notika-up-arrow"></i></td>
-                                            </tr>
+                                        <tbody id="cardComparativa">
+                                            
                                         </tbody>
                                     </table>
                                 </div>
@@ -420,7 +398,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                     </div>
                 </div>
             </div>

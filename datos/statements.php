@@ -792,6 +792,22 @@
         $datos->execute();
         return $datos->fetchAll();
     }
+    
+    //
+    function buscarproduccioncomparar($ibmFinca) {
+        $bd = conectar();
+        $datos = $bd->prepare("
+            SELECT p.FKId_TblSemanas, p.Total_CRechazadas, p.Total_CElaboradas, f.Nombre, p.Cod_Embarque, s.N_Semana
+            FROM tblproduccion as p, tblfincas as f, tblsemanas as s
+            WHERE p.FKIbm_TblFincas = f.PKIbm
+            AND p.FKId_TblSemanas = s.PKId
+            AND f.PKIbm = :ibmFinca
+            ORDER BY p.Cod_Embarque DESC LIMIT 2
+        ");
+        $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
+        $datos->execute();
+        return $datos->fetchAll();
+    }
 
 
 // Sentencias de actualización------------------------------------------------------------------------------------------------------------

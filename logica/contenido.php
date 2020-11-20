@@ -859,9 +859,9 @@
             //cardSemanaRegistrada
             $itemUltimaSemana = buscarultimasemana($f->PKIbm);
             if (count($itemUltimaSemana) > 0)
-            array_push($result['cardSemanaRegistrada'], $itemUltimaSemana[0]);
+                array_push($result['cardSemanaRegistrada'], $itemUltimaSemana[0]);
             else 
-            array_push($result['cardSemanaRegistrada'], $f);
+                array_push($result['cardSemanaRegistrada'], $f);
             
             //cardRechazadasAndElaboradas
             $itemUltimaProduccion = buscarultimaproduccion($f->PKIbm);
@@ -869,6 +869,10 @@
                 array_push($result['cardRechazadasAndElaboradas'], $itemUltimaProduccion[0]);
             else 
                 array_push($result['cardRechazadasAndElaboradas'], $f);
+                
+            //cardComparativa
+            $itemComparativa = buscarproduccioncomparar($f->PKIbm);
+            array_push($result['cardComparativa'], $itemComparativa);
         }
 
         $estimativo = buscarultimoestimativo(count($fincas));
