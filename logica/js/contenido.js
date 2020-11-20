@@ -176,7 +176,6 @@
             const cardComparativa = document.querySelector('#cardComparativa');
             component = '';
             datos.cardComparativa.forEach(element => {
-                console.log(element);
                 if (element.length == 1) {
                     component += `
                         <tr>
@@ -186,12 +185,9 @@
                         </tr>
                     `;
                 } else if (element.length == 2) {
-                    console.log(element[0].Total_CElaboradas, element[1].Total_CElaboradas);
                     let valor = parseInt(element[0].Total_CElaboradas) - parseInt(element[1].Total_CElaboradas);
-                    console.log(valor);
                     let semanas = element[0].N_Semana.split(' '); 
                     semanas += element[1].N_Semana.split(' ');
-                    console.log(semanas)
                     component += `
                         <tr>
                             <td>${element[0].Nombre}</td>

@@ -721,14 +721,14 @@
                     caja: 'Ratio 1a. / 2a.',
                     codigo: null,
                     factor: null,
-                    lunes: (existsTblCajas != false ? (existsTblCajas[0].ratio == 0 ? null : existsTblCajas[0].ratio) : null),
-                    martes: (existsTblCajas != false ? (existsTblCajas[1].ratio == 0 ? null : existsTblCajas[1].ratio) : null),
-                    miercoles: (existsTblCajas != false ? (existsTblCajas[2].ratio == 0 ? null : existsTblCajas[2].ratio) : null),
-                    jueves: (existsTblCajas != false ? (existsTblCajas[3].ratio == 0 ? null : existsTblCajas[3].ratio) : null),
-                    viernes: (existsTblCajas != false ? (existsTblCajas[4].ratio == 0 ? null : existsTblCajas[4].ratio) : null),
-                    sabado: (existsTblCajas != false ? (existsTblCajas[5].ratio == 0 ? null : existsTblCajas[5].ratio) : null),
-                    domingo: (existsTblCajas != false ? (existsTblCajas[6].ratio == 0 ? null : existsTblCajas[6].ratio) : null),
-                    total: `=ROUND(AVERAGE(D${tblCajas_data.length+4}:J${tblCajas_data.length+4}), 2)`,
+                    lunes: (existsTblCajas != false ? (existsTblCajas[0].ratio == 0 ? '' : existsTblCajas[0].ratio) : ''),
+                    martes: (existsTblCajas != false ? (existsTblCajas[1].ratio == 0 ? '' : existsTblCajas[1].ratio) : ''),
+                    miercoles: (existsTblCajas != false ? (existsTblCajas[2].ratio == 0 ? '' : existsTblCajas[2].ratio) : ''),
+                    jueves: (existsTblCajas != false ? (existsTblCajas[3].ratio == 0 ? '' : existsTblCajas[3].ratio) : ''),
+                    viernes: (existsTblCajas != false ? (existsTblCajas[4].ratio == 0 ? '' : existsTblCajas[4].ratio) : ''),
+                    sabado: (existsTblCajas != false ? (existsTblCajas[5].ratio == 0 ? '' : existsTblCajas[5].ratio) : ''),
+                    domingo: (existsTblCajas != false ? (existsTblCajas[6].ratio == 0 ? '' : existsTblCajas[6].ratio) : ''),
+                    total: null,
                     conversion: null
                 }, {
                     caja: '% Merma',
@@ -741,7 +741,7 @@
                     viernes: (existsTblCajas != false ? (existsTblCajas[4].merma == 0 ? null : existsTblCajas[4].merma) : null),
                     sabado: (existsTblCajas != false ? (existsTblCajas[5].merma == 0 ? null : existsTblCajas[5].merma) : null),
                     domingo: (existsTblCajas != false ? (existsTblCajas[6].merma == 0 ? null : existsTblCajas[6].merma) : null),
-                    total: `=ROUND(AVERAGE(D${tblCajas_data.length+5}:J${tblCajas_data.length+5}), 2)`,
+                    total: null,
                     conversion: null
                 }, {
                     caja: 'Peso Racimos',
@@ -754,7 +754,7 @@
                     viernes: (existsTblCajas != false ? (existsTblCajas[4].pesoRacimos == 0 ? null : existsTblCajas[4].pesoRacimos) : null),
                     sabado: (existsTblCajas != false ? (existsTblCajas[5].pesoRacimos == 0 ? null : existsTblCajas[5].pesoRacimos) : null),
                     domingo: (existsTblCajas != false ? (existsTblCajas[6].pesoRacimos == 0 ? null : existsTblCajas[6].pesoRacimos) : null),
-                    total: `=ROUND(AVERAGE(D${tblCajas_data.length+6}:J${tblCajas_data.length+6}), 2)`,
+                    total: null,
                 }, {
                     caja: 'Area Recorrida',
                     codigo: null,
@@ -779,7 +779,7 @@
                     viernes: (existsTblCajas != false ? (existsTblCajas[4].pesoVastago == 0 ? null : existsTblCajas[4].pesoVastago) : null),
                     sabado: (existsTblCajas != false ? (existsTblCajas[5].pesoVastago == 0 ? null : existsTblCajas[5].pesoVastago) : null),
                     domingo: (existsTblCajas != false ? (existsTblCajas[6].pesoVastago == 0 ? null : existsTblCajas[6].pesoVastago) : null),
-                    total: `=ROUND(AVERAGE(D${tblCajas_data.length+8}:J${tblCajas_data.length+8}), 2)`,
+                    total: null,
                     conversion: null
                 }, {
                     caja: 'Lotes CORTADOS',
@@ -983,8 +983,47 @@
                 ]
             };
             hot2 = new Handsontable(tblCajas, tblSettings_cajas);
-            // hot2.setDataAtCell(length-5, 10, `=ROUND(AVERAGE(D${length-4}:J${length-4}), 2)`);
-            // setTimeout(() => {hot3.render(); alert("renderizar");}, 1000);
+
+            function averageFunction(values) {
+                let average = 0;
+                let sum = 0;
+                let countElements = 0;
+                for (let x = 0; x < values.length; x++) {
+                    if (values[x] > 0) {
+                        sum += values[x];
+                        countElements++;
+                    }
+                }
+                average = sum > 0 ? sum/countElements : 0;
+                console.log(average)
+                return average.toFixed(2);
+            }
+          
+            let row;
+            function getDataForTotals(row_index) { 
+                row = hot2.getDataAtRow(row_index);
+                return row.slice(3,10);
+            }
+          
+            hot2.setDataAtCell(length-7, 10, averageFunction(getDataForTotals(length-7)), 'runningMyCalc');
+            hot2.setDataAtCell(length-6, 10, averageFunction(getDataForTotals(length-6)), 'runningMyCalc');
+            hot2.setDataAtCell(length-5, 10, averageFunction(getDataForTotals(length-5)), 'runningMyCalc');
+            hot2.setDataAtCell(length-3, 10, averageFunction(getDataForTotals(length-3)), 'runningMyCalc');
+          
+            hot2.addHook('afterChange', function(changes, source) {
+                if (source !== 'runningMyCalc') {
+                    let rowChanged = changes[0][0];
+                    if (rowChanged === length-7) {
+                        hot2.setDataAtCell(length-7, 10, averageFunction(getDataForTotals(length-7)), 'runningMyCalc');
+                    } else if (rowChanged === length-6) {
+                        hot2.setDataAtCell(length-6, 10, averageFunction(getDataForTotals(length-6)), 'runningMyCalc');
+                    } else if (rowChanged === length-5) {
+                        hot2.setDataAtCell(length-5, 10, averageFunction(getDataForTotals(length-5)), 'runningMyCalc');
+                    } else if (rowChanged === length-3) {
+                        hot2.setDataAtCell(length-3, 10, averageFunction(getDataForTotals(length-3)), 'runningMyCalc');
+                    }
+                }
+            })
         });
     }
 
