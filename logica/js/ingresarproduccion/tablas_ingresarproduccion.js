@@ -1017,8 +1017,9 @@
                 let sum = 0;
                 let countElements = 0;
                 for (let x = 0; x < values.length; x++) {
-                    if (values[x] > 0) {
-                        sum += parseFloat(values[x]);
+                    let valor = parseFloat(values[x]);
+                    if (valor > 0) {
+                        sum += valor;
                         countElements++;
                     }
                 }
