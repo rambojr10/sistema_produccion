@@ -1018,11 +1018,16 @@
                 let countElements = 0;
                 for (let x = 0; x < values.length; x++) {
                     if (values[x] > 0) {
+<<<<<<< HEAD
                         sum += parseFloat(values[x]);
+=======
+                        sum += values[x];
+>>>>>>> 5dc1741811a7ae2264760d82dbfe1b9df14e6192
                         countElements++;
                     }
                 }
                 average = sum > 0 ? sum/countElements : 0;
+<<<<<<< HEAD
                 return average.toFixed(2);
             }
 
@@ -1031,6 +1036,18 @@
                 return row.slice(3,10);
             }
 
+=======
+                console.log(average)
+                return average.toFixed(2);
+            }
+          
+            let row;
+            function getDataForTotals(row_index) { 
+                row = hot2.getDataAtRow(row_index);
+                return row.slice(3,10);
+            }
+          
+>>>>>>> 5dc1741811a7ae2264760d82dbfe1b9df14e6192
             hot2.setDataAtCell(length-7, 10, averageFunction(getDataForTotals(length-7)), 'runningMyCalc');
             hot2.setDataAtCell(length-6, 10, averageFunction(getDataForTotals(length-6)), 'runningMyCalc');
             hot2.setDataAtCell(length-5, 10, averageFunction(getDataForTotals(length-5)), 'runningMyCalc');
