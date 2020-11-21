@@ -893,6 +893,14 @@
         echo json_encode($result);
     }
 
+    //
+    function buscar_semana_verificar() {
+        $idSemana = $_POST['idSemana'];
+        $semana = buscarregistro($idSemana, 'PKId', 'tblsemanas', false)[0];
+        $result = ['Semana' => $semana, 'Privileges' => $_SESSION['conectado']->FKId_TblTipoUsuario];
+        echo json_encode($result);
+    }
+
 //  ACTUALIZAR ==================================================================================================================
     
     //
@@ -1185,6 +1193,11 @@
                 datos_home();
                 break;
 
+            // Busca semana
+            case 'buscar_semana_verificar':
+                buscar_semana_verificar();
+                break;
+                
     //Metodos de actualizar
             case 'actualizarempresa':
                 actualizar_empresa();

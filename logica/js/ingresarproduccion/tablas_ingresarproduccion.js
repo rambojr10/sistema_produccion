@@ -4,7 +4,6 @@
     var hot3; // tblNacional 
     var hot4; // tblCargue
     const cod_embarque = $("#cod_embarque_ip").text();
-    
 
 // Renderers Here ----------------------------------------------------------------------------------------------------------------------------------------
         
@@ -192,137 +191,149 @@
 // Cinta de opciones ------------------------------------------------------------------------------------------------------------
 
     //Guardar datos de las tablas 
-    $(document).on('click', '#btnGuardar_ip', function () {
-        swal({
-            title: "¡Guardar producción!",
-            text: "¿Desea guardar los datos de producción?",
-            type: "info",
-            showCancelButton: true,
-            confirmButtonText: "Si, guardar!",
-            cancelButtonText: "No, cancelar!"
-        }).then(function(isConfirm) {
-            if(isConfirm){
-                let jsonProduccion = {
-                    cod_embarque: cod_embarque,
-                    embolse: {
-                        id_semana: $("#cod_embarque_ip").data('idSemana_ip'),
-                        id_cinta: $("#cod_embarque_ip").data('idCinta_ip'),
-                        presente: $("#txtPresente_ip").val(),
-                        prematuro: $("#txtPrematuro_ip").val()
-                    },
-                    tblRacimos: hot1.getData(),
-                    tblCajas: hot2.getData(),
-                    tblNacional: hot3.getData(),
-                    tblCargue: hot4.getData()
-                };
-                // Loader
-                $(".osc").fadeIn();
-                $("#loader").fadeIn();
-                const op = new FormData();
-                op.append('op', 'guardarProduccion');
-                op.append('datosProduccionGuardar', JSON.stringify(jsonProduccion));
-                fetch('../logica/contenido.php', {
-                    method: 'POST',
-                    body: op
-                })
-                .then(response => {
-                    if (response.ok)
-                        return response.text();
-                    else
-                        throw "No se ha podido guardar los datos correctamente IP";
-                })
-                .then(res => {
+    $(document).on('click', '#btnGuardar_ip', async () => {
+        let idSemana = $("#cod_embarque_ip").data('idSemana_ip');
+        const objectSemana = await getStatus(idSemana);
+        if (objectSemana.status === 'edit' || objectSemana.privileges === '1') {
+            swal({
+                title: "¡Guardar producción!",
+                text: "¿Desea guardar los datos de producción?",
+                type: "info",
+                showCancelButton: true,
+                confirmButtonText: "Si, guardar!",
+                cancelButtonText: "No, cancelar!"
+            }).then(function(isConfirm) {
+                if(isConfirm){
+                    let jsonProduccion = {
+                        cod_embarque: cod_embarque,
+                        embolse: {
+                            id_semana: $("#cod_embarque_ip").data('idSemana_ip'),
+                            id_cinta: $("#cod_embarque_ip").data('idCinta_ip'),
+                            presente: $("#txtPresente_ip").val(),
+                            prematuro: $("#txtPrematuro_ip").val()
+                        },
+                        tblRacimos: hot1.getData(),
+                        tblCajas: hot2.getData(),
+                        tblNacional: hot3.getData(),
+                        tblCargue: hot4.getData()
+                    };
+                    // Loader
+                    $(".osc").fadeIn();
+                    $("#loader").fadeIn();
+                    const op = new FormData();
+                    op.append('op', 'guardarProduccion');
+                    op.append('datosProduccionGuardar', JSON.stringify(jsonProduccion));
+                    fetch('../logica/contenido.php', {
+                        method: 'POST',
+                        body: op
+                    })
+                    .then(response => {
+                        if (response.ok)
+                            return response.text();
+                        else
+                            throw "No se ha podido guardar los datos correctamente IP";
+                    })
+                    .then(res => {
 
-                    $(".osc").fadeOut();
-                    $("#loader").fadeOut();
-                    if (res == 20) { // response 20 is a code for save data
-                        $.notify({
-                            icon: 'fa fa-check-circle',
-                            message: 'Datos <strong>GUARDADOS</strong> correctamente.',
-                            title: '<strong>Producción: </strong>'
-                        }, {
-                            type: 'success'
-                        });
-                    } else if (res == 21) { //response 21 is a code for update data
-                        $.notify({
-                            icon: 'fa fa-info-circle',
-                            message: 'Datos <strong>ACTUALIZADOS</strong> correctamente.',
-                            title: '<strong>Producción: </strong>'
-                        }, {
-                            type: 'info'
-                        });
-                    } else if (res == 22) { //response 22 is a error code for limit of elaboration
-                        setTimeout(func => {swal('Guardar producción', '¡Los datos superan el límite de elaboración!', 'error')}, 1000);
-                    } else {
-                        $.notify({
-                            icon: 'fa fa-times-circle',
-                            message: 'Ha ocurrido un error, verifica los datos.',
-                            title: '<strong>Producción: </strong>'
-                        }, {
-                            type: 'danger'
-                        });
-                    }
-                });
-            }
-        });
+                        $(".osc").fadeOut();
+                        $("#loader").fadeOut();
+                        if (res == 20) { // response 20 is a code for save data
+                            $.notify({
+                                icon: 'fa fa-check-circle',
+                                message: 'Datos <strong>GUARDADOS</strong> correctamente.',
+                                title: '<strong>Producción: </strong>'
+                            }, {
+                                type: 'success'
+                            });
+                        } else if (res == 21) { //response 21 is a code for update data
+                            $.notify({
+                                icon: 'fa fa-info-circle',
+                                message: 'Datos <strong>ACTUALIZADOS</strong> correctamente.',
+                                title: '<strong>Producción: </strong>'
+                            }, {
+                                type: 'info'
+                            });
+                        } else if (res == 22) { //response 22 is a error code for limit of elaboration
+                            setTimeout(func => {swal('Guardar producción', '¡Los datos superan el límite de elaboración!', 'error')}, 1000);
+                        } else {
+                            $.notify({
+                                icon: 'fa fa-times-circle',
+                                message: 'Ha ocurrido un error, verifica los datos.',
+                                title: '<strong>Producción: </strong>'
+                            }, {
+                                type: 'danger'
+                            });
+                        }
+                    });
+                }
+            });
+        } else {
+            swal('Ingresar producción', 'Fecha límite de modificación superada', 'error');
+        }
     });
-
+    
     //Elimina los datos de una producción
-    $(document).on('click', '#btnEliminar_ip', () => {
-        swal({
-            title: '¡Eliminar producción!',
-            text: '¿Desea eliminar los datos?, no podrá recuperarlos más tarde.',
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Estoy seguro!',
-            cancelButtonText: 'No, cancelar!'
-        }).then((isConfirm) => {
-            if (isConfirm) {
-                //Loader
-                $('.osc').fadeIn();
-                $('#loader').fadeIn();
+    $(document).on('click', '#btnEliminar_ip', async () => {
+        let idSemana = $('#cod_embarque_ip').data('idSemana_ip');
+        const objectSemana = await getStatus(idSemana);
+        if (objectSemana.status === 'edit' || objectSemana.privileges === '1') {
+            swal({
+                title: '¡Eliminar producción!',
+                text: '¿Desea eliminar los datos?, no podrá recuperarlos más tarde.',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Estoy seguro!',
+                cancelButtonText: 'No, cancelar!'
+            }).then((isConfirm) => {
+                if (isConfirm) {
+                    //Loader
+                    $('.osc').fadeIn();
+                    $('#loader').fadeIn();
 
-                const op = new FormData();
-                op.append('op', 'eliminarproduccion');
-                op.append('codEmbarque', cod_embarque);
-                fetch('../logica/contenido.php', {
-                    method: 'POST',
-                    body: op
-                })
-                .then(response => {
-                    if (response.ok)
-                        return response.text()
-                    else
-                        throw "No es posible realizar esta acción"
-                })
-                .then(res => {
-                    if (res == true) {
-                        //Loader
-                        $('.osc').fadeOut();
-                        $('#loader').fadeOut();
-                        $.notify({
-                            icon: 'fa fa-check',
-                            message: 'Datos <strong>ELIMINADOS</strong> correctamente.',
-                            title: '<strong>Producción: </strong>'
-                        }, {
-                            type: 'warning'
-                        });
-                        $("a[href='#ingresarproduccion']").trigger('click');
-                    } else if (res == false) {
-                        // Loader
-                        $('.osc').fadeOut();
-                        $('#loader').fadeOut();
-                        $.notify({
-                            icon: 'fa fa-times',
-                            message: 'Acción inválida.',
-                            title: '<strong>Producción: </strong>'
-                        }, {
-                            type: 'danger'
-                        });
-                    }
-                });
-            }
-        })
+                    const op = new FormData();
+                    op.append('op', 'eliminarproduccion');
+                    op.append('codEmbarque', cod_embarque);
+                    fetch('../logica/contenido.php', {
+                        method: 'POST',
+                        body: op
+                    })
+                    .then(response => {
+                        if (response.ok)
+                            return response.text()
+                        else
+                            throw "No es posible realizar esta acción"
+                    })
+                    .then(res => {
+                        if (res == true) {
+                            //Loader
+                            $('.osc').fadeOut();
+                            $('#loader').fadeOut();
+                            $.notify({
+                                icon: 'fa fa-check',
+                                message: 'Datos <strong>ELIMINADOS</strong> correctamente.',
+                                title: '<strong>Producción: </strong>'
+                            }, {
+                                type: 'warning'
+                            });
+                            $("a[href='#ingresarproduccion']").trigger('click');
+                        } else if (res == false) {
+                            // Loader
+                            $('.osc').fadeOut();
+                            $('#loader').fadeOut();
+                            $.notify({
+                                icon: 'fa fa-times',
+                                message: 'Acción inválida.',
+                                title: '<strong>Producción: </strong>'
+                            }, {
+                                type: 'danger'
+                            });
+                        }
+                    });
+                }
+            })
+        } else {
+            swal('Ingresar producción', 'Fecha límite de modificación superada', 'error');
+        }
     });
 
     //Ver alineación: || muestra el modal desde el evento del botón || - sólo es informativo
@@ -393,6 +404,23 @@
             console.log('undefined');
         }
     });
+
+    //
+    async function getStatus(idSemana) {
+        const objectDate = new Date();
+        const hoy = new Date( (`${objectDate.getMonth()+1}/${objectDate.getDate()}/${objectDate.getFullYear()}`) );
+        const fechaActual = `${hoy.getFullYear()}-${hoy.getMonth()+1}-${hoy.getDate()}`;
+        const op = new FormData();
+        op.append('op', 'buscar_semana_verificar');
+        op.append('idSemana', idSemana);
+        const peticion = await fetch('../logica/contenido.php', {method: 'POST', body: op});
+        const response = await peticion.json();
+        let result = {
+            'status': Date.parse(response.Semana.Fecha_Fin) > Date.parse(fechaActual) ? 'edit' : 'noEdit',
+            'privileges': response.Privileges
+        }
+        return result;
+    }
 
 // Tabla racimos ----------------------------------------------------------------------------------------------------------
 
