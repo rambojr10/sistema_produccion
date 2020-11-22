@@ -1031,7 +1031,13 @@
                 let row = hot2.getDataAtRow(row_index);
                 return row.slice(3,10);
             }
-
+          
+            let row;
+            function getDataForTotals(row_index) { 
+                row = hot2.getDataAtRow(row_index);
+                return row.slice(3,10);
+            }
+            
             hot2.setDataAtCell(length-7, 10, averageFunction(getDataForTotals(length-7)), 'runningMyCalc');
             hot2.setDataAtCell(length-6, 10, averageFunction(getDataForTotals(length-6)), 'runningMyCalc');
             hot2.setDataAtCell(length-5, 10, averageFunction(getDataForTotals(length-5)), 'runningMyCalc');
