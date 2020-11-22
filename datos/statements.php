@@ -782,7 +782,7 @@
     function buscarultimaproduccion($ibmFinca) {
         $bd = conectar();
         $datos = $bd->prepare("
-            SELECT p.FKId_TblSemanas, p.Total_CRechazadas, p.Total_CElaboradas, f.Nombre, p.Cod_Embarque, s.N_Semana
+            SELECT *
             FROM tblproduccion as p, tblfincas as f, tblsemanas as s
             WHERE p.FKIbm_TblFincas = f.PKIbm
             AND p.FKId_TblSemanas = s.PKId
@@ -806,6 +806,86 @@
             ORDER BY p.Cod_Embarque DESC LIMIT 2
         ");
         $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
+        $datos->execute();
+        return $datos->fetchAll();
+    }
+
+    //
+    function totalelaboradofinca($ibmFinca) {
+        $bd = conectar();
+        $datos = $bd->prepare("
+            SELECT SUM(p.Total_CElaboradas) as totalElaborado, SUM(p.Total_CRechazadas) as totalRechazadas 
+            FROM tblproduccion as p, tblfincas WHERE p.FKIbm_TblFincas = tblfincas.PKIbm 
+            AND tblfincas.PKIbm = :ibmFinca
+        ");
+        $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
+        $datos->execute();
+        return $datos->fetchAll();
+    }
+
+    //
+    function buscarultimaprogramacion($ibmFinca) {
+        $bd = conectar();
+        $datos = $bd->prepare("
+            SELECT e.PKCod, e.FKId_TblSemanas, e.Anho, de.Cantidad
+            FROM tblembarque as e, tbldet_tblembarque as de, tblfincas as f
+            WHERE e.PKCod = de.FKCod_TblEmbarque
+            AND f.PKIbm = de.FKIbm_TblFincas
+            AND de.Cantidad > 0
+            AND f.PKIbm = :ibmFinca
+            ORDER BY e.PKCod DESC LIMIT 1
+        ");
+        $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
+        $datos->execute();
+        return $datos->fetchAll();
+    }
+
+    //
+    function totalprogramadofinca($codEmbarque, $ibmFinca) {
+        $bd = conectar();
+        $datos = $bd->prepare("
+            SELECT SUM(de.Cantidad) as Total
+            FROM tbldet_tblembarque as de
+            WHERE de.FKCod_TblEmbarque = :codEmbarque
+            AND de.FKIbm_TblFincas = :ibmFinca
+        ");
+        $datos->bindParam(':codEmbarque', $codEmbarque, PDO::PARAM_STR);
+        $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
+        $datos->execute();
+        return $datos->fetchAll();
+    }
+
+    //
+    function buscarelaboradosemana($codEmbarque, $ibmFinca) {
+        $bd = conectar();
+        $datos = $bd->prepare("
+            SELECT dp.Total_CE_Dia as elaboradoDia
+            FROM tbldet_tblproduccion as dp
+            INNER JOIN tblproduccion as p
+            ON p.PKId = dp.FKId_TblProduccion
+            AND p.Cod_Embarque = :codEmbarque
+            AND p.FKIbm_TblFincas = :ibmFinca
+        ");
+        $datos->bindParam(':codEmbarque', $codEmbarque, PDO::PARAM_STR);
+        $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
+        $datos->execute();
+        return $datos->fetchAll();
+    }
+
+    // Obtiene el total de elaboración de el día según el id de la produccion
+    function buscarelaboradodianacional($codEmbarque, $ibmFinca, $idDia) {
+        $bd = conectar();
+        $datos = $bd->prepare("
+            SELECT SUM(dmn.Cantidad_Elaborado) totalElaborado, d.Descripcion
+            FROM tbldet_tblmercadonacional as dmn, tblmercadonacional as mn, tbldias as d
+            WHERE mn.PKId = dmn.FKId_TblMercadoNacional
+            AND d.PKId = dmn.FKId_TblDias
+            AND mn.PKId = (SELECT FKId_TblMercadoNacional FROM tblproduccion WHERE Cod_Embarque = :codEmbarque AND FKIbm_TblFincas = :ibmFinca)
+            AND d.PKId = :idDia
+        ");
+        $datos->bindParam(':codEmbarque', $codEmbarque, PDO::PARAM_STR);
+        $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
+        $datos->bindParam(':idDia', $idDia, PDO::PARAM_INT);
         $datos->execute();
         return $datos->fetchAll();
     }
