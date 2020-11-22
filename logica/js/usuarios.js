@@ -1,8 +1,54 @@
     //Administración de usuarios
     
     function changePassword(idUser) {
-        console.log('changePassword', idUser)
-        //asignar un modal para el cambio de password en el html
+        swal({
+            title: 'Users',
+            text: 'Password uptade',
+            type: 'warning',
+            showCancelButton: true,
+            input: 'password',
+            cancelButtonText: 'Cancel',
+            confirmButtonText: 'Update',
+            reverseButtons: true
+        })
+        .then(inputValue => {
+            if (inputValue.length > 6) {
+                const op = new FormData();
+                op.append('op', 'change_password');
+                op.append('idUser', idUser);
+                op.append('password', inputValue);
+                fetch('../logica/contenido.php', {method: 'POST', body: op})
+                .then(response => response.text())
+                .then(res => {
+                    console.log(res);
+                    if (res == true) {
+                        $.notify({
+                            message: 'Password update completed',
+                            title: '<strong>Users: </strong>',
+                            icon: 'fa fa-key',
+                        }, {
+                            type: 'success'
+                        });
+                    } else {
+                        $.notify({
+                            message: 'Password update failed',
+                            title: '<strong>Users: </strong>',
+                            icon: 'fa fa-key',
+                        }, {
+                            type: 'danger'
+                        });
+                    }
+                })
+            } else {
+                $.notify({
+                    message: 'Password update failed',
+                    title: '<strong>Users: </strong>',
+                    icon: 'fa fa-key',
+                }, {
+                    type: 'danger'
+                });
+            }
+        })
     }
 
     function changePrivileges(idUser, value) {

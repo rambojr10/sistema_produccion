@@ -951,6 +951,14 @@
     }
 
     //
+    function change_password() {
+        $idUser = $_POST['idUser'];
+        $password = $_POST['password'];
+        $result = changepassword($idUser, $password);
+        echo $result;
+    }
+
+    //
     function nueva_caja_select() {
         $codEmbarque = $_POST['codEmbarque'];
         $codigoCajas = json_decode($_POST['codigoCajas']);
@@ -1221,6 +1229,10 @@
 
             case 'nueva_caja_select':
                 nueva_caja_select();
+                break;
+            
+            case 'change_password':
+                change_password();
                 break;
             
     //Métodos de eliminar

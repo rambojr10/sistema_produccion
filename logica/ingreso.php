@@ -21,7 +21,6 @@
             $_SESSION["conectado"] = $usuario[0];
             header("Location:../capa_web/inicio.php");
         } else {
-            echo "<script>console.log('error de ingreso')</script>";
             header("Location:../index.php");
         }
     }

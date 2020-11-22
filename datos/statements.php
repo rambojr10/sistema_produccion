@@ -682,6 +682,7 @@
             WHERE de.FKCodigo_TblCajasProduccion = cp.PKCodigo
             AND de.FKIbm_TblFincas = :ibmFinca
             AND de.FKCod_TblEmbarque = :codEmbarque
+            AND de.Cantidad > 0
         ");
         $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
         $datos->bindParam(':codEmbarque', $codEmbarque, PDO::PARAM_STR);
@@ -892,6 +893,22 @@
                 return false;
         } catch (Exception $e) {
             echo "Error".$e;
+        }
+    }
+
+    // Cambia el password de un usuario 
+    function changepassword($idUser, $password) {
+        try {
+            $bd = conectar();
+            $datos = $bd->prepare("UPDATE TblUsuarios SET password = :password WHERE PKId = :idUser");
+            $datos->bindParam(':idUser', $idUser, PDO::PARAM_INT);
+            $datos->bindParam(':password', $password, PDO::PARAM_STR);
+            if ($datos->execute())
+                return true;
+            else 
+                return false;
+        } catch (Exception $e) {
+            echo 'Error'.$e;
         }
     }
     
