@@ -35,7 +35,7 @@
         if ($('#lblusuario').html() == 'ADMINISTRADOR')
             cargarHome(hoy.getWeekNumber());
         else
-            cargarHomeUser();
+            cargarHomeUser(hoy.getWeekNumber());
     });
 
 /* Mostrar datos ================================================================================*/ 
@@ -210,10 +210,15 @@
     }
 
     //
-    function cargarHomeUser() {
-
+    function cargarHomeUser(semanaActual) {
+        fetch('../logica/contenido.php?op=datos_home_user')
+        .then(response => response.json())
+        .then(datos => {
+            console.log(semanaActual, datos)
+        });
     }
 
+    
 // COMPLEMENTOS --------------------------------------------------------------------------------------------------------
     
     //Valida campos de ingreso de sólo número

@@ -850,7 +850,7 @@
         echo json_encode(datosflot());
     }
 
-    // retorna los dato del home admin
+    // retorna los datos del home admin
     function datos_home() {
         $result = ['cardSemanaRegistrada' => [], 'cardEstimativo' => [], 'cardRechazadasAndElaboradas' => [], 'cardComparativa' => []];
         $fincas = listarfincas();
@@ -890,6 +890,14 @@
         $result['cardEstimativo']['tableBody']['especial'] = $tableEspecial;
         $result['cardEstimativo']['codEmbarque'] = $estimativo[0]->FKCod_TblEmbarque;
         
+        echo json_encode($result);
+    }
+
+    // retorna los datos del home user
+    function datos_home_user() {
+        $result = ['rowOne' => []];
+        $ultimaSemana = buscarultimasemana(/* $_SESSION['conectado']->PKIbm */ '85747');
+        $result['rowOne'] = $ultimaSemana;
         echo json_encode($result);
     }
 
@@ -1199,6 +1207,11 @@
             //
             case 'datos_home':
                 datos_home();
+                break;
+                
+            // Busca semana
+            case 'datos_home_user':
+                datos_home_user();
                 break;
 
             // Busca semana

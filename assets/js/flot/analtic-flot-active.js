@@ -17,10 +17,10 @@
                 label: "Total Cajas",
                 bars: {
                     show: !0,
-                    barWidth: .4,
+                    barWidth: .5,
                     order: 1,
-                    lineWidth: 0,
-                    fillColor: "#00c292"
+                    lineWidth: 2,
+                    fillColor: "#39A275" // 39A275 , 01689c
                 }
             }],
             options = {
@@ -29,7 +29,7 @@
                     borderColor: "#f3f3f3",
                     show: !0,
                     hoverable: !0,
-                    clickable: !0,
+                    clickable: !1,
                     labelMargin: 10
                 },
                 yaxis: {
@@ -63,7 +63,7 @@
             data[fincas.indexOf(element.Nombre)-1] = [fincas.indexOf(element.Nombre), element.totalElaborado];
         });
 
-        $("#visit-server-time")[0] && $.plot($("#visit-server-time"), dataset, options),$(".flot-chart")[0] && ($(".flot-chart").bind("plothover", function(event, pos, item) {
+        $("#chart-produccion-fincas")[0] && $.plot($("#chart-produccion-fincas"), dataset, options),$(".flot-chart")[0] && ($(".flot-chart").bind("plothover", function(event, pos, item) {
             if (item) {
                 var x = item.datapoint[0].toFixed(2),
                     y = item.datapoint[1].toFixed(2);
@@ -73,72 +73,5 @@
                 }).show()
             } else $(".flot-tooltip").hide()
         }), $("<div class='flot-tooltip' class='chart-tooltip'></div>").appendTo("body"))
-        
-        
-        function getRandomData() {
-            for (data.length > 0 && (data = data.slice(1)); data.length < totalPoints;) {
-                var prev = data.length > 0 ? data[data.length - 1] : 50,
-                    y = prev + 10 * Math.random() - 5;
-                0 > y ? y = 0 : y > 90 && (y = 90), data.push(y)
-            }
-            for (var res = [], i = 0; i < data.length; ++i) res.push([i, data[i]]);
-            return res
-        }
-
-        function update() {
-            plot.setData([getRandomData()]), plot.draw(), setTimeout(update, updateInterval)
-        }
-        var data = [],
-            totalPoints = 300,
-            updateInterval = 30;
-        if ($("#dynamic-chart")[0]) {
-            var plot = $.plot("#dynamic-chart", [getRandomData()], {
-                series: {
-                    label: "Server Process Data",
-                    lines: {
-                        show: !0,
-                        lineWidth: .2,
-                        fill: .6
-                    },
-                    color: "#00c292",
-                    shadowSize: 0
-                },
-                yaxis: {
-                    min: 0,
-                    max: 100,
-                    tickColor: "#eee",
-                    font: {
-                        lineHeight: 13,
-                        style: "normal",
-                        color: "#9f9f9f"
-                    },
-                    shadowSize: 0
-                },
-                xaxis: {
-                    tickColor: "#eee",
-                    show: !0,
-                    font: {
-                        lineHeight: 13,
-                        style: "normal",
-                        color: "#9f9f9f"
-                    },
-                    shadowSize: 0,
-                    min: 0,
-                    max: 250
-                },
-                grid: {
-                    borderWidth: 1,
-                    borderColor: "#eee",
-                    labelMargin: 10,
-                    hoverable: !0,
-                    clickable: !0,
-                    mouseActiveRadius: 6
-                },
-                legend: {
-                    show: !1
-                }
-            });
-            update()
-        }
     })  
 })(jQuery); 

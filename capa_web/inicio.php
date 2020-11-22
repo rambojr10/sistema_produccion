@@ -272,12 +272,13 @@
                                     <h2>Producción</h2>
                                     <p>Total produccion por fincas, histórico.</p>
                                 </div>
-                                <div class="visitor-sv-tm-ch">
-                                    <div id="visit-server-time" class="flot-chart"></div>
+                                <div class="visit-server-time">
+                                    <div id="chart-produccion-fincas" class="flot-chart"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    
                     <div class="row mg-t-30">
 
                         <!-- Card Semana Registrada -->
@@ -406,7 +407,357 @@
         <?php endif; ?>
 
         <?php if ($_SESSION['conectado']->FKId_TblTipoUsuario == 2) :?>
-            <!-- html for the standar user -->
+             <!-- Start Status area -->
+            <div class="notika-status-area">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                            <div class="wb-traffic-inner notika-shadow sm-res-mg-t-30 tb-res-mg-t-30">
+                                <div class="website-traffic-ctn">
+                                    <h2 id="lblTotalElaborado">0</h2>
+                                    <p>Total elaborado, histórico.</p>
+                                </div>
+                                <div class="sparkline-bar-stats1">12,11,10,9,8,7,6,5,4,3,2,1</div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                            <div class="wb-traffic-inner notika-shadow sm-res-mg-t-30 tb-res-mg-t-30">
+                                <div class="website-traffic-ctn">
+                                    <h2 id="lblTotalRechazadas">0</h2>
+                                    <p>Total rechazadas, histórico.</p>
+                                </div>
+                                <div class="sparkline-bar-stats2">1,2,3,4,5,6,6,5,4,3,2,1</div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                            <div class="wb-traffic-inner notika-shadow sm-res-mg-t-30 tb-res-mg-t-30 dk-res-mg-t-30">
+                                <div class="website-traffic-ctn">
+                                    <h2 id="lblTotalSemana">0</h2>
+                                    <p>Total última semana.</p>
+                                </div>
+                                <div class="sparkline-bar-stats3">1,2,3,4,5,6,7,8,9,10,11,12</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Status area-->
+
+            <!-- Start % area -->
+            <div class="notika-email-post-area">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 mg-t-30">
+                            <div class="ongoing-task-inner notika-shadow">
+                                <div class="realtime-ctn">
+                                    <div class="realtime-title ongoing-hd-wd">
+                                        <h2>Alineación</h2>
+                                        <p>Porcentaje de elaboración de la última alineación</p>
+                                    </div>
+                                </div>
+                                <div class="skill-content-3 ongoing-tsk">
+                                    <div class="skill">
+                                        <div class="progress">
+                                            <div class="lead-content">
+                                                <p>HTML5 Validation Report</p>
+                                            </div>
+                                            <div class="progress-bar wow fadeInLeft" data-progress="95%" style="width: 95%;" data-wow-duration="1.5s" data-wow-delay="1.2s"> <span>95%</span>
+                                            </div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="lead-content">
+                                                <p>Google Chrome Extension</p>
+                                            </div>
+                                            <div class="progress-bar" data-progress="85%" style="width: 85%;"><span>85%</span> </div>
+                                        </div>
+                                        <!-- <div class="progress">
+                                            <div class="lead-content">
+                                                <p>Social Internet Projects</p>
+                                            </div>
+                                            <div class="progress-bar wow fadeInLeft" data-progress="70%" style="width: 70%;" data-wow-duration="1.5s" data-wow-delay="1.2s"><span>70%</span> </div>
+                                        </div>
+                                        <div class="progress">
+                                            <div class="lead-content">
+                                                <p>Bootstrap Admin</p>
+                                            </div>
+                                            <div class="progress-bar wow fadeInLeft" data-progress="60%" style="width: 60%;" data-wow-duration="1.5s" data-wow-delay="1.2s"><span>60%</span> </div>
+                                        </div>
+                                        <div class="progress progress-bt">
+                                            <div class="lead-content">
+                                                <p>Youtube App</p>
+                                            </div>
+                                            <div class="progress-bar wow fadeInLeft" data-progress="50%" style="width: 50%;" data-wow-duration="1.5s" data-wow-delay="1.2s"><span>50%</span> </div>
+                                        </div> -->
+                                    </div>
+                                    <!-- <div class="view-all-onging">
+                                        <a href="#">View All Tasks</a>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End % area -->
+
+            <!-- Start Sale Statistic area-->
+            <div class="sale-statistic-area">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-9 col-md-8 col-sm-7 col-xs-12">
+                            <div class="sale-statistic-inner notika-shadow mg-t-30">
+                                <div class="curved-inner-pro">
+                                    <div class="curved-ctn">
+                                        <h2>Producción</h2>
+                                        <p>Muestra la elaboración en la última semana registrada.</p>
+                                    </div>
+                                </div>
+                                <div id="bar-chart" class="flot-chart bar-three bar-hm-three"></div>
+                                <div class="flc-bar"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-4 col-sm-5 col-xs-12">
+                            <div class="statistic-right-area notika-shadow mg-tb-30 sm-res-mg-t-0">
+                                <div class="past-day-statis">
+                                    <h2>Balance de masas</h2>
+                                    <p>Datos de última semana registrada: <span class="text-muted">SEMANA 10</span></p>
+                                </div>
+                                <div>
+                                    <table class="table table-light">
+                                        <thead>
+                                            <tr>
+                                                <th>Concepto</th>
+                                                <th class="text-right">Valor</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Ratio</td>
+                                                <td class="text-right">18.7</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Merma</td>
+                                                <td class="text-right"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Peso racimos</td>
+                                                <td class="text-right"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Area recorrida</td>
+                                                <td class="text-right"></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Peso vastago</td>
+                                                <td class="text-right"></td>
+                                            </tr>
+                                        </tbody>
+                                        <tfoot style="height: 75px;">
+                                            <tr>
+                                                <th>Código</th>
+                                                <th class="text-right">EMB-202051</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Sale Statistic area-->
+
+            <!-- Start Email Statistic area-->
+            <div class="notika-email-post-area">
+                <div class="container">
+                    <div class="row">
+
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                            <div class="email-statis-inner notika-shadow">
+                                <div class="email-ctn-round">
+                                    <div class="email-rdn-hd">
+                                        <h2>Elaboración semanal</h2>
+                                    </div>
+                                    <div class="email-statis-wrap">
+                                        <div class="email-round-nock">
+                                            <input type="text" class="knob" value="0" data-rel="100" data-linecap="round" data-width="130" data-bgcolor="#E4E4E4" data-fgcolor="#00c292" data-thickness=".10" data-readonly="true">
+                                        </div>
+                                        <div class="email-ctn-nock">
+                                            <p>Total elaborado, semana actual.</p>
+                                        </div>
+                                    </div>
+                                    <div class="email-round-gp">
+                                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Sint aspernatur pariatur voluptates officiis praesentium, voluptatibus quaerat eaque odio maiores quis numquam cumque nihil assumenda amet quo officia sit minima animi.</p>
+                                        <!-- <div class="email-round-pro">
+                                            <div class="email-signle-gp">
+                                                <input type="text" class="knob" value="0" data-rel="75" data-linecap="round" data-width="90" data-bgcolor="#E4E4E4" data-fgcolor="#00c292" data-thickness=".10" data-readonly="true" disabled>
+                                            </div>
+                                            <div class="email-ctn-nock">
+                                                <p>Bounce Rate</p>
+                                            </div>
+                                        </div>
+                                        <div class="email-round-pro">
+                                            <div class="email-signle-gp">
+                                                <input type="text" class="knob" value="0" data-rel="35" data-linecap="round" data-width="90" data-bgcolor="#E4E4E4" data-fgcolor="#00c292" data-thickness=".10" data-readonly="true" disabled>
+                                            </div>
+                                            <div class="email-ctn-nock">
+                                                <p>Total Opened</p>
+                                            </div>
+                                        </div>
+                                        <div class="email-round-pro sm-res-ds-n lg-res-mg-bl">
+                                            <div class="email-signle-gp">
+                                                <input type="text" class="knob" value="0" data-rel="45" data-linecap="round" data-width="90" data-bgcolor="#E4E4E4" data-fgcolor="#00c292" data-thickness=".10" data-readonly="true" disabled>
+                                            </div>
+                                            <div class="email-ctn-nock">
+                                                <p>Total Ignored</p>
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                            <div class="recent-post-wrapper notika-shadow sm-res-mg-t-30 tb-res-ds-n dk-res-ds">
+                                <div class="recent-post-ctn">
+                                    <div class="recent-post-title">
+                                        <h2>Alineación</h2>
+                                    </div>
+                                </div>
+                                <div class="recent-post-items">
+                                    <div class="recent-post-signle rct-pt-mg-wp">
+                                        <a href="#">
+                                            <div class="recent-post-flex">
+                                                <div class="recent-post-img">
+                                                    <img src="img/post/2.jpg" alt="" />
+                                                </div>
+                                                <div class="recent-post-it-ctn">
+                                                    <h2>Smith</h2>
+                                                    <p>Nunc quis diam diamurabitur at dolor elementum, dictum turpis vel</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="recent-post-signle">
+                                        <a href="#">
+                                            <div class="recent-post-flex rct-pt-mg">
+                                                <div class="recent-post-img">
+                                                    <img src="img/post/1.jpg" alt="" />
+                                                </div>
+                                                <div class="recent-post-it-ctn">
+                                                    <h2>John Deo</h2>
+                                                    <p>Nunc quis diam diamurabitur at dolor elementum, dictum turpis vel</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="recent-post-signle">
+                                        <a href="#">
+                                            <div class="recent-post-flex rct-pt-mg">
+                                                <div class="recent-post-img">
+                                                    <img src="img/post/4.jpg" alt="" />
+                                                </div>
+                                                <div class="recent-post-it-ctn">
+                                                    <h2>Malika</h2>
+                                                    <p>Nunc quis diam diamurabitur at dolor elementum, dictum turpis vel</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="recent-post-signle">
+                                        <a href="#">
+                                            <div class="recent-post-flex rct-pt-mg">
+                                                <div class="recent-post-img">
+                                                    <img src="img/post/2.jpg" alt="" />
+                                                </div>
+                                                <div class="recent-post-it-ctn">
+                                                    <h2>Smith</h2>
+                                                    <p>Nunc quis diam diamurabitur at dolor elementum, dictum turpis vel</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="recent-post-signle">
+                                        <a href="#">
+                                            <div class="recent-post-flex rct-pt-mg">
+                                                <div class="recent-post-img">
+                                                    <img src="img/post/1.jpg" alt="" />
+                                                </div>
+                                                <div class="recent-post-it-ctn">
+                                                    <h2>John Deo</h2>
+                                                    <p>Nunc quis diam diamurabitur at dolor elementum, dictum turpis vel</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="recent-post-signle">
+                                        <a href="#">
+                                            <div class="recent-post-flex rc-ps-vw">
+                                                <div class="recent-post-line rct-pt-mg">
+                                                    <p>View All</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                            <div class="recent-items-wp notika-shadow sm-res-mg-t-30">
+                                <div class="rc-it-ltd">
+                                    <div class="recent-items-ctn">
+                                        <div class="recent-items-title">
+                                            <h2>Recent Items</h2>
+                                        </div>
+                                    </div>
+                                    <div class="recent-items-inn">
+                                        <table class="table table-inner table-vmiddle">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Name</th>
+                                                    <th style="width: 60px">Price</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="f-500 c-cyan">4555</td>
+                                                    <td>Samsung Galaxy Mega</td>
+                                                    <td class="f-500 c-cyan">$921</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="f-500 c-cyan">4556</td>
+                                                    <td>Huawei Ascend P6</td>
+                                                    <td class="f-500 c-cyan">$240</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="f-500 c-cyan">8778</td>
+                                                    <td>HTC One M8</td>
+                                                    <td class="f-500 c-cyan">$400</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="f-500 c-cyan">5667</td>
+                                                    <td>Samsung Galaxy Alpha</td>
+                                                    <td class="f-500 c-cyan">$870</td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="f-500 c-cyan">7886</td>
+                                                    <td>LG G3</td>
+                                                    <td class="f-500 c-cyan">$790</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div id="recent-items-chart" class="flot-chart-items flot-chart vt-ct-it tb-rc-it-res"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Email Statistic area-->
+
         <?php endif; ?>
 
     </div>
@@ -436,24 +787,17 @@
     <!-- bootstrap JS
 		============================================ -->
     <script src="../assets/js/bootstrap.min.js"></script>
-    <!-- wow JS
-		============================================ -->
-    <!-- <script src="../assets/js/wow.min.js"></script> -->
 
     <!-- owl.carousel JS
 		============================================ -->
     <!-- <script src="../assets/js/owl.carousel.min.js"></script> -->
+
     <!-- scrollUp JS
 		============================================ -->
     <script src="../assets/js/jquery.scrollUp.min.js"></script>
     <!-- meanmenu JS
 		============================================ -->
     <script src="../assets/js/meanmenu/jquery.meanmenu.js"></script>
-    <!-- counterup JS
-		============================================ -->
-    <script src="../assets/js/counterup/jquery.counterup.min.js"></script>
-    <script src="../assets/js/counterup/waypoints.min.js"></script>
-    <script src="../assets/js/counterup/counterup-active.js"></script>
    
     <!-- mCustomScrollbar JS
 		============================================ -->
@@ -462,11 +806,30 @@
      <!-- flot JS
 		============================================ -->
     <script src="../assets/js/flot/jquery.flot.js"></script>
-    <script src="../assets/js/flot/jquery.flot.resize.js"></script>
-    <script src="../assets/js/flot/jquery.flot.time.js"></script>
     <script src="../assets/js/flot/jquery.flot.tooltip.min.js"></script>
     <script src="../assets/js/flot/analtic-flot-active.js"></script>
+    <script src="../assets/js/flot/jquery.flot.orderBars.js"></script>
+    <script src="../assets/js/flot/flot-active.js"></script>
+    <!-- <script src="../assets/js/flot/jquery.flot.resize.js"></script> -->
+    <!-- <script src="../assets/js/flot/jquery.flot.pie.js"></script> -->
+    <!-- <script src="../assets/js/flot/jquery.flot.time.js"></script> -->
+    <!-- <script src="../assets/js/flot/curvedLines.js"></script> -->
     
+    <!-- knob JS
+		============================================ -->
+        <script src="../assets/js/knob/jquery.knob.js"></script>
+        <script src="../assets/js/knob/jquery.appear.js"></script>
+        <script src="../assets/js/knob/knob-active.js"></script>
+
+    <!-- sparkline JS
+		============================================ -->
+        <script src="../assets/js/sparkline/jquery.sparkline.min.js"></script>
+        <script src="../assets/js/sparkline/sparkline-active.js"></script>
+    
+    <!-- wow JS
+		============================================ -->
+        <script src="../assets/js/wow.min.js"></script>
+
     <!-- Data Table JS
 		============================================ -->
         <script src="../assets/js/data-table/jquery.dataTables.min.js"></script>
