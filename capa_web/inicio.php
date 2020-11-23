@@ -407,7 +407,7 @@
         <?php endif; ?>
 
         <?php if ($_SESSION['conectado']->FKId_TblTipoUsuario == 2) :?>
-             <!-- Start Status area -->
+             <!-- rowOne -->
             <div class="notika-status-area">
                 <div class="container">
                     <div class="row">
@@ -441,9 +441,8 @@
                     </div>
                 </div>
             </div>
-            <!-- End Status area-->
 
-            <!-- Start % area -->
+            <!-- rowTwo -->
             <div class="notika-email-post-area">
                 <div class="container">
                     <div class="row">
@@ -459,48 +458,24 @@
                                     <div class="skill">
                                         <div class="progress">
                                             <div class="lead-content">
-                                                <p>HTML5 Validation Report</p>
+                                                <p>Cajas producción <i class="fa fa-dropbox"></i></p>
                                             </div>
-                                            <div class="progress-bar wow fadeInLeft" data-progress="95%" style="width: 95%;" data-wow-duration="1.5s" data-wow-delay="1.2s"> <span>95%</span>
+                                            <div id="porcentajeElaborado" class="progress-bar wow fadeInLeft" data-progress="0%" style="width: 0%;" data-wow-duration="2s" data-wow-delay="1.5s"> 
+                                                <span>0%</span>
                                             </div>
                                         </div>
-                                        <div class="progress">
-                                            <div class="lead-content">
-                                                <p>Google Chrome Extension</p>
-                                            </div>
-                                            <div class="progress-bar" data-progress="85%" style="width: 85%;"><span>85%</span> </div>
-                                        </div>
-                                        <!-- <div class="progress">
-                                            <div class="lead-content">
-                                                <p>Social Internet Projects</p>
-                                            </div>
-                                            <div class="progress-bar wow fadeInLeft" data-progress="70%" style="width: 70%;" data-wow-duration="1.5s" data-wow-delay="1.2s"><span>70%</span> </div>
-                                        </div>
-                                        <div class="progress">
-                                            <div class="lead-content">
-                                                <p>Bootstrap Admin</p>
-                                            </div>
-                                            <div class="progress-bar wow fadeInLeft" data-progress="60%" style="width: 60%;" data-wow-duration="1.5s" data-wow-delay="1.2s"><span>60%</span> </div>
-                                        </div>
-                                        <div class="progress progress-bt">
-                                            <div class="lead-content">
-                                                <p>Youtube App</p>
-                                            </div>
-                                            <div class="progress-bar wow fadeInLeft" data-progress="50%" style="width: 50%;" data-wow-duration="1.5s" data-wow-delay="1.2s"><span>50%</span> </div>
-                                        </div> -->
                                     </div>
-                                    <!-- <div class="view-all-onging">
+                                    <div class="view-all-onging">
                                         <a href="#">View All Tasks</a>
-                                    </div> -->
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- End % area -->
 
-            <!-- Start Sale Statistic area-->
+            <!-- rowThree -->
             <div class="sale-statistic-area">
                 <div class="container">
                     <div class="row">
@@ -519,11 +494,11 @@
                         <div class="col-lg-3 col-md-4 col-sm-5 col-xs-12">
                             <div class="statistic-right-area notika-shadow mg-tb-30 sm-res-mg-t-0">
                                 <div class="past-day-statis">
-                                    <h2>Balance de masas</h2>
-                                    <p>Datos de última semana registrada: <span class="text-muted">SEMANA 10</span></p>
+                                    <h2>Rendimientos</h2>
+                                    <p>Datos de última semana registrada: <span class="text-muted" id="ultimaSemanaRegistrada">SEMANA 00</span></p>
                                 </div>
                                 <div>
-                                    <table class="table table-light">
+                                    <table class="table">
                                         <thead>
                                             <tr>
                                                 <th>Concepto</th>
@@ -533,29 +508,29 @@
                                         <tbody>
                                             <tr>
                                                 <td>Ratio</td>
-                                                <td class="text-right">18.7</td>
+                                                <td class="text-right" id="td-Ratio"></td>
                                             </tr>
                                             <tr>
                                                 <td>Merma</td>
-                                                <td class="text-right"></td>
+                                                <td class="text-right" id="td-Merma"></td>
                                             </tr>
                                             <tr>
                                                 <td>Peso racimos</td>
-                                                <td class="text-right"></td>
+                                                <td class="text-right" id="td-Peso_Racimos"></td>
                                             </tr>
                                             <tr>
                                                 <td>Area recorrida</td>
-                                                <td class="text-right"></td>
+                                                <td class="text-right" id="td-Area_Recorrida"></td>
                                             </tr>
                                             <tr>
                                                 <td>Peso vastago</td>
-                                                <td class="text-right"></td>
+                                                <td class="text-right" id="td-Peso_Vastago"></td>
                                             </tr>
                                         </tbody>
                                         <tfoot style="height: 75px;">
                                             <tr>
                                                 <th>Código</th>
-                                                <th class="text-right">EMB-202051</th>
+                                                <th class="text-right" id="td-Cod_Embarque">EMB-000000</th>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -565,9 +540,8 @@
                     </div>
                 </div>
             </div>
-            <!-- End Sale Statistic area-->
 
-            <!-- Start Email Statistic area-->
+            <!-- rowFour -->
             <div class="notika-email-post-area">
                 <div class="container">
                     <div class="row">
@@ -638,67 +612,6 @@
                                             </div>
                                         </a>
                                     </div>
-                                    <div class="recent-post-signle">
-                                        <a href="#">
-                                            <div class="recent-post-flex rct-pt-mg">
-                                                <div class="recent-post-img">
-                                                    <img src="img/post/1.jpg" alt="" />
-                                                </div>
-                                                <div class="recent-post-it-ctn">
-                                                    <h2>John Deo</h2>
-                                                    <p>Nunc quis diam diamurabitur at dolor elementum, dictum turpis vel</p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="recent-post-signle">
-                                        <a href="#">
-                                            <div class="recent-post-flex rct-pt-mg">
-                                                <div class="recent-post-img">
-                                                    <img src="img/post/4.jpg" alt="" />
-                                                </div>
-                                                <div class="recent-post-it-ctn">
-                                                    <h2>Malika</h2>
-                                                    <p>Nunc quis diam diamurabitur at dolor elementum, dictum turpis vel</p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="recent-post-signle">
-                                        <a href="#">
-                                            <div class="recent-post-flex rct-pt-mg">
-                                                <div class="recent-post-img">
-                                                    <img src="img/post/2.jpg" alt="" />
-                                                </div>
-                                                <div class="recent-post-it-ctn">
-                                                    <h2>Smith</h2>
-                                                    <p>Nunc quis diam diamurabitur at dolor elementum, dictum turpis vel</p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="recent-post-signle">
-                                        <a href="#">
-                                            <div class="recent-post-flex rct-pt-mg">
-                                                <div class="recent-post-img">
-                                                    <img src="img/post/1.jpg" alt="" />
-                                                </div>
-                                                <div class="recent-post-it-ctn">
-                                                    <h2>John Deo</h2>
-                                                    <p>Nunc quis diam diamurabitur at dolor elementum, dictum turpis vel</p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="recent-post-signle">
-                                        <a href="#">
-                                            <div class="recent-post-flex rc-ps-vw">
-                                                <div class="recent-post-line rct-pt-mg">
-                                                    <p>View All</p>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -708,55 +621,29 @@
                                 <div class="rc-it-ltd">
                                     <div class="recent-items-ctn">
                                         <div class="recent-items-title">
-                                            <h2>Recent Items</h2>
+                                            <h2>Última alineación</h2>
                                         </div>
                                     </div>
                                     <div class="recent-items-inn">
-                                        <table class="table table-inner table-vmiddle">
+                                        <table class="table table-inner table-vmiddle" style="height: 700px; overflow: auto;">
                                             <thead>
                                                 <tr>
-                                                    <th>ID</th>
-                                                    <th>Name</th>
-                                                    <th style="width: 60px">Price</th>
+                                                    <th>Código</th>
+                                                    <th>Caja</th>
+                                                    <th style="width: 50px">Cantidad</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td class="f-500 c-cyan">4555</td>
-                                                    <td>Samsung Galaxy Mega</td>
-                                                    <td class="f-500 c-cyan">$921</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="f-500 c-cyan">4556</td>
-                                                    <td>Huawei Ascend P6</td>
-                                                    <td class="f-500 c-cyan">$240</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="f-500 c-cyan">8778</td>
-                                                    <td>HTC One M8</td>
-                                                    <td class="f-500 c-cyan">$400</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="f-500 c-cyan">5667</td>
-                                                    <td>Samsung Galaxy Alpha</td>
-                                                    <td class="f-500 c-cyan">$870</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="f-500 c-cyan">7886</td>
-                                                    <td>LG G3</td>
-                                                    <td class="f-500 c-cyan">$790</td>
-                                                </tr>
+                                            <tbody id="tblAlineacionHomeUser">
+                                                
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div id="recent-items-chart" class="flot-chart-items flot-chart vt-ct-it tb-rc-it-res"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- End Email Statistic area-->
 
         <?php endif; ?>
 

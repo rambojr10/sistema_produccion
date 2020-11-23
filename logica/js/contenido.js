@@ -215,6 +215,62 @@
         .then(response => response.json())
         .then(datos => {
             console.log(semanaActual, datos)
+
+            //rowOne
+            const lblTotalElaborado = document.getElementById('lblTotalElaborado');
+            lblTotalElaborado.textContent = datos.rowOne.historico.totalElaborado;
+            const lblTotalRechazadas = document.getElementById('lblTotalRechazadas');
+            lblTotalRechazadas.textContent = datos.rowOne.historico.totalRechazadas;
+            const lblTotalSemana = document.getElementById('lblTotalSemana');
+            lblTotalSemana.textContent = datos.ultimaProduccion.Total_CElaboradas;
+
+            //rowTwo
+            function Porcentaje(...dynamicValues) {
+                this.value = (dynamicValues[0]/dynamicValues[1])*100;
+                return `${this.value.toFixed(2)}%`
+            }
+            const porcentaje = Porcentaje(datos.rowTwo.ultimaProgramacion.totalElaborado, datos.rowTwo.ultimaProgramacion.totalProgramado);
+            const progressBar = document.getElementById('porcentajeElaborado');
+            progressBar.setAttribute('data-progress', porcentaje);
+            progressBar.setAttribute('style', `width: ${porcentaje}`);
+            progressBar.children[0].textContent = porcentaje;
+
+            //rowThree
+            chartHomeUser(jQuery, datos.rowThree);
+
+            function Rendimientos(semana, values, elements) {
+                semana.textContent = values.N_Semana
+                elements.forEach(element => {
+                    let tag = document.querySelector(`#td-${element}`);
+                    let simbolo = element == 'Area_Recorrida' ? '' : element == 'Cod_Embarque' ? '' : '%';
+                    tag.textContent = values[element] !== null ? `${values[element]}${simbolo}` : 0;
+                });
+            }
+            const lblUltimaSemanaRegistrada = document.querySelector('#ultimaSemanaRegistrada');
+            Rendimientos(
+                lblUltimaSemanaRegistrada, 
+                datos.ultimaProduccion, 
+                ['Ratio', 'Merma', 'Peso_Racimos', 'Area_Recorrida', 'Peso_Vastago', 'Cod_Embarque']
+            );
+            
+
+            //rowFour
+            function TablaAlineacion(datos) {
+                let value = '';
+                datos.forEach(element => {
+                    value += `
+                        <tr>
+                            <td class="f-500 c-cyan">${element.Codigo}</td>
+                            <td>${element.Caja}</td>
+                            <td class="text-right">${element.Cantidad}</td>
+                        </tr>
+                    `
+                })
+                return value;
+            }
+            const tblAlineacionHomeUser = document.querySelector('#tblAlineacionHomeUser');
+            tblAlineacionHomeUser.innerHTML = TablaAlineacion(datos.rowFour.ultimaAlineacion);
+
         });
     }
 

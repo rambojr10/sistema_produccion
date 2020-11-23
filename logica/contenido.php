@@ -896,38 +896,35 @@
     // retorna los datos del home user
     function datos_home_user() {
         $result = ['ultimaProduccion' => [], 'rowOne' => [], 'rowTwo' => [], 'rowThree' => [], 'rowFour' => []];
-        /* $_SESSION['conectado']->PKIbm */ 
 
         //Use register
-        $ultimaProduccion = buscarultimaproduccion('85747')[0];
+        $ultimaProduccion = buscarultimaproduccion($_SESSION['conectado']->PKIbm)[0];
         $result['ultimaProduccion'] = $ultimaProduccion;
 
         //rowOne
-        $result['rowOne']['historico'] = totalelaboradofinca('85747')[0];
-        // $result['rowOne']['elaboradoUltimaSemana'] = $ultimaProduccion->Total_CElaboradas;
+        $result['rowOne']['historico'] = totalelaboradofinca($_SESSION['conectado']->PKIbm)[0];
 
         //rowTwo
-        $ultimaProgramacion = buscarultimaprogramacion('85747')[0];
-        $totalProgramado = totalprogramadofinca($ultimaProgramacion->PKCod, '85747')[0];
-        $totalElaborado = buscarregistro($ultimaProgramacion->PKCod, 'Cod_Embarque', 'TblProduccion', 'FKIbm_TblFincas = "85747"')[0];
+        $ultimaProgramacion = buscarultimaprogramacion($_SESSION['conectado']->PKIbm)[0];
+        $totalProgramado = totalprogramadofinca($ultimaProgramacion->PKCod, $_SESSION['conectado']->PKIbm)[0];
         $result['rowTwo']['ultimaProgramacion']['codigoEmbarque'] = $ultimaProgramacion->PKCod;
         $result['rowTwo']['ultimaProgramacion']['totalProgramado'] = $totalProgramado->Total;
-        $result['rowTwo']['ultimaProgramacion']['totalElaborado'] = $totalElaborado->Total_CElaboradas;
+        $result['rowTwo']['ultimaProgramacion']['totalElaborado'] = $ultimaProduccion->Total_CElaboradas;
         
         //rowThree
-        $cajasElaboradasUltimaSemana = buscarelaboradosemana($ultimaProduccion->Cod_Embarque, '85747');
+        $cajasElaboradasUltimaSemana = buscarelaboradosemana($ultimaProduccion->Cod_Embarque, $_SESSION['conectado']->PKIbm);
         foreach ($cajasElaboradasUltimaSemana as $c) {
             $result['rowThree']['cajasElaboradasUltimaSemana'][] = $c->elaboradoDia;
         }
         $nacionalElaboradasDia = [];
         for ($x = 1; $x < 8; $x++) {
-            $data = buscarelaboradodianacional($ultimaProduccion->Cod_Embarque, '85747', $x)[0]->totalElaborado;
+            $data = buscarelaboradodianacional($ultimaProduccion->Cod_Embarque, $_SESSION['conectado']->PKIbm, $x)[0]->totalElaborado;
             $nacionalElaboradasDia[] = $data;
         }
         $result['rowThree']['nacionalElaboradasUltimaSemana'] = $nacionalElaboradasDia;
 
         //rowFour
-        $result['rowFour']['ultimaAlineacion'] = veralineacion($ultimaProgramacion->PKCod, '85747');
+        $result['rowFour']['ultimaAlineacion'] = veralineacion($ultimaProgramacion->PKCod, $_SESSION['conectado']->PKIbm);
 
         //Final
         echo json_encode($result);

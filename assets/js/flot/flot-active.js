@@ -1,24 +1,24 @@
-(function ($) {
+function chartHomeUser($, dynamicData) {
  "use strict";
- 		
+
     var dias = [null, 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
     var data1 = [
-            [1, 1353],
-            [2, 723],
-            [3, 1322],
-            [4, 1244],
-            [5, 0],
-            [6, 0],
-            [7, 0]
+            [1, dynamicData.cajasElaboradasUltimaSemana[0]],
+            [2, dynamicData.cajasElaboradasUltimaSemana[1]],
+            [3, dynamicData.cajasElaboradasUltimaSemana[2]],
+            [4, dynamicData.cajasElaboradasUltimaSemana[3]],
+            [5, dynamicData.cajasElaboradasUltimaSemana[4]],
+            [6, dynamicData.cajasElaboradasUltimaSemana[5]],
+            [7, dynamicData.cajasElaboradasUltimaSemana[6]]
         ],
         data2 = [
-            [1, 135],
-            [2, 133],
-            [3, 224],
-            [4, 157],
-            [5, 0],
-            [6, 0],
-            [7, 0]
+            [1, dynamicData.nacionalElaboradasUltimaSemana[0]],
+            [2, dynamicData.nacionalElaboradasUltimaSemana[1]],
+            [3, dynamicData.nacionalElaboradasUltimaSemana[2]],
+            [4, dynamicData.nacionalElaboradasUltimaSemana[3]],
+            [5, dynamicData.nacionalElaboradasUltimaSemana[4]],
+            [6, dynamicData.nacionalElaboradasUltimaSemana[5]],
+            [7, dynamicData.nacionalElaboradasUltimaSemana[6]]
         ],
         barData = [{
             label: "Cajas producción",
@@ -77,13 +77,13 @@
         }
     }), $(".flot-chart")[0] && ($(".flot-chart").bind("plothover", function(event, pos, item) {
         if (item) {
-            var x = item.datapoint[0].toFixed(2),
-                y = item.datapoint[1].toFixed(2);
-            $(".flot-tooltip").html(item.series.label + " of " + x + " = " + y).css({
+            var x = item.datapoint[0],
+                y = item.datapoint[1];
+            $(".flot-tooltip").html(item.series.label + " = " + y).css({
                 top: item.pageY + 5,
                 left: item.pageX + 5
             }).show()
         } else $(".flot-tooltip").hide()
     }), $("<div class='flot-tooltip' class='chart-tooltip'></div>").appendTo("body"))
  
-})(jQuery); 
+} 
