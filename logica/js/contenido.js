@@ -35,7 +35,7 @@
         if ($('#lblusuario').html() == 'ADMINISTRADOR')
             cargarHome(hoy.getWeekNumber());
         else
-            cargarHomeUser(hoy.getWeekNumber());
+            cargarHomeUser(hoy);
     });
 
 /* Mostrar datos ================================================================================*/ 
@@ -210,11 +210,15 @@
     }
 
     //
-    function cargarHomeUser(semanaActual) {
-        fetch('../logica/contenido.php?op=datos_home_user')
+    function cargarHomeUser(fechaActual) {
+        const fecha = (objectDate) => {
+            let hoy = `${objectDate.getFullYear()}-${objectDate.getMonth()+1}-${objectDate.getDate()}`;
+            return hoy;
+        }
+        fetch(`../logica/contenido.php?op=datos_home_user&fecha_actual=${fecha(fechaActual)}`)
         .then(response => response.json())
         .then(datos => {
-            console.log(semanaActual, datos)
+            console.log(fechaActual, datos)
 
             //rowOne
             const lblTotalElaborado = document.getElementById('lblTotalElaborado');
@@ -255,12 +259,70 @@
             
 
             //rowFour
-            function TablaAlineacion(datos) {
+            const objectSemanaActual = {
+                infoSemanaSemana: document.getElementById('info-semana-semana'),
+                inforSemanaInicio: document.getElementById('info-semana-inicio'),
+                infoSemanaFin: document.getElementById('info-semana-fin'),
+                cintasRenderer: document.querySelectorAll('.btn-block')
+            };
+            (function (selectores, datos) {
+                let claseReturn = (element) => {
+                    switch (element) {
+                        case '1':
+                            return 'embolseCoffee';
+                        case '2':
+                            return 'embolseBlack';
+                        case '3':
+                            return 'embolseOrange';
+                        case '4':
+                            return 'embolseGreen';
+                        case '5':
+                            return 'embolseYellow';
+                        case '6':
+                            return 'embolseWhite';
+                        case '7':
+                            return 'embolseBlue';
+                        case '8':
+                            return 'embolseGray';
+                        case '9':
+                            return 'embolsePurple';
+                        case '10':
+                            return 'embolseRed';
+                        default:
+                            break;
+                    }
+                }
+                datos.cintas.forEach((elementOne, index) => {
+                    selectores.cintasRenderer[index].className += ` ${claseReturn(elementOne.PKId)}`;
+                });
+                
+            })(objectSemanaActual, datos.rowFour.ultimaSemanaInfo);
+
+
+            function TablaAlineacion(datosTabla, semana, codEmbarque) {
                 let value = '';
-                datos.forEach(element => {
+                datosTabla.forEach(element => {
+                    let label = (tipoFruta) => {
+                        switch (tipoFruta) {
+                            case '1':
+                                return 'yellow';
+                            case '2':
+                                return 'green';
+                            case '3':
+                                return 'gray';
+                            case '4':
+                                return 'gray';
+                            case '5':
+                                return 'gray';
+                            case '6':
+                                return 'blue';
+                            default:
+                                break;
+                        }
+                    } 
                     value += `
                         <tr>
-                            <td class="f-500 c-cyan">${element.Codigo}</td>
+                            <td><span class="ui ${label(element.tipoFruta)} label">${element.Codigo}</span></td>
                             <td>${element.Caja}</td>
                             <td class="text-right">${element.Cantidad}</td>
                         </tr>
@@ -269,6 +331,8 @@
                 return value;
             }
             const tblAlineacionHomeUser = document.querySelector('#tblAlineacionHomeUser');
+            const lblInfoAlineacion = document.querySelector('#lblInfoAlineacion');
+            lblInfoAlineacion.innerHTML = `Semana: ${datos.ultimaProduccion.N_Semana} <br> Código: ${datos.ultimaProduccion.Cod_Embarque}`;
             tblAlineacionHomeUser.innerHTML = TablaAlineacion(datos.rowFour.ultimaAlineacion);
 
         });

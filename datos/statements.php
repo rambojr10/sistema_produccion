@@ -509,6 +509,7 @@
         return $datos->fetch();
     }
 
+    //Devuelve las semanas por año
     function cargarsemanaspa($anho) {
         $bd = conectar();
         $datos = $bd->prepare("SELECT * FROM tblsemanas WHERE Anho = :anho");
@@ -677,8 +678,8 @@
     function veralineacion($codEmbarque, $ibmFinca) {
         $bd = conectar();
         $datos = $bd->prepare("
-            SELECT de.FKCodigo_TblCajasProduccion as Codigo, cp.Descripcion as Caja, de.Cantidad as Cantidad 
-            FROM tbldet_tblembarque as de, tblcajasproduccion as cp
+            SELECT de.FKCodigo_TblCajasProduccion as Codigo, cp.Descripcion as Caja, de.Cantidad as Cantidad, cp.FKId_TblTipoFruta as tipoFruta
+            FROM tbldet_tblembarque as de, tblcajasproduccion as cp, tbltipofruta as tp
             WHERE de.FKCodigo_TblCajasProduccion = cp.PKCodigo
             AND de.FKIbm_TblFincas = :ibmFinca
             AND de.FKCod_TblEmbarque = :codEmbarque
@@ -888,6 +889,19 @@
         $datos->bindParam(':idDia', $idDia, PDO::PARAM_INT);
         $datos->execute();
         return $datos->fetchAll();
+    }
+
+    //
+    function semanaporfecha($fecha) {
+        $bd = conectar();
+        $datos = $bd->prepare("
+            SELECT * FROM tblsemanas as s
+            WHERE :fecha >= DATE(s.Fecha_Inicio) 
+            AND DATE(s.Fecha_Fin) >= :fecha     
+        ");
+        $datos->bindParam(':fecha', $fecha, PDO::PARAM_STR);
+        $datos->execute();
+        return $datos->fetch();
     }
 
 

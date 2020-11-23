@@ -595,37 +595,53 @@
                             <div class="recent-post-wrapper notika-shadow sm-res-mg-t-30 tb-res-ds-n dk-res-ds">
                                 <div class="recent-post-ctn">
                                     <div class="recent-post-title">
-                                        <h2>Alineación</h2>
+                                        <h2>Semana actual</h2>
                                     </div>
                                 </div>
                                 <div class="recent-post-items">
-                                    <div class="recent-post-signle rct-pt-mg-wp">
-                                        <a href="#">
-                                            <div class="recent-post-flex">
-                                                <div class="recent-post-img">
-                                                    <img src="img/post/2.jpg" alt="" />
-                                                </div>
-                                                <div class="recent-post-it-ctn">
-                                                    <h2>Smith</h2>
-                                                    <p>Nunc quis diam diamurabitur at dolor elementum, dictum turpis vel</p>
+                                    <div class="row ui blue segment">
+                                        <div class="ui relaxed divided list">
+                                            <div class="item">
+                                                <div class="content">
+                                                    <a class="header">Semana</a>
+                                                    <div class="description" id="info-semana-semana">SEMANA 48</div>
                                                 </div>
                                             </div>
-                                        </a>
+                                            <div class="item">
+                                                <div class="content">
+                                                    <a class="header">Fecha inicio</a>
+                                                    <div class="description" id="info-semana-inicio">2020-12-23</div>
+                                                </div>
+                                            </div>
+                                            <div class="item">
+                                                <div class="content">
+                                                    <a class="header">Fecha fin</a>
+                                                    <div class="description" id="info-semana-fin">2020-12-30</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <button type="button" class="btn btn-block">12 SEMANAS</button>
+                                        <button type="button" class="btn btn-block"">11 SEMANAS</button>
+                                        <button type="button" class="btn btn-block"">10 SEMANAS</button>
+                                        <button type="button" class="btn btn-block">09 SEMANAS</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
-                            <div class="recent-items-wp notika-shadow sm-res-mg-t-30">
+                            <div class="recent-items-wp notika-shadow sm-res-mg-t-30" style="height: 400px; overflow: auto;">
                                 <div class="rc-it-ltd">
                                     <div class="recent-items-ctn">
                                         <div class="recent-items-title">
                                             <h2>Última alineación</h2>
+                                            <p class="text-muted" id="lblInfoAlineacion"></p>
                                         </div>
                                     </div>
                                     <div class="recent-items-inn">
-                                        <table class="table table-inner table-vmiddle" style="height: 700px; overflow: auto;">
+                                        <table class="table table-inner table-vmiddle">
                                             <thead>
                                                 <tr>
                                                     <th>Código</th>

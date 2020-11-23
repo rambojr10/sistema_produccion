@@ -632,9 +632,9 @@
     }
 
     //
-    function cargardatos_racimos_ip() {
+    function info_semana($idSemana) {
         // Obtiene y cambia los números de acuerdo a los ids de las cintas en la tabla que van de 1 a 10, los retorna en orden de 12 a 9 semanas
-        $semana = buscarregistro($_POST['id_semana'], 'PKId', 'TblSemanas', false);
+        $semana = buscarregistro($idSemana, 'PKId', 'TblSemanas', false);
         $datos['semana'] = $semana[0];
         $ids[] = buscarregistro(
             (($semana[0]->FKId_TblCintas-2 == -1 ? 9 : ($semana[0]->FKId_TblCintas-2 == 0 ? 10 : $semana[0]->FKId_TblCintas-2))),
@@ -653,7 +653,7 @@
             'PKId', 'TblCintas', false
         )[0];
         $datos['cintas'] = $ids;
-        echo json_encode($datos);
+        return $datos;
     }
 
     // 
@@ -924,7 +924,10 @@
         $result['rowThree']['nacionalElaboradasUltimaSemana'] = $nacionalElaboradasDia;
 
         //rowFour
+        $semanaActual = semanaporfecha($_GET['fecha_actual']);
+        $semanaWithInfo = info_semana($semanaActual->PKId);
         $result['rowFour']['ultimaAlineacion'] = veralineacion($ultimaProgramacion->PKCod, $_SESSION['conectado']->PKIbm);
+        $result['rowFour']['ultimaSemanaInfo'] = $semanaWithInfo;
 
         //Final
         echo json_encode($result);
@@ -1190,7 +1193,7 @@
             
             //
             case 'cargardatos_racimos_ip':
-                cargardatos_racimos_ip();
+                echo json_encode(info_semana($_POST['id_semana']));
                 break;
             
             // Verifica si existe el código de embarque

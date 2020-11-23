@@ -345,6 +345,7 @@
         })
         .then(datosTablas => {
             generar_tablas_pe(datosTablas);
+            
             //loader 
             $('.osc').fadeOut();
             $('#loader').fadeOut();
