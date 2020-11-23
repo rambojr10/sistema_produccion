@@ -218,7 +218,6 @@
         fetch(`../logica/contenido.php?op=datos_home_user&fecha_actual=${fecha(fechaActual)}`)
         .then(response => response.json())
         .then(datos => {
-            console.log(fechaActual, datos)
 
             //rowOne
             const lblTotalElaborado = document.getElementById('lblTotalElaborado');
@@ -259,6 +258,12 @@
             
 
             //rowFour
+            const infoFincaContainer = document.querySelector('#infoFincaContainer');
+            infoFincaContainer.children[0].textContent = datos.ultimaProduccion.PKIbm;
+            infoFincaContainer.children[1].textContent = datos.ultimaProduccion.Nombre;
+            infoFincaContainer.children[2].children[0].textContent = datos.ultimaProduccion.Area_Neta;
+            infoFincaContainer.children[3].children[0].textContent = datos.ultimaProduccion.Area_Bruta;
+
             const objectSemanaActual = {
                 infoSemanaSemana: document.getElementById('info-semana-semana'),
                 inforSemanaInicio: document.getElementById('info-semana-inicio'),
@@ -298,8 +303,7 @@
                 
             })(objectSemanaActual, datos.rowFour.ultimaSemanaInfo);
 
-
-            function TablaAlineacion(datosTabla, semana, codEmbarque) {
+            function TablaAlineacion(datosTabla) {
                 let value = '';
                 datosTabla.forEach(element => {
                     let label = (tipoFruta) => {
@@ -334,7 +338,6 @@
             const lblInfoAlineacion = document.querySelector('#lblInfoAlineacion');
             lblInfoAlineacion.innerHTML = `Semana: ${datos.ultimaProduccion.N_Semana} <br> Código: ${datos.ultimaProduccion.Cod_Embarque}`;
             tblAlineacionHomeUser.innerHTML = TablaAlineacion(datos.rowFour.ultimaAlineacion);
-
         });
     }
 
