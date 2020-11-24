@@ -103,10 +103,10 @@
             if ($datos->execute()) {
                 for ($x=2; $x < 53; $x++) { 
                     $datos = $bd->prepare("
-                        SELECT  tblsemanas.Fecha_Inicio as fechai, 
-                                tblsemanas.Fecha_Fin as fechaf, 
-                                tblsemanas.FKId_TblCintas as cinta 
-                        FROM tblsemanas WHERE tblsemanas.N_Semana = 'SEMANA ".($x-1)."' AND tblsemanas.Anho = :anho
+                        SELECT  Fecha_Inicio as fechai, 
+                                Fecha_Fin as fechaf, 
+                                FKId_TblCintas as cinta 
+                        FROM tblsemanas WHERE N_Semana = 'SEMANA ".($x-1)."' AND Anho = :anho
                     ");
                     $datos->bindParam(":anho", $anho, PDO::PARAM_INT);
                     if ($datos->execute()){
@@ -324,7 +324,7 @@
             $totalCajasExportadas, $ratio, $merma, $pesoRacimos, $areaRecorrida, $pesoVastago, $anhoProduccion) {
             try {
                 $bd = conectar();
-                $datos = $bd->prepare("INSERT INTO TblProduccion VALUES(
+                $datos = $bd->prepare("INSERT INTO tblproduccion VALUES(
                     null, :ibmFinca, :idEmbolse, :idRacimos, :idSemana, :idNacional, :codEmbarque, :totalCajasElaboradas, :totalCajasRechazadas, 
                     :totalCajasExportadas, :ratio, :merma, :pesoRacimos, :areaRecorrida, :pesoVastago, :anhoProduccion);");
                 $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
@@ -405,6 +405,7 @@
 // Sentencias de búsqueda ==========================================================================================
     //función busca un único registro globalmente si tiene condicional lo ejecuta
     function buscarregistro($key, $campo, $tabla, $condicional){
+        $tabla = strtolower($tabla);
         $bd = conectar();
         if ($condicional != false)
             $datos = $bd->prepare("SELECT * FROM $tabla WHERE $campo = :key AND $condicional");
@@ -469,7 +470,7 @@
 
     function buscarfinca($ibm_f) {
         $bd = conectar();
-        $datos = $bd->prepare("SELECT tblfincas.Nombre FROM TblFincas WHERE PKIbm = :ibm_f");
+        $datos = $bd->prepare("SELECT Nombre FROM TblFincas WHERE PKIbm = :ibm_f");
         $datos->bindParam(":ibm_f", $ibm_f, PDO::PARAM_STR);
         $datos->execute();
         return $datos->fetch();
@@ -613,7 +614,7 @@
     //
     function tipofrutaselect() {
         $bd = conectar();
-        $datos = $bd->prepare("SELECT * FROM TblTipoFruta");
+        $datos = $bd->prepare("SELECT * FROM tbltipofruta");
         $datos->execute();
         return $datos->fetchAll();
     }
@@ -701,7 +702,7 @@
             AND f.PKIbm = de.FKIbm_TblFincas
             AND e.PKCod = de.FKCod_TblEmbarque
             AND e.PKCod = :codEmbarque
-            AND f.PKIbm = (SELECT tblfincas.PKIbm FROM tblfincas LIMIT 1)
+            AND f.PKIbm = (SELECT PKIbm FROM tblfincas LIMIT 1)
         ");
         $datos->bindParam(':codEmbarque', $codEmbarque, PDO::PARAM_STR);
         $datos->execute();
@@ -773,7 +774,7 @@
     //
     function buscarultimoestimativo($totalFincas) {
         $bd = conectar();
-        $datos = $bd->prepare("SELECT * FROM TblEstimativo ORDER BY FKCod_TblEmbarque DESC LIMIT :id ");
+        $datos = $bd->prepare("SELECT * FROM tblestimativo ORDER BY FKCod_TblEmbarque DESC LIMIT :id ");
         $datos->bindParam(':id', $totalFincas, PDO::PARAM_INT);
         $datos->execute();
         return $datos->fetchAll();
@@ -816,8 +817,8 @@
         $bd = conectar();
         $datos = $bd->prepare("
             SELECT SUM(p.Total_CElaboradas) as totalElaborado, SUM(p.Total_CRechazadas) as totalRechazadas 
-            FROM tblproduccion as p, tblfincas WHERE p.FKIbm_TblFincas = tblfincas.PKIbm 
-            AND tblfincas.PKIbm = :ibmFinca
+            FROM tblproduccion as p, tblfincas as f WHERE p.FKIbm_TblFincas = f.PKIbm 
+            AND f.PKIbm = :ibmFinca
         ");
         $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
         $datos->execute();
@@ -994,7 +995,7 @@
     function changepassword($idUser, $password) {
         try {
             $bd = conectar();
-            $datos = $bd->prepare("UPDATE TblUsuarios SET password = :password WHERE PKId = :idUser");
+            $datos = $bd->prepare("UPDATE tblusuarios SET password = :password WHERE PKId = :idUser");
             $datos->bindParam(':idUser', $idUser, PDO::PARAM_INT);
             $datos->bindParam(':password', $password, PDO::PARAM_STR);
             if ($datos->execute())

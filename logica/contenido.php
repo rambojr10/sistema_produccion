@@ -634,7 +634,7 @@
     //
     function info_semana($idSemana) {
         // Obtiene y cambia los números de acuerdo a los ids de las cintas en la tabla que van de 1 a 10, los retorna en orden de 12 a 9 semanas
-        $semana = buscarregistro($idSemana, 'PKId', 'TblSemanas', false);
+        $semana = buscarregistro($idSemana, 'PKId', 'tblsemanas', false);
         $datos['semana'] = $semana[0];
         $ids[] = buscarregistro(
             (($semana[0]->FKId_TblCintas-2 == -1 ? 9 : ($semana[0]->FKId_TblCintas-2 == 0 ? 10 : $semana[0]->FKId_TblCintas-2))),
@@ -671,17 +671,17 @@
         $tblProduccion = (count($tblProduccion) == 1 ? $tblProduccion[0] : ""); 
         if ($tblProduccion != "") {
 
-            $tblEmbolse = buscarregistro($tblProduccion->FKId_TblEmbolse, "PKId", "TblEmbolse", false);
+            $tblEmbolse = buscarregistro($tblProduccion->FKId_TblEmbolse, "PKId", "tblembolse", false);
             $tblEmbolse = (count($tblEmbolse) == 1 ? $tblEmbolse[0] : "");
-            $idCinta = buscarregistro($tblProduccion->FKId_TblSemanas, "PKId", "TblSemanas", false);
+            $idCinta = buscarregistro($tblProduccion->FKId_TblSemanas, "PKId", "tblsemanas", false);
 
             //TblRacimos
-            $tblRacimos = buscarregistro($tblProduccion->FKId_TblRacimos, "PKId", "TblRacimos", false);
-            $tblRacimos = buscarregistro($tblRacimos[0]->PKId, "FKId_TblRacimos", "TblDet_TblRacimos_TblDias", false);
+            $tblRacimos = buscarregistro($tblProduccion->FKId_TblRacimos, "PKId", "tblracimos", false);
+            $tblRacimos = buscarregistro($tblRacimos[0]->PKId, "FKId_TblRacimos", "tbldet_tblracimos_tbldias", false);
             $infoRacimos = array();
             foreach ($tblRacimos as $dr) {
                 $pushDetalle = [$dr->N_RacimosR_Dia, $dr->Total_PEmbarque, $dr->Total_POtrasFincas];
-                $datosDia = buscarregistro($dr->PKId, "FKId_TblDet_TblRacimos_TblDias", "TblDet_TblDet_TblRacimos_TblDias", false);
+                $datosDia = buscarregistro($dr->PKId, "FKId_TblDet_TblRacimos_TblDias", "tbldet_tbldet_tblracimos_tbldias", false);
                 $pushDetalleDetalle = [];
                 foreach ($datosDia as $dd) {
                     $pushDetalleDetalle[] = $dd->N_RacimosC_Cintas;
