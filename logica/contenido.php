@@ -941,6 +941,10 @@
         echo json_encode($result);
     }
 
+    function ver_reporte() {
+        return json_encode('todo ok');
+    }
+
 //  ACTUALIZAR ==================================================================================================================
     
     //

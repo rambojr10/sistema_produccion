@@ -2,13 +2,13 @@
 // MOSTRAR RAZÓN SOCIAL POR FINCAS ------------------------------------------------------------------------
     
     $(document).on("click", "[href='#ver_empresa']", function() {
-        var ibm = $(this).attr("ibm");
+        let ibm = $(this).attr("ibm");
         $.post({
             url: '../logica/contenido.php',
             data: {op: 'mostrarempresa', ibm_e: ibm},
             cache: false,
             success: function(res) {
-                var empresa = JSON.parse(res);
+                let empresa = JSON.parse(res);
                 $("#nom_empresa").text(empresa.nombre);
                 $("#dir_empresa").text(empresa.dir);
                 $("#tel_empresa").text(empresa.tel);
@@ -21,27 +21,12 @@
     
     function listar_fincas() {
         $(".contenido").load("../capa_web/fincas.php");
-        const op = new FormData();
-        op.append('op', 'listarfincas');
-        fetch("../logica/contenido.php", {
-            method: 'POST',
-            body: op
-        })
+        fetch('../logica/contenido.php?op=listarfincas')
+        .then(response => response.text())
         .then(res => {
-            if (res.ok) {
-                return res.text()  
-            }else{
-                throw "Error al cargar los datos";
-            }
+            $("#listarfincas").html(res);
+            $(".contenido").hide().show("blind", 1500);
         })
-        .then(datos => {
-            $("#listarfincas").html(datos);
-        })
-        .catch(function(err) {
-            console.log(err); 
-        });
-
-        $(".contenido").hide().show("blind", 1500);
     }
 
 // AGREGAR NUEVA FINCA ------------------------------------------------------------------------------------
@@ -76,14 +61,13 @@
         //alert(JSON.stringify(lotes));
         if (ibm != "" && nombre != "" && neta != "" && bruta != "" && empresa != 0 && lotes[0][0] != "" && lotes[0][1] != "") {
             var data = {ibm: ibm, nombre: nombre, neta: neta, bruta: bruta, empresa: empresa, lotes: lotes};
-            $.get("../logica/contenido.php",{op: 'nuevafinca', data: data}, function(res){
-                if(res == true){
+            $.get("../logica/contenido.php", {op: 'nuevafinca', data: data}, function(res){
+                if(res == true)
                     swal("Registro", "Registro de datos exitoso", "success");
-                }else{
+                else
                     swal("Registro", "Falló al intentar registrar los datos, por favor revise detenidamente", "error");
-                }
             });
-        }else{
+        }else {
             swal("Datos", "Faltan campos por llenar...", "error");
         } 
     }
@@ -97,7 +81,7 @@
 // ELIMINAR FINCA ----------------------------------------------------------------------------------------
     
     $(document).on("click", "[href='#eliminar_finca']", function(){
-        var ibm = "";
+        let ibm = "";
         $(this).parents("tr").find("td").each(function(){
             ibm = $(this).attr("dato");
             if (ibm === undefined) {
@@ -115,14 +99,13 @@
 		}).then(function(isConfirm){
 			if (isConfirm) {  
                 $.get("../logica/contenido.php", {op: "eliminar", key: ibm, campo: "tblfincas.PKIbm", tabla: "tblfincas"}, function(res){
-                    // alert(res);
                     if (res == true) {
                         swal("Eliminación", "Registro eliminado satisfactoriamente.", "success");
                         $("#listarfincas").html("");
                         $.get("../logica/contenido.php", {op: "listarfincas"}, function(res){
                             $("#listarfincas").html(res);       
                         });
-                    }else{
+                    }else {
                         swal("Eliminación", "No se pudo eliminar el registro.", "error");
                     }
                 });

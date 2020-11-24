@@ -744,6 +744,7 @@
     <!-- Controlador de contenido, según menú 
         ============================================ -->
     <script src="../logica/js/contenido.js"></script>
+    <script src="../logica/js/home.js"></script>
     <script src="../logica/js/fincas.js"></script>
     <script src="../logica/js/empresas.js"></script>
     <script src="../logica/js/cajasproduccion.js"></script>
