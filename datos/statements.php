@@ -358,7 +358,7 @@
             $pesoVastagoDia, $lotesCortadosDia, $lotesIniciadosDia) {
             try {
                 $bd = conectar();
-                $datos = $bd->prepare("INSERT INTO TblDet_TblProduccion VALUES(
+                $datos = $bd->prepare("INSERT INTO tbldet_tblproduccion VALUES(
                     null, :idTblProduccion, :idTblDias, :cajasElaboradasDia, 
                     :cajasRechazadasDia, :cajasExportadasDia, :ratioDia, 
                     :mermaDia, :pesoRacimosDia, :areaRecorridaDia, :pesoVastagoDia, :lotesCortadosDia, :lotesIniciadosDia);");
@@ -387,7 +387,7 @@
         function guardarproduccion_detalle_detalle($idProduccionDetalle, $codigoTblCajasProduccion, $cantidadProducidas) {
             try {
                 $bd = conectar();
-                $datos = $bd->prepare("INSERT INTO TblDet_TblDet_TblProduccion VALUES(
+                $datos = $bd->prepare("INSERT INTO tbldet_tbldet_tblproduccion VALUES(
                     null, :idProduccionDetalle, :codigoTblCajasProduccion, :cantidadProducidas);");
                 $datos->bindParam(':idProduccionDetalle', $idProduccionDetalle, PDO::PARAM_INT);
                 $datos->bindParam(':codigoTblCajasProduccion', $codigoTblCajasProduccion, PDO::PARAM_INT);
@@ -470,7 +470,7 @@
 
     function buscarfinca($ibm_f) {
         $bd = conectar();
-        $datos = $bd->prepare("SELECT Nombre FROM TblFincas WHERE PKIbm = :ibm_f");
+        $datos = $bd->prepare("SELECT Nombre FROM tblfincas WHERE PKIbm = :ibm_f");
         $datos->bindParam(":ibm_f", $ibm_f, PDO::PARAM_STR);
         $datos->execute();
         return $datos->fetch();
@@ -1010,6 +1010,7 @@
 // Sentencias de eliminación ----------------------------------------------------------------------------------------
     //Esta función recibe la llave primaria y la tabla como referencia de eliminación (eliminar_s = método Eliminar del archivo statements)
     function eliminar_s($key, $campo, $tabla){
+        $tabla = strtolower($tabla);
         try {
             $bd = conectar();
             if ($tabla == 'tblfincas'){
@@ -1027,7 +1028,7 @@
     function eliminar_lotes($key){
         try{
             $bd = conectar();
-            $datos = $bd->prepare("DELETE FROM tbllotes WHERE tbllotes.FKIbm_TblFincas = :key");
+            $datos = $bd->prepare("DELETE FROM tbllotes WHERE FKIbm_TblFincas = :key");
             $datos->bindParam(":key", $key, PDO::PARAM_STR);
             $datos->execute();
         }catch(Exception $e){
