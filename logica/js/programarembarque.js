@@ -364,111 +364,111 @@
         })
         .then(function(isConfirm) {
             if(isConfirm) {
-                let codEmbarque = $("#cod_embarque-pe").data("codEmbarque");
-                let anho = $("#anho_pe").data("anho");
-                let idSemana = $("#semanas_pe").data("idSemana");
-                var detalles = {
-                    codEmbarque: codEmbarque,
-                    anho: anho,
-                    idSemana: idSemana,
-                    cajas: [],
-                    estimativo: [
-                        {
-                            finca: "ZARZAMORA",
-                            premiun: ($("#premiun_zz").val()),
-                            especial: ($("#especial_zz").val())
-                        }, 
-                        {
-                            finca: "GUAIMARAL",
-                            premiun: ($("#premiun_gm").val()),
-                            especial: ($("#especial_gm").val())
-                        },
-                        {
-                            finca: "TAIWÁN",
-                            premiun: ($("#premiun_tw").val()),
-                            especial: ($("#especial_tw").val())
-                        },
-                        {
-                            finca: "CANDELARIA",
-                            premiun: ($("#premiun_cn").val()),
-                            especial: ($("#especial_cn").val())
-                        },
-                        {
-                            finca: "ÁLAMOS",
-                            premiun: ($("#premiun_al").val()),
-                            especial: ($("#especial_al").val())
-                        },
-                        {
-                            finca: "KALAMARÍ",
-                            premiun: ($("#premiun_kl").val()),
-                            especial: ($("#especial_kl").val())
-                        }
-                    ]                
-                }
-                //Recorre la tabla obteniendo los datos de cada fila 
-                $("#tblAlineacion-pe tbody tr").each( function() {
-                    let codigoCaja;
-                    $(this).find("td").each(function(index) {
-                        let cantidad;
-                        if ($(this).attr("idTd") == "datos") {
-                            if (index === 1) {
-                                codigoCaja = $(this).text();
-                            } else {
-                                cantidad = ($(this).find("input[type='text']").val() == '' ? null : $(this).find("input[type='text']").val());
-                                let nomFinca = $(this).find("input[type='text']").attr("ident");
-                                //De acuerdo al abreviado de la finca se usa para enviarlo a una función y buscar el ibm
-                                switch (nomFinca) {
-                                    case "t_zz":
-                                        nomFinca = "zarzamora";
-                                        break;
-                                    case "t_gm":
-                                        nomFinca = "guaimaral";
-                                        break;
-                                    case "t_tw":
-                                        nomFinca = "taiwan";
-                                        break;
-                                    case "t_cn":
-                                        nomFinca = "candelaria";
-                                        break;
-                                    case "t_kl":
-                                        nomFinca = "kalamari";
-                                        break;
-                                    case "t_al":
-                                        nomFinca = "alamos";
-                                        break;
-                                
-                                    default:
-                                        break;
-                                }
-                                $.ajax({
-                                    async: false,
-                                    cache: false,
-                                    dataType: 'JSON',
-                                    data: {
-                                        op: 'buscarfinca',
-                                        nombreFinca: nomFinca
-                                    },
-                                    type: 'GET',
-                                    url: '../logica/contenido.php',
-                                    success: (resIbmFinca) => {
-                                        let item = {
-                                            codigoCaja: codigoCaja,
-                                            ibmFinca: resIbmFinca,
-                                            cantidad: cantidad
-                                        }
-                                        detalles.cajas.push(item);
-                                    }
-                                });
-                            }
-                        }
-                    });
-                });
-                
                 if (validar_datos()) {
                     //Loader
                     $(".osc").fadeIn();
                     $("#loader").fadeIn();
                     
+                    let codEmbarque = $("#cod_embarque-pe").data("codEmbarque");
+                    let anho = $("#anho_pe").data("anho");
+                    let idSemana = $("#semanas_pe").data("idSemana");
+                    var detalles = {
+                        codEmbarque: codEmbarque,
+                        anho: anho,
+                        idSemana: idSemana,
+                        cajas: [],
+                        estimativo: [
+                            {
+                                finca: "ZARZAMORA",
+                                premiun: ($("#premiun_zz").val()),
+                                especial: ($("#especial_zz").val())
+                            }, 
+                            {
+                                finca: "GUAIMARAL",
+                                premiun: ($("#premiun_gm").val()),
+                                especial: ($("#especial_gm").val())
+                            },
+                            {
+                                finca: "TAIWÁN",
+                                premiun: ($("#premiun_tw").val()),
+                                especial: ($("#especial_tw").val())
+                            },
+                            {
+                                finca: "CANDELARIA",
+                                premiun: ($("#premiun_cn").val()),
+                                especial: ($("#especial_cn").val())
+                            },
+                            {
+                                finca: "ÁLAMOS",
+                                premiun: ($("#premiun_al").val()),
+                                especial: ($("#especial_al").val())
+                            },
+                            {
+                                finca: "KALAMARÍ",
+                                premiun: ($("#premiun_kl").val()),
+                                especial: ($("#especial_kl").val())
+                            }
+                        ]                
+                    }
+                    //Recorre la tabla obteniendo los datos de cada fila 
+                    $("#tblAlineacion-pe tbody tr").each( function() {
+                        let codigoCaja;
+                        $(this).find("td").each(function(index) {
+                            let cantidad;
+                            if ($(this).attr("idTd") == "datos") {
+                                if (index === 1) {
+                                    codigoCaja = $(this).text();
+                                } else {
+                                    cantidad = ($(this).find("input[type='text']").val() == '' ? null : $(this).find("input[type='text']").val());
+                                    let nomFinca = $(this).find("input[type='text']").attr("ident");
+                                    //De acuerdo al abreviado de la finca se usa para enviarlo a una función y buscar el ibm
+                                    switch (nomFinca) {
+                                        case "t_zz":
+                                            nomFinca = "zarzamora";
+                                            break;
+                                        case "t_gm":
+                                            nomFinca = "guaimaral";
+                                            break;
+                                        case "t_tw":
+                                            nomFinca = "taiwan";
+                                            break;
+                                        case "t_cn":
+                                            nomFinca = "candelaria";
+                                            break;
+                                        case "t_kl":
+                                            nomFinca = "kalamari";
+                                            break;
+                                        case "t_al":
+                                            nomFinca = "alamos";
+                                            break;
+                                    
+                                        default:
+                                            break;
+                                    }
+                                    $.ajax({
+                                        async: false,
+                                        cache: false,
+                                        dataType: 'JSON',
+                                        data: {
+                                            op: 'buscarfinca',
+                                            nombreFinca: nomFinca
+                                        },
+                                        type: 'GET',
+                                        url: '../logica/contenido.php',
+                                        success: (resIbmFinca) => {
+                                            let item = {
+                                                codigoCaja: codigoCaja,
+                                                ibmFinca: resIbmFinca,
+                                                cantidad: cantidad
+                                            }
+                                            detalles.cajas.push(item);
+                                        }
+                                    });
+                                }
+                            }
+                        });
+                    });
+                
                     const op = new FormData();
                     op.append("op", "guardar_programacion");
                     op.append("jsonProgramacion", JSON.stringify(detalles));
@@ -545,8 +545,8 @@
                     <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_al" style="width:80px"></td>
                     <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_kl" style="width:80px"></td>
                     <td align="center"><input type="text" class="valida text-center tcj_h" style="width:80px" value="0" disabled></td>
-                    <td align="center"><input type="text" class="valida text-center tcj_pm" style="width:80px" factor_con="${dataCajasPe.FactorConversion}" value="0" disabled></td>
-                    <td align="center"><input type="text" class="valida text-center" style="width:80px" value="0" disabled></td>
+                    <td align="center"><input type="text" class="valida text-center tcj_pm" style="width:80px" factor_con="${dataCajasPe.FKId_TblTipoFruta != '2' ? dataCajasPe.FactorConversion : 0}" value="0" disabled></td>
+                    <td align="center"><input type="text" class="valida text-center tcj_me" style="width:80px" factor_con="${dataCajasPe.FKId_TblTipoFruta == '2' ? dataCajasPe.FactorConversion : 0}" value="0" disabled></td>
                 </tr>
             `;
         }
@@ -567,8 +567,8 @@
         })
         .then(isConfirm => {
             if (isConfirm) {
-                const op = new FormData();
                 let codEmbarque = $("#cod_embarque-pe").data("codEmbarque")
+                const op = new FormData();
                 op.append("op", "eliminarembarque");
                 op.append("codEmbarque", codEmbarque);
                 fetch("../logica/contenido.php", {
@@ -586,7 +586,7 @@
                         swal('Programar embarque', `Acción completada, ${codEmbarque} eliminado`, 'success');
                         $("[href='#programarembarque']").trigger("click");
                     } else {
-                        swal('Programar embarque', `Acción completada, ${codEmbarque} no se ha podido eliminar`, 'error');
+                        swal('Programar embarque', `${codEmbarque} no se ha podido eliminar, es posible que esté intentando eliminar un código en producción`, 'error');
                     }
                 });
             }
@@ -648,8 +648,14 @@
         factorsito.val(r => {
             return (campo_cajas*factorsito.attr("factor_con"));
         });
+        
+        //llena ME.20 KLS en columna -------------------------------------------------------
+        factorsito = $(this).parents("tr").find("td").eq(10).find("input[type='text']");
+        factorsito.val(r => {
+            return (campo_cajas*factorsito.attr("factor_con"));
+        });
 
-        //llena el total_cajas en columna
+        //llena el total_cajas en columna cajas
         let total_cajas_h = 0;
         [...document.querySelectorAll(".tcj_h")].forEach( element => {
             total_cajas_h += parseInt(element.value === 'NaN' ? '0' : element.value);
@@ -662,6 +668,13 @@
             total_cajas_pm += parseInt(element.value === 'NaN' ? '0' : element.value);
         });
         $("#t_pm").html(r => total_cajas_pm);
+
+        //llena el total_cajas en columna de MENOR ESPECIFICACIÓN 20.KLS
+        let total_cajas_me = 0;
+        [...document.querySelectorAll(".tcj_me")].forEach( element => {
+            total_cajas_me += parseInt(element.value === 'NaN' ? '0' : element.value);
+        });
+        $("#t_me").html(r => total_cajas_me);
         //igualar campos totales a cero al cancelar un embarque, e importar el index
 
         //--------------------------------------------

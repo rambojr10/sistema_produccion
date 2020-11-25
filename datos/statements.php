@@ -680,7 +680,7 @@
         $bd = conectar();
         $datos = $bd->prepare("
             SELECT de.FKCodigo_TblCajasProduccion as Codigo, cp.Descripcion as Caja, de.Cantidad as Cantidad, cp.FKId_TblTipoFruta as tipoFruta
-            FROM tbldet_tblembarque as de, tblcajasproduccion as cp, tbltipofruta as tp
+            FROM tbldet_tblembarque as de, tblcajasproduccion as cp
             WHERE de.FKCodigo_TblCajasProduccion = cp.PKCodigo
             AND de.FKIbm_TblFincas = :ibmFinca
             AND de.FKCod_TblEmbarque = :codEmbarque

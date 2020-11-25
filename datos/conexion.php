@@ -1,11 +1,11 @@
 <?php 
 	function conectar() {
 
-		//conection1
-		// $server = 'remotemysql.com';
-		// $databaseName = 'l5tGyMWrI9';
-		// $userName = 'l5tGyMWrI9';
-		// $password = 'bdV98BMjOX';
+		// conection1
+		$server = 'remotemysql.com';
+		$databaseName = 'l5tGyMWrI9';
+		$userName = 'l5tGyMWrI9';
+		$password = 'bdV98BMjOX';
 		
 		//conection2
 		// $server2 = 'sql9.freemysqlhosting.net';

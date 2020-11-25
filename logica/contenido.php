@@ -1031,11 +1031,15 @@
         $hasDetalleEmbarque = buscarregistro($codEmbarque, 'FKCod_TblEmbarque', 'TblDet_TblEmbarque', false);
         $hasEstimativo = buscarregistro($codEmbarque, 'FKCod_TblEmbarque', 'TblEstimativo', false);
         $hasProduccion = count($hasProduccion) > 0 ? false : true;
-        $hasDetalleEmbarque = count($hasDetalleEmbarque) > 0 ? eliminar_s($codEmbarque, 'FKCod_TblEmbarque', 'TblDet_TblEmbarque') : true;
-        $hasEstimativo = count($hasEstimativo) > 0 ? eliminar_s($codEmbarque, 'FKCod_TblEmbarque', 'TblEstimativo') : true;
-        if ($hasProduccion and $hasDetalleEmbarque and $hasEstimativo and $state !== 'edit') {
-            eliminar_s($codEmbarque, 'PKCod', 'TblEmbarque');
-            echo true;
+        if ($hasProduccion) {
+            $hasDetalleEmbarque = count($hasDetalleEmbarque) > 0 ? eliminar_s($codEmbarque, 'FKCod_TblEmbarque', 'TblDet_TblEmbarque') : true;
+            $hasEstimativo = count($hasEstimativo) > 0 ? eliminar_s($codEmbarque, 'FKCod_TblEmbarque', 'TblEstimativo') : true;
+            if ($hasDetalleEmbarque and $hasEstimativo and $state !== 'edit') {
+                eliminar_s($codEmbarque, 'PKCod', 'TblEmbarque');
+                echo true;
+            } else {
+                echo false;
+            }
         } else {
             echo false;
         }

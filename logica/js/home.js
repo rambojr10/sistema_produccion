@@ -1,11 +1,32 @@
 
 // VIEW HOME ---------------------------------------------------------------------------------------------------------------------------------
+    
+    //
+    function controllerLoaderInHome(datos) {
+        if (typeof datos === 'object') {
+            //Loader
+            $(".osc").fadeOut();
+            $("#loader").fadeOut();
+        } else {
+            swal('Dashboard', 'No se ha podido cargar correctamente, es posible que no existan datos para tratar', 'error');
+            //Loader
+            $(".osc").fadeOut();
+            $("#loader").fadeOut();
+        }
+    }
 
     //
     function cargarHome(semanaActual) {
         fetch('../logica/contenido.php?op=datos_home')
-        .then(response => response.json())
+        .then(response => {
+            if (response.ok)
+                response.json();
+            else
+                throw "No es posible obtener los datos HOME";
+        })
         .then(datos => {
+            console.log(datos);
+            controllerLoaderInHome(datos);
 
             let component = '';
 
@@ -57,7 +78,7 @@
                     <tr>
                         <td>${element.Nombre}</td>
                         <td class="text-center">${element.N_Semana ? element.N_Semana : '-'}</td>
-                        <td class="text-right"><span class="btn-${element.Total_CRechazadas > 0 ? 'danger' : 'success'}">${element.Total_CRechazadas ? element.Total_CRechazadas : ''}</span></td>
+                        <td class="text-right"><span class="btn-${element.Total_CREchazadas > 0 ? 'danger' : 'success'}">${element.Total_CREchazadas ? element.Total_CREchazadas : ''}</span></td>
                     </tr>
                 `;
                 componentElaboradas += `
@@ -106,6 +127,8 @@
                 }
             });
             cardComparativa.innerHTML = component;
+
+            
         });
     }
 
@@ -116,127 +139,141 @@
             return hoy;
         };
         fetch(`../logica/contenido.php?op=datos_home_user&fecha_actual=${fecha(fechaActual)}`)
-            .then(response => response.json())
-            .then(datos => {
+        .then(response => {
+            if (response.ok) 
+                response.json();
+            else
+                throw "No es posible obtener los datos HOME";
+        })
+        .then(datos => {
+            console.log(datos);
+            controllerLoaderInHome(datos);
 
-                //rowOne
-                const lblTotalElaborado = document.getElementById('lblTotalElaborado');
-                lblTotalElaborado.textContent = datos.rowOne.historico.totalElaborado;
-                const lblTotalRechazadas = document.getElementById('lblTotalRechazadas');
-                lblTotalRechazadas.textContent = datos.rowOne.historico.totalRechazadas;
-                const lblTotalSemana = document.getElementById('lblTotalSemana');
-                lblTotalSemana.textContent = datos.ultimaProduccion.Total_CElaboradas;
+            //rowOne
+            const lblTotalElaborado = document.getElementById('lblTotalElaborado');
+            lblTotalElaborado.textContent = datos.rowOne.historico.totalElaborado;
+            const lblTotalRechazadas = document.getElementById('lblTotalRechazadas');
+            lblTotalRechazadas.textContent = datos.rowOne.historico.totalRechazadas;
+            const lblTotalSemana = document.getElementById('lblTotalSemana');
+            lblTotalSemana.textContent = datos.ultimaProduccion.Total_CElaboradas;
 
-                //rowTwo
-                function Porcentaje(...dynamicValues) {
-                    this.value = (dynamicValues[0] / dynamicValues[1]) * 100;
-                    return `${this.value.toFixed(2)}%`;
-                }
-                const porcentaje = Porcentaje(datos.rowTwo.ultimaProgramacion.totalElaborado, datos.rowTwo.ultimaProgramacion.totalProgramado);
-                const progressBar = document.getElementById('porcentajeElaborado');
-                progressBar.setAttribute('data-progress', porcentaje);
-                progressBar.setAttribute('style', `width: ${porcentaje}`);
-                progressBar.children[0].textContent = porcentaje;
+            //rowTwo
+            function Porcentaje(...dynamicValues) {
+                this.value = (dynamicValues[0] / dynamicValues[1]) * 100;
+                return `${this.value.toFixed(2)}%`;
+            }
+            const porcentaje = Porcentaje(datos.rowTwo.ultimaProgramacion.totalElaborado, datos.rowTwo.ultimaProgramacion.totalProgramado);
+            const progressBar = document.getElementById('porcentajeElaborado');
+            progressBar.setAttribute('data-progress', porcentaje);
+            progressBar.setAttribute('style', `width: ${porcentaje}`);
+            progressBar.children[0].textContent = porcentaje;
 
-                //rowThree
-                chartHomeUser(jQuery, datos.rowThree);
+            //rowThree
+            chartHomeUser(jQuery, datos.rowThree);
 
-                function Rendimientos(semana, values, elements) {
-                    semana.textContent = values.N_Semana;
-                    elements.forEach(element => {
-                        let tag = document.querySelector(`#td-${element}`);
-                        let simbolo = element == 'Area_Recorrida' ? '' : element == 'Cod_Embarque' ? '' : '%';
-                        tag.textContent = values[element] !== null ? `${values[element]}${simbolo}` : 0;
-                    });
-                }
-                const lblUltimaSemanaRegistrada = document.querySelector('#ultimaSemanaRegistrada');
-                Rendimientos(
-                    lblUltimaSemanaRegistrada,
-                    datos.ultimaProduccion,
-                    ['Ratio', 'Merma', 'Peso_Racimos', 'Area_Recorrida', 'Peso_Vastago', 'Cod_Embarque']
-                );
+            function Rendimientos(semana, values, elements) {
+                semana.textContent = values.N_Semana;
+                elements.forEach(element => {
+                    let tag = document.querySelector(`#td-${element}`);
+                    let simbolo = element == 'Area_Recorrida' ? '' : element == 'Cod_Embarque' ? '' : '%';
+                    tag.textContent = values[element] !== null ? `${values[element]}${simbolo}` : 0;
+                });
+            }
+            const lblUltimaSemanaRegistrada = document.querySelector('#ultimaSemanaRegistrada');
+            Rendimientos(
+                lblUltimaSemanaRegistrada,
+                datos.ultimaProduccion,
+                ['Ratio', 'Merma', 'Peso_Racimos', 'Area_Recorrida', 'Peso_Vastago', 'Cod_Embarque']
+            );
 
+            //rowFour
+            const infoFincaContainer = document.querySelector('#infoFincaContainer');
+            infoFincaContainer.children[0].textContent = datos.ultimaProduccion.PKIbm;
+            infoFincaContainer.children[1].textContent = datos.ultimaProduccion.Nombre;
+            infoFincaContainer.children[2].children[0].textContent = datos.ultimaProduccion.Area_Neta;
+            infoFincaContainer.children[3].children[0].textContent = datos.ultimaProduccion.Area_Bruta;
 
-                //rowFour
-                const infoFincaContainer = document.querySelector('#infoFincaContainer');
-                infoFincaContainer.children[0].textContent = datos.ultimaProduccion.PKIbm;
-                infoFincaContainer.children[1].textContent = datos.ultimaProduccion.Nombre;
-                infoFincaContainer.children[2].children[0].textContent = datos.ultimaProduccion.Area_Neta;
-                infoFincaContainer.children[3].children[0].textContent = datos.ultimaProduccion.Area_Bruta;
-
-                const objectSemanaActual = {
-                    infoSemanaSemana: document.getElementById('info-semana-semana'),
-                    inforSemanaInicio: document.getElementById('info-semana-inicio'),
-                    infoSemanaFin: document.getElementById('info-semana-fin'),
-                    cintasRenderer: document.querySelectorAll('.btn-block')
+            const objectSemanaActual = {
+                infoSemanaSemana: document.getElementById('info-semana-semana'),
+                inforSemanaInicio: document.getElementById('info-semana-inicio'),
+                infoSemanaFin: document.getElementById('info-semana-fin'),
+                cintasRenderer: document.querySelectorAll('.btn-block')
+            };
+            (function (selectores, datos) {
+                let claseReturn = (element) => {
+                    switch (element) {
+                        case '1':
+                            return 'embolseCoffee';
+                        case '2':
+                            return 'embolseBlack';
+                        case '3':
+                            return 'embolseOrange';
+                        case '4':
+                            return 'embolseGreen';
+                        case '5':
+                            return 'embolseYellow';
+                        case '6':
+                            return 'embolseWhite';
+                        case '7':
+                            return 'embolseBlue';
+                        case '8':
+                            return 'embolseGray';
+                        case '9':
+                            return 'embolsePurple';
+                        case '10':
+                            return 'embolseRed';
+                        default:
+                            break;
+                    }
                 };
-                (function (selectores, datos) {
-                    let claseReturn = (element) => {
-                        switch (element) {
+                datos.cintas.forEach((elementOne, index) => {
+                    selectores.cintasRenderer[index].className += ` ${claseReturn(elementOne.PKId)}`;
+                });
+
+            })(objectSemanaActual, datos.rowFour.ultimaSemanaInfo);
+
+            function TablaAlineacion(datosTabla) {
+                let value = '';
+                datosTabla.forEach(element => {
+                    let label = (tipoFruta) => {
+                        switch (tipoFruta) {
                             case '1':
-                                return 'embolseCoffee';
+                                return 'yellow';
                             case '2':
-                                return 'embolseBlack';
+                                return 'green';
                             case '3':
-                                return 'embolseOrange';
+                                return 'gray';
                             case '4':
-                                return 'embolseGreen';
+                                return 'gray';
                             case '5':
-                                return 'embolseYellow';
+                                return 'gray';
                             case '6':
-                                return 'embolseWhite';
-                            case '7':
-                                return 'embolseBlue';
-                            case '8':
-                                return 'embolseGray';
-                            case '9':
-                                return 'embolsePurple';
-                            case '10':
-                                return 'embolseRed';
+                                return 'blue';
                             default:
                                 break;
                         }
                     };
-                    datos.cintas.forEach((elementOne, index) => {
-                        selectores.cintasRenderer[index].className += ` ${claseReturn(elementOne.PKId)}`;
-                    });
+                    value += `
+                        <tr>
+                            <td><span class="ui ${label(element.tipoFruta)} label">${element.Codigo}</span></td>
+                            <td>${element.Caja}</td>
+                            <td class="text-right">${element.Cantidad}</td>
+                        </tr>
+                    `;
+                });
+                return value;
+            }
+            const tblAlineacionHomeUser = document.querySelector('#tblAlineacionHomeUser');
+            const lblInfoAlineacion = document.querySelector('#lblInfoAlineacion');
+            lblInfoAlineacion.innerHTML = `Semana: ${datos.rowFour.ultimaSemanaInfo.semana.N_Semana} <br> Código: EMB-${datos.rowFour.ultimaSemanaInfo.semana.Anho}${datos.rowFour.ultimaSemanaInfo.semana.PKId}`;
+            tblAlineacionHomeUser.innerHTML = TablaAlineacion(datos.rowFour.ultimaAlineacion);
 
-                })(objectSemanaActual, datos.rowFour.ultimaSemanaInfo);
-
-                function TablaAlineacion(datosTabla) {
-                    let value = '';
-                    datosTabla.forEach(element => {
-                        let label = (tipoFruta) => {
-                            switch (tipoFruta) {
-                                case '1':
-                                    return 'yellow';
-                                case '2':
-                                    return 'green';
-                                case '3':
-                                    return 'gray';
-                                case '4':
-                                    return 'gray';
-                                case '5':
-                                    return 'gray';
-                                case '6':
-                                    return 'blue';
-                                default:
-                                    break;
-                            }
-                        };
-                        value += `
-                            <tr>
-                                <td><span class="ui ${label(element.tipoFruta)} label">${element.Codigo}</span></td>
-                                <td>${element.Caja}</td>
-                                <td class="text-right">${element.Cantidad}</td>
-                            </tr>
-                        `;
-                    });
-                    return value;
-                }
-                const tblAlineacionHomeUser = document.querySelector('#tblAlineacionHomeUser');
-                const lblInfoAlineacion = document.querySelector('#lblInfoAlineacion');
-                lblInfoAlineacion.innerHTML = `Semana: ${datos.rowFour.ultimaSemanaInfo.semana.N_Semana} <br> Código: EMB-${datos.rowFour.ultimaSemanaInfo.semana.Anho}${datos.rowFour.ultimaSemanaInfo.semana.PKId}`;
-                tblAlineacionHomeUser.innerHTML = TablaAlineacion(datos.rowFour.ultimaAlineacion);
-            });
+            if (typeof datos === 'object') {
+                //Loader
+                $(".osc").fadeOut(); 
+                $("#loader").fadeOut();
+            }
+        });
     }
+
+// --------------------------------------------------------------------------------------------------------------------------------------------

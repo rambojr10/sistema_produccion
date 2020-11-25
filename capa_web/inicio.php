@@ -147,9 +147,9 @@
                         <li>
                             <a data-toggle="tab" href="#produccion"><i class="notika-icon notika-edit"></i> Producción</a>
                         </li>
-                        <li>
+                        <!-- <li>
                             <a data-toggle="tab" href="#reportes"><i class="notika-icon notika-bar-chart"></i> Reportes</a>
-                        </li>
+                        </li> -->
 
                         <?php if ($_SESSION['conectado']->FKId_TblTipoUsuario == 1) : ?> 
                         <li>
