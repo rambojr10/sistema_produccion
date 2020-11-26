@@ -1006,21 +1006,36 @@
             echo 'Error'.$e;
         }
     }
+
+    //
+    function actualizarprogramacion($idRegistro, $cantidad) {
+        try {
+            $bd = conectar();
+            $datos = $bd->prepare("UPDATE tbldet_tblembarque SET cantidad = :cantidad WHERE PKId = :idRegistro");
+            $datos->bindParam(':cantidad', $cantidad, PDO::PARAM_INT);
+            $datos->bindParam(':idRegistro', $idRegistro, PDO::PARAM_INT);
+            if ($datos->execute()) 
+                return true;
+            else 
+                return false;
+        } catch (Exception $e) {
+            echo 'Error'.$e;
+        }
+    }
     
 // Sentencias de eliminación ----------------------------------------------------------------------------------------
     //Esta función recibe la llave primaria y la tabla como referencia de eliminación (eliminar_s = método Eliminar del archivo statements)
-    function eliminar_s($key, $campo, $tabla){
+    function eliminar_s($key, $campo, $tabla) {
         $tabla = strtolower($tabla);
         try {
             $bd = conectar();
-            if ($tabla == 'tblfincas'){
+            if ($tabla == 'tblfincas')
                 eliminar_lotes($key);
-            }
             $datos = $bd->prepare("DELETE FROM ".$tabla." WHERE ".$campo." = :key");
             $datos->bindParam(":key", $key, PDO::PARAM_STR);
             $datos->execute();
             return true;
-        }catch (Exception $e){
+        } catch (Exception $e) {
             echo "Error".$e;
         }
     }

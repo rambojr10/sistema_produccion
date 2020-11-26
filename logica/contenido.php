@@ -87,18 +87,18 @@
         $result = false;
         $datos = array();
         $datos = json_decode($_POST['jsonProgramacion']);
-        $deleteIfExists = eliminar_embarque($datos->codEmbarque, 'edit');
-        if (!$deleteIfExists) {
-            foreach ($datos->cajas as $c){
+        foreach ($datos->cajas as $c) {
+            $existsRegister = buscarregistro($c->codigoCaja, 'FKCodigo_TblCajasProduccion', 'tbldet_tblembarque', "FKIbm_TblFincas = $c->ibmFinca");
+            if (count($existsRegister) > 0)
+                $result = actualizarprogramacion($existsRegister[0]->PKId, $c->cantidad);
+            else
                 $result = guardarprogramacion($datos->codEmbarque, $c->ibmFinca, $c->codigoCaja, $c->cantidad);
-            }
-            foreach ($datos->estimativo as $e){
-                $result = guardarestimativo($e->finca, $e->premiun, $e->especial, $datos->codEmbarque);
-            }
-            echo $result;
         }
-        // elimina el registro al momento de guardar uno nuevo, puedes usar
-        // localstorage para migrar o enviar el estado creando un método de actualización
+        eliminar_s($datos->codEmbarque, 'FKCod_TblEmbarque', 'tblestimativo');
+        foreach ($datos->estimativo as $e){
+            $result = guardarestimativo($e->finca, $e->premiun, $e->especial, $datos->codEmbarque);
+        }
+        echo $result;
     }
 
     // Guarda los datos de la vista insertar produccion llenando todas las tablas 
@@ -1026,7 +1026,8 @@
     }   
 
     //
-    function eliminar_embarque($codEmbarque, $state) {
+    function eliminar_embarque() {
+        $codEmbarque = $_POST['codEmbarque'];
         $hasProduccion = buscarregistro($codEmbarque, 'Cod_Embarque', 'TblProduccion', false);
         $hasDetalleEmbarque = buscarregistro($codEmbarque, 'FKCod_TblEmbarque', 'TblDet_TblEmbarque', false);
         $hasEstimativo = buscarregistro($codEmbarque, 'FKCod_TblEmbarque', 'TblEstimativo', false);
@@ -1034,7 +1035,7 @@
         if ($hasProduccion) {
             $hasDetalleEmbarque = count($hasDetalleEmbarque) > 0 ? eliminar_s($codEmbarque, 'FKCod_TblEmbarque', 'TblDet_TblEmbarque') : true;
             $hasEstimativo = count($hasEstimativo) > 0 ? eliminar_s($codEmbarque, 'FKCod_TblEmbarque', 'TblEstimativo') : true;
-            if ($hasDetalleEmbarque and $hasEstimativo and $state !== 'edit') {
+            if ($hasDetalleEmbarque and $hasEstimativo) {
                 eliminar_s($codEmbarque, 'PKCod', 'TblEmbarque');
                 echo true;
             } else {
@@ -1302,7 +1303,7 @@
                 break;
 
             case 'eliminarembarque':
-                eliminar_embarque($_POST['codEmbarque'], false);
+                eliminar_embarque();
                 break;
 
             case 'eliminarproduccion':

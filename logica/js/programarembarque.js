@@ -185,7 +185,7 @@
         });
     }
 
-    //
+    // Recibe codEmbarque, semana, anho
     function cargar_embarque_pe(...valuesInvoice) {
         fetch(`../logica/contenido.php?op=cargar_programacion&codEmbarque=${valuesInvoice[0]}`)
         .then(response => response.json())
@@ -797,7 +797,7 @@
                             }"></td>
                             <td align="center"><input type="text" class="valida text-center tcj_h" style="width:80px" value="${totalCajas}" disabled></td>
                             <td align="center"><input type="text" class="valida text-center tcj_pm" style="width:80px" factor_con="${infoCajas.FactorConversion}" value="${totalCajas * infoCajas.FactorConversion}" disabled></td>
-                            <td align="center"><input type="text" class="valida text-center" style="width:80px" value="0" disabled></td>
+                            <td align="center"><input type="text" class="valida text-center tcj_me" style="width:80px" value="0" disabled></td>
                         </tr>
                     `;
                 }
