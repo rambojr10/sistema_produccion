@@ -62,7 +62,7 @@
             if (res == 1) {
                 swal("Editar lote", "Acción realizada correctamente", "success");
                 ver_lotes($("#finca_l").data("ibm_finca-ll"));
-            }else {
+            } else {
                 $.notify({
                     icon: "fa fa-times",
                     title: "<strong>Editar lote: </strong>",
@@ -72,10 +72,44 @@
                 });
             }
         })
+    });
 
+    //Eliminar lote
+    $(document).on("click", "[href='#eliminar_lote']", function() {
+        let idLote = $(this).attr("id");
+        swal({
+            title: "¿Está seguro?",
+            text: "El lote se eliminará permanentemente",
+            type: "question",
+            showCancelButton: true,
+            confirmButtonText: "Si, eliminar!",
+            cancelButtonText: "No, cancelar!",
+            reverseButtons: true
+        })
+        .then(isConfirm => {
+            if (isConfirm) {
+                const op = new FormData();
+                op.append('op', 'eliminar');
+                op.append('key', idLote);
+                op.append('campo', 'PKId');
+                op.append('tabla', 'TblLotes');
+                fetch('../logica/contenido.php', {method: 'POST', body: op})
+                .then(response => response.text())
+                .then(res => {
+                    console.log(res); 
+                    if (res == 1) {
+                        swal('Lotes', 'Registro eliminado correctamente.', 'success');
+                        $('#exitModalListarLotes').trigger('click');
+                        listar_fincas(false);
+                    } else {
+                        swal('Lotes', 'Ha ocurrido un error al eliminar el registro.', 'error');
+                    }
+                });
+            }
+        });
     });
 
     //cerrar modal lotes
     $(document).on("hidden.bs.modal", "#modal-ll", function () {
-        listar_fincas();
+        listar_fincas(false);
     });

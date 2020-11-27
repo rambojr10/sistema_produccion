@@ -406,23 +406,6 @@
         }
     });
 
-    //
-    async function getStatus(idSemana) {
-        const objectDate = new Date();
-        const hoy = new Date( (`${objectDate.getMonth()+1}/${objectDate.getDate()}/${objectDate.getFullYear()}`) );
-        const fechaActual = `${hoy.getFullYear()}-${hoy.getMonth()+1}-${hoy.getDate()}`;
-        const op = new FormData();
-        op.append('op', 'buscar_semana_verificar');
-        op.append('idSemana', idSemana);
-        const peticion = await fetch('../logica/contenido.php', {method: 'POST', body: op});
-        const response = await peticion.json();
-        let result = {
-            'status': Date.parse(response.Semana.Fecha_Fin) > Date.parse(fechaActual) ? 'edit' : 'noEdit',
-            'privileges': response.Privileges
-        }
-        return result;
-    }
-
 // Tabla racimos ----------------------------------------------------------------------------------------------------------
 
     function cargar_tabla_racimos_ip(id_semana, existsTblRacimos) {
@@ -1433,19 +1416,35 @@
         hot4 = new Handsontable(tblCargue, tblSettings_cargue);
     }
 
-
 // COMPLEMENTOS --------------------------------------------------------------------------------------------------
+    
+    //
+    async function getStatus(idSemana) {
+        const objectDate = new Date();
+        const hoy = new Date( (`${objectDate.getMonth()+1}/${objectDate.getDate()}/${objectDate.getFullYear()}`) );
+        const fechaActual = `${hoy.getFullYear()}-${hoy.getMonth()+1}-${hoy.getDate()}`;
+        const op = new FormData();
+        op.append('op', 'buscar_semana_verificar');
+        op.append('idSemana', idSemana);
+        const peticion = await fetch('../logica/contenido.php', {method: 'POST', body: op});
+        const response = await peticion.json();
+        let result = {
+            'status': Date.parse(response.Semana.Fecha_Fin) > Date.parse(fechaActual) ? 'edit' : 'noEdit',
+            'privileges': response.Privileges
+        }
+        return result;
+    }
+
+    //
     function calculateTotalEmbolse() {
         let presente = $('#txtPresente_ip').val();
         let prematuro = $('#txtPrematuro_ip').val();
         let total = parseInt(presente ? presente : 0) + parseInt(prematuro ? prematuro : 0);
         return total;
     }
-
     $(document).on('input', '#txtPresente_ip', () => {
         $('#lblTotal_ip').val(calculateTotalEmbolse());
     });
-    
     $(document).on('input', '#txtPrematuro_ip', () => {
         $('#lblTotal_ip').val(calculateTotalEmbolse());
     });

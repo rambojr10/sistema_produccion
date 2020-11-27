@@ -19,14 +19,28 @@
 
 // LISTAR FINCAS ------------------------------------------------------------------------------------------
     
-    function listar_fincas() {
+    function listar_fincas(withoutEffect = true) {
         $(".contenido").load("../capa_web/fincas.php");
         fetch('../logica/contenido.php?op=listarfincas')
         .then(response => response.text())
         .then(res => {
-            $("#listarfincas").html(res);
-            $(".contenido").hide().show("blind", 1500);
+            const panelFincas = document.querySelector('#listarfincas');
+            panelFincas.innerHTML = res;
+            if (withoutEffect === true)
+                $(".contenido").hide().show("blind", 1500);
         })
+    }
+
+    //Agrega el nombre al nuevo lote
+    function nuevo_lote(ibmFinca) {
+        fetch(`../logica/contenido.php?op=ultimo_lote&ibmFinca=${ibmFinca}`)
+        .then(response => response.json())
+        .then(res => {
+            console.log(res.FKIbm_TblFincas);
+            let loteInArray = String(res.Lote).split(' ');
+            localStorage.setItem('newLote', ibmFinca);
+            $('#newNameLote').html(`Lote ${parseInt(loteInArray[1])+1}`);
+        });
     }
 
 // AGREGAR NUEVA FINCA ------------------------------------------------------------------------------------
@@ -77,6 +91,31 @@
         guardar_finca();
     });
 
+    //Guarda un nuevo lote
+    $(document).on('click', '#btnGuardarNewLote', function() {
+        let nameLote = $('#newNameLote').text();
+        let areaNeta = $('#newAreaNeta').val();
+        let areaBruta = $('#newAreaBruta').val();
+        let ibmFinca = localStorage.getItem('newLote');
+        const op = new FormData();
+        op.append('op', 'guardar_nuevo_lote');
+        op.append('nameLote', nameLote);
+        op.append('areaNeta', areaNeta);
+        op.append('areaBruta', areaBruta);
+        op.append('ibmFinca', ibmFinca);
+        fetch('../logica/contenido.php', {method: 'POST', body: op})
+        .then(response => response.text())
+        .then(res => {
+            if (res == 1) {
+                $('#cancelNewLote').trigger('click');
+                swal('Fincas', `${nameLote} guardado correctamente.`, 'success');
+                localStorage.removeItem('newLote');
+                listar_fincas(false);
+            } else {
+                swal('Fincas', 'No se ha podido guardar el registro, por favor intente nuevamente.', 'error');
+            }
+        });
+    });
 
 // ELIMINAR FINCA ----------------------------------------------------------------------------------------
     
@@ -137,7 +176,7 @@
     $(document).on("click", "[href='#nuevo_lote']", function(e) {
         e.preventDefault();
         //obtiene la cantidad de formularios de nuevo_lote agregados, para enviar ese dato a el archivo que retorna el método append
-        num = $("[valor='num_lote']").length;        
+        let num = $("[valor='num_lote']").length;        
         $.get("../capa_web/formularios/form_lotes.php", {num: num}, function(res){
             $("#agg_lotes").append(res);
             $("#"+num).each(function(){
@@ -149,7 +188,7 @@
     //elimina un formulario para digitar otro lote en el modal de nueva finca
     $(document).on("click", "[href='#quitar_lote']", function(e) {
         e.preventDefault();
-        num = $("[valor='num_lote']").length;
+        let num = $("[valor='num_lote']").length;
         $("#"+num).each(function(){
             $(this).fadeOut(500, function(){
                 $(this).remove();

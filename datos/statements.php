@@ -41,6 +41,23 @@
         }
     }
 
+    function guardarnuevolote($nameLote, $areaNeta, $areaBruta, $ibmFinca) {
+        try {
+            $bd = conectar();
+            $datos = $bd->prepare("INSERT INTO tbllotes VALUES(null, :nameLote, :areaNeta, :areaBruta, :ibmFinca);");
+            $datos->bindParam(':nameLote', $nameLote, PDO::PARAM_STR);
+            $datos->bindParam(':areaNeta', $areaNeta, PDO::PARAM_STR);
+            $datos->bindParam(':areaBruta', $areaBruta, PDO::PARAM_STR);
+            $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
+            if ($datos->execute())
+                return true;
+            else 
+                return false;
+        } catch (Exception $e) {
+            echo 'Error'.$e;
+        }
+    }
+
     function nuevaempresa($empresa){
         try {
             $bd = conectar();

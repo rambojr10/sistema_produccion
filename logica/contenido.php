@@ -22,6 +22,16 @@
     }
 
     //
+    function guardar_nuevo_lote() {
+        $nameLote = $_POST['nameLote'];
+        $areaNeta = $_POST['areaNeta'];
+        $areaBruta = $_POST['areaBruta'];
+        $ibmFinca = $_POST['ibmFinca'];
+        $result = guardarnuevolote($nameLote, $areaNeta, $areaBruta, $ibmFinca);
+        echo $result;
+    }
+
+    //
     function nueva_empresa() {
         $empresa = array(
             'nit' => $_POST['empresa']['nit'],
@@ -306,7 +316,7 @@
                 " . $f->area_bruta . "
                 </td>
                 <td dato='$f->PKIbm'>
-                    <a href='#editar_finca' class='notika-icon notika-edit' title='Editar'></a> - 
+                    <a href='#nuevolote' class='notika-icon notika-edit' data-toggle='modal' data-target='#nuevolote' onclick='nuevo_lote($f->PKIbm)' title='Nuevo lote'></a> - 
                     <objet class='dropdown'> 
                         <a class='notika-icon notika-menu dropdown-toggle' id='drop_finca' data-toggle='dropdown' aria-haspopup='true' aria-expanded='true'></a>
                         <ul class='dropdown-menu' aria-labelledby='drop_finca'>
@@ -318,6 +328,12 @@
                 </td>
             </tr>";
         }
+    }
+
+    //Returna el último lote de una finca
+    function ultimo_lote() {
+        $lotes = listarlotes($_GET['ibmFinca']);
+        echo json_encode(end($lotes));
     }
 
     //
@@ -396,7 +412,7 @@
                     "</td>
                     <td>
                         <a href='#editar_lote' id='$l->PKId' data-toggle='modal' data-target='#editarlote' class='notika-icon notika-edit' title='Editar'></a> - 
-                        <a href='#eliminar_lote' class='notika-icon notika-close' title='Eliminar'></a>
+                        <a href='#eliminar_lote' id='$l->PKId' class='notika-icon notika-close' title='Eliminar'></a>
                     </td>
                 </tr>";
         }
@@ -1084,13 +1100,17 @@
     }
 
 // ------------------------------------------------------------------------------------------
-    if(isset($_REQUEST['op'])){
+    if(isset($_REQUEST['op']) and isset($_SESSION['conectado'])){
         $op = $_REQUEST['op'];
         switch ($op) {
 
     //Métodos de crear
             case 'nuevafinca':
                 nueva_finca();
+                break;
+            
+            case 'guardar_nuevo_lote':
+                guardar_nuevo_lote();
                 break;
             
             case 'guardarempresa':
@@ -1127,6 +1147,10 @@
 
             case 'listarfincas':
                 listar_fincas();
+                break;
+
+            case 'ultimo_lote':
+                ultimo_lote();
                 break;
 
             case 'listarempresas':

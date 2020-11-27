@@ -2,6 +2,7 @@
     include_once '../capa_web/modals/nuevafinca.php';
     include_once '../capa_web/modals/listarlotes.php';
     include_once '../capa_web/modals/verempresa.php';
+    include_once '../capa_web/modals/nuevolote.php';
 ?>
 
     <!-- title area -->
