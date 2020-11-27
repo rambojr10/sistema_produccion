@@ -12,7 +12,7 @@
             reverseButtons: true
         })
         .then(inputValue => {
-            if (inputValue.length > 6) {
+            if (inputValue.length > 4) {
                 const op = new FormData();
                 op.append('op', 'change_password');
                 op.append('idUser', idUser);

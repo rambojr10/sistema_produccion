@@ -1,0 +1,938 @@
+/* ARCHIVO STATEMENTS CON BASE DE DATOS FINAL SIN DATOS DE PRUEBA 
+
+	Tablas:
+	EMPRESAS 			%1
+	FINCAS 				%2
+	LOTES				%3
+	TIPO FRUTA			%4
+	CAJAS PRODUCCIÓN		%5
+	CINTAS				%6
+	SEMANAS				%7
+	DÍAS				%8
+	TIPO USUARIO			%9
+	ESTADO USUARIO			%10
+	USUARIOS			%11
+	EMBOLSE				%12
+	RACIMOS				%13
+	RACIMOS - DIAS			%14
+	RACIMOS_DIAS - CINTAS	 	%15
+	CAJAS MERCADO NACIONAL		%16
+	CLIENTES			%17
+	MERCADO NACIONAL		%18
+	CARGUE				%19
+	CARGUE - MERCADO NACIONAL	%20
+	PRODUCCIÓN			%21
+	PRODUCCION - DÍAS		%22
+	PRODUCCÓN - CAJAS PRODUCCIÓN	%23
+	EMBARQUE			%24
+	EMBARQUE - CAJAS PRODUCCION	%25
+	REGISTRO SEMANAS		%26
+	ESTIMATIVO			%27
+	
+
+***************************************************************************************************************/
+
+	/* EMPRESAS */
+	CREATE TABLE TblEmpresas(
+		PKNit VARCHAR(11) PRIMARY KEY,
+		Nombre VARCHAR(50) not null,
+		Direccion VARCHAR(100) not null,
+		Telefono VARCHAR(10) not null
+	);
+	
+	/* FINCAS */
+	CREATE TABLE TblFincas(
+		PKIbm VARCHAR(5) PRIMARY KEY,
+		Nombre VARCHAR(50) not null,
+		Area_Neta FLOAT not null,
+		Area_Bruta FLOAT not null,
+		FKNit_TblEmpresas VARCHAR (11) not null,
+		FOREIGN KEY (FKNit_TblEmpresas) REFERENCES TblEmpresas(PKNit)
+	);
+
+	/* LOTES */
+	CREATE TABLE TblLotes(
+		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		Lote VARCHAR(20) not null,
+		Area_Neta FLOAT not null,
+		Area_Bruta FLOAT not null,
+		FKIbm_TblFincas VARCHAR(5) not null,
+		FOREIGN KEY (FKIbm_TblFincas) REFERENCES TblFincas(PKIbm)	
+	);
+
+	/* TIPO FRUTA */
+	CREATE TABLE TblTipoFruta(
+		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		Descripcion VARCHAR(50) not null
+	);
+
+	/* CAJAS PRODUCCIÓN */
+	CREATE TABLE TblCajasProduccion(
+		PKCodigo VARCHAR(5) PRIMARY KEY,
+		Descripcion VARCHAR(100) not null,
+		FactorConversion FLOAT not null,
+		FKId_TblTipoFruta INT not null,
+		FOREIGN KEY (FKId_TblTipoFruta) REFERENCES TblTipoFruta(PKId)
+	);
+
+	/* CINTAS */
+	CREATE TABLE TblCintas(
+		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		Descripcion VARCHAR(50)
+	);
+
+	/* SEMANAS */
+	CREATE TABLE TblSemanas(
+		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		N_Semana VARCHAR(50),
+		Fecha_Inicio DATE,
+		Fecha_Fin DATE,
+		Anho INT not null,
+		FKId_TblCintas INT not null,
+		FOREIGN KEY (FKId_TblCintas) REFERENCES TblCintas(PKId)
+	);
+	
+	/* DÍAS */
+	CREATE TABLE TblDias(
+		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		Descripcion VARCHAR(50)
+	);
+
+	/* TIPO USUARIO */
+	CREATE TABLE TblTipoUsuario(
+		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		Descripcion VARCHAR(50)
+	);
+
+	/* ESTADO USUARIO */
+	CREATE TABLE TblEstadoUsuario(
+		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		Descripcion VARCHAR(50)
+	);
+
+	/* USUARIOS */
+	CREATE TABLE TblUsuarios(
+		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		Usuario VARCHAR(50) not null,
+		Password VARCHAR(255) not null,
+		Ibm_Finca VARCHAR(5),
+		FKId_TblTipoUsuario INT not null,
+		FKId_TblEstadoUsuario INT not null,
+		FOREIGN KEY (FKId_TblTipoUsuario) REFERENCES TblTipoUsuario(PKId),
+		FOREIGN KEY (FKId_TblEstadoUsuario) REFERENCES TblEstadoUsuario(PKId)	
+	);
+
+	/* EMBOLSE */
+	CREATE TABLE TblEmbolse(
+		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		FKId_TblSemanas INT not null,
+		N_PlantasPresente INT not null,
+		N_PlantasPrematuro INT not null,
+		FOREIGN KEY (FKId_TblSemanas) REFERENCES TblSemanas(PKId)
+	);
+
+	/* RACIMOS */
+	CREATE TABLE TblRacimos(
+		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		FKId_TblSemanas INT not null,
+		N_RacimosC INT not null,
+		N_RacimosR INT not null,
+		FOREIGN KEY (FKId_TblSemanas) REFERENCES TblSemanas(PKId)
+	);
+	
+	/* DETALLE - RACIMOS - DIAS */
+	CREATE TABLE TblDet_TblRacimos_TblDias(
+		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		FKId_TblRacimos INT not null,
+		FKId_TblDias INT not null,
+		N_RacimosC_Dia INT not null,
+		N_RacimosR_Dia INT not null,
+		Total_PEmbarque INT not null,
+		Total_POtrasFincas INT null,
+		FOREIGN KEY (FKId_TblRacimos) REFERENCES TblRacimos(PKId),
+		FOREIGN KEY (FKId_TblDias) REFERENCES TblDias(PKId)
+	);
+	
+	/* DETALLE - DET_RACIMOS_DIAS - CINTAS */
+	CREATE TABLE TblDet_TblDet_TblRacimos_TblDias(
+		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		FKId_TblDet_TblRacimos_TblDias INT not null,
+		FKId_TblCintas INT not null,
+		N_RacimosC_Cintas INT not null,
+		FOREIGN KEY (FKId_TblDet_TblRacimos_TblDias) REFERENCES TblDet_TblRacimos_TblDias(PKId),
+		FOREIGN KEY (FKId_TblCintas) REFERENCES TblCintas(PKId)
+	);
+
+	/* MERCADO NACIONAL */
+	CREATE TABLE TblCajasMercadoNacional(
+		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		Descripcion VARCHAR(250) not null
+	);
+		
+	CREATE TABLE TblMercadoNacional(
+		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		Total_Elaborado INT not null
+	);
+	
+	CREATE TABLE TblDet_TblMercadoNacional(
+		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		FKId_TblMercadoNacional INT not null,
+		FKId_TblDias INT not null,
+		FKId_TblCajasMercadoNacional INT not null,
+		Cantidad_Elaborado INT not null,
+		FOREIGN KEY (FKId_TblMercadoNacional) REFERENCES TblMercadoNacional(PKId),
+		FOREIGN KEY (FKId_TblDias) REFERENCES TblDias(PKId),
+		FOREIGN KEY (FKId_TblCajasMercadoNacional) REFERENCES TblCajasMercadoNacional(PKId)
+	);
+	
+	/* PRODUCCIÓN */
+	CREATE TABLE TblProduccion(
+		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		FKIbm_TblFincas VARCHAR(5) not null,
+		FKId_TblEmbolse INT not null,
+		FKId_TblRacimos INT not null,
+		FKId_TblSemanas INT not null,
+		FKId_TblMercadoNacional INT,
+		Cod_Embarque VARCHAR(10) not null,
+		Total_CElaboradas INT,
+		Total_CREchazadas INT,
+		Total_CExportadas INT,
+		Ratio FLOAT,
+		Merma FLOAT,
+		Peso_Racimos FLOAT,
+		Area_Recorrida FLOAT,
+		Peso_Vastago FLOAT,
+		Anho_Produccion VARCHAR(5) not null,
+		FOREIGN KEY (FKIbm_TblFincas) REFERENCES TblFincas(PKIbm),
+		FOREIGN KEY (FKId_TblEmbolse) REFERENCES TblEmbolse(PKId),
+		FOREIGN KEY (FKId_TblRacimos) REFERENCES TblRacimos(PKId),
+		FOREIGN KEY (FKId_TblSemanas) REFERENCES TblSemanas(PKId),
+		FOREIGN KEY (FKId_TblMercadoNacional) REFERENCES TblMercadoNacional(PKId)
+ 	);
+
+	/* DETALLE PRODUCCIÓN */
+	CREATE TABLE TblDet_TblProduccion(
+		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		FKId_TblProduccion INT not null,
+		FKId_TblDias INT not null,
+		Total_CE_Dia INT,
+		Total_CR_Dia INT,
+		Total_CEx_Dia INT,
+		Ratio FLOAT,
+		Merma FLOAT,
+		Peso_Racimos FLOAT,
+		Area_Recorrida FLOAT,
+		Peso_Vastago FLOAT,
+		Lotes_Cortados VARCHAR(50),
+		Lotes_Iniciados VARCHAR(50),
+		FOREIGN KEY (FKId_TblProduccion) REFERENCES TblProduccion(PKId),
+		FOREIGN KEY (FKId_TblDias) REFERENCES TblDias(PKId)	
+	);
+
+	/* DETALLE - DETALLE PRODUCCION - CAJAS PRODUCCIÓN */
+	CREATE TABLE TblDet_TblDet_TblProduccion(
+		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		FKId_TblDet_TblProduccion INT not null,
+		FKCodigo_TblCajasProduccion VARCHAR(5) not null,
+		N_CajasProducidas_Dia INT,
+		FOREIGN KEY (FKId_TblDet_TblProduccion) REFERENCES TblDet_TblProduccion(PKId),
+		FOREIGN KEY (FKCodigo_TblCajasProduccion) REFERENCES TblCajasProduccion(PKCodigo)
+	);
+
+	/* EMBARQUE */
+	CREATE TABLE TblEmbarque(
+		PKCod VARCHAR(10) PRIMARY KEY,
+    		FKId_TblSemanas INT not null,
+    		Anho VARCHAR(5) not null,
+    		FOREIGN KEY (FKId_TblSemanas) REFERENCES tblsemanas(PKId)
+	);
+	
+	/* DETALLE EMBARQUE - FINCAS - CAJAS PRODUCCION */
+	CREATE TABLE TblDet_TblEmbarque(
+		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+    		FKCod_TblEmbarque VARCHAR(10) not null, 
+    		FKIbm_TblFincas VARCHAR(5) not null,
+    		FKCodigo_TblCajasProduccion VARCHAR(5) not null,
+    		Cantidad INT,
+    		FOREIGN KEY (FKCod_TblEmbarque) REFERENCES tblembarque(PKCod),
+    		FOREIGN KEY (FKIbm_TblFincas) REFERENCES tblfincas(PKIbm),
+    		FOREIGN KEY (FKCodigo_TblCajasProduccion) REFERENCES tblcajasproduccion(PKCodigo)
+	);
+
+	/* TABLAS INDEPENDIENTES DE CONFIGURACIÓN */
+	CREATE TABLE TblRegistroSemanas(
+		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		Anho_generado INT not null
+	);
+
+	/* TABLA ESTIMATIVO */
+	CREATE TABLE TblEstimativo(
+		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+    		Finca VARCHAR(50) not null,
+    		Premiun INT,
+    		Especial INT,
+    		FKCod_TblEmbarque VARCHAR(10) not null,
+    		FOREIGN KEY (FKCod_TblEmbarque) REFERENCES TblEmbarque(PKCod)
+	);
+
+	/* TABLA CARGUE */
+	CREATE TABLE TblCargue(
+		PKId_Cargue INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		FKIbm_TblFincas VARCHAR(5) not null,
+		Cliente VARCHAR(200) not null,
+		Fecha_Cargue DATE not null,
+		N_Poma VARCHAR(5) not null,
+		DedoSuelto INT,
+		Cluster INT,
+		ManoEntera INT,
+		Especial INT,
+		Bolsa20Kilos INT,
+		Bolsa25Kilos INT,
+		Total INT,
+		Placa_Vehiculo VARCHAR(8) not null,
+		Conductor VARCHAR(200) not null,
+		FKCod_TblEmbarque VARCHAR(10) not null,
+		FOREIGN KEY (FKIbm_TblFincas) REFERENCES TblFincas(PKIbm),
+		FOREIGN KEY (FKCod_TblEmbarque) REFERENCES TblEmbarque(PKCod)
+	);
+
+/*******************************************************************************************************/
+
+/* STATEMENTS PARA LLENAR TABLAS*/
+
+	/*TABLA CINTAS */
+	INSERT INTO TblCintas VALUES(null, 'CAFÉ');
+	INSERT INTO TblCintas VALUES(null, 'NEGRA');
+	INSERT INTO TblCintas VALUES(null, 'NARANJA');
+	INSERT INTO TblCintas VALUES(null, 'VERDE');
+	INSERT INTO TblCintas VALUES(null, 'AMARILLA');
+	INSERT INTO TblCintas VALUES(null, 'BLANCA');
+	INSERT INTO TblCintas VALUES(null, 'AZUL');
+	INSERT INTO TblCintas VALUES(null, 'GRIS');
+	INSERT INTO TblCintas VALUES(null, 'MORADA');
+	INSERT INTO TblCintas VALUES(null, 'ROJA');
+	
+	/* TABLA CAJAS MERCADO NACIONAL */
+	INSERT INTO TblCajasMercadoNacional VALUES(null, 'DEDO SUELTO CARTÓN');
+	INSERT INTO TblCajasMercadoNacional VALUES(null, 'CLUSTER CARTÓN');
+	INSERT INTO TblCajasMercadoNacional VALUES(null, 'MANO ENTERA');
+	INSERT INTO TblCajasMercadoNacional VALUES(null, 'DEDO SUELTO EN BOLSA DE 20KLS');
+	INSERT INTO TblCajasMercadoNacional VALUES(null, 'FRUTA DE PISO BOLSA DE 25KLS');
+	INSERT INTO TblCajasMercadoNacional VALUES(null, 'CANASTAS SUCIAS');
+
+	/* TABLA SEMANAS */
+		INSERT INTO `tblsemanas` (`PKId`, `N_Semana`, `Fecha_Inicio`, `Fecha_Fin`, `Anho`, `FKId_TblCintas`) VALUES
+			(1, 'SEMANA 1', '2019-12-30', '2020-01-05', 2020, 3),
+			(2, 'SEMANA 2', '2020-01-06', '2020-01-12', 2020, 4),
+			(3, 'SEMANA 3', '2020-01-13', '2020-01-19', 2020, 5),
+			(4, 'SEMANA 4', '2020-01-20', '2020-01-26', 2020, 6),
+			(5, 'SEMANA 5', '2020-01-27', '2020-02-02', 2020, 7),
+			(6, 'SEMANA 6', '2020-02-03', '2020-02-09', 2020, 8),
+			(7, 'SEMANA 7', '2020-02-10', '2020-02-16', 2020, 9),
+			(8, 'SEMANA 8', '2020-02-17', '2020-02-23', 2020, 10),
+			(9, 'SEMANA 9', '2020-02-24', '2020-03-01', 2020, 1),
+			(10, 'SEMANA 10', '2020-03-02', '2020-03-08', 2020, 2),
+			(11, 'SEMANA 11', '2020-03-09', '2020-03-15', 2020, 3),
+			(12, 'SEMANA 12', '2020-03-16', '2020-03-22', 2020, 4),
+			(13, 'SEMANA 13', '2020-03-23', '2020-03-29', 2020, 5),
+			(14, 'SEMANA 14', '2020-03-30', '2020-04-05', 2020, 6),
+			(15, 'SEMANA 15', '2020-04-06', '2020-04-12', 2020, 7),
+			(16, 'SEMANA 16', '2020-04-13', '2020-04-19', 2020, 8),
+			(17, 'SEMANA 17', '2020-04-20', '2020-04-26', 2020, 9),
+			(18, 'SEMANA 18', '2020-04-27', '2020-05-03', 2020, 10),
+			(19, 'SEMANA 19', '2020-05-04', '2020-05-10', 2020, 1),
+			(20, 'SEMANA 20', '2020-05-11', '2020-05-17', 2020, 2),
+			(21, 'SEMANA 21', '2020-05-18', '2020-05-24', 2020, 3),
+			(22, 'SEMANA 22', '2020-05-25', '2020-05-31', 2020, 4),
+			(23, 'SEMANA 23', '2020-06-01', '2020-06-07', 2020, 5),
+			(24, 'SEMANA 24', '2020-06-08', '2020-06-14', 2020, 6),
+			(25, 'SEMANA 25', '2020-06-15', '2020-06-21', 2020, 7),
+			(26, 'SEMANA 26', '2020-06-22', '2020-06-28', 2020, 8),
+			(27, 'SEMANA 27', '2020-06-29', '2020-07-05', 2020, 9),
+			(28, 'SEMANA 28', '2020-07-06', '2020-07-12', 2020, 10),
+			(29, 'SEMANA 29', '2020-07-13', '2020-07-19', 2020, 1),
+			(30, 'SEMANA 30', '2020-07-20', '2020-07-26', 2020, 2),
+			(31, 'SEMANA 31', '2020-07-27', '2020-08-02', 2020, 3),
+			(32, 'SEMANA 32', '2020-08-03', '2020-08-09', 2020, 4),
+			(33, 'SEMANA 33', '2020-08-10', '2020-08-16', 2020, 5),
+			(34, 'SEMANA 34', '2020-08-17', '2020-08-23', 2020, 6),
+			(35, 'SEMANA 35', '2020-08-24', '2020-08-30', 2020, 7),
+			(36, 'SEMANA 36', '2020-08-31', '2020-09-06', 2020, 8),
+			(37, 'SEMANA 37', '2020-09-07', '2020-09-13', 2020, 9),
+			(38, 'SEMANA 38', '2020-09-14', '2020-09-20', 2020, 10),
+			(39, 'SEMANA 39', '2020-09-21', '2020-09-27', 2020, 1),
+			(40, 'SEMANA 40', '2020-09-28', '2020-10-04', 2020, 2),
+			(41, 'SEMANA 41', '2020-10-05', '2020-10-11', 2020, 3),
+			(42, 'SEMANA 42', '2020-10-12', '2020-10-18', 2020, 4),
+			(43, 'SEMANA 43', '2020-10-19', '2020-10-25', 2020, 5),
+			(44, 'SEMANA 44', '2020-10-26', '2020-11-01', 2020, 6),
+			(45, 'SEMANA 45', '2020-11-02', '2020-11-08', 2020, 7),
+			(46, 'SEMANA 46', '2020-11-09', '2020-11-15', 2020, 8),
+			(47, 'SEMANA 47', '2020-11-16', '2020-11-22', 2020, 9),
+			(48, 'SEMANA 48', '2020-11-23', '2020-11-29', 2020, 10),
+			(49, 'SEMANA 49', '2020-11-30', '2020-12-06', 2020, 1),
+			(50, 'SEMANA 50', '2020-12-07', '2020-12-13', 2020, 2),
+			(51, 'SEMANA 51', '2020-12-14', '2020-12-20', 2020, 3),
+			(52, 'SEMANA 52', '2020-12-21', '2020-12-27', 2020, 4);
+
+
+	/* TABLA DÍAS */
+	INSERT INTO TblDias VALUES(null, 'LUNES');
+	INSERT INTO TblDias VALUES(null, 'MARTES');
+	INSERT INTO TblDias VALUES(null, 'MIERCOLES');
+	INSERT INTO TblDias VALUES(null, 'JUEVES');
+	INSERT INTO TblDias VALUES(null, 'VIERNES');
+	INSERT INTO TblDias VALUES(null, 'SÁBADO');
+	INSERT INTO TblDias VALUES(null, 'DOMINGO');
+	
+	/* TIPO FRUTA */
+	INSERT INTO tbltipofruta VALUES(null, 'PRIMERA');
+	INSERT INTO tbltipofruta VALUES(null, 'SEGUNDA');
+	INSERT INTO tbltipofruta VALUES(null, 'ESPECIAL');
+	INSERT INTO tbltipofruta VALUES(null, 'FRUTICA');
+	INSERT INTO tbltipofruta VALUES(null, 'FRUTICA II');
+	INSERT INTO tbltipofruta VALUES(null, 'FAIR TRADE');
+
+	/* TIPO USUARIO */
+	INSERT INTO TblTipoUsuario VALUES(null, 'ADMINISTRADOR');
+	INSERT INTO TblTipoUsuario VALUES(null, 'ESTANDAR');
+
+	/* ESTADO USUARIO */
+	INSERT INTO TblEstadoUsuario VALUES(null, 'ACTIVO');
+	INSERT INTO TblEstadoUsuario VALUES(null, 'INACTIVO');
+
+	/* EMPRESAS */
+	INSERT INTO TblEmpresas VALUES('900645788-8', 'BANANERAS AGROFUTURO S.A.S', 'CALLE 18 NO. 35-69 AV. LAS PALMAS', '2662861');
+	INSERT INTO TblEmpresas VALUES('900306440-7', 'AGRÍCOLA YUMANÁ S.A.S', 'CALLE 18 NO. 35-69 AV. LAS PALMAS', '2662861');
+	INSERT INTO TblEmpresas VALUES('900305092-2', 'AGRÍCOLA MONTESOL S.A.S', 'CALLE 18 NO. 35-69 AV. LAS PALMAS', '2662861');
+	INSERT INTO TblEmpresas VALUES('811032708-5', 'AGRÍCOLA GUAIMARAL S.A.S', 'CRA 99 NO. 105B-11 BARRIO ORTÍZ', '2662861');
+
+	/* FINCAS */
+	INSERT INTO TblFincas VALUES('80074', 'ÁLAMOS', 128.47, 150.43, '900645788-8');
+	INSERT INTO TblFincas VALUES('80075', 'CANDELARIA', 83.08, 100.83, '900645788-8');
+	INSERT INTO TblFincas VALUES('85747', 'GUAIMARAL', 45.82, 57.90, '811032708-5');
+	INSERT INTO TblFincas VALUES('80008', 'KALAMARI', 61.08, 70.49, '900306440-7');
+	INSERT INTO TblFincas VALUES('80004', 'TAIWÁN', 64.21, 79.16, '900306440-7');
+	INSERT INTO TblFincas VALUES('80009', 'ZARZAMORA', 58.33, 70.85, '900305092-2');
+
+
+	/* LOTES */
+	
+	/* Finca Álamos */
+	INSERT INTO TblLotes VALUES(null, 'Lote 1', 4.29, 4.94, '80074');
+	INSERT INTO TblLotes VALUES(null, 'Lote 2', 5.69, 6.49, '80074');
+	INSERT INTO TblLotes VALUES(null, 'Lote 3', 5.96, 6.78, '80074');
+	INSERT INTO TblLotes VALUES(null, 'Lote 4', 5.92, 6.42, '80074');
+	INSERT INTO TblLotes VALUES(null, 'Lote 5', 3.14, 3.94, '80074');
+	INSERT INTO TblLotes VALUES(null, 'Lote 6', 4.89, 0, '80074');
+	INSERT INTO TblLotes VALUES(null, 'Lote 7', 5.35, 0, '80074');
+	INSERT INTO TblLotes VALUES(null, 'Lote 8', 4.20, 0, '80074');
+	INSERT INTO TblLotes VALUES(null, 'Lote 9', 2.79, 0, '80074');
+	INSERT INTO TblLotes VALUES(null, 'Lote 10', 4.46, 5.25, '80074');
+	INSERT INTO TblLotes VALUES(null, 'Lote 11', 4.64, 5.58, '80074');
+	INSERT INTO TblLotes VALUES(null, 'Lote 12', 5.22, 7.09, '80074');
+	INSERT INTO TblLotes VALUES(null, 'Lote 13', 6.02, 7.31, '80074');
+	INSERT INTO TblLotes VALUES(null, 'Lote 14', 7.23, 8.43, '80074');
+	INSERT INTO TblLotes VALUES(null, 'Lote 15', 6.48, 7.38, '80074');
+	INSERT INTO TblLotes VALUES(null, 'Lote 16', 3.51, 3.92, '80074');
+	INSERT INTO TblLotes VALUES(null, 'Lote 17', 2.98, 3.47, '80074');
+	INSERT INTO TblLotes VALUES(null, 'Lote 18', 3.29, 4.57, '80074');
+	INSERT INTO TblLotes VALUES(null, 'Lote 19', 4.61, 5.07, '80074');
+	INSERT INTO TblLotes VALUES(null, 'Lote 20', 5.49, 6.14, '80074');
+	INSERT INTO TblLotes VALUES(null, 'Lote 21', 4.94, 5.56, '80074');
+	INSERT INTO TblLotes VALUES(null, 'Lote 22', 9.49, 11.05, '80074');
+	INSERT INTO TblLotes VALUES(null, 'Lote 23', 9.60, 10.33, '80074');
+	INSERT INTO TblLotes VALUES(null, 'Lote 24', 8.28, 9.70, '80074');
+
+	/* Finca Candelaria */
+	INSERT INTO TblLotes VALUES(null, 'Lote 1', 6.08, 7.42, '80075');
+	INSERT INTO TblLotes VALUES(null, 'Lote 2', 3.28, 3.89, '80075');
+	INSERT INTO TblLotes VALUES(null, 'Lote 3', 4.45, 5.40, '80075');
+	INSERT INTO TblLotes VALUES(null, 'Lote 4', 4.83, 5.90, '80075');
+	INSERT INTO TblLotes VALUES(null, 'Lote 5', 4.23, 5.50, '80075');
+	INSERT INTO TblLotes VALUES(null, 'Lote 6', 4.57, 5.94, '80075');
+	INSERT INTO TblLotes VALUES(null, 'Lote 7', 4.75, 5.67, '80075');
+	INSERT INTO TblLotes VALUES(null, 'Lote 8', 6.24, 7.69, '80075');
+	INSERT INTO TblLotes VALUES(null, 'Lote 9', 3.87, 5.75, '80075');
+	INSERT INTO TblLotes VALUES(null, 'Lote 10', 3.75, 4.57, '80075');
+	INSERT INTO TblLotes VALUES(null, 'Lote 11', 4.18, 5.02, '80075');
+	INSERT INTO TblLotes VALUES(null, 'Lote 12', 3.78, 4.32, '80075');
+	INSERT INTO TblLotes VALUES(null, 'Lote 13', 3.20, 3.63, '80075');
+	INSERT INTO TblLotes VALUES(null, 'Lote 14', 2.00, 2.23, '80075');
+	INSERT INTO TblLotes VALUES(null, 'Lote 15', 3.20, 3.47, '80075');
+	INSERT INTO TblLotes VALUES(null, 'Lote 16', 5.21, 6.27, '80075');
+	INSERT INTO TblLotes VALUES(null, 'Lote 17', 5.83, 6.65, '80075');
+	INSERT INTO TblLotes VALUES(null, 'Lote 18', 7.15, 7.96, '80075');
+	INSERT INTO TblLotes VALUES(null, 'Lote 19', 2.48, 3.05, '80075');
+
+	/* Finca Guaimaral */
+	INSERT INTO TblLotes VALUES(null, 'Lote 1', 0.96, 1.22, '85747');
+	INSERT INTO TblLotes VALUES(null, 'Lote 2', 2.15, 2.67, '85747');
+	INSERT INTO TblLotes VALUES(null, 'Lote 3', 3.22, 3.84, '85747');
+	INSERT INTO TblLotes VALUES(null, 'Lote 4', 5.62, 6.55, '85747');
+	INSERT INTO TblLotes VALUES(null, 'Lote 5', 3.55, 4.33, '85747');
+	INSERT INTO TblLotes VALUES(null, 'Lote 6', 3.70, 4.72, '85747');
+	INSERT INTO TblLotes VALUES(null, 'Lote 7', 3.30, 4.57, '85747');
+	INSERT INTO TblLotes VALUES(null, 'Lote 8', 3.20, 4.40, '85747');
+	INSERT INTO TblLotes VALUES(null, 'Lote 9', 4.45, 5.54, '85747');
+	INSERT INTO TblLotes VALUES(null, 'Lote 10', 3.73, 4.72, '85747');
+	INSERT INTO TblLotes VALUES(null, 'Lote 11', 1.85, 2.19, '85747');
+	INSERT INTO TblLotes VALUES(null, 'Lote 12', 2.63, 3.14, '85747');
+	INSERT INTO TblLotes VALUES(null, 'Lote 13', 3.46, 4.32, '85747');
+	INSERT INTO TblLotes VALUES(null, 'Lote 14', 2.65, 4.03, '85747');
+	INSERT INTO TblLotes VALUES(null, 'Lote 15', 1.35, 1.66, '85747');
+
+	/* Finca Kalamarí */
+	INSERT INTO TblLotes VALUES(null, 'Lote 1', 3.68, 3.98, '80008');
+	INSERT INTO TblLotes VALUES(null, 'Lote 2', 3.42, 3.79, '80008');
+	INSERT INTO TblLotes VALUES(null, 'Lote 3', 1.61, 2.35, '80008');
+	INSERT INTO TblLotes VALUES(null, 'Lote 4', 5.34, 6.30, '80008');
+	INSERT INTO TblLotes VALUES(null, 'Lote 5', 6.83, 8.30, '80008');
+	INSERT INTO TblLotes VALUES(null, 'Lote 6', 5.27, 5.83, '80008');
+	INSERT INTO TblLotes VALUES(null, 'Lote 7', 4.52, 5.08, '80008');
+	INSERT INTO TblLotes VALUES(null, 'Lote 8', 1.25, 1.43, '80008');
+	INSERT INTO TblLotes VALUES(null, 'Lote 9', 3.06, 3.39, '80008');
+	INSERT INTO TblLotes VALUES(null, 'Lote 10', 3.66, 4.02, '80008');
+	INSERT INTO TblLotes VALUES(null, 'Lote 11', 3.60, 4.03, '80008');
+	INSERT INTO TblLotes VALUES(null, 'Lote 12', 4.18, 4.71, '80008');
+	INSERT INTO TblLotes VALUES(null, 'Lote 13', 2.57, 2.99, '80008');
+	INSERT INTO TblLotes VALUES(null, 'Lote 14', 2.45, 3.25, '80008');
+	INSERT INTO TblLotes VALUES(null, 'Lote 15', 2.78, 3.12, '80008');
+	INSERT INTO TblLotes VALUES(null, 'Lote 16', 3.56, 4.06, '80008');
+	INSERT INTO TblLotes VALUES(null, 'Lote 17', 3.30, 3.86, '80008');
+
+	/* Finca Taiwán */
+	INSERT INTO TblLotes VALUES(null, 'Lote 1', 3.22, 4.31, '80004');
+	INSERT INTO TblLotes VALUES(null, 'Lote 2', 3.15, 3.89, '80004');
+	INSERT INTO TblLotes VALUES(null, 'Lote 3', 4.36, 5.20, '80004');
+	INSERT INTO TblLotes VALUES(null, 'Lote 4', 4.14, 5.00, '80004');
+	INSERT INTO TblLotes VALUES(null, 'Lote 5', 4.15, 5.03, '80004');
+	INSERT INTO TblLotes VALUES(null, 'Lote 6', 3.75, 4.78, '80004');
+	INSERT INTO TblLotes VALUES(null, 'Lote 7', 2.13, 2.54, '80004');
+	INSERT INTO TblLotes VALUES(null, 'Lote 8', 1.52, 1.84, '80004');
+	INSERT INTO TblLotes VALUES(null, 'Lote 9', 1.18, 1.50, '80004');
+	INSERT INTO TblLotes VALUES(null, 'Lote 10', 4.31, 5.13, '80004');
+	INSERT INTO TblLotes VALUES(null, 'Lote 11', 2.93, 3.60, '80004');
+	INSERT INTO TblLotes VALUES(null, 'Lote 12', 3.15, 4.02, '80004');
+	INSERT INTO TblLotes VALUES(null, 'Lote 13', 3.56, 4.34, '80004');
+	INSERT INTO TblLotes VALUES(null, 'Lote 14', 5.00, 5.93, '80004');
+	INSERT INTO TblLotes VALUES(null, 'Lote 15', 2.28, 2.82, '80004');
+	INSERT INTO TblLotes VALUES(null, 'Lote 16', 2.61, 3.23, '80004');
+	INSERT INTO TblLotes VALUES(null, 'Lote 17', 2.41, 2.99, '80004');
+	INSERT INTO TblLotes VALUES(null, 'Lote 18', 2.13, 2.63, '80004');
+	INSERT INTO TblLotes VALUES(null, 'Lote 19', 2.72, 3.56, '80004');
+	INSERT INTO TblLotes VALUES(null, 'Lote 20', 3.86, 4.71, '80004');
+	INSERT INTO TblLotes VALUES(null, 'Lote 21', 1.65, 2.11, '80004');
+
+	/* Finca Zarzamora */
+	INSERT INTO TblLotes VALUES(null, 'Lote 1', 0.74, 0.85, '80009');
+	INSERT INTO TblLotes VALUES(null, 'Lote 2', 1.01, 1.18, '80009');
+	INSERT INTO TblLotes VALUES(null, 'Lote 3', 2.14, 2.55, '80009');
+	INSERT INTO TblLotes VALUES(null, 'Lote 4', 1.70, 1.95, '80009');
+	INSERT INTO TblLotes VALUES(null, 'Lote 5', 1.85, 2.17, '80009');
+	INSERT INTO TblLotes VALUES(null, 'Lote 6', 2.82, 3.23, '80009');
+	INSERT INTO TblLotes VALUES(null, 'Lote 7', 2.48, 2.96, '80009');
+	INSERT INTO TblLotes VALUES(null, 'Lote 8', 2.55, 3.04, '80009');
+	INSERT INTO TblLotes VALUES(null, 'Lote 9', 2.18, 2.53, '80009');
+	INSERT INTO TblLotes VALUES(null, 'Lote 10', 2.34, 2.79, '80009');
+	INSERT INTO TblLotes VALUES(null, 'Lote 11', 2.23, 2.63, '80009');
+	INSERT INTO TblLotes VALUES(null, 'Lote 12', 1.43, 1.78, '80009');
+	INSERT INTO TblLotes VALUES(null, 'Lote 13', 1.13, 1.37, '80009');
+	INSERT INTO TblLotes VALUES(null, 'Lote 14', 2.50, 3.12, '80009');
+	INSERT INTO TblLotes VALUES(null, 'Lote 15', 2.75, 3.30, '80009');
+	INSERT INTO TblLotes VALUES(null, 'Lote 16', 3.11, 3.83, '80009');
+	INSERT INTO TblLotes VALUES(null, 'Lote 17', 3.17, 4.02, '80009');
+	INSERT INTO TblLotes VALUES(null, 'Lote 18', 5.17, 6.44, '80009');
+	INSERT INTO TblLotes VALUES(null, 'Lote 19', 3.77, 4.77, '80009');
+	INSERT INTO TblLotes VALUES(null, 'Lote 20', 3.06, 3.63, '80009');
+	INSERT INTO TblLotes VALUES(null, 'Lote 21', 2.07, 2.46, '80009');
+	INSERT INTO TblLotes VALUES(null, 'Lote 22', 1.41, 1.71, '80009');
+	INSERT INTO TblLotes VALUES(null, 'Lote 23', 5.22, 6.86, '80009');
+	INSERT INTO TblLotes VALUES(null, 'Lote 24', 1.50, 1.68, '80009');
+
+
+	/* CAJAS PRODUCCIÓN */
+	INSERT INTO `tblcajasproduccion` (`PKCodigo`, `Descripcion`, `FactorConversion`, `FKId_TblTipoFruta`) VALUES
+	('1003', 'PR ORSERO BANANAS --', 1, 1),
+	('1010', 'PR TURBANA 3 LBS BAN', 1, 1),
+	('1011', 'FT TESCO*', 0.94, 6),
+	('1014', 'FLO FAIR TRADE EU***', 1, 6),
+	('1015', 'FT JS FAIR TRADE 17K', 0.94, 6),
+	('1016', 'FT 14 KLS- 75 DEDOS*', 0.77, 6),
+	('1017', 'FT FLO FAIR TRADE EU', 1, 6),
+	('1019', 'FT TESCO 17 KG EU**', 0.94, 6),
+	('1020', 'FT SMALL 13 KG*', 0.7, 6),
+	('1021', 'FT TESCO 17 KG CLUSTER BAG', 0.94, 6),
+	('1025', 'FT FAIR T 3LB EEUU', 1, 6),
+	('1028', 'FAIR TRADE TROPY DED', 1, 6),
+	('1036', 'PRIMERA BANANAS', 1, 1),
+	('1041', 'PIMERA MIX SIMBA BANANAS', 1, 1),
+	('1043', 'PR BAHIA HD SIN SELLO  54', 1, 1),
+	('1044', 'MIX SIMBA BANANAS 5', 1, 1),
+	('1046', 'PREMIUM TROPY HD 54', 1, 1),
+	('1047', 'PREMIUM ADRIA BANANA ', 1, 1),
+	('1048', 'SEGUNDA DARIEN BVC 54 (SEGUNDA)', 1, 2),
+	('1051', 'MENOR ESPECIFICACION  - BANANAS X 54', 1, 2),
+	('1054', 'PR DM EUROMINI 17KG', 0.94, 1),
+	('1056', 'PR 14 KL EU 75 DEDOS', 0.77, 1),
+	('1059', 'PR LD17 TRIAL 2', 0.94, 1),
+	('1062', 'FT JSFTX5 17 K EU', 0.94, 6),
+	('1073', 'PR SUPREME BANANAS', 1, 1),
+	('1075', 'PR LD17 AL 55', 0.94, 1),
+	('1078', 'ME FREDY F BAG 13 KG ', 0.74, 1),
+	('1079', 'ME FYFFES 12.7 KGS (SEGUNDA).', 0.7, 1),
+	('1080', 'ME ALDI BAG 1B 13 KGS.', 0.74, 1),
+	('1081', 'SEGUNDA FT SMALL 12.7 KG EU*', 0.7, 6),
+	('1085', 'PR FRUTIA BANANAS', 1, 1),
+	('1089', 'PR TROPY MEDITERRAN', 1, 1),
+	('1103', 'PR DERBY BANANAS', 1, 1),
+	('1106', 'SEGUNDA DARIEN BVC 54', 1, 2),
+	('1107', 'MENOR ESPECIFICACION - BANANAS AL 54', 1, 2),
+	('1108', 'PR TURBANA RAINFOREST', 1, 1),
+	('1114', 'PR  LD17RA  KGS.', 0.94, 1),
+	('1120', 'PR FYFFES STDW 54', 1, 1),
+	('1124', 'DARIEN 54 RAINFORES', 1, 2),
+	('1125', 'PR TURBANA 3 LBS BA', 1, 1),
+	('1126', 'PR FYFFES USA.', 1, 1),
+	('1129', 'PR FYFFES MED 54', 1, 1),
+	('1133', 'PR MOR5STD - 54', 0.92, 1),
+	('1137', 'PR CHIQUITA BANAVAC', 1, 1),
+	('1138', 'DARIEN BVC RAINFORE', 1, 2),
+	('1140', 'SEGUNDA CUMBIA BANANAS 54', 1, 2),
+	('1141', 'SEGUNDA CUMBIA HD BANANAS 4', 1, 2),
+	('1142', 'SEGUNDA CUMBIA HD BANANAS 5', 1, 2),
+	('1143', 'SEGUNDA ME HAPPY BANANAS BV', 1, 2),
+	('1148', 'SEGUNDA ME SLOBANA', 1, 2),
+	('1149', 'STDRA', 1, 1),
+	('1153', 'PR DERBY - 48', 0.77, 1),
+	('1154', 'MIX DARIEN BANANA', 1, 1),
+	('1155', 'PR SUPREME SARL', 1, 1),
+	('1163', 'PR SUPREME MEDITERR', 1, 1),
+	('1165', 'PR DERBY BANANAS 48', 1, 1),
+	('1166', 'ME ALDI BAG 13 KGS.', 0.74, 1),
+	('1167', 'FT JSFTX5 17 K EU -', 0.94, 6),
+	('1168', 'PRIMERA MIX TROPY RA', 1, 1),
+	('1170', 'PR TURBANA RAINFOREST -', 1, 1),
+	('1171', 'PR FYFFES STDHD RAI', 1, 1),
+	('1186', 'MIX ORSERO 41.5 LB', 1, 1),
+	('1189', 'FT JS FAIR TRADE 17', 0.94, 6),
+	('1191', 'PR FYFFES SRDHD 18.14 K', 1, 1),
+	('1192', 'PR FYFFES FYFMED 18.14 K', 1, 1),
+	('1193', 'PR FYFFES STDHDRA 18.14 K. RAIN', 1, 1),
+	('1194', 'PR CHIQUITA RAC BAN', 1, 1),
+	('1195', 'MIX ORSERO 41.5 LB -', 1, 1),
+	('1198', 'PR CLUSTER BAG FYFF', 1, 1),
+	('1200', 'ME ALDI BAG RA 13 K', 0.74, 1),
+	('1202', 'SEGUNDA ME ALDI BAG RA 13 K', 0.74, 2),
+	('1209', 'FT MHFT17 - EU-55', 0.94, 6),
+	('1214', 'PR MOR5STDRA - 54', 0.92, 1),
+	('1215', 'ME FYFFES 12.7 KGS.', 0.7, 1),
+	('1216', 'PR MSTDRA - 54', 1, 1),
+	('1219', 'PR FYFFES 3 LBS BAN', 1, 1),
+	('1223', 'PR YELLOW RAINFORES', 1, 1),
+	('1224', 'PR YELLOW RAINFORES ', 1, 1),
+	('1225', 'PR PAMELA BANANAS', 1, 1),
+	('1231', 'FT TROPY EU - 48', 1, 1),
+	('1233', 'PR FYFFES STDWR 54', 1, 1),
+	('1239', 'DARIEN BVC*', 1, 2),
+	('1242', 'DARIEN 54*', 1, 2),
+	('1243', 'DARIEN BVC 54*', 1, 2),
+	('1253', 'PR ALDI RAINFOREST', 0.94, 1),
+	('1255', 'MIX TROPY RAINFORES 17 KLOS', 0.94, 1),
+	('1259', 'PR CHIQUITA RAC BANAVAC 54 REF', 1, 1),
+	('1268', 'PR CHIQUITA RAC BAN -', 1, 1),
+	('1271', 'FT FT22X5 EU*', 1, 6),
+	('1278', 'MENOR ESPECIFICACION FYFFES 13 KL CLUSTER BAG', 0.7, 1),
+	('1283', 'PR DERBY BANANAS -', 1, 1),
+	('1285', 'PR DERBY BANANAS RA', 1, 1),
+	('1287', 'PR ORSERO EUROMINI 17 KGS', 0.95, 1),
+	('1290', 'FT PLUSFT5', 1, 1),
+	('1292', 'PR YELLOW RAINFOREST MOTTED', 1, 1),
+	('1298', 'FT JSFTIF17-55EU', 0.94, 1),
+	('1303', 'MENOR ESPECIFICACION DEDO SUELTO 10 LBS.', 0.25, 2),
+	('1304', 'PR ORSERO BANANAS', 1, 1),
+	('1313', 'FT - MHFTF517 - 55 EU', 0.94, 1),
+	('1316', 'FT - DELMONTE - 54 EU', 1, 1),
+	('1320', 'SEGUNDA BANAKING BVC - 54', 1, 1),
+	('1324', 'PR GOODFARMER 4 HANDS 13.5 K', 0.74, 1),
+	('1327', 'PR GOODFARMER 6 HANDS 13.5 K', 0.74, 1),
+	('1328', 'PR GOODFARMER 5 HANDS 13.5 K', 0.74, 1),
+	('1329', 'FT TROPY 17 KGS - 55 EU', 0.94, 1),
+	('1333', 'PR GOODFARMER 5 HANDS 13.5 K -', 0.74, 1),
+	('1336', 'PR BANANAS KRAFT SIN SELLO - 5', 1, 1),
+	('1339', 'MENOR ESPECIFICACION ME BANANEN EVERY DAY', 1, 2),
+	('1341', 'MENOR ESPECIFICACION - BANANAS 5 DEDOS', 1, 2),
+	('1342', 'MENOR ESPECIFICACION ME SIMBARICA 6 DEDO', 1, 2),
+	('1345', 'PR BAHIA HD RAINFOREST', 1, 1),
+	('1350', 'FT DELMONTE 17 KGS-EU-55', 0.94, 1),
+	('1351', 'MENOR ESPECIFICACION YUMMYBAN UCRANIA BANANAS 54', 1, 2),
+	('1353', 'FT JS - FAIR TRADE 17K EU - 55', 0.94, 1),
+	('1354', 'FT JSFTX5 17 K EU -55', 0.94, 1),
+	('1355', 'FT JS FAIR TRADE 17K JSFTB13K', 0.94, 1),
+	('1356', 'MHFT17-EU-55', 0.94, 1),
+	('1357', 'FT DELMONTE 17 KGS-EU-55 -', 0.94, 1),
+	('1359', 'MENOR ESPECIFICACION - YUMMYBAN UCRANIA BA', 1, 2),
+	('1361', 'MENOR ESPICIFICACION - YUMMYBAN UCRANIA BANANAS 54', 1, 2),
+	('200', 'CLUSTER BAG DEDO SUELTO LARGO KILOS 20', 1, 1),
+	('354', 'PRIMERA NORMAL TROPICAL  EDEN EUROBOX KILOS 20', 1, 1),
+	('376', 'PREMIUM BANANAS EN BAG PALLET EUROPA URA', 1, 1),
+	('392', 'MENOR ESPECIFICACION CLUSTER BAG QUAD PACK KILOS 20', 1, 1),
+	('426', 'TROPICAL EDEN EUROBOX 80*120', 1, 1),
+	('462', 'SEGUNDA DARIEN BVC 20 KLOS', 1, 2),
+	('474', 'SELECT SUN SWEET', 1, 1),
+	('489', 'PREMIUM TURBANA ECUADOR', 1, 1),
+	('494', 'PRIMERA NORMAL IRANI ESTRELLA KILOS 20', 0.71, 1),
+	('511', '13 KLS MANOS TURBANA KILOS', 0.71, 1),
+	('512', 'PRIMERA NORMAL FYFFES EUROBOX KILOS 20', 1, 1),
+	('519', 'SEVEN BBANANAS PACK', 1, 1),
+	('528', 'PR FYFF EUBOX 20 K45', 1, 1),
+	('534', 'PRIMERA NORMAL TURBANA PALLET KILOS 20', 1, 1),
+	('538', 'PRIMERA NORMAL FYFFES 20 KILOS KILOS 20', 1, 1),
+	('540', 'PRIMERA NORMAL BLANCOS BAG KILOS 20', 1, 1),
+	('542', 'FREDY FYFFES 20 KL BAG KILOS', 1, 6),
+	('545', 'PRIMERA NORMAL FYFFES CL B 48 KILOS 20', 1, 1),
+	('550', 'PR TURBANA EUROPA 18.14 KG - 48', 1, 1),
+	('552', '1B FREDY FYFFES BAG 22 18.14 KG - 48 SM', 1, 1),
+	('553', 'PR FYFFES STD 18.14 KG -48 SM', 1, 1),
+	('554', 'SEVEN BANANAS PACK', 1, 1),
+	('559', 'CLUSTERT BAG 12X1 KG EXPOCARIBE', 0.71, 1),
+	('562', 'PRIMERA NORMAL IRANI FRUTTIA KILOS 20', 0.71, 1),
+	('568', 'DOLE USA', 1, 1),
+	('574', 'FLO FT EUROPA 18.14 KG - FT', 1, 6),
+	('575', 'DARIEN KILOS', 1, 2),
+	('584', 'PRIMERA NORMAL STOP AND SHOP KILOS 20', 1, 1),
+	('587', 'PRIMERA NORMAL BONI BAG KILOS 20', 1, 1),
+	('589', 'PRIMERA NORMAL DON CARLOS KILOS 20', 1, 1),
+	('595', '13 KLS MANO ENTER EXPOCA-56', 0.71, 1),
+	('601', 'SEVEN BANANAS BLANCO BAG -48', 1, 1),
+	('603', '1B 7-BANANAS BLANCO BAG 22 18.14 KG SM -48', 1, 1),
+	('604', 'CLUSTER BAG DOLPHIN BAG KILOS 20', 1, 1),
+	('608', 'PRIMERA NORMAL TURBANA PREMIUM KILOS 20', 1, 1),
+	('609', 'PRIMERA CLUSTER BAG KILOS 20', 1, 1),
+	('610', 'PRIMERA NORMAL FIVE A DAY PREMIUM KILOS 20', 1, 1),
+	('611', 'PRIMERA NORMAL PRICE CHOPPER KILOS 20', 1, 1),
+	('612', 'KORA KILOS', 1, 1),
+	('613', 'PRIMERA NORMAL PREMIUM TROPY KILOS 20', 1, 1),
+	('614', 'SEGUNDA DARIEN ESTÁNDAR KILOS 20', 1, 2),
+	('615', 'DARIEN BAG (SEGUNDA)', 1, 2),
+	('616', 'SEGUNDA DARIEN 3 LIBRAS KILOS 17', 1, 2),
+	('617', 'PRIMERA NORMAL WEISS PREMIUM KILOS 20', 1, 1),
+	('618', 'PRIMERA NORMAL UNIFRUIT KILOS 20', 1, 1),
+	('619', 'PRIMERA NORMAL TURBANA SPOT KILOS 20', 1, 1),
+	('620', 'PRIMERA NORMAL GIOIA KILOS 20', 1, 1),
+	('621', 'PRIMERA NORMAL COMACO KILOS 20', 1, 1),
+	('624', 'PRIMERA DOLE USA  KILOS 20', 1, 1),
+	('625', 'PRIMERA NORMAL SHURFINE PREMIUM KILOS 20', 1, 1),
+	('626', 'PREMIUM FAIR TRADE USA', 1, 1),
+	('627', 'CLUSTER BAG FREDY FYFFES 13 KL BAG KILOS 13', 0.74, 1),
+	('629', 'PRIMERA NORMAL FAIR TRADE BAG KILOS 20', 1, 1),
+	('630', 'PRIMERA NORMAL ANITA PREMIUM KILOS 20', 1, 1),
+	('631', '1B FREDY FYFFES BAG 16 13 KG SM - 60', 0.71, 1),
+	('637', 'PRIMERA NORMAL FYFFES EUROBOX CHEP KILOS 20', 1, 1),
+	('638', 'PRIMERA NORMAL DOLE PREMIO POLYPAC KILOS 20', 1, 1),
+	('642', 'CLUSTER BAG FYFFES 13 KLS CLUSTER KILOS 13', 0.71, 1),
+	('645', 'PRIMERA NORMAL FYFFES BAG BLANK KILOS 20', 1, 1),
+	('649', 'DECO BAG KILOS', 1, 1),
+	('650', 'FREDDY FYFFES USA', 1, 6),
+	('654', 'CLUSTER BAG DEDO SUELTO CORTO KILOS', 1, 1),
+	('655', 'NATURAL TASTY INV. KILOS', 1, 1),
+	('656', 'PRIMERA NORMAL PREMIUM HOYA EUROBOX KILOS 20', 1, 1),
+	('657', 'PR FYFFES 12.7K -60 SM', 0.71, 1),
+	('658', 'PR FYFFE BAG BLANCO 18.14K SM - 48', 1, 1),
+	('660', 'PR BONI BAG 18.14K SM-48', 1, 1),
+	('661', 'PR FYFFES PRINTED BAG SM-48', 1, 1),
+	('663', 'FYFFES SMOLL BAG KILOS', 0.71, 1),
+	('665', 'TURBANA 5 LIBRAS KILOS 20', 0.14, 1),
+	('667', 'PRIMERA NORMAL DELMONTE ITALIANO KILOS 21', 1, 1),
+	('668', 'PR BANASUN', 1, 1),
+	('669', 'PRIMERA NORMAL DISNEY PREMIUM KILOS 20', 1, 1),
+	('670', 'PR HOYA 12.7 KG SM -60', 0.71, 1),
+	('673', 'PRIMERA NORMAL PREMIUM HOYA ESTÁNDAR KILOS 20', 1, 1),
+	('674', 'FYFFES HD  KILOS', 1, 1),
+	('675', 'JS FAIR TRADE 17 KG EU-50', 0.94, 1),
+	('676', 'SAINSBURY EUROPA KILOS', 0.94, 1),
+	('678', 'FYFFES 13KL C BAG UK KILOS', 0.72, 1),
+	('679', 'PRIMERA NORMAL TURBANA PRMIUN KILOS 20', 1, 1),
+	('681', 'PR ASDA CHEP 17 K', 0.94, 1),
+	('682', 'PRIMERA NORMAL PR TURBANA HD KILOS 20', 1, 1),
+	('683', 'PRIMERA NORMAL FYFFES HD  KILOS 20', 1, 1),
+	('685', 'CLUSTER BAG JUNIOR DISNEY KILOS 20', 1, 1),
+	('686', 'PRIMERA NORMAL  DIAMANTE HD KILOS 20', 1, 1),
+	('687', 'CHIQUITA BANAVACK EUROPALLET', 1, 1),
+	('688', 'CLUSTER BAG DISNEY PREMIUN BAG KILOS 20', 1, 1),
+	('689', 'PRIMERA NORMAL FRUIT DU MONDE KILOS 20', 1, 1),
+	('690', 'PRIMERA NORMAL ASDA  KILOS 17', 0.95, 1),
+	('691', 'JS FAIRTRADE 17K SM - 55', 0.94, 1),
+	('692', 'CLUSTER BAG BLANCO 7 18.14 KGS KILOS 20', 1, 1),
+	('693', 'PRIMERA NORMAL TURBANA BANA FRESH KILOS 20', 1, 1),
+	('694', 'PRIMERA MED STDHD NORMAL FYFFES KILOS 20 SIN SELLO', 1, 1),
+	('695', 'PR TURBANA HANDS 13K SM - 56', 0.71, 1),
+	('696', 'CLUSTER BAG COOP 7 KILOS 13', 0.74, 1),
+	('698', 'PRFYFFES STD 18.14 K ALTA VENTILACIÓN', 1, 1),
+	('699', 'PRIMERA NORMAL RIO GRANDE  KILOS 20', 1, 1),
+	('700', 'RACIMO BANANO ENMEPADO', 1, 1),
+	('701', 'FAIR TRADE 12 KG-SM', 0.66, 6),
+	('702', 'FLO FT EUROPA 18.14 KG - FT -', 1, 6),
+	('703', 'ORGANICO BAG NAKED', 1, 1),
+	('704', 'FAIR TRADE 13 KG-UR', 0.72, 6),
+	('705', 'PR BANANEC MEDIT EURO KILOS 20', 1, 1),
+	('706', 'PR BANANEC MEDIT PAL KILOS 20', 1, 1),
+	('707', 'FAITRADE 3LB BAG USA', 1, 6),
+	('708', 'FAIR TRADE BAG 13 KLS', 0.72, 6),
+	('709', 'BLANC BAG TURBANA SM', 1, 1),
+	('710', 'FLO FT 12 BAG 15 KLS', 0.83, 6),
+	('711', 'FLO FT 12 BAG 15 KLS SM', 0.83, 6),
+	('712', 'PRIMERA NORMAL DOLPHIN HD KILOS 20', 1, 1),
+	('713', 'SEGUNDA DARIEN ESTÁNDAR KILOS 20 -', 1, 2),
+	('714', 'PRIMERA NORMAL TURBANA PREMIUM KILOS 20 -', 1, 1),
+	('716', 'PR FYFFE PEV-EURO-45', 1, 1),
+	('717', 'PRIMERA NORMAL TROPY DARIÉN KILOS 20', 1, 1),
+	('719', 'FLO FT 20BAG MORRISONS', 1, 6),
+	('720', 'CLUSTER BAG TURBANA BAG 3LBS KILOS 20', 1, 1),
+	('7200', 'DEL MONTE PB-EU DM-COVER PP', 1, 1),
+	('721', 'DEL MONTE PB EU DM-COVER BVC', 1, 1),
+	('7210', 'DEL MONTE PB-EU DM-COVER B.BULK PP', 1, 1),
+	('7215', 'DEL MONTE PB-EU DM-COVER B.BULK BVC', 1, 1),
+	('722', 'COSTCO TB-BAG 3 LBS', 1, 1),
+	('7220', 'DEL MONTE EUROBOX-EU EEPB6 B.BULK', 1, 1),
+	('7225', 'DEL MONTE EUROBOX-EU EEPB6', 1, 1),
+	('723', 'FAIRTRADE PINTED BAG 13KG', 0.72, 6),
+	('7230', 'DEL MONTE PB-UK DM-COVER BVC', 1, 1),
+	('7235', 'DEL MONTE PREMIUM EUROMINI', 1, 1),
+	('724', 'FLO FT 24BAG MORRISONS', 1, 6),
+	('7240', 'DEL MONTE PB-DM-COVER BVC B.BULK', 1, 1),
+	('7245', 'DEL MONTE PB-EU DM-COVER BVC', 1, 1),
+	('725', 'CLUSTER BAG FYFFES 3 LBS BAG KILOS 20', 1, 1),
+	('726', 'PRIMERA NORMAL DOLE PREMIO BANAVAC KILOS 20', 1, 1),
+	('727', 'TROPY PREMIO', 1, 1),
+	('7270', 'UTC PB-EU DM-COVER BVC', 1, 1),
+	('7275', 'UTC PB-EU DM-COVER PP', 1, 1),
+	('728', 'ELABORADO MERCADO NACIONAL LARGO UNIBAN', 1, 1),
+	('7280', 'UTC PB-EU DM-COVER B.BULK PP', 1, 1),
+	('7285', 'UTC EUROPEO GRANEL BVC', 1, 1),
+	('729', 'ELABORADO DEDO SUELTO 25 KLS', 1, 1),
+	('730', 'RECH 20 KLS MDO NAL', 1, 1),
+	('7300', 'DEL MONTE PREMIUM ITALIANO', 1, 1),
+	('731', 'RECH 13 KLS MDO NAL', 0.71, 1),
+	('732', 'PR DOLE MEDITERRANEO PALLET', 1, 1),
+	('733', 'PR DOLE MED. GRANEL', 1, 1),
+	('7330', 'UTC ITALIANO DM-COVER', 1, 1),
+	('734', 'TURBANA 4 LBS', 1, 1),
+	('735', 'CLUSTER BAG 1B CLUSTER BAG KILOS 15', 0.84, 1),
+	('736', 'ANITA SPOT COMACO', 1, 1),
+	('737', 'PRIMERA NORMAL FYFFES EUROBOX KILOS 20 -', 1, 1),
+	('738', 'PR PLOP BAG SM-48', 1, 1),
+	('739', 'BUMPER PACK', 0.74, 1),
+	('740', 'CLUSTER BAG DOLE EXTRA SF-95 BANAVAC KILOS', 1, 1),
+	('741', 'DOLE CABANITA BANAVAC KILOS', 1, 1),
+	('742', 'PR DON MARIO KILOS', 1, 1),
+	('743', 'CLUSTER BAG MORRISONS BUMPER PACK KILOS 13', 0.71, 1),
+	('744', 'PRIMERA NORMAL PREMIUM LOBLAW KILOS 20', 1, 1),
+	('745', 'FT WHOLE FOODS', 1, 6),
+	('746', 'PRIMERA NORMAL PREMIUM TROPY HD KILOS 20', 1, 1),
+	('747', 'MORRISON 16 MOR8', 1, 1),
+	('748', 'FLO FT 13 BAG 16.5 K', 0.91, 6),
+	('749', 'PRIMERA NORMAL DOLE BAJELLA BANAVAC  KILOS 20', 1, 1),
+	('750', 'PR TROPICAL EDEN -48', 1, 1),
+	('767', 'FT 14 KLS- 75 DEDOS', 0.77, 6),
+	('771', 'CLUSTER BAG 1B-ASDA GARDEN 15CB8 KILOS 15', 0.79, 1),
+	('780', 'MI CASA', 1, 1),
+	('781', 'BAHIA SPOT COMACO EUROPALLET 20K BANAV', 1, 1),
+	('783', 'PR TURBANA COLOMBIA', 1, 1),
+	('794', 'FT 13 KLS 16CB7 BAG', 0.71, 6),
+	('799', 'JS FAIR TRADE EU-50', 0.94, 1),
+	('8100', '5 A DAY USA', 1, 1),
+	('811', 'PREMIUM TURBANA NEW LOGO 48 KILOS 20', 1, 1),
+	('8118', 'PRIMERA NORMAL DOLE EXTRA SF-95 POLYPACK KILOS 20', 1, 1),
+	('8123', 'CLUSTER BAG DOLE BARE CLUSTER BAG KILOS 20', 1, 1),
+	('8124', 'SEGUNDA NORMAL DOLE BAJELLA POLYPACK KILOS 20', 1, 2),
+	('8125', 'PRIMERA NORMAL DOLE FIRST PRICE KILOS 20', 1, 1),
+	('8127', 'PRIMERA NORMAL DOLE FIRST PRICE KILOS 21', 1, 1),
+	('8136', 'PRIMERA NORMAL DOLE CABANITA POLYPACK KILOS 20', 1, 1),
+	('817', 'DEDO SUELTO CORTO', 1, 1),
+	('818', 'FT WHOLE FOODS -', 1, 6),
+	('820', 'PREMIUM UNIFRUIT KRAFT 20 KLOS', 1, 1),
+	('823', 'PRIMERA TROPY KRAFT', 1, 1),
+	('833', 'FLO FT 13 BAG 16.5 K -', 0.91, 6),
+	('834', 'FT-WAITROSE 17', 0.94, 6),
+	('839', 'FAIRTRADE 3 LB BAG USA', 1, 6),
+	('840', 'PRIMERA B FYFFES 12.7 KL 60 13 KLS CLUSTERG', 0.72, 1),
+	('844', 'FAIR TRADE 18 KL', 1, 6),
+	('845', 'FLO FT EUROPEA 18.14 KG - FTMH18', 1, 6),
+	('847', 'PR SUPREME MEDIT EUR', 1, 1),
+	('851', 'PRIMERA TROPY MEDITERRANEO PACIFIC', 1, 1),
+	('853', 'FLO TROPY HD', 1, 6),
+	('862', 'DEL MONTE  FRANCIA PB EU DM-COVER BVC', 1, 1),
+	('863', 'FLO FT EUROPA 18.14 KG - FT18', 1, 6),
+	('865', 'FT SMALL 13 KG', 0.71, 6),
+	('868', 'SEGUNDA HAPPY BANANAS', 1, 2),
+	('877', 'FTJS FAIR T17K EU-50', 0.94, 6),
+	('878', 'FT 13 BAG 16.5 K', 0.91, 6),
+	('880', 'DOLE PREMIUM', 1, 1),
+	('882', 'PRIMERA DOLE BAJELLA POLYPACK 20 KLOS', 1, 1),
+	('883', 'PREMIO BAJELLA POLYPACK', 1, 1),
+	('887', 'DEL MONTE  PORTUGAL PB EU DM-COVER BVC', 1, 1),
+	('888', 'SELEC ORSERO BANANAS', 1, 1),
+	('889', 'SELEC ORSERO BANANAS -', 1, 1),
+	('891', 'FT PRIMERA WAITROSD 17 KILOS', 0.94, 6),
+	('897', 'FT EUROPA 18.14 KLOS FTNS', 1, 6),
+	('906', 'PRIMERA ASDA 17 KLOS', 0.94, 1),
+	('9100', 'DM USA', 1, 1),
+	('9110', 'ROSY', 1, 1),
+	('9120', '3 LBS BAG', 1, 1),
+	('913', 'PR AS17 NEW', 0.95, 1),
+	('9135', 'U.T.C', 1, 1),
+	('918', 'FT PRIMERA ST FIRE 3 LIBRAS BAG', 1, 6),
+	('919', 'FT PRIMERA WHOLE FOODS', 1, 6),
+	('9200', 'DM 27 BD PALLET POLYPACK', 1, 1),
+	('9210', 'DM GRANEL', 1, 1),
+	('9220', 'EUROBOX', 1, 1),
+	('9225', 'DM EUBOX-EU-EEPB-6', 1, 1),
+	('9230', 'DM PALLET', 1, 1),
+	('9245', 'DM PALLET BVC', 1, 1),
+	('9260', 'ROSY PALLET BVC', 1, 1),
+	('9270', 'U.T.C PALLET BVC', 1, 1),
+	('9275', 'U.T.C PALLET POLY P.', 1, 1),
+	('9280', 'U.T.C GRANEL', 1, 1),
+	('930', 'PRIMERA TROPY HD KRAFT', 1, 1),
+	('9300', 'DM ITALIANO', 1, 1),
+	('9330', 'UTC MEDITERRANEO BVC PALLET', 1, 1),
+	('934', 'PR BAHIA HDSIN SELLO', 1, 1),
+	('935', 'PR SIMBA BANANAS', 1, 1),
+	('942', 'PRIMERA SLOBANA PREMIUM HD', 1, 1),
+	('945', 'PR FYFFES STD - HD', 1, 1),
+	('946', 'PR FYFFES MED 18.14', 1, 1),
+	('947', 'SELECT PEV FYFFES 18K', 1, 1),
+	('950', 'FT WALTROSE  17', 0.94, 6),
+	('956', 'PR CONAD', 1, 1),
+	('96', 'FRUTA PREMIUN BANANAS 1 X 1', 1, 3),
+	('960', 'FT 14 CB 6 EU-60 BAG', 0.78, 6),
+	('967', 'FT FAIRTRADE FTFY18 20 KLOS', 1, 6),
+	('97', 'FRUTA MERCADO NACIONAL ESPECIAL', 1, 3),
+	('970', 'PR SUPREME MEDIT EUR (BANAFRUT) ', 1, 1),
+	('972', 'FTJS FAIR T17K EU-50 -', 0.94, 6),
+	('975', 'PR SUPREME MEDIT EUR -', 1, 1),
+	('98', 'FRUTA PREMIUN FRUTICA', 1, 4),
+	('983', 'FT PRIMERA WAITROSD 17 KILOS -', 0.94, 6),
+	('985', 'FT DOCE KILOS', 0.66, 6),
+	('99', 'FRUTA CATEGORIA II FRUTICA ', 1, 5),
+	('991', 'FT TEFTB 15 EU-50 17 KL BAG', 0.94, 6),
+	('999', 'JS FAIR TRADE 17K E', 0.94, 1);
+
+
+	/* USUARIOS */
+	INSERT INTO `tblusuarios` (`PKId`, `Usuario`, `Password`, `Ibm_Finca`, `FKId_TblTipoUsuario`, `FKId_TblEstadoUsuario`) VALUES
+	(1, '80074', 'alamos123', '80074', 2, 1),
+	(2, '80004', 'taiwan123', '80004', 2, 1),
+	(3, '80008', 'kalamari123', '80008', 2, 1),
+	(4, '80009', 'zarzamora123', '80009', 2, 1),
+	(5, '80075', 'candelaria123', '80075', 2, 1),
+	(6, '85747', 'guaimaral123', '85747', 2, 1),
+	(7, 'admin', 'valencia', null, 2, 1);
+
+
+	/* CLASIFICACION 
+	INSERT INTO TblClasificacion(1, "PREMIUN");
+	INSERT INTO TblClasificacion(2, "FRUTA DE APROVECHAMIENTO"); */
+
+

@@ -395,6 +395,7 @@
                 } else {
                     $("#txtPresente_ip").val(datosProduccion.embolse.presente);
                     $("#txtPrematuro_ip").val(datosProduccion.embolse.prematuro);
+                    $('#lblTotal_ip').val(calculateTotalEmbolse());
                     cargar_tabla_racimos_ip(res[0].FKId_TblSemanas, datosProduccion.tblRacimos);
                     cargar_tabla_cajas_ip(datosProduccion.tblCajas);
                     cargar_tabla_nacional_ip(datosProduccion.tblNacional, datosProduccion.tblCargue);
@@ -1431,3 +1432,20 @@
         hot3 = new Handsontable(tblNacional, tblSettings_nacional);
         hot4 = new Handsontable(tblCargue, tblSettings_cargue);
     }
+
+
+// COMPLEMENTOS --------------------------------------------------------------------------------------------------
+    function calculateTotalEmbolse() {
+        let presente = $('#txtPresente_ip').val();
+        let prematuro = $('#txtPrematuro_ip').val();
+        let total = parseInt(presente ? presente : 0) + parseInt(prematuro ? prematuro : 0);
+        return total;
+    }
+
+    $(document).on('input', '#txtPresente_ip', () => {
+        $('#lblTotal_ip').val(calculateTotalEmbolse());
+    });
+    
+    $(document).on('input', '#txtPrematuro_ip', () => {
+        $('#lblTotal_ip').val(calculateTotalEmbolse());
+    });

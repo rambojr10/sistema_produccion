@@ -905,6 +905,22 @@
         return $datos->fetch();
     }
 
+    //
+    function existsCajaAlineada($codigoCaja, $ibmFinca, $codEmbarque) {
+        $bd = conectar();
+        $datos = $bd->prepare("
+            SELECT * FROM tbldet_tblembarque 
+            WHERE FKCodigo_TblCajasProduccion = :codigoCaja 
+            AND FKIbm_TblFincas = :ibmFinca 
+            AND FKCod_TblEmbarque = :codEmbarque
+        ");
+        $datos->bindParam(':codigoCaja', $codigoCaja, PDO::PARAM_STR);
+        $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
+        $datos->bindParam(':codEmbarque', $codEmbarque, PDO::PARAM_STR);
+        $datos->execute();
+        return $datos->fetchAll();
+    }
+
 
 // Sentencias de actualización------------------------------------------------------------------------------------------------------------
 

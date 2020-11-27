@@ -190,6 +190,7 @@
         fetch(`../logica/contenido.php?op=cargar_programacion&codEmbarque=${valuesInvoice[0]}`)
         .then(response => response.json())
         .then(datos => {
+
             if (datos.infoCajas.length > 0 && datos.estimativo[0].length > 0) {
                 $("#alineacion-pe").prop("hidden", false);
                 $("#estimativo-pe").prop("hidden", false);
@@ -210,35 +211,58 @@
                 let x = 0; //Se usa para asignar el número de cada caja en la tabla
                 //recorre el objeto para llenar la tabla
                 for (const infoCajas of datos.infoCajas) {
+
                     let tipoFruta;
+                    let totalCajas = 0;
+                    let totalCajasPe = 0;
+                    let totalCajasMe = 0;
+
+                    infoCajas.Programacion.forEach(element => {
+                        totalCajas += parseInt(element.Cantidad == null ? 0 : element.Cantidad);
+                    });
+
                     switch (infoCajas.FKId_TblTipoFruta) { 
                         case "1":
                             tipoFruta = "yellow";
+                            infoCajas.Programacion.forEach(element => {
+                                totalCajasPe += parseInt(element.Cantidad == null ? 0 : element.Cantidad);
+                            });
                             break;
                         case "2":
                             tipoFruta = "green";
+                            infoCajas.Programacion.forEach(element => {
+                                totalCajasMe += parseInt(element.Cantidad == null ? 0 : element.Cantidad);
+                            });
                             break;
                         case "3":
                             tipoFruta = "gray";
+                            infoCajas.Programacion.forEach(element => {
+                                totalCajasPe += parseInt(element.Cantidad == null ? 0 : element.Cantidad);
+                            });
                             break;
                         case "4":
                             tipoFruta = "gray";
+                            infoCajas.Programacion.forEach(element => {
+                                totalCajasPe += parseInt(element.Cantidad == null ? 0 : element.Cantidad);
+                            });
                             break;
                         case "5":
                             tipoFruta = "gray";
+                            infoCajas.Programacion.forEach(element => {
+                                totalCajasPe += parseInt(element.Cantidad == null ? 0 : element.Cantidad);
+                            });
                             break;
                         case "6":
                             tipoFruta = "blue";
+                            infoCajas.Programacion.forEach(element => {
+                                totalCajasPe += parseInt(element.Cantidad == null ? 0 : element.Cantidad);
+                            });
                             break;
                     
                         default:
                             break;
                     }
 
-                    let totalCajas = 0;
-                    infoCajas.Programacion.forEach(element => {
-                        totalCajas += parseInt(element.Cantidad == null ? 0 : element.Cantidad);
-                    });
                     // ic -> InputCajas se usa como identificador para obtener sus valores
                     tablaBody.innerHTML += `
                         <tr>
@@ -251,17 +275,19 @@
                             <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_al" style="width:80px" value="${infoCajas.Programacion[4].Cantidad === null ? '' : infoCajas.Programacion[4].Cantidad}"></td>
                             <td idTd="datos" align="center"><input type="text" class="valida text-center ic" ident="t_kl" style="width:80px" value="${infoCajas.Programacion[5].Cantidad === null ? '' : infoCajas.Programacion[5].Cantidad}"></td>
                             <td align="center"><input type="text" class="valida text-center tcj_h" style="width:80px" value="${totalCajas}" disabled></td>
-                            <td align="center"><input type="text" class="valida text-center tcj_pm" style="width:80px" factor_con="${infoCajas.FactorConversion}" value="${totalCajas * infoCajas.FactorConversion}" disabled></td>
-                            <td align="center"><input type="text" class="valida text-center" style="width:80px" value="0" disabled></td>
+                            <td align="center"><input type="text" class="valida text-center tcj_pm" style="width:80px" factor_con="${infoCajas.FKId_TblTipoFruta != 2 ? infoCajas.FactorConversion : 0}" value="${totalCajasPe * (infoCajas.FKId_TblTipoFruta != '2' ? infoCajas.FactorConversion : 0)}" disabled></td>
+                            <td align="center"><input type="text" class="valida text-center tcj_pe" style="width:80px" factor_con="${infoCajas.FKId_TblTipoFruta == 2 ? infoCajas.FactorConversion : 0}" value="${totalCajasMe * (infoCajas.FKId_TblTipoFruta == '2' ? infoCajas.FactorConversion : 0)}" disabled></td>
                         </tr>
                     `; 
                 };
+
                 let totalPremiun = 0;
                 let totalEspecial = 0;
                 datos.estimativo[0].forEach(element => {
                     totalPremiun += parseInt(element.Premiun);
                     totalEspecial += parseInt(element.Especial);
                 });
+
                 (function(datos) {
                     
                     $("#premiun_zz").val(datos[0].Premiun);
@@ -286,6 +312,7 @@
                     window.t_especial.textContent = totalEspecial;
 
                 })(datos.estimativo[0])
+
             } else {
                 swal('Programar embarque', `El código: ${valuesInvoice[0]} no posee datos, se eliminará para mejorar su experiencia, podrá usarlo más adelante`, 'error');
                 const op = new FormData();
@@ -478,12 +505,12 @@
                     })
                     .then(response => {
                         if (response.ok)
-                            return response.text()
+                            return response.text();
                         else
                             throw "No se ha podido guardar los datos";
                     })
                     .then(res => {
-                        if (res == true) {
+                        if (res == "") {
                             // Loader
                             $(".osc").fadeOut();
                             $("#loader").fadeOut();
@@ -727,39 +754,64 @@
                     throw "No se ha podido completar la petición PE";
             })
             .then(res => {
+
                 let tablaBody = document.querySelector("#data_cajas_pe"); 
                 tablaBody.innerHTML = "";
                 let x = 0;
+                
                 for (const infoCajas of res) {
+                    
                     let tipoFruta;
+                    let totalCajasPe = 0;
+                    let totalCajasMe = 0;
+                    let totalCajas = 0;
+
+                    infoCajas.Programacion.forEach(element => {
+                        totalCajas += parseInt(element.Cantidad == null ? 0 : element.Cantidad);
+                    });
+
                     switch (infoCajas.FKId_TblTipoFruta) { 
                         case "1":
                             tipoFruta = "yellow";
+                            infoCajas.Programacion.forEach(element => {
+                                totalCajasPe += parseInt(element.Cantidad == null ? 0 : element.Cantidad);
+                            });
                             break;
                         case "2":
                             tipoFruta = "green";
+                            infoCajas.Programacion.forEach(element => {
+                                totalCajasMe += parseInt(element.Cantidad == null ? 0 : element.Cantidad);
+                            });
                             break;
                         case "3":
                             tipoFruta = "gray";
+                            infoCajas.Programacion.forEach(element => {
+                                totalCajasPe += parseInt(element.Cantidad == null ? 0 : element.Cantidad);
+                            });
                             break;
                         case "4":
                             tipoFruta = "gray";
+                            infoCajas.Programacion.forEach(element => {
+                                totalCajasPe += parseInt(element.Cantidad == null ? 0 : element.Cantidad);
+                            });
                             break;
                         case "5":
                             tipoFruta = "gray";
+                            infoCajas.Programacion.forEach(element => {
+                                totalCajasPe += parseInt(element.Cantidad == null ? 0 : element.Cantidad);
+                            });
                             break;
                         case "6":
                             tipoFruta = "blue";
+                            infoCajas.Programacion.forEach(element => {
+                                totalCajasPe += parseInt(element.Cantidad == null ? 0 : element.Cantidad);
+                            });
                             break;
                     
                         default:
                             break;
                     }
 
-                    let totalCajas = 0;
-                    infoCajas.Programacion.forEach(element => {
-                        totalCajas += parseInt(element.Cantidad == null ? 0 : element.Cantidad);
-                    });
                     // ic -> InputCajas se usa como identificador para obtener sus valores
                     tablaBody.innerHTML += `
                         <tr>
@@ -796,14 +848,15 @@
                                     : ''
                             }"></td>
                             <td align="center"><input type="text" class="valida text-center tcj_h" style="width:80px" value="${totalCajas}" disabled></td>
-                            <td align="center"><input type="text" class="valida text-center tcj_pm" style="width:80px" factor_con="${infoCajas.FactorConversion}" value="${totalCajas * infoCajas.FactorConversion}" disabled></td>
-                            <td align="center"><input type="text" class="valida text-center tcj_me" style="width:80px" value="0" disabled></td>
+                            <td align="center"><input type="text" class="valida text-center tcj_pm" style="width:80px" factor_con="${infoCajas.FKId_TblTipoFruta != 2 ? infoCajas.FactorConversion : 0}" value="${totalCajasPe * (infoCajas.FKId_TblTipoFruta != '2' ? infoCajas.FactorConversion : 0)}" disabled></td>
+                            <td align="center"><input type="text" class="valida text-center tcj_me" style="width:80px" factor_con="${infoCajas.FKId_TblTipoFruta == 2 ? infoCajas.FactorConversion : 0}" value="${totalCajasMe * (infoCajas.FKId_TblTipoFruta == '2' ? infoCajas.FactorConversion : 0)}" disabled></td>
                         </tr>
                     `;
                 }
                 //Loader
                 $('.osc').fadeOut();
                 $('#loader').fadeOut();
+
             });
         }
     });

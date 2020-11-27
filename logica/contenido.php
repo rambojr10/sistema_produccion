@@ -84,28 +84,25 @@
 
     //Guarda la programación y el estimativo de la semana
     function guardar_programacion() {
-        $result = false;
         $datos = array();
         $datos = json_decode($_POST['jsonProgramacion']);
         foreach ($datos->cajas as $c) {
-            $existsRegister = buscarregistro($c->codigoCaja, 'FKCodigo_TblCajasProduccion', 'tbldet_tblembarque', "FKIbm_TblFincas = $c->ibmFinca");
+            $existsRegister = existsCajaAlineada($c->codigoCaja, $c->ibmFinca, $datos->codEmbarque);
             if (count($existsRegister) > 0)
-                $result = actualizarprogramacion($existsRegister[0]->PKId, $c->cantidad);
+                actualizarprogramacion($existsRegister[0]->PKId, $c->cantidad);
             else
-                $result = guardarprogramacion($datos->codEmbarque, $c->ibmFinca, $c->codigoCaja, $c->cantidad);
+                guardarprogramacion($datos->codEmbarque, $c->ibmFinca, $c->codigoCaja, $c->cantidad);
         }
         eliminar_s($datos->codEmbarque, 'FKCod_TblEmbarque', 'tblestimativo');
         foreach ($datos->estimativo as $e){
-            $result = guardarestimativo($e->finca, $e->premiun, $e->especial, $datos->codEmbarque);
+            guardarestimativo($e->finca, $e->premiun, $e->especial, $datos->codEmbarque);
         }
-        echo $result;
     }
 
     // Guarda los datos de la vista insertar produccion llenando todas las tablas 
     function guardar_produccion() {
         // Controla el estado de la producción
         $state = null; //Cambia el estado si, los registros son actualizados, si superan el límite de producción y si sólo guardan por primera vez
-        echo $state;
         $datosProduccion = json_decode($_POST['datosProduccionGuardar']);
         $validarCantidadesCajas = false;
 

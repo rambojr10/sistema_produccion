@@ -19,7 +19,9 @@
         input:disabled {
             opacity: .9 !important;
         }
+
     </style>
+
     <div class="container">
 
         <div class="ui segment animated bounceInRight">
@@ -72,7 +74,7 @@
                 <div class="col-lg-6 col-md-6">
                     <form class="ui small form">
                         <h4 class="ui dividing header">Embolse</h4>
-                        <div class="two fields">
+                        <div class="three fields">
                             <div class="field">
                                 <div class="panel" id="pnlPresente">
                                     <label style="padding-left: 5px;">Presente</label>
@@ -83,6 +85,12 @@
                                 <div class="panel" id="pnlPrematuro">
                                     <label style="padding-left: 5px;">Prematuro</label>
                                     <input type="text" class="form-control" value="0" id="txtPrematuro_ip">
+                                </div>
+                            </div>
+                            <div class="field">
+                                <div class="panel">
+                                    <label style="padding-left: 5px;">Total embolse</label>
+                                    <input type="text" class="form-control" value="0" id="lblTotal_ip" disabled>
                                 </div>
                             </div>
                         </div>
