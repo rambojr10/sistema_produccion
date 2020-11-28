@@ -1,36 +1,5 @@
-/* ARCHIVO STATEMENTS CON BASE DE DATOS FINAL SIN DATOS DE PRUEBA 
-
-	Tablas:
-	EMPRESAS 			%1
-	FINCAS 				%2
-	LOTES				%3
-	TIPO FRUTA			%4
-	CAJAS PRODUCCI”N		%5
-	CINTAS				%6
-	SEMANAS				%7
-	DÕAS				%8
-	TIPO USUARIO			%9
-	ESTADO USUARIO			%10
-	USUARIOS			%11
-	EMBOLSE				%12
-	RACIMOS				%13
-	RACIMOS - DIAS			%14
-	RACIMOS_DIAS - CINTAS	 	%15
-	CAJAS MERCADO NACIONAL		%16
-	CLIENTES			%17
-	MERCADO NACIONAL		%18
-	CARGUE				%19
-	CARGUE - MERCADO NACIONAL	%20
-	PRODUCCI”N			%21
-	PRODUCCION - DÕAS		%22
-	PRODUCC”N - CAJAS PRODUCCI”N	%23
-	EMBARQUE			%24
-	EMBARQUE - CAJAS PRODUCCION	%25
-	REGISTRO SEMANAS		%26
-	ESTIMATIVO			%27
-	
-
-***************************************************************************************************************/
+CREATE DATABASE bdspmontesol;
+USE bdspmontesol;
 
 	/* EMPRESAS */
 	CREATE TABLE TblEmpresas(
@@ -52,7 +21,7 @@
 
 	/* LOTES */
 	CREATE TABLE TblLotes(
-		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		PKId INT IDENTITY (1,1) PRIMARY KEY,
 		Lote VARCHAR(20) not null,
 		Area_Neta FLOAT not null,
 		Area_Bruta FLOAT not null,
@@ -62,11 +31,11 @@
 
 	/* TIPO FRUTA */
 	CREATE TABLE TblTipoFruta(
-		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		PKId INT IDENTITY (1,1) PRIMARY KEY,
 		Descripcion VARCHAR(50) not null
 	);
 
-	/* CAJAS PRODUCCI”N */
+	/* CAJAS PRODUCCI√ìN */
 	CREATE TABLE TblCajasProduccion(
 		PKCodigo VARCHAR(5) PRIMARY KEY,
 		Descripcion VARCHAR(100) not null,
@@ -77,13 +46,13 @@
 
 	/* CINTAS */
 	CREATE TABLE TblCintas(
-		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		PKId INT IDENTITY (1,1) PRIMARY KEY,
 		Descripcion VARCHAR(50)
 	);
 
 	/* SEMANAS */
 	CREATE TABLE TblSemanas(
-		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		PKId INT IDENTITY (1,1) PRIMARY KEY,
 		N_Semana VARCHAR(50),
 		Fecha_Inicio DATE,
 		Fecha_Fin DATE,
@@ -92,27 +61,27 @@
 		FOREIGN KEY (FKId_TblCintas) REFERENCES TblCintas(PKId)
 	);
 	
-	/* DÕAS */
+	/* D√çAS */
 	CREATE TABLE TblDias(
-		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		PKId INT IDENTITY(1,1) PRIMARY KEY,
 		Descripcion VARCHAR(50)
 	);
 
 	/* TIPO USUARIO */
 	CREATE TABLE TblTipoUsuario(
-		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		PKId INT IDENTITY (1,1) PRIMARY KEY,
 		Descripcion VARCHAR(50)
 	);
 
 	/* ESTADO USUARIO */
 	CREATE TABLE TblEstadoUsuario(
-		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		PKId INT IDENTITY (1,1) PRIMARY KEY,
 		Descripcion VARCHAR(50)
 	);
 
 	/* USUARIOS */
 	CREATE TABLE TblUsuarios(
-		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		PKId INT IDENTITY (1,1) PRIMARY KEY,
 		Usuario VARCHAR(50) not null,
 		Password VARCHAR(255) not null,
 		Ibm_Finca VARCHAR(5),
@@ -124,7 +93,7 @@
 
 	/* EMBOLSE */
 	CREATE TABLE TblEmbolse(
-		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		PKId INT IDENTITY (1,1) PRIMARY KEY,
 		FKId_TblSemanas INT not null,
 		N_PlantasPresente INT not null,
 		N_PlantasPrematuro INT not null,
@@ -133,7 +102,7 @@
 
 	/* RACIMOS */
 	CREATE TABLE TblRacimos(
-		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		PKId INT IDENTITY (1,1) PRIMARY KEY,
 		FKId_TblSemanas INT not null,
 		N_RacimosC INT not null,
 		N_RacimosR INT not null,
@@ -142,7 +111,7 @@
 	
 	/* DETALLE - RACIMOS - DIAS */
 	CREATE TABLE TblDet_TblRacimos_TblDias(
-		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		PKId INT IDENTITY (1,1) PRIMARY KEY,
 		FKId_TblRacimos INT not null,
 		FKId_TblDias INT not null,
 		N_RacimosC_Dia INT not null,
@@ -155,7 +124,7 @@
 	
 	/* DETALLE - DET_RACIMOS_DIAS - CINTAS */
 	CREATE TABLE TblDet_TblDet_TblRacimos_TblDias(
-		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		PKId INT IDENTITY (1,1) PRIMARY KEY,
 		FKId_TblDet_TblRacimos_TblDias INT not null,
 		FKId_TblCintas INT not null,
 		N_RacimosC_Cintas INT not null,
@@ -165,17 +134,17 @@
 
 	/* MERCADO NACIONAL */
 	CREATE TABLE TblCajasMercadoNacional(
-		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		PKId INT IDENTITY (1,1) PRIMARY KEY,
 		Descripcion VARCHAR(250) not null
 	);
 		
 	CREATE TABLE TblMercadoNacional(
-		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		PKId INT IDENTITY (1,1) PRIMARY KEY,
 		Total_Elaborado INT not null
 	);
 	
 	CREATE TABLE TblDet_TblMercadoNacional(
-		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		PKId INT IDENTITY (1,1) PRIMARY KEY,
 		FKId_TblMercadoNacional INT not null,
 		FKId_TblDias INT not null,
 		FKId_TblCajasMercadoNacional INT not null,
@@ -185,9 +154,9 @@
 		FOREIGN KEY (FKId_TblCajasMercadoNacional) REFERENCES TblCajasMercadoNacional(PKId)
 	);
 	
-	/* PRODUCCI”N */
+	/* PRODUCCI√ìN */
 	CREATE TABLE TblProduccion(
-		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		PKId INT IDENTITY (1,1) PRIMARY KEY,
 		FKIbm_TblFincas VARCHAR(5) not null,
 		FKId_TblEmbolse INT not null,
 		FKId_TblRacimos INT not null,
@@ -210,9 +179,9 @@
 		FOREIGN KEY (FKId_TblMercadoNacional) REFERENCES TblMercadoNacional(PKId)
  	);
 
-	/* DETALLE PRODUCCI”N */
+	/* DETALLE PRODUCCI√ìN */
 	CREATE TABLE TblDet_TblProduccion(
-		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		PKId INT IDENTITY (1,1) PRIMARY KEY,
 		FKId_TblProduccion INT not null,
 		FKId_TblDias INT not null,
 		Total_CE_Dia INT,
@@ -229,9 +198,9 @@
 		FOREIGN KEY (FKId_TblDias) REFERENCES TblDias(PKId)	
 	);
 
-	/* DETALLE - DETALLE PRODUCCION - CAJAS PRODUCCI”N */
+	/* DETALLE - DETALLE PRODUCCION - CAJAS PRODUCCI√ìN */
 	CREATE TABLE TblDet_TblDet_TblProduccion(
-		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		PKId INT IDENTITY (1,1) PRIMARY KEY,
 		FKId_TblDet_TblProduccion INT not null,
 		FKCodigo_TblCajasProduccion VARCHAR(5) not null,
 		N_CajasProducidas_Dia INT,
@@ -249,7 +218,7 @@
 	
 	/* DETALLE EMBARQUE - FINCAS - CAJAS PRODUCCION */
 	CREATE TABLE TblDet_TblEmbarque(
-		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		PKId INT IDENTITY (1,1) PRIMARY KEY,
     		FKCod_TblEmbarque VARCHAR(10) not null, 
     		FKIbm_TblFincas VARCHAR(5) not null,
     		FKCodigo_TblCajasProduccion VARCHAR(5) not null,
@@ -259,15 +228,15 @@
     		FOREIGN KEY (FKCodigo_TblCajasProduccion) REFERENCES tblcajasproduccion(PKCodigo)
 	);
 
-	/* TABLAS INDEPENDIENTES DE CONFIGURACI”N */
+	/* TABLAS INDEPENDIENTES DE CONFIGURACI√ìN */
 	CREATE TABLE TblRegistroSemanas(
-		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		PKId INT IDENTITY (1,1) PRIMARY KEY,
 		Anho_generado INT not null
 	);
 
 	/* TABLA ESTIMATIVO */
 	CREATE TABLE TblEstimativo(
-		PKId INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		PKId INT IDENTITY (1,1) PRIMARY KEY,
     		Finca VARCHAR(50) not null,
     		Premiun INT,
     		Especial INT,
@@ -277,7 +246,7 @@
 
 	/* TABLA CARGUE */
 	CREATE TABLE TblCargue(
-		PKId_Cargue INTEGER PRIMARY KEY INT IDENTITY (1,1),
+		PKId_Cargue INT IDENTITY (1,1) PRIMARY KEY,
 		FKIbm_TblFincas VARCHAR(5) not null,
 		Cliente VARCHAR(200) not null,
 		Fecha_Cargue DATE not null,
@@ -301,27 +270,29 @@
 /* STATEMENTS PARA LLENAR TABLAS*/
 
 	/*TABLA CINTAS */
-	INSERT INTO TblCintas VALUES(null, 'CAF…');
-	INSERT INTO TblCintas VALUES(null, 'NEGRA');
-	INSERT INTO TblCintas VALUES(null, 'NARANJA');
-	INSERT INTO TblCintas VALUES(null, 'VERDE');
-	INSERT INTO TblCintas VALUES(null, 'AMARILLA');
-	INSERT INTO TblCintas VALUES(null, 'BLANCA');
-	INSERT INTO TblCintas VALUES(null, 'AZUL');
-	INSERT INTO TblCintas VALUES(null, 'GRIS');
-	INSERT INTO TblCintas VALUES(null, 'MORADA');
-	INSERT INTO TblCintas VALUES(null, 'ROJA');
+	INSERT INTO TblCintas (PKId, Descripcion) VALUES
+		(null, 'CAF√â'),
+		(null, 'NEGRA'),
+		(null, 'NARANJA'),
+		(null, 'VERDE'),
+		(null, 'AMARILLA'),
+		(null, 'BLANCA'),
+		(null, 'AZUL'),
+		(null, 'GRIS'),
+		(null, 'MORADA'),
+		(null, 'ROJA');
 	
 	/* TABLA CAJAS MERCADO NACIONAL */
-	INSERT INTO TblCajasMercadoNacional VALUES(null, 'DEDO SUELTO CART”N');
-	INSERT INTO TblCajasMercadoNacional VALUES(null, 'CLUSTER CART”N');
-	INSERT INTO TblCajasMercadoNacional VALUES(null, 'MANO ENTERA');
-	INSERT INTO TblCajasMercadoNacional VALUES(null, 'DEDO SUELTO EN BOLSA DE 20KLS');
-	INSERT INTO TblCajasMercadoNacional VALUES(null, 'FRUTA DE PISO BOLSA DE 25KLS');
-	INSERT INTO TblCajasMercadoNacional VALUES(null, 'CANASTAS SUCIAS');
+	INSERT INTO TblCajasMercadoNacional (PKId, Descripcion) VALUES 
+		(null, 'DEDO SUELTO CART√ìN');
+		(null, 'CLUSTER CART√ìN');
+		(null, 'MANO ENTERA');
+		(null, 'DEDO SUELTO EN BOLSA DE 20KLS');
+		(null, 'FRUTA DE PISO BOLSA DE 25KLS');
+		(null, 'CANASTAS SUCIAS');
 
 	/* TABLA SEMANAS */
-		INSERT INTO `tblsemanas` (`PKId`, `N_Semana`, `Fecha_Inicio`, `Fecha_Fin`, `Anho`, `FKId_TblCintas`) VALUES
+		INSERT INTO tblsemanas (PKId, N_Semana, Fecha_Inicio, Fecha_Fin, Anho, FKId_TblCintas) VALUES
 			(1, 'SEMANA 1', '2019-12-30', '2020-01-05', 2020, 3),
 			(2, 'SEMANA 2', '2020-01-06', '2020-01-12', 2020, 4),
 			(3, 'SEMANA 3', '2020-01-13', '2020-01-19', 2020, 5),
@@ -376,183 +347,179 @@
 			(52, 'SEMANA 52', '2020-12-21', '2020-12-27', 2020, 4);
 
 
-	/* TABLA DÕAS */
-	INSERT INTO TblDias VALUES(null, 'LUNES');
-	INSERT INTO TblDias VALUES(null, 'MARTES');
-	INSERT INTO TblDias VALUES(null, 'MIERCOLES');
-	INSERT INTO TblDias VALUES(null, 'JUEVES');
-	INSERT INTO TblDias VALUES(null, 'VIERNES');
-	INSERT INTO TblDias VALUES(null, 'S¡BADO');
-	INSERT INTO TblDias VALUES(null, 'DOMINGO');
+	/* TABLA D√çAS */
+	INSERT INTO tbldias (PKId, Descripcion) VALUES
+		(1, 'LUNES'),
+		(2, 'MARTES'),
+		(3, 'MIERCOLES'),
+		(4, 'JUEVES'),
+		(5, 'VIERNES'),
+		(6, 'SABADO'),
+		(7, 'DOMINGO');
 	
 	/* TIPO FRUTA */
-	INSERT INTO tbltipofruta VALUES(null, 'PRIMERA');
-	INSERT INTO tbltipofruta VALUES(null, 'SEGUNDA');
-	INSERT INTO tbltipofruta VALUES(null, 'ESPECIAL');
-	INSERT INTO tbltipofruta VALUES(null, 'FRUTICA');
-	INSERT INTO tbltipofruta VALUES(null, 'FRUTICA II');
-	INSERT INTO tbltipofruta VALUES(null, 'FAIR TRADE');
+	INSERT INTO tbltipofruta (PKId, Descripcion) VALUES
+		(1, 'PRIMERA'),
+		(2, 'SEGUNDA'),
+		(3, 'ESPECIAL'),
+		(4, 'FRUTICA'),
+		(5, 'FRUTICA II'),
+		(6, 'FAIR TRADE');
 
 	/* TIPO USUARIO */
-	INSERT INTO TblTipoUsuario VALUES(null, 'ADMINISTRADOR');
-	INSERT INTO TblTipoUsuario VALUES(null, 'ESTANDAR');
+	INSERT INTO tbltipousuario (PKId, Descripcion) VALUES
+		(1, 'ADMINISTRADOR'),
+		(2, 'ESTANDAR');
 
 	/* ESTADO USUARIO */
-	INSERT INTO TblEstadoUsuario VALUES(null, 'ACTIVO');
-	INSERT INTO TblEstadoUsuario VALUES(null, 'INACTIVO');
+	INSERT INTO TblEstadoUsuario (PKId, Descripcion) VALUES
+		(null, 'ACTIVO');
+		(null, 'INACTIVO');
 
 	/* EMPRESAS */
-	INSERT INTO TblEmpresas VALUES('900645788-8', 'BANANERAS AGROFUTURO S.A.S', 'CALLE 18 NO. 35-69 AV. LAS PALMAS', '2662861');
-	INSERT INTO TblEmpresas VALUES('900306440-7', 'AGRÕCOLA YUMAN¡ S.A.S', 'CALLE 18 NO. 35-69 AV. LAS PALMAS', '2662861');
-	INSERT INTO TblEmpresas VALUES('900305092-2', 'AGRÕCOLA MONTESOL S.A.S', 'CALLE 18 NO. 35-69 AV. LAS PALMAS', '2662861');
-	INSERT INTO TblEmpresas VALUES('811032708-5', 'AGRÕCOLA GUAIMARAL S.A.S', 'CRA 99 NO. 105B-11 BARRIO ORTÕZ', '2662861');
+	INSERT INTO tblempresas (PKNit, Nombre, Direccion, Telefono) VALUES
+		('811032708-5', 'AGR√çCOLA GUAIMARAL S.A.S', 'CRA 99 NO. 105B-11 BARRIO ORT√çZ', '2662861'),
+		('900305092-2', 'AGR√çCOLA MONTESOL S.A.S', 'CALLE 18 NO. 35-69 AV. LAS PALMAS', '2662861'),
+		('900306440-7', 'AGR√çCOLA YUMAN√Å S.A.S', 'CALLE 18 NO. 35-69 AV. LAS PALMAS', '2662861'),
+		('900645788-8', 'BANANERAS AGROFUTURO S.A.S', 'CALLE 18 NO. 35-69 AV. LAS PALMAS', '2662861');
 
 	/* FINCAS */
-	INSERT INTO TblFincas VALUES('80074', '¡LAMOS', 128.47, 150.43, '900645788-8');
-	INSERT INTO TblFincas VALUES('80075', 'CANDELARIA', 83.08, 100.83, '900645788-8');
-	INSERT INTO TblFincas VALUES('85747', 'GUAIMARAL', 45.82, 57.90, '811032708-5');
-	INSERT INTO TblFincas VALUES('80008', 'KALAMARI', 61.08, 70.49, '900306440-7');
-	INSERT INTO TblFincas VALUES('80004', 'TAIW¡N', 64.21, 79.16, '900306440-7');
-	INSERT INTO TblFincas VALUES('80009', 'ZARZAMORA', 58.33, 70.85, '900305092-2');
+	INSERT INTO tblfincas (PKIbm, Nombre, Area_Neta, Area_Bruta, FKNit_TblEmpresas) VALUES
+		('80004', 'TAIW√ÅN', 64.21, 79.16, '900306440-7'),
+		('80008', 'KALAMAR√ç', 61.08, 70.49, '900306440-7'),
+		('80009', 'ZARZAMORA', 58.33, 70.85, '900305092-2'),
+		('80074', '√ÅLAMOS', 128.47, 150.43, '900645788-8'),
+		('80075', 'CANDELARIA', 83.08, 100.83, '900645788-8'),
+		('85747', 'GUAIMARAL', 45.82, 57.9, '811032708-5');
 
 
 	/* LOTES */
 	
-	/* Finca ¡lamos */
-	INSERT INTO TblLotes VALUES(null, 'Lote 1', 4.29, 4.94, '80074');
-	INSERT INTO TblLotes VALUES(null, 'Lote 2', 5.69, 6.49, '80074');
-	INSERT INTO TblLotes VALUES(null, 'Lote 3', 5.96, 6.78, '80074');
-	INSERT INTO TblLotes VALUES(null, 'Lote 4', 5.92, 6.42, '80074');
-	INSERT INTO TblLotes VALUES(null, 'Lote 5', 3.14, 3.94, '80074');
-	INSERT INTO TblLotes VALUES(null, 'Lote 6', 4.89, 0, '80074');
-	INSERT INTO TblLotes VALUES(null, 'Lote 7', 5.35, 0, '80074');
-	INSERT INTO TblLotes VALUES(null, 'Lote 8', 4.20, 0, '80074');
-	INSERT INTO TblLotes VALUES(null, 'Lote 9', 2.79, 0, '80074');
-	INSERT INTO TblLotes VALUES(null, 'Lote 10', 4.46, 5.25, '80074');
-	INSERT INTO TblLotes VALUES(null, 'Lote 11', 4.64, 5.58, '80074');
-	INSERT INTO TblLotes VALUES(null, 'Lote 12', 5.22, 7.09, '80074');
-	INSERT INTO TblLotes VALUES(null, 'Lote 13', 6.02, 7.31, '80074');
-	INSERT INTO TblLotes VALUES(null, 'Lote 14', 7.23, 8.43, '80074');
-	INSERT INTO TblLotes VALUES(null, 'Lote 15', 6.48, 7.38, '80074');
-	INSERT INTO TblLotes VALUES(null, 'Lote 16', 3.51, 3.92, '80074');
-	INSERT INTO TblLotes VALUES(null, 'Lote 17', 2.98, 3.47, '80074');
-	INSERT INTO TblLotes VALUES(null, 'Lote 18', 3.29, 4.57, '80074');
-	INSERT INTO TblLotes VALUES(null, 'Lote 19', 4.61, 5.07, '80074');
-	INSERT INTO TblLotes VALUES(null, 'Lote 20', 5.49, 6.14, '80074');
-	INSERT INTO TblLotes VALUES(null, 'Lote 21', 4.94, 5.56, '80074');
-	INSERT INTO TblLotes VALUES(null, 'Lote 22', 9.49, 11.05, '80074');
-	INSERT INTO TblLotes VALUES(null, 'Lote 23', 9.60, 10.33, '80074');
-	INSERT INTO TblLotes VALUES(null, 'Lote 24', 8.28, 9.70, '80074');
+	/* Finca √Ålamos */
+	INSERT INTO tbllotes (PKId, Lote, Area_Neta, Area_Bruta, FKIbm_TblFincas) VALUES
+		(1, 'Lote 1', 4.29, 4.94, '80074'),
+		(2, 'Lote 2', 5.69, 6.49, '80074'),
+		(3, 'Lote 3', 5.96, 6.78, '80074'),
+		(4, 'Lote 4', 5.92, 6.42, '80074'),
+		(5, 'Lote 5', 3.14, 3.94, '80074'),
+		(6, 'Lote 6', 4.89, 0, '80074'),
+		(7, 'Lote 7', 5.35, 0, '80074'),
+		(8, 'Lote 8', 4.2, 0, '80074'),
+		(9, 'Lote 9', 2.79, 0, '80074'),
+		(10, 'Lote 10', 4.46, 5.25, '80074'),
+		(11, 'Lote 11', 4.64, 5.58, '80074'),
+		(12, 'Lote 12', 5.22, 7.09, '80074'),
+		(13, 'Lote 13', 6.02, 7.31, '80074'),
+		(14, 'Lote 14', 7.23, 8.43, '80074'),
+		(15, 'Lote 15', 6.48, 7.38, '80074'),
+		(16, 'Lote 16', 3.51, 3.92, '80074'),
+		(17, 'Lote 17', 2.98, 3.47, '80074'),
+		(18, 'Lote 18', 3.29, 4.57, '80074'),
+		(19, 'Lote 19', 4.61, 5.07, '80074'),
+		(20, 'Lote 20', 5.49, 6.14, '80074'),
+		(21, 'Lote 21', 4.94, 5.56, '80074'),
+		(22, 'Lote 22', 9.49, 11.05, '80074'),
+		(23, 'Lote 23', 9.6, 10.33, '80074'),
+		(24, 'Lote 24', 8.28, 9.7, '80074'),
+		(25, 'Lote 1', 6.08, 7.42, '80075'),
+		(26, 'Lote 2', 3.28, 3.89, '80075'),
+		(27, 'Lote 3', 4.45, 5.4, '80075'),
+		(28, 'Lote 4', 4.83, 5.9, '80075'),
+		(29, 'Lote 5', 4.23, 5.5, '80075'),
+		(30, 'Lote 6', 4.57, 5.94, '80075'),
+		(31, 'Lote 7', 4.75, 5.67, '80075'),
+		(32, 'Lote 8', 6.24, 7.69, '80075'),
+		(33, 'Lote 9', 3.87, 5.75, '80075'),
+		(34, 'Lote 10', 3.75, 4.57, '80075'),
+		(35, 'Lote 11', 4.18, 5.02, '80075'),
+		(36, 'Lote 12', 3.78, 4.32, '80075'),
+		(37, 'Lote 13', 3.2, 3.63, '80075'),
+		(38, 'Lote 14', 2, 2.23, '80075'),
+		(39, 'Lote 15', 3.2, 3.47, '80075'),
+		(40, 'Lote 16', 5.21, 6.27, '80075'),
+		(41, 'Lote 17', 5.83, 6.65, '80075'),
+		(42, 'Lote 18', 7.15, 7.96, '80075'),
+		(43, 'Lote 19', 2.48, 3.05, '80075'),
+		(44, 'Lote 1', 0.96, 1.22, '85747'),
+		(45, 'Lote 2', 2.15, 2.67, '85747'),
+		(46, 'Lote 3', 3.22, 3.84, '85747'),
+		(47, 'Lote 4', 5.62, 6.55, '85747'),
+		(48, 'Lote 5', 3.55, 4.33, '85747'),
+		(49, 'Lote 6', 3.7, 4.72, '85747'),
+		(50, 'Lote 7', 3.3, 4.57, '85747'),
+		(51, 'Lote 8', 3.2, 4.4, '85747'),
+		(52, 'Lote 9', 4.45, 5.54, '85747'),
+		(53, 'Lote 10', 3.73, 4.72, '85747'),
+		(54, 'Lote 11', 1.85, 2.19, '85747'),
+		(55, 'Lote 12', 2.63, 3.14, '85747'),
+		(56, 'Lote 13', 3.46, 4.32, '85747'),
+		(57, 'Lote 14', 2.65, 4.03, '85747'),
+		(58, 'Lote 15', 1.35, 1.66, '85747'),
+		(59, 'Lote 1', 3.68, 3.98, '80008'),
+		(60, 'Lote 2', 3.42, 3.79, '80008'),
+		(61, 'Lote 3', 1.61, 2.35, '80008'),
+		(62, 'Lote 4', 5.34, 6.3, '80008'),
+		(63, 'Lote 5', 6.83, 8.3, '80008'),
+		(64, 'Lote 6', 5.27, 5.83, '80008'),
+		(65, 'Lote 7', 4.52, 5.08, '80008'),
+		(66, 'Lote 8', 1.25, 1.43, '80008'),
+		(67, 'Lote 9', 3.06, 3.39, '80008'),
+		(68, 'Lote 10', 3.66, 4.02, '80008'),
+		(69, 'Lote 11', 3.6, 4.03, '80008'),
+		(70, 'Lote 12', 4.18, 4.71, '80008'),
+		(71, 'Lote 13', 2.57, 2.99, '80008'),
+		(72, 'Lote 14', 2.45, 3.25, '80008'),
+		(73, 'Lote 15', 2.78, 3.12, '80008'),
+		(74, 'Lote 16', 3.56, 4.06, '80008'),
+		(75, 'Lote 17', 3.3, 3.86, '80008'),
+		(76, 'Lote 1', 3.22, 4.31, '80004'),
+		(77, 'Lote 2', 3.15, 3.89, '80004'),
+		(78, 'Lote 3', 4.36, 5.2, '80004'),
+		(79, 'Lote 4', 4.14, 5, '80004'),
+		(80, 'Lote 5', 4.15, 5.03, '80004'),
+		(81, 'Lote 6', 3.75, 4.78, '80004'),
+		(82, 'Lote 7', 2.13, 2.54, '80004'),
+		(83, 'Lote 8', 1.52, 1.84, '80004'),
+		(84, 'Lote 9', 1.18, 1.5, '80004'),
+		(85, 'Lote 10', 4.31, 5.13, '80004'),
+		(86, 'Lote 11', 2.93, 3.6, '80004'),
+		(87, 'Lote 12', 3.15, 4.02, '80004'),
+		(88, 'Lote 13', 3.56, 4.34, '80004'),
+		(89, 'Lote 14', 5, 5.93, '80004'),
+		(90, 'Lote 15', 2.28, 2.82, '80004'),
+		(91, 'Lote 16', 2.61, 3.23, '80004'),
+		(92, 'Lote 17', 2.41, 2.99, '80004'),
+		(93, 'Lote 18', 2.13, 2.63, '80004'),
+		(94, 'Lote 19', 2.72, 3.56, '80004'),
+		(95, 'Lote 20', 3.86, 4.71, '80004'),
+		(96, 'Lote 21', 1.65, 2.11, '80004'),
+		(97, 'Lote 1', 0.74, 0.85, '80009'),
+		(98, 'Lote 2', 1.01, 1.18, '80009'),
+		(99, 'Lote 3', 2.14, 2.55, '80009'),
+		(100, 'Lote 4', 1.7, 1.95, '80009'),
+		(101, 'Lote 5', 1.85, 2.17, '80009'),
+		(102, 'Lote 6', 2.82, 3.23, '80009'),
+		(103, 'Lote 7', 2.48, 2.96, '80009'),
+		(104, 'Lote 8', 2.55, 3.04, '80009'),
+		(105, 'Lote 9', 2.18, 2.53, '80009'),
+		(106, 'Lote 10', 2.34, 2.79, '80009'),
+		(107, 'Lote 11', 2.23, 2.63, '80009'),
+		(108, 'Lote 12', 1.43, 1.78, '80009'),
+		(109, 'Lote 13', 1.13, 1.37, '80009'),
+		(110, 'Lote 14', 2.5, 3.12, '80009'),
+		(111, 'Lote 15', 2.75, 3.3, '80009'),
+		(112, 'Lote 16', 3.11, 3.83, '80009'),
+		(113, 'Lote 17', 3.17, 4.02, '80009'),
+		(114, 'Lote 18', 5.17, 6.44, '80009'),
+		(115, 'Lote 19', 3.77, 4.77, '80009'),
+		(116, 'Lote 20', 3.06, 3.63, '80009'),
+		(117, 'Lote 21', 2.07, 2.46, '80009'),
+		(118, 'Lote 22', 1.41, 1.71, '80009'),
+		(119, 'Lote 23', 5.22, 6.86, '80009'),
+		(120, 'Lote 24', 1.5, 1.68, '80009');
 
-	/* Finca Candelaria */
-	INSERT INTO TblLotes VALUES(null, 'Lote 1', 6.08, 7.42, '80075');
-	INSERT INTO TblLotes VALUES(null, 'Lote 2', 3.28, 3.89, '80075');
-	INSERT INTO TblLotes VALUES(null, 'Lote 3', 4.45, 5.40, '80075');
-	INSERT INTO TblLotes VALUES(null, 'Lote 4', 4.83, 5.90, '80075');
-	INSERT INTO TblLotes VALUES(null, 'Lote 5', 4.23, 5.50, '80075');
-	INSERT INTO TblLotes VALUES(null, 'Lote 6', 4.57, 5.94, '80075');
-	INSERT INTO TblLotes VALUES(null, 'Lote 7', 4.75, 5.67, '80075');
-	INSERT INTO TblLotes VALUES(null, 'Lote 8', 6.24, 7.69, '80075');
-	INSERT INTO TblLotes VALUES(null, 'Lote 9', 3.87, 5.75, '80075');
-	INSERT INTO TblLotes VALUES(null, 'Lote 10', 3.75, 4.57, '80075');
-	INSERT INTO TblLotes VALUES(null, 'Lote 11', 4.18, 5.02, '80075');
-	INSERT INTO TblLotes VALUES(null, 'Lote 12', 3.78, 4.32, '80075');
-	INSERT INTO TblLotes VALUES(null, 'Lote 13', 3.20, 3.63, '80075');
-	INSERT INTO TblLotes VALUES(null, 'Lote 14', 2.00, 2.23, '80075');
-	INSERT INTO TblLotes VALUES(null, 'Lote 15', 3.20, 3.47, '80075');
-	INSERT INTO TblLotes VALUES(null, 'Lote 16', 5.21, 6.27, '80075');
-	INSERT INTO TblLotes VALUES(null, 'Lote 17', 5.83, 6.65, '80075');
-	INSERT INTO TblLotes VALUES(null, 'Lote 18', 7.15, 7.96, '80075');
-	INSERT INTO TblLotes VALUES(null, 'Lote 19', 2.48, 3.05, '80075');
-
-	/* Finca Guaimaral */
-	INSERT INTO TblLotes VALUES(null, 'Lote 1', 0.96, 1.22, '85747');
-	INSERT INTO TblLotes VALUES(null, 'Lote 2', 2.15, 2.67, '85747');
-	INSERT INTO TblLotes VALUES(null, 'Lote 3', 3.22, 3.84, '85747');
-	INSERT INTO TblLotes VALUES(null, 'Lote 4', 5.62, 6.55, '85747');
-	INSERT INTO TblLotes VALUES(null, 'Lote 5', 3.55, 4.33, '85747');
-	INSERT INTO TblLotes VALUES(null, 'Lote 6', 3.70, 4.72, '85747');
-	INSERT INTO TblLotes VALUES(null, 'Lote 7', 3.30, 4.57, '85747');
-	INSERT INTO TblLotes VALUES(null, 'Lote 8', 3.20, 4.40, '85747');
-	INSERT INTO TblLotes VALUES(null, 'Lote 9', 4.45, 5.54, '85747');
-	INSERT INTO TblLotes VALUES(null, 'Lote 10', 3.73, 4.72, '85747');
-	INSERT INTO TblLotes VALUES(null, 'Lote 11', 1.85, 2.19, '85747');
-	INSERT INTO TblLotes VALUES(null, 'Lote 12', 2.63, 3.14, '85747');
-	INSERT INTO TblLotes VALUES(null, 'Lote 13', 3.46, 4.32, '85747');
-	INSERT INTO TblLotes VALUES(null, 'Lote 14', 2.65, 4.03, '85747');
-	INSERT INTO TblLotes VALUES(null, 'Lote 15', 1.35, 1.66, '85747');
-
-	/* Finca KalamarÌ */
-	INSERT INTO TblLotes VALUES(null, 'Lote 1', 3.68, 3.98, '80008');
-	INSERT INTO TblLotes VALUES(null, 'Lote 2', 3.42, 3.79, '80008');
-	INSERT INTO TblLotes VALUES(null, 'Lote 3', 1.61, 2.35, '80008');
-	INSERT INTO TblLotes VALUES(null, 'Lote 4', 5.34, 6.30, '80008');
-	INSERT INTO TblLotes VALUES(null, 'Lote 5', 6.83, 8.30, '80008');
-	INSERT INTO TblLotes VALUES(null, 'Lote 6', 5.27, 5.83, '80008');
-	INSERT INTO TblLotes VALUES(null, 'Lote 7', 4.52, 5.08, '80008');
-	INSERT INTO TblLotes VALUES(null, 'Lote 8', 1.25, 1.43, '80008');
-	INSERT INTO TblLotes VALUES(null, 'Lote 9', 3.06, 3.39, '80008');
-	INSERT INTO TblLotes VALUES(null, 'Lote 10', 3.66, 4.02, '80008');
-	INSERT INTO TblLotes VALUES(null, 'Lote 11', 3.60, 4.03, '80008');
-	INSERT INTO TblLotes VALUES(null, 'Lote 12', 4.18, 4.71, '80008');
-	INSERT INTO TblLotes VALUES(null, 'Lote 13', 2.57, 2.99, '80008');
-	INSERT INTO TblLotes VALUES(null, 'Lote 14', 2.45, 3.25, '80008');
-	INSERT INTO TblLotes VALUES(null, 'Lote 15', 2.78, 3.12, '80008');
-	INSERT INTO TblLotes VALUES(null, 'Lote 16', 3.56, 4.06, '80008');
-	INSERT INTO TblLotes VALUES(null, 'Lote 17', 3.30, 3.86, '80008');
-
-	/* Finca Taiw·n */
-	INSERT INTO TblLotes VALUES(null, 'Lote 1', 3.22, 4.31, '80004');
-	INSERT INTO TblLotes VALUES(null, 'Lote 2', 3.15, 3.89, '80004');
-	INSERT INTO TblLotes VALUES(null, 'Lote 3', 4.36, 5.20, '80004');
-	INSERT INTO TblLotes VALUES(null, 'Lote 4', 4.14, 5.00, '80004');
-	INSERT INTO TblLotes VALUES(null, 'Lote 5', 4.15, 5.03, '80004');
-	INSERT INTO TblLotes VALUES(null, 'Lote 6', 3.75, 4.78, '80004');
-	INSERT INTO TblLotes VALUES(null, 'Lote 7', 2.13, 2.54, '80004');
-	INSERT INTO TblLotes VALUES(null, 'Lote 8', 1.52, 1.84, '80004');
-	INSERT INTO TblLotes VALUES(null, 'Lote 9', 1.18, 1.50, '80004');
-	INSERT INTO TblLotes VALUES(null, 'Lote 10', 4.31, 5.13, '80004');
-	INSERT INTO TblLotes VALUES(null, 'Lote 11', 2.93, 3.60, '80004');
-	INSERT INTO TblLotes VALUES(null, 'Lote 12', 3.15, 4.02, '80004');
-	INSERT INTO TblLotes VALUES(null, 'Lote 13', 3.56, 4.34, '80004');
-	INSERT INTO TblLotes VALUES(null, 'Lote 14', 5.00, 5.93, '80004');
-	INSERT INTO TblLotes VALUES(null, 'Lote 15', 2.28, 2.82, '80004');
-	INSERT INTO TblLotes VALUES(null, 'Lote 16', 2.61, 3.23, '80004');
-	INSERT INTO TblLotes VALUES(null, 'Lote 17', 2.41, 2.99, '80004');
-	INSERT INTO TblLotes VALUES(null, 'Lote 18', 2.13, 2.63, '80004');
-	INSERT INTO TblLotes VALUES(null, 'Lote 19', 2.72, 3.56, '80004');
-	INSERT INTO TblLotes VALUES(null, 'Lote 20', 3.86, 4.71, '80004');
-	INSERT INTO TblLotes VALUES(null, 'Lote 21', 1.65, 2.11, '80004');
-
-	/* Finca Zarzamora */
-	INSERT INTO TblLotes VALUES(null, 'Lote 1', 0.74, 0.85, '80009');
-	INSERT INTO TblLotes VALUES(null, 'Lote 2', 1.01, 1.18, '80009');
-	INSERT INTO TblLotes VALUES(null, 'Lote 3', 2.14, 2.55, '80009');
-	INSERT INTO TblLotes VALUES(null, 'Lote 4', 1.70, 1.95, '80009');
-	INSERT INTO TblLotes VALUES(null, 'Lote 5', 1.85, 2.17, '80009');
-	INSERT INTO TblLotes VALUES(null, 'Lote 6', 2.82, 3.23, '80009');
-	INSERT INTO TblLotes VALUES(null, 'Lote 7', 2.48, 2.96, '80009');
-	INSERT INTO TblLotes VALUES(null, 'Lote 8', 2.55, 3.04, '80009');
-	INSERT INTO TblLotes VALUES(null, 'Lote 9', 2.18, 2.53, '80009');
-	INSERT INTO TblLotes VALUES(null, 'Lote 10', 2.34, 2.79, '80009');
-	INSERT INTO TblLotes VALUES(null, 'Lote 11', 2.23, 2.63, '80009');
-	INSERT INTO TblLotes VALUES(null, 'Lote 12', 1.43, 1.78, '80009');
-	INSERT INTO TblLotes VALUES(null, 'Lote 13', 1.13, 1.37, '80009');
-	INSERT INTO TblLotes VALUES(null, 'Lote 14', 2.50, 3.12, '80009');
-	INSERT INTO TblLotes VALUES(null, 'Lote 15', 2.75, 3.30, '80009');
-	INSERT INTO TblLotes VALUES(null, 'Lote 16', 3.11, 3.83, '80009');
-	INSERT INTO TblLotes VALUES(null, 'Lote 17', 3.17, 4.02, '80009');
-	INSERT INTO TblLotes VALUES(null, 'Lote 18', 5.17, 6.44, '80009');
-	INSERT INTO TblLotes VALUES(null, 'Lote 19', 3.77, 4.77, '80009');
-	INSERT INTO TblLotes VALUES(null, 'Lote 20', 3.06, 3.63, '80009');
-	INSERT INTO TblLotes VALUES(null, 'Lote 21', 2.07, 2.46, '80009');
-	INSERT INTO TblLotes VALUES(null, 'Lote 22', 1.41, 1.71, '80009');
-	INSERT INTO TblLotes VALUES(null, 'Lote 23', 5.22, 6.86, '80009');
-	INSERT INTO TblLotes VALUES(null, 'Lote 24', 1.50, 1.68, '80009');
-
-
-	/* CAJAS PRODUCCI”N */
-	INSERT INTO `tblcajasproduccion` (`PKCodigo`, `Descripcion`, `FactorConversion`, `FKId_TblTipoFruta`) VALUES
+	/* CAJAS PRODUCCI√ìN */
+	INSERT INTO tblcajasproduccion (PKCodigo, Descripcion, FactorConversion, FKId_TblTipoFruta) VALUES
 	('1003', 'PR ORSERO BANANAS --', 1, 1),
 	('1010', 'PR TURBANA 3 LBS BAN', 1, 1),
 	('1011', 'FT TESCO*', 0.94, 6),
@@ -713,7 +680,7 @@
 	('611', 'PRIMERA NORMAL PRICE CHOPPER KILOS 20', 1, 1),
 	('612', 'KORA KILOS', 1, 1),
 	('613', 'PRIMERA NORMAL PREMIUM TROPY KILOS 20', 1, 1),
-	('614', 'SEGUNDA DARIEN EST¡NDAR KILOS 20', 1, 2),
+	('614', 'SEGUNDA DARIEN EST√ÅNDAR KILOS 20', 1, 2),
 	('615', 'DARIEN BAG (SEGUNDA)', 1, 2),
 	('616', 'SEGUNDA DARIEN 3 LIBRAS KILOS 17', 1, 2),
 	('617', 'PRIMERA NORMAL WEISS PREMIUM KILOS 20', 1, 1),
@@ -747,7 +714,7 @@
 	('668', 'PR BANASUN', 1, 1),
 	('669', 'PRIMERA NORMAL DISNEY PREMIUM KILOS 20', 1, 1),
 	('670', 'PR HOYA 12.7 KG SM -60', 0.71, 1),
-	('673', 'PRIMERA NORMAL PREMIUM HOYA EST¡NDAR KILOS 20', 1, 1),
+	('673', 'PRIMERA NORMAL PREMIUM HOYA EST√ÅNDAR KILOS 20', 1, 1),
 	('674', 'FYFFES HD  KILOS', 1, 1),
 	('675', 'JS FAIR TRADE 17 KG EU-50', 0.94, 1),
 	('676', 'SAINSBURY EUROPA KILOS', 0.94, 1),
@@ -768,7 +735,7 @@
 	('694', 'PRIMERA MED STDHD NORMAL FYFFES KILOS 20 SIN SELLO', 1, 1),
 	('695', 'PR TURBANA HANDS 13K SM - 56', 0.71, 1),
 	('696', 'CLUSTER BAG COOP 7 KILOS 13', 0.74, 1),
-	('698', 'PRFYFFES STD 18.14 K ALTA VENTILACI”N', 1, 1),
+	('698', 'PRFYFFES STD 18.14 K ALTA VENTILACI√ìN', 1, 1),
 	('699', 'PRIMERA NORMAL RIO GRANDE  KILOS 20', 1, 1),
 	('700', 'RACIMO BANANO ENMEPADO', 1, 1),
 	('701', 'FAIR TRADE 12 KG-SM', 0.66, 6),
@@ -783,10 +750,10 @@
 	('710', 'FLO FT 12 BAG 15 KLS', 0.83, 6),
 	('711', 'FLO FT 12 BAG 15 KLS SM', 0.83, 6),
 	('712', 'PRIMERA NORMAL DOLPHIN HD KILOS 20', 1, 1),
-	('713', 'SEGUNDA DARIEN EST¡NDAR KILOS 20 -', 1, 2),
+	('713', 'SEGUNDA DARIEN EST√ÅNDAR KILOS 20 -', 1, 2),
 	('714', 'PRIMERA NORMAL TURBANA PREMIUM KILOS 20 -', 1, 1),
 	('716', 'PR FYFFE PEV-EURO-45', 1, 1),
-	('717', 'PRIMERA NORMAL TROPY DARI…N KILOS 20', 1, 1),
+	('717', 'PRIMERA NORMAL TROPY DARI√âN KILOS 20', 1, 1),
 	('719', 'FLO FT 20BAG MORRISONS', 1, 6),
 	('720', 'CLUSTER BAG TURBANA BAG 3LBS KILOS 20', 1, 1),
 	('7200', 'DEL MONTE PB-EU DM-COVER PP', 1, 1),
@@ -919,20 +886,13 @@
 	('991', 'FT TEFTB 15 EU-50 17 KL BAG', 0.94, 6),
 	('999', 'JS FAIR TRADE 17K E', 0.94, 1);
 
-
 	/* USUARIOS */
-	INSERT INTO `tblusuarios` (`PKId`, `Usuario`, `Password`, `Ibm_Finca`, `FKId_TblTipoUsuario`, `FKId_TblEstadoUsuario`) VALUES
+	INSERT INTO tblusuarios (PKId, Usuario, Password, Ibm_Finca, FKId_TblTipoUsuario, FKId_TblEstadoUsuario) VALUES
 	(1, '80074', 'alamos123', '80074', 2, 1),
 	(2, '80004', 'taiwan123', '80004', 2, 1),
 	(3, '80008', 'kalamari123', '80008', 2, 1),
 	(4, '80009', 'zarzamora123', '80009', 2, 1),
 	(5, '80075', 'candelaria123', '80075', 2, 1),
 	(6, '85747', 'guaimaral123', '85747', 2, 1),
-	(7, 'admin', 'valencia', null, 2, 1);
-
-
-	/* CLASIFICACION 
-	INSERT INTO TblClasificacion(1, "PREMIUN");
-	INSERT INTO TblClasificacion(2, "FRUTA DE APROVECHAMIENTO"); */
-
+	(7, 'admin', 'valencia', null, 1, 1);
 

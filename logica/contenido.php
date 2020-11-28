@@ -1330,9 +1330,7 @@
             case 'eliminarproduccion':
                 echo (eliminar_produccion($_POST['codEmbarque'], $_SESSION['conectado']->PKIbm));
                 break;
-
     // Defecto
-
             // Método de asignación de ibmFinca only user admin
             case 'assign_ibmfinca':
                 $_SESSION['conectado']->PKIbm = $_GET['ibmFinca'];

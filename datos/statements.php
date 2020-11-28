@@ -1,5 +1,5 @@
 <?php
-    require_once 'conexion.php';
+    require_once 'sqlserver-connection.php';
     //Orden crud
     
 // Sentencias de creación =========================================================================================
@@ -13,7 +13,7 @@
         $empresa = $datos_c['empresa'];
         try {
             $bd = conectar();
-            $datos = $bd->prepare("INSERT INTO tblfincas VALUES(:ibm, :nombre, :neta, :bruta, :empresa)");
+            $datos = $bd->prepare("INSERT INTO tblfincas VALUES(:ibm, :nombre, :neta, :bruta, :empresa);");
             $datos->bindParam(":ibm", $ibm, PDO::PARAM_STR);
             $datos->bindParam(":nombre", $nombre, PDO::PARAM_STR);
             $datos->bindParam(":neta", $neta, PDO::PARAM_STR);
@@ -25,7 +25,10 @@
                     $neta_l = $l[1];
                     $bruta_l = $l[2];
                     $ibm = $datos_c['ibm'];
-                    $datos = $bd->prepare("INSERT INTO tbllotes VALUES(null, :nom, :neta, :bruta, :ibm)");
+                    $datos = $bd->prepare("
+                        INSERT INTO tbllotes (Lote, Area_Neta, Area_Bruta, FKIbm_TblFincas) 
+                        VALUES(:nom, :neta, :bruta, :ibm);
+                    ");
                     $datos->bindParam(":nom", $nom_l, PDO::PARAM_STR);
                     $datos->bindParam(":neta", $neta_l, PDO::PARAM_STR);
                     $datos->bindParam(":bruta", $bruta_l, PDO::PARAM_STR);
@@ -44,7 +47,10 @@
     function guardarnuevolote($nameLote, $areaNeta, $areaBruta, $ibmFinca) {
         try {
             $bd = conectar();
-            $datos = $bd->prepare("INSERT INTO tbllotes VALUES(null, :nameLote, :areaNeta, :areaBruta, :ibmFinca);");
+            $datos = $bd->prepare("
+                INSERT INTO tbllotes (Lote, Area_Neta, Area_Bruta, FKIbm_TblFincas) 
+                VALUES(:nameLote, :areaNeta, :areaBruta, :ibmFinca);
+            ");
             $datos->bindParam(':nameLote', $nameLote, PDO::PARAM_STR);
             $datos->bindParam(':areaNeta', $areaNeta, PDO::PARAM_STR);
             $datos->bindParam(':areaBruta', $areaBruta, PDO::PARAM_STR);
@@ -112,7 +118,10 @@
     function anhonuevo($fechai, $fechaf, $anho, $cinta){
         try {
             $bd = conectar();
-            $datos = $bd->prepare("INSERT INTO tblsemanas VALUES(null, 'SEMANA 1', :fechai, :fechaf, :anho, :cinta)");
+            $datos = $bd->prepare("
+                INSERT INTO tblsemanas (N_Semana, Fecha_Inicio, Fecha_Fin, Anho, FKId_TblCintas) 
+                VALUES('SEMANA 1', :fechai, :fechaf, :anho, :cinta);"
+            );
             $datos->bindParam(":fechai", $fechai, PDO::PARAM_STR);
             $datos->bindParam(":fechaf", $fechaf, PDO::PARAM_STR);
             $datos->bindParam(":anho", $anho, PDO::PARAM_INT);
@@ -127,17 +136,20 @@
                     ");
                     $datos->bindParam(":anho", $anho, PDO::PARAM_INT);
                     if ($datos->execute()){
-                        $ultima_semana = $datos->fetch();
+                        $ultima_semana = $datos->fetch(PDO::FETCH_OBJ);
                         if ($ultima_semana->cinta == 10) {
                         	$ultima_semana->cinta = 0;
                         }
-                        $datos = $bd->prepare("SELECT DATE_ADD(:fechai, INTERVAL 7 DAY) as fechai, DATE_ADD(:fechaf, INTERVAL 7 DAY) as fechaf, :cinta+1 as cinta");
+                        $datos = $bd->prepare("SELECT DATEADD(DAY, 7, :fechai) as fechai, DATEADD(DAY, 7, :fechaf) as fechaf, :cinta+1 as cinta");
                         $datos->bindParam(":fechai", $ultima_semana->fechai, PDO::PARAM_STR);
                         $datos->bindParam(":fechaf", $ultima_semana->fechaf, PDO::PARAM_STR);
                         $datos->bindParam(":cinta", $ultima_semana->cinta, PDO::PARAM_INT);
                         if ($datos->execute()){
-                            $insertar_semana = $datos->fetch();
-                            $datos = $bd->prepare("INSERT INTO tblsemanas VALUES(null, 'SEMANA ".$x."', :fechai, :fechaf, :anho, :cinta)");
+                            $insertar_semana = $datos->fetch(PDO::FETCH_OBJ);
+                            $datos = $bd->prepare("
+                                INSERT INTO tblsemanas (N_Semana, Fecha_Inicio, Fecha_Fin, Anho, FKId_TblCintas)
+                                VALUES('SEMANA ".$x."', :fechai, :fechaf, :anho, :cinta);
+                            ");
                             $datos->bindParam(":fechai", $insertar_semana->fechai, PDO::PARAM_STR);
                             $datos->bindParam(":fechaf", $insertar_semana->fechaf, PDO::PARAM_STR);
                             $datos->bindParam(":anho", $anho, PDO::PARAM_INT);
@@ -150,7 +162,7 @@
                         return false;
                     }
                 }
-                $datos = $bd->prepare("INSERT INTO tblregistrosemanas VALUES (null, :anho)");
+                $datos = $bd->prepare("INSERT INTO tblregistrosemanas (Anho_generado) VALUES (:anho);");
                 $datos->bindParam(":anho", $anho, PDO::PARAM_INT);
                 if ($datos->execute())
                     return true;
@@ -168,7 +180,10 @@
     function guardarprogramacion($cod_embarque, $ibm_finca, $codigo_caja, $cantidad) {
         try {
             $bd = conectar();
-            $datos = $bd->prepare("INSERT INTO tbldet_tblembarque VALUES(null, :codigo_embarque, :ibm_finca, :codigo_caja, :cantidad);");
+            $datos = $bd->prepare("
+                INSERT INTO tbldet_tblembarque (FKCod_TblEmbarque, FKIbm_TblFincas, FKCodigo_TblCajasProduccion, Cantidad)
+                VALUES(:codigo_embarque, :ibm_finca, :codigo_caja, :cantidad);
+            ");
             $datos->bindParam(":codigo_embarque", $cod_embarque, PDO::PARAM_STR);
             $datos->bindParam(":ibm_finca", $ibm_finca, PDO::PARAM_STR);
             $datos->bindParam(":codigo_caja", $codigo_caja, PDO::PARAM_STR);
@@ -186,7 +201,10 @@
     function guardarestimativo($finca, $premiun, $especial, $cod_embarque) {
         try {
             $bd = conectar();
-            $datos = $bd->prepare("INSERT INTO tblestimativo VALUES(null, :finca, :premiun, :especial, :cod_embarque);");
+            $datos = $bd->prepare("
+                INSERT INTO tblestimativo (Finca, Premiun, Especial, FKCod_TblEmbarque)
+                VALUES(:finca, :premiun, :especial, :cod_embarque);
+            ");
             $datos->bindParam(":finca", $finca, PDO::PARAM_STR);
             $datos->bindParam(":premiun", $premiun, PDO::PARAM_INT);
             $datos->bindParam(":especial", $especial, PDO::PARAM_INT);
@@ -206,7 +224,10 @@
         function guardarembolse($id_semana, $presente, $prematuro) {
             try {
                 $bd = conectar();
-                $datos = $bd->prepare("INSERT INTO TblEmbolse VALUES(null, :id_semana, :presente, :prematuro)");
+                $datos = $bd->prepare("
+                    INSERT INTO TblEmbolse (FKId_TblSemanas, N_PlantasPresente, N_PlantasPrematuro)
+                    VALUES(:id_semana, :presente, :prematuro);
+                ");
                 $datos->bindParam(':id_semana', $id_semana, PDO::PARAM_INT);
                 $datos->bindParam(':presente', $presente, PDO::PARAM_INT);
                 $datos->bindParam(':prematuro', $prematuro, PDO::PARAM_INT);
@@ -223,7 +244,10 @@
         function guardarracimos($id_semana, $totalRacimosCortados, $totalRacimosRechazados) {
             try {
                 $bd = conectar();
-                $datos = $bd->prepare("INSERT INTO TblRacimos VALUES(null, :id_semana, :totalRacimosCortados, :totalRacimosRechazados);");
+                $datos = $bd->prepare("
+                    INSERT INTO TblRacimos (FKId_TblSemanas, N_RacimosC, N_RacimosR)
+                    VALUES(:id_semana, :totalRacimosCortados, :totalRacimosRechazados);
+                ");
                 $datos->bindParam(':id_semana', $id_semana, PDO::PARAM_INT);
                 $datos->bindParam(':totalRacimosCortados', $totalRacimosCortados, PDO::PARAM_INT);
                 $datos->bindParam(':totalRacimosRechazados', $totalRacimosRechazados, PDO::PARAM_INT);
@@ -243,8 +267,8 @@
             try {
                 $bd = conectar();
                 $datos = $bd->prepare("
-                    INSERT INTO TblDet_TblRacimos_TblDias VALUES(
-                    null, :lastIdRacimos, :idTblDias, :racimosCortadosDia, :racimosRechazadosDia, 
+                    INSERT INTO TblDet_TblRacimos_TblDias (FKId_TblRacimos, FKId_TblDias, N_RacimosC_Dia, N_RacimosR_Dia, Total_PEmbarque, Total_POtrasFincas)
+                    VALUES(:lastIdRacimos, :idTblDias, :racimosCortadosDia, :racimosRechazadosDia, 
                     :totalPersonasEmbarque, :totalPersonasOtrasFincas);
                 ");
                 $datos->bindParam(":lastIdRacimos", $lastIdRacimos, PDO::PARAM_INT);
@@ -266,7 +290,10 @@
         function guardarracimos_detalle_detalle($idRacimosDetalle, $idCinta, $racimosCortadosCinta) {
             try {
                 $bd = conectar();
-                $datos = $bd->prepare("INSERT INTO TblDet_TblDet_TblRacimos_TblDias VALUES(null, :idRacimosDetalle, :idCinta, :racimosCortadosCinta);");
+                $datos = $bd->prepare("
+                    INSERT INTO TblDet_TblDet_TblRacimos_TblDias (FKId_TblDet_TblRacimos_TblDias, FKId_TblCintas, N_RacimosC_Cintas)
+                    VALUES(:idRacimosDetalle, :idCinta, :racimosCortadosCinta);
+                ");
                 $datos->bindParam(":idRacimosDetalle", $idRacimosDetalle, PDO::PARAM_INT);
                 $datos->bindParam(":idCinta", $idCinta, PDO::PARAM_INT);
                 $datos->bindParam(":racimosCortadosCinta", $racimosCortadosCinta, PDO::PARAM_INT);
@@ -280,7 +307,7 @@
         function guardarnacional($totalElaborado) {
             try {
                 $bd = conectar();
-                $datos = $bd->prepare("INSERT INTO TblMercadoNacional VALUES(null, :totalElaborado)");
+                $datos = $bd->prepare("INSERT INTO TblMercadoNacional (Total_Elaborado) VALUES(:totalElaborado)");
                 $datos->bindParam(':totalElaborado', $totalElaborado, PDO::PARAM_INT);
                 if ($datos->execute()) 
                     return $bd->lastInsertId();
@@ -296,8 +323,10 @@
         function guardarnacional_detalle($idNacional, $idTblDias, $idCajasNacional, $cantidadElaborado) {
             try {
                 $bd = conectar();
-                $datos = $bd->prepare("INSERT INTO TblDet_TblMercadoNacional VALUES(
-                    null, :idNacional, :idTblDias, :idCajasNacional, :cantidadElaborado)");
+                $datos = $bd->prepare("
+                    INSERT INTO TblDet_TblMercadoNacional (FKId_TblMercadoNacional, FKId_TblDias, FKId_TblCajasMercadoNacional, Cantidad_Elaborado)
+                    VALUES(:idNacional, :idTblDias, :idCajasNacional, :cantidadElaborado);
+                ");
                 $datos->bindParam(':idNacional', $idNacional, PDO::PARAM_INT);
                 $datos->bindParam(':idTblDias', $idTblDias, PDO::PARAM_INT);
                 $datos->bindParam(':idCajasNacional', $idCajasNacional, PDO::PARAM_INT);
@@ -312,9 +341,11 @@
         function guardarcargue($datosCargue) {
             try {
                 $bd = conectar();
-                $datos = $bd->prepare("INSERT INTO TblCargue VALUES(
-                    null, :ibmFinca, :cliente, :fechaCargue, :numeroPoma, :dedoSuelto, :cluster, :manoEntera, :especial, 
-                    :bolsa20Kilos, :bolsa25Kilos, :total, :placa, :conductor, :codEmbarque)");
+                $datos = $bd->prepare("
+                    INSERT INTO TblCargue (FKIbm_TblFincas, Cliente, Fecha_Cargue, N_Poma, DedoSuelto, Cluster, ManoEntera, Especial, Bolsa20Kilos, Bolsa25Kilos, Total, Placa_Vehiculo, Conductor, FKCod_TblEmbarque)
+                    VALUES(:ibmFinca, :cliente, :fechaCargue, :numeroPoma, :dedoSuelto, :cluster, :manoEntera, :especial, 
+                    :bolsa20Kilos, :bolsa25Kilos, :total, :placa, :conductor, :codEmbarque);
+                ");
                 $datos->bindParam(':ibmFinca', $datosCargue['ibmFinca'], PDO::PARAM_STR);
                 $datos->bindParam(':cliente', $datosCargue['cliente'], PDO::PARAM_STR);
                 $datos->bindParam(':fechaCargue', $datosCargue['fechaCargue'], PDO::PARAM_STR);
@@ -341,9 +372,9 @@
             $totalCajasExportadas, $ratio, $merma, $pesoRacimos, $areaRecorrida, $pesoVastago, $anhoProduccion) {
             try {
                 $bd = conectar();
-                $datos = $bd->prepare("INSERT INTO tblproduccion VALUES(
-                    null, :ibmFinca, :idEmbolse, :idRacimos, :idSemana, :idNacional, :codEmbarque, :totalCajasElaboradas, :totalCajasRechazadas, 
-                    :totalCajasExportadas, :ratio, :merma, :pesoRacimos, :areaRecorrida, :pesoVastago, :anhoProduccion);");
+                $datos = $bd->prepare("INSERT INTO tblproduccion (FKIbm_TblFincas, FKId_TblEmbolse, FKId_TblRacimos, FKId_TblSemanas, FKId_TblMercadoNacional, Cod_Embarque, Total_CElaboradas, Total_CREchazadas, Total_CExportadas, Ratio, Merma, Peso_Racimos, Area_Recorrida, Peso_Vastago, Anho_Produccion)
+                    VALUES(:ibmFinca, :idEmbolse, :idRacimos, :idSemana, :idNacional, :codEmbarque, :totalCajasElaboradas, :totalCajasRechazadas, :totalCajasExportadas, :ratio, :merma, :pesoRacimos, :areaRecorrida, :pesoVastago, :anhoProduccion);
+                ");
                 $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
                 $datos->bindParam(':idEmbolse', $idEmbolse, PDO::PARAM_INT);
                 $datos->bindParam(':idRacimos', $idRacimos, PDO::PARAM_INT);
@@ -375,10 +406,10 @@
             $pesoVastagoDia, $lotesCortadosDia, $lotesIniciadosDia) {
             try {
                 $bd = conectar();
-                $datos = $bd->prepare("INSERT INTO tbldet_tblproduccion VALUES(
-                    null, :idTblProduccion, :idTblDias, :cajasElaboradasDia, 
-                    :cajasRechazadasDia, :cajasExportadasDia, :ratioDia, 
-                    :mermaDia, :pesoRacimosDia, :areaRecorridaDia, :pesoVastagoDia, :lotesCortadosDia, :lotesIniciadosDia);");
+                $datos = $bd->prepare("
+                    INSERT INTO tbldet_tblproduccion (FKId_TblProduccion, FKId_TblDias, Total_CE_Dia, Total_CR_Dia, Total_CEx_Dia, Ratio, Merma, Peso_Racimos, Area_Recorrida, Peso_Vastago, Lotes_Cortados, Lotes_Iniciados)
+                    VALUES(:idTblProduccion, :idTblDias, :cajasElaboradasDia, :cajasRechazadasDia, :cajasExportadasDia, :ratioDia, :mermaDia, :pesoRacimosDia, :areaRecorridaDia, :pesoVastagoDia, :lotesCortadosDia, :lotesIniciadosDia);
+                ");
                 $datos->bindParam(':idTblProduccion', $idTblProduccion, PDO::PARAM_INT);
                 $datos->bindParam(':idTblDias', $idTblDias, PDO::PARAM_INT);
                 $datos->bindParam(':cajasElaboradasDia', $cajasElaboradasDia, PDO::PARAM_INT);
@@ -404,8 +435,10 @@
         function guardarproduccion_detalle_detalle($idProduccionDetalle, $codigoTblCajasProduccion, $cantidadProducidas) {
             try {
                 $bd = conectar();
-                $datos = $bd->prepare("INSERT INTO tbldet_tbldet_tblproduccion VALUES(
-                    null, :idProduccionDetalle, :codigoTblCajasProduccion, :cantidadProducidas);");
+                $datos = $bd->prepare("
+                    INSERT INTO tbldet_tbldet_tblproduccion (FKId_TblDet_TblProduccion, FKCodigo_TblCajasProduccion, N_CajasProducidas_Dia)
+                    VALUES(:idProduccionDetalle, :codigoTblCajasProduccion, :cantidadProducidas);
+                ");
                 $datos->bindParam(':idProduccionDetalle', $idProduccionDetalle, PDO::PARAM_INT);
                 $datos->bindParam(':codigoTblCajasProduccion', $codigoTblCajasProduccion, PDO::PARAM_INT);
                 $datos->bindParam(':cantidadProducidas', $cantidadProducidas, PDO::PARAM_INT);
@@ -430,7 +463,7 @@
             $datos = $bd->prepare("SELECT * FROM $tabla WHERE $campo = :key");
         $datos->bindParam(":key", $key, PDO::PARAM_STR);
         $datos->execute();
-        return $datos->fetchAll();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
     }
 
     function ingreso($usuario, $password) {
@@ -446,35 +479,37 @@
         $datos->bindParam(":usuario", $usuario, PDO::PARAM_STR);
         $datos->bindParam(":password", $password, PDO::PARAM_STR);
         $datos->execute();
-        return $datos->fetchAll();
+        return $datos->fetch(PDO::FETCH_OBJ);
     }
 
     function listarfincas() {
         $bd = conectar();
         $datos = $bd->prepare("
             SELECT f.PKIbm, f.Nombre, 
-            (SELECT ROUND(SUM(Area_Neta), 2) FROM tbllotes WHERE FKIbm_TblFincas = f.PKIbm) as area_neta, 
-            (SELECT ROUND(SUM(Area_Bruta), 2) FROM tbllotes WHERE FKIbm_TblFincas = f.PKIbm) as area_bruta
+            (SELECT SUM(Area_Neta) FROM tbllotes WHERE FKIbm_TblFincas = f.PKIbm as area_neta, 
+            (SELECT SUM(Area_Bruta) FROM tbllotes WHERE FKIbm_TblFincas = f.PKIbm as area_bruta
             FROM tblfincas as f
         ");
         $datos->execute();
-        return $datos->fetchAll();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
     }
 
     function listarempresas() {
         $bd = conectar();
         $datos = $bd->prepare("SELECT * FROM tblempresas");
         $datos->execute();
-        return $datos->fetchAll();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
     }
 
     function cajasproduccion() {
         $bd = conectar();
-        $datos = $bd->prepare("SELECT c.PKCodigo, c.Descripcion, c.FactorConversion, t.Descripcion TipoFruta
-                                FROM tblcajasproduccion c, tbltipofruta t
-                                WHERE c.FKId_TblTipoFruta = t.PKId");
+        $datos = $bd->prepare("
+            SELECT c.PKCodigo, c.Descripcion, c.FactorConversion, t.Descripcion TipoFruta
+            FROM tblcajasproduccion c, tbltipofruta t
+            WHERE c.FKId_TblTipoFruta = t.PKId
+        ");
         $datos->execute();
-        return $datos->fetchAll();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
     }
 
     function listarlotes($ibm_l) {
@@ -482,7 +517,7 @@
         $datos = $bd->prepare("SELECT * FROM tbllotes WHERE FKIbm_TblFincas = :ibm_l");
         $datos->bindParam(":ibm_l", $ibm_l, PDO::PARAM_STR);
         $datos->execute();
-        return $datos->fetchAll();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
     }
 
     function buscarfinca($ibm_f) {
@@ -490,7 +525,7 @@
         $datos = $bd->prepare("SELECT Nombre FROM tblfincas WHERE PKIbm = :ibm_f");
         $datos->bindParam(":ibm_f", $ibm_f, PDO::PARAM_STR);
         $datos->execute();
-        return $datos->fetch();
+        return $datos->fetch(PDO::FETCH_OBJ);
     }
 
     function buscarlote($id_lote) {
@@ -498,17 +533,19 @@
         $datos = $bd->prepare("SELECT * FROM tbllotes WHERE PKId = :id_lote");
         $datos->bindParam(":id_lote", $id_lote, PDO::PARAM_INT);
         $datos->execute();
-        return $datos->fetch();
+        return $datos->fetch(PDO::FETCH_OBJ);
     }
 
     function buscarempresa($ibm_e) {
         $bd = conectar();
-        $datos = $bd->prepare("SELECT e.PKNit, e.Nombre, e.Direccion, e.Telefono 
-                                FROM tblempresas as e, tblfincas as f 
-                                WHERE f.FKNit_TblEmpresas = e.PKNit AND f.PKIbm = :ibm_e");
+        $datos = $bd->prepare("
+            SELECT e.PKNit, e.Nombre, e.Direccion, e.Telefono 
+            FROM tblempresas as e, tblfincas as f 
+            WHERE f.FKNit_TblEmpresas = e.PKNit AND f.PKIbm = :ibm_e
+        ");
         $datos->bindParam(":ibm_e", $ibm_e, PDO::PARAM_STR);
         $datos->execute();
-        return $datos->fetch();
+        return $datos->fetch(PDO::FETCH_OBJ);
     }
 
     function editarempresa($nit) {
@@ -516,7 +553,7 @@
         $datos = $bd->prepare("SELECT * FROM tblempresas WHERE PKNit = :nit");
         $datos->bindParam(":nit", $nit, PDO::PARAM_STR);
         $datos->execute();
-        return $datos->fetch();
+        return $datos->fetch(PDO::FETCH_OBJ);
     }
 
     function buscarcaja($codigo) {
@@ -524,7 +561,7 @@
         $datos = $bd->prepare("SELECT * FROM tblcajasproduccion WHERE PKCodigo = :codigo");
         $datos->bindParam(":codigo", $codigo, PDO::PARAM_STR);
         $datos->execute();
-        return $datos->fetch();
+        return $datos->fetch(PDO::FETCH_OBJ);
     }
 
     //Devuelve las semanas por año
@@ -533,7 +570,7 @@
         $datos = $bd->prepare("SELECT * FROM tblsemanas WHERE Anho = :anho");
         $datos->bindParam(":anho", $anho, PDO::PARAM_STR);
         $datos->execute();
-        return $datos->fetchAll();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
     }
 
     //Funciones de ver elaboración de acuerdo al tipo de filtro
@@ -545,86 +582,61 @@
                 FROM	
                     tbldet_tbldet_tblproduccion as d, tblcajasproduccion as c, tbldias as di, tblfincas as f, 
                     tblsemanas as s, tbldet_tblproduccion as p, tblproduccion as pr
-                WHERE
-                    d.FKCodigo_TblCajasProduccion = :codigocaja
-                AND
-                    d.FKCodigo_TblCajasProduccion = c.PKCodigo
-                AND 
-                    d.FKId_TblDet_TblProduccion = p.PKId
-                AND 
-                    p.FKId_TblDias = di.PKId
-                AND 
-                    p.FKId_TblProduccion = pr.PKId
-                AND 
-                    pr.FKIbm_TblFincas = f.PKIbm
-                AND 
-                    pr.FKId_TblSemanas = s.PKId
-                AND
-                    pr.FKIbm_TblFincas = :finca
-                AND
-                    pr.FKId_TblSemanas = :semana
-                AND
-                    pr.Anho_Produccion = :ano
+                WHERE d.FKCodigo_TblCajasProduccion = :codigocaja
+                AND d.FKCodigo_TblCajasProduccion = c.PKCodigo
+                AND d.FKId_TblDet_TblProduccion = p.PKId
+                AND p.FKId_TblDias = di.PKId
+                AND p.FKId_TblProduccion = pr.PKId
+                AND pr.FKIbm_TblFincas = f.PKIbm
+                AND pr.FKId_TblSemanas = s.PKId
+                AND pr.FKIbm_TblFincas = :finca
+                AND pr.FKId_TblSemanas = :semana
+                AND pr.Anho_Produccion = :ano
             ");
             $datos->bindParam(":codigocaja", $codigocaja, PDO::PARAM_STR);
             $datos->bindParam(":finca", $finca, PDO::PARAM_STR);
             $datos->bindParam(":semana", $semana, PDO::PARAM_INT);
             $datos->bindParam(":ano", $ano, PDO::PARAM_STR);
             $datos->execute();
-            return $datos->fetchAll();
+            return $datos->fetchAll(PDO::FETCH_OBJ);
         }
 
         function verelaboracion_a($finca, $ano, $codigocaja) {
             $bd = conectar();
             $datos = $bd->prepare("
                 SELECT SUM(dd.N_CajasProducidas_Dia) as total_anual 
-                FROM
-                    tbldet_tbldet_tblproduccion as dd, tblcajasproduccion as cp, tbldet_tblproduccion as dp, tblproduccion as pr, tblfincas as fi
-                WHERE
-                    dd.FKCodigo_TblCajasProduccion = cp.PKCodigo
-                AND
-                    dd.FKId_TblDet_TblProduccion = dp.PKId
-                AND
-                    dp.FKId_TblProduccion = pr.PKId
-                AND
-                    pr.FKIbm_TblFincas = fi.PKIbm
-                AND
-                    cp.PKCodigo = :codigocaja
-                AND 
-                    pr.Anho_Produccion = :ano
-                AND
-                    fi.PKIbm = :finca
+                FROM tbldet_tbldet_tblproduccion as dd, tblcajasproduccion as cp, tbldet_tblproduccion as dp, tblproduccion as pr, tblfincas as fi
+                WHERE dd.FKCodigo_TblCajasProduccion = cp.PKCodigo
+                AND dd.FKId_TblDet_TblProduccion = dp.PKId
+                AND dp.FKId_TblProduccion = pr.PKId
+                AND pr.FKIbm_TblFincas = fi.PKIbm
+                AND cp.PKCodigo = :codigocaja
+                AND pr.Anho_Produccion = :ano
+                AND fi.PKIbm = :finca
             ");
             $datos->bindParam(":codigocaja", $codigocaja, PDO::PARAM_STR);
             $datos->bindParam(":ano", $ano, PDO::PARAM_STR);
             $datos->bindParam(":finca", $finca, PDO::PARAM_STR);
             $datos->execute();
-            return $datos->fetch();
+            return $datos->fetch(PDO::FETCH_OBJ);
         }
 
         function verelaboracion_h($finca, $codigocaja) {
             $bd = conectar();
             $datos = $bd->prepare("
                 SELECT SUM(dd.N_CajasProducidas_Dia) as total_historico
-                FROM
-                    tbldet_tbldet_tblproduccion as dd, tblcajasproduccion as cp, tbldet_tblproduccion as dp, tblproduccion as pr, tblfincas as fi
-                WHERE
-                    dd.FKCodigo_TblCajasProduccion = cp.PKCodigo
-                AND
-                    dd.FKId_TblDet_TblProduccion = dp.PKId
-                AND
-                    dp.FKId_TblProduccion = pr.PKId
-                AND
-                    pr.FKIbm_TblFincas = fi.PKIbm
-                AND
-                    cp.PKCodigo = :codigocaja
-                AND
-                    fi.PKIbm = :finca
+                FROM tbldet_tbldet_tblproduccion as dd, tblcajasproduccion as cp, tbldet_tblproduccion as dp, tblproduccion as pr, tblfincas as fi
+                WHERE dd.FKCodigo_TblCajasProduccion = cp.PKCodigo
+                AND dd.FKId_TblDet_TblProduccion = dp.PKId
+                AND dp.FKId_TblProduccion = pr.PKId
+                AND pr.FKIbm_TblFincas = fi.PKIbm
+                AND cp.PKCodigo = :codigocaja
+                AND fi.PKIbm = :finca
             ");
             $datos->bindParam(":codigocaja", $codigocaja, PDO::PARAM_STR);
             $datos->bindParam(":finca", $finca, PDO::PARAM_STR);
             $datos->execute();
-            return $datos->fetch();
+            return $datos->fetch(PDO::FETCH_OBJ);
         }
     // End funciones de ver elaboración --------------------------------------------------
 
@@ -633,7 +645,7 @@
         $bd = conectar();
         $datos = $bd->prepare("SELECT * FROM tbltipofruta");
         $datos->execute();
-        return $datos->fetchAll();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
     }
 
     //
@@ -653,7 +665,7 @@
         $datos->bindParam(':cod_embarque', $cod_embarque, PDO::PARAM_STR);
         $datos->bindParam(':ibm_finca', $ibm_finca, PDO::PARAM_STR);
         if ($datos->execute()) {
-            return $datos->fetchAll();
+            return $datos->fetchAll(PDO::FETCH_OBJ);
         } else {
             return false;
         }
@@ -670,7 +682,7 @@
         ");
         $datos->bindParam(":cod_embarque", $cod_embarque, PDO::PARAM_STR);
         if ($datos->execute())
-            return $datos->fetch();
+            return $datos->fetch(PDO::FETCH_OBJ);
         else
             return false;
     }
@@ -687,7 +699,7 @@
         $datos->bindParam(':codCajasProduccion', $codCajasProduccion, PDO::PARAM_STR);
         $datos->bindParam(':codEmbarque', $codEmbarque, PDO::PARAM_STR);
         if ($datos->execute())
-            return $datos->fetch();
+            return $datos->fetch(PDO::FETCH_OBJ);
         else
             return false;
     }
@@ -706,7 +718,7 @@
         $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
         $datos->bindParam(':codEmbarque', $codEmbarque, PDO::PARAM_STR);
         $datos->execute();
-        return $datos->fetchAll();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
     }
 
     //
@@ -723,7 +735,7 @@
         ");
         $datos->bindParam(':codEmbarque', $codEmbarque, PDO::PARAM_STR);
         $datos->execute();
-        return $datos->fetchAll();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
     }
 
     //
@@ -738,7 +750,7 @@
             LEFT JOIN tbltipousuario as tu ON u.FKId_TblTipoUsuario = tu.PKId
         ");
         $datos->execute();
-        return $datos->fetchAll();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
     }
 
     //
@@ -754,7 +766,7 @@
         $datos->bindParam(':codigoCaja', $codigoCaja, PDO::PARAM_STR);
         $datos->bindParam(':codEmbarque', $codEmbarque, PDO::PARAM_STR);
         $datos->execute();
-        return $datos->fetchAll();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
     }
 
     //
@@ -769,7 +781,7 @@
             WHERE tblfincas.PKIbm = tblproduccion.FKIbm_TblFincas
         ");
         $datos->execute();
-        return $datos->fetchAll();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
     }
 
     //
@@ -785,7 +797,7 @@
         ");
         $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
         $datos->execute();
-        return $datos->fetchAll();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
     }
 
     //
@@ -794,7 +806,7 @@
         $datos = $bd->prepare("SELECT * FROM tblestimativo ORDER BY FKCod_TblEmbarque DESC LIMIT :id ");
         $datos->bindParam(':id', $totalFincas, PDO::PARAM_INT);
         $datos->execute();
-        return $datos->fetchAll();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
     }
 
     //
@@ -810,7 +822,7 @@
         ");
         $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
         $datos->execute();
-        return $datos->fetchAll();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
     }
     
     //
@@ -826,7 +838,7 @@
         ");
         $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
         $datos->execute();
-        return $datos->fetchAll();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
     }
 
     //
@@ -839,7 +851,7 @@
         ");
         $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
         $datos->execute();
-        return $datos->fetchAll();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
     }
 
     //
@@ -856,7 +868,7 @@
         ");
         $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
         $datos->execute();
-        return $datos->fetchAll();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
     }
 
     //
@@ -871,7 +883,7 @@
         $datos->bindParam(':codEmbarque', $codEmbarque, PDO::PARAM_STR);
         $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
         $datos->execute();
-        return $datos->fetchAll();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
     }
 
     //
@@ -888,7 +900,7 @@
         $datos->bindParam(':codEmbarque', $codEmbarque, PDO::PARAM_STR);
         $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
         $datos->execute();
-        return $datos->fetchAll();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
     }
 
     // Obtiene el total de elaboración de el día según el id de la produccion
@@ -906,7 +918,7 @@
         $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
         $datos->bindParam(':idDia', $idDia, PDO::PARAM_INT);
         $datos->execute();
-        return $datos->fetchAll();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
     }
 
     //
@@ -919,7 +931,7 @@
         ");
         $datos->bindParam(':fecha', $fecha, PDO::PARAM_STR);
         $datos->execute();
-        return $datos->fetch();
+        return $datos->fetch(PDO::FETCH_OBJ);
     }
 
     //
@@ -935,7 +947,7 @@
         $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
         $datos->bindParam(':codEmbarque', $codEmbarque, PDO::PARAM_STR);
         $datos->execute();
-        return $datos->fetchAll();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
     }
 
 
@@ -996,7 +1008,7 @@
     function changeprivilegesuser($idUser, $value) {
         try {
             $bd = conectar(); 
-            $datos = $bd->prepare("UPDATE tblusuarios as u SET u.FKId_TblTipoUsuario = :value WHERE u.PKId = :idUser");
+            $datos = $bd->prepare("UPDATE tblusuarios SET FKId_TblTipoUsuario = :value WHERE PKId = :idUser");
             $datos->bindParam(':idUser', $idUser, PDO::PARAM_INT);
             $datos->bindParam(':value', $value, PDO::PARAM_INT);
             if ($datos->execute())
@@ -1012,7 +1024,7 @@
     function changestatussuser($idUser, $value) {
         try {
             $bd = conectar(); 
-            $datos = $bd->prepare("UPDATE tblusuarios as u SET u.FKId_TblEstadoUsuario = :value WHERE u.PKId = :idUser");
+            $datos = $bd->prepare("UPDATE tblusuarios SET FKId_TblEstadoUsuario = :value WHERE PKId = :idUser");
             $datos->bindParam(':idUser', $idUser, PDO::PARAM_INT);
             $datos->bindParam(':value', $value, PDO::PARAM_INT);
             if ($datos->execute())

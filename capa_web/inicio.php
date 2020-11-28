@@ -169,7 +169,7 @@
                         <div id="fincas" class="tab-pane notika-tab-menu-bg animated flipInX">
                             <ul class="notika-main-menu-dropdown">
                                 <li>
-                                    <a href="#listarfincas">Listar Fincas</a>
+                                    <a onclick="listar_fincas()" style="cursor: pointer;">Listar Fincas</a>
                                 </li>
                                 <li>
                                     <a href="#listarempresas">Razones Sociales</a>

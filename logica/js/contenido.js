@@ -41,10 +41,10 @@
 /* Mostrar datos ================================================================================*/ 
     
     //Llama método en archivo finca.js para listar las fincas
-    $(document).on("click", "[href='#listarfincas']", function(e){
-        e.preventDefault();
-        listar_fincas();
-    });
+    // $(document).on("click", "[href='#listarfincas']", function(e){
+    //     e.preventDefault();
+    //     listar_fincas();
+    // });
 
     //Cargar vista producción
     $(document).on("click", "[href='#ingresarproduccion']", function(e){
