@@ -355,7 +355,7 @@
                 </td>
                 <td dato='$e->PKNit'>
                     <a href='#editar_empresa' nit='$e->PKNit' data-toggle='modal' data-target='#modal-ed' class='notika-icon notika-edit' title='Editar'></a> - 
-                    <a href='#eliminar_empresa' class='notika-icon notika-close' title='Eliminar' onclick='eliminarempresa($e->PKNit)'></a>
+                    <a href='#eliminar_empresa' nit='$e->PKNit' class='notika-icon notika-close' title='Eliminar'></a>
                 </td>
             </tr>";
         }
@@ -844,7 +844,7 @@
     //
     function cargar_programacion() {
         $codEmbarque = $_GET['codEmbarque'];
-        $listaCajas = buscarregistro($codEmbarque, 'FKCod_TblEmbarque', 'TblDet_TblEmbarque', 'FKIbm_TblFincas = (SELECT PKIbm FROM tblfincas LIMIT 1);');
+        $listaCajas = buscarregistro($codEmbarque, 'FKCod_TblEmbarque', 'TblDet_TblEmbarque', 'FKIbm_TblFincas = (SELECT TOP 1 PKIbm FROM tblfincas);');
         $result = [ 'infoCajas' => [], 'estimativo' => [] ];
         foreach ($listaCajas as $lc) {
             $infoCaja = buscarcaja($lc->FKCodigo_TblCajasProduccion);
@@ -904,6 +904,7 @@
         $result['cardEstimativo']['codEmbarque'] = $estimativo[0]->FKCod_TblEmbarque;
         
         echo json_encode($result);
+
     }
 
     // retorna los datos del home user
@@ -931,8 +932,8 @@
         }
         $nacionalElaboradasDia = [];
         for ($x = 1; $x < 8; $x++) {
-            $data = buscarelaboradodianacional($ultimaProduccion->Cod_Embarque, $_SESSION['conectado']->PKIbm, $x)[0]->totalElaborado;
-            $nacionalElaboradasDia[] = $data;
+            $data = buscarelaboradodianacional($ultimaProduccion->Cod_Embarque, $_SESSION['conectado']->PKIbm, $x);
+            $nacionalElaboradasDia[] = $data->totalElaborado;
         }
         $result['rowThree']['nacionalElaboradasUltimaSemana'] = $nacionalElaboradasDia;
 

@@ -140,24 +140,18 @@
                         if ($ultima_semana->cinta == 10) {
                         	$ultima_semana->cinta = 0;
                         }
-                        $datos = $bd->prepare("SELECT DATEADD(DAY, 7, :fechai) as fechai, DATEADD(DAY, 7, :fechaf) as fechaf, :cinta+1 as cinta");
-                        $datos->bindParam(":fechai", $ultima_semana->fechai, PDO::PARAM_STR);
-                        $datos->bindParam(":fechaf", $ultima_semana->fechaf, PDO::PARAM_STR);
-                        $datos->bindParam(":cinta", $ultima_semana->cinta, PDO::PARAM_INT);
-                        if ($datos->execute()){
-                            $insertar_semana = $datos->fetch(PDO::FETCH_OBJ);
-                            $datos = $bd->prepare("
-                                INSERT INTO tblsemanas (N_Semana, Fecha_Inicio, Fecha_Fin, Anho, FKId_TblCintas)
-                                VALUES('SEMANA ".$x."', :fechai, :fechaf, :anho, :cinta);
-                            ");
-                            $datos->bindParam(":fechai", $insertar_semana->fechai, PDO::PARAM_STR);
-                            $datos->bindParam(":fechaf", $insertar_semana->fechaf, PDO::PARAM_STR);
-                            $datos->bindParam(":anho", $anho, PDO::PARAM_INT);
-                            $datos->bindParam(":cinta", $insertar_semana->cinta, PDO::PARAM_INT);
-                            $datos->execute();
-                        } else {
-                            return false;
-                        }
+                        $fechaInicioInsert = date('Y-m-d', strtotime($ultima_semana->fechai.'+ 1 week'));
+                        $fechaFinalInsert = date('Y-m-d', strtotime($ultima_semana->fechaf.'+ 1 week'));
+                        $cintaInsert = $ultima_semana->cinta+1;
+                        $datos = $bd->prepare("
+                            INSERT INTO tblsemanas (N_Semana, Fecha_Inicio, Fecha_Fin, Anho, FKId_TblCintas)
+                            VALUES('SEMANA ".$x."', :fechai, :fechaf, :anho, :cinta);
+                        ");
+                        $datos->bindParam(":fechai", $fechaInicioInsert, PDO::PARAM_STR);
+                        $datos->bindParam(":fechaf", $fechaFinalInsert, PDO::PARAM_STR);
+                        $datos->bindParam(":anho", $anho, PDO::PARAM_INT);
+                        $datos->bindParam(":cinta", $cintaInsert, PDO::PARAM_INT);
+                        $datos->execute();
                     } else {
                         return false;
                     }
@@ -486,8 +480,8 @@
         $bd = conectar();
         $datos = $bd->prepare("
             SELECT f.PKIbm, f.Nombre, 
-            (SELECT SUM(Area_Neta) FROM tbllotes WHERE FKIbm_TblFincas = f.PKIbm as area_neta, 
-            (SELECT SUM(Area_Bruta) FROM tbllotes WHERE FKIbm_TblFincas = f.PKIbm as area_bruta
+            (SELECT SUM(Area_Neta) FROM tbllotes WHERE FKIbm_TblFincas = f.PKIbm) as area_neta, 
+            (SELECT SUM(Area_Bruta) FROM tbllotes WHERE FKIbm_TblFincas = f.PKIbm) as area_bruta
             FROM tblfincas as f
         ");
         $datos->execute();
@@ -577,10 +571,8 @@
         function verelaboracion_s($finca, $semana, $ano, $codigocaja) {
             $bd = conectar();
             $datos = $bd->prepare("
-                SELECT  (SELECT DATE_ADD(s.Fecha_Inicio, INTERVAL (di.PKId-1) DAY)) as Fecha, 
-                            di.Descripcion as Dia, d.N_CajasProducidas_Dia as Total_CajaDia		
-                FROM	
-                    tbldet_tbldet_tblproduccion as d, tblcajasproduccion as c, tbldias as di, tblfincas as f, 
+                SELECT (SELECT DATEADD(DAY, (di.PKId-1), s.Fecha_Inicio)) as Fecha, di.Descripcion as Dia, d.N_CajasProducidas_Dia as Total_CajaDia		
+                FROM tbldet_tbldet_tblproduccion as d, tblcajasproduccion as c, tbldias as di, tblfincas as f, 
                     tblsemanas as s, tbldet_tblproduccion as p, tblproduccion as pr
                 WHERE d.FKCodigo_TblCajasProduccion = :codigocaja
                 AND d.FKCodigo_TblCajasProduccion = c.PKCodigo
@@ -731,7 +723,7 @@
             AND f.PKIbm = de.FKIbm_TblFincas
             AND e.PKCod = de.FKCod_TblEmbarque
             AND e.PKCod = :codEmbarque
-            AND f.PKIbm = (SELECT PKIbm FROM tblfincas LIMIT 1)
+            AND f.PKIbm = (SELECT TOP 1 PKIbm FROM tblfincas)
         ");
         $datos->bindParam(':codEmbarque', $codEmbarque, PDO::PARAM_STR);
         $datos->execute();
@@ -788,12 +780,12 @@
     function buscarultimasemana($ibmFinca) {
         $bd = conectar();
         $datos = $bd->prepare("
-            SELECT f.PKIbm, f.Nombre, p.FKId_TblSemanas, s.N_Semana
+            SELECT TOP 1 f.PKIbm, f.Nombre, p.FKId_TblSemanas, s.N_Semana
             FROM tblproduccion as p, tblsemanas as s, tblfincas as f
             WHERE p.FKIbm_TblFincas = :ibmFinca 
             AND f.PKIbm = p.FKIbm_TblFincas
             AND s.PKId = p.FKId_TblSemanas 
-            ORDER BY p.PKId DESC LIMIT 1
+            ORDER BY p.PKId DESC
         ");
         $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
         $datos->execute();
@@ -803,8 +795,7 @@
     //
     function buscarultimoestimativo($totalFincas) {
         $bd = conectar();
-        $datos = $bd->prepare("SELECT * FROM tblestimativo ORDER BY FKCod_TblEmbarque DESC LIMIT :id ");
-        $datos->bindParam(':id', $totalFincas, PDO::PARAM_INT);
+        $datos = $bd->prepare("SELECT TOP $totalFincas * FROM tblestimativo ORDER BY FKCod_TblEmbarque DESC");
         $datos->execute();
         return $datos->fetchAll(PDO::FETCH_OBJ);
     }
@@ -813,12 +804,12 @@
     function buscarultimaproduccion($ibmFinca) {
         $bd = conectar();
         $datos = $bd->prepare("
-            SELECT *
+            SELECT TOP 1 *
             FROM tblproduccion as p, tblfincas as f, tblsemanas as s
             WHERE p.FKIbm_TblFincas = f.PKIbm
             AND p.FKId_TblSemanas = s.PKId
             AND f.PKIbm = :ibmFinca
-            ORDER BY p.Cod_Embarque DESC LIMIT 1
+            ORDER BY p.Cod_Embarque DESC 
         ");
         $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
         $datos->execute();
@@ -829,12 +820,12 @@
     function buscarproduccioncomparar($ibmFinca) {
         $bd = conectar();
         $datos = $bd->prepare("
-            SELECT p.FKId_TblSemanas, p.Total_CRechazadas, p.Total_CElaboradas, f.Nombre, p.Cod_Embarque, s.N_Semana
+            SELECT TOP 2 p.FKId_TblSemanas, p.Total_CRechazadas, p.Total_CElaboradas, f.Nombre, p.Cod_Embarque, s.N_Semana
             FROM tblproduccion as p, tblfincas as f, tblsemanas as s
             WHERE p.FKIbm_TblFincas = f.PKIbm
             AND p.FKId_TblSemanas = s.PKId
             AND f.PKIbm = :ibmFinca
-            ORDER BY p.Cod_Embarque DESC LIMIT 2
+            ORDER BY p.Cod_Embarque DESC
         ");
         $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
         $datos->execute();
@@ -858,13 +849,13 @@
     function buscarultimaprogramacion($ibmFinca) {
         $bd = conectar();
         $datos = $bd->prepare("
-            SELECT e.PKCod, e.FKId_TblSemanas, e.Anho, de.Cantidad
+            SELECT TOP 1 e.PKCod, e.FKId_TblSemanas, e.Anho, de.Cantidad
             FROM tblembarque as e, tbldet_tblembarque as de, tblfincas as f
             WHERE e.PKCod = de.FKCod_TblEmbarque
             AND f.PKIbm = de.FKIbm_TblFincas
             AND de.Cantidad > 0
             AND f.PKIbm = :ibmFinca
-            ORDER BY e.PKCod DESC LIMIT 1
+            ORDER BY e.PKCod DESC
         ");
         $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
         $datos->execute();
@@ -907,7 +898,7 @@
     function buscarelaboradodianacional($codEmbarque, $ibmFinca, $idDia) {
         $bd = conectar();
         $datos = $bd->prepare("
-            SELECT SUM(dmn.Cantidad_Elaborado) totalElaborado, d.Descripcion
+            SELECT SUM(dmn.Cantidad_Elaborado) totalElaborado
             FROM tbldet_tblmercadonacional as dmn, tblmercadonacional as mn, tbldias as d
             WHERE mn.PKId = dmn.FKId_TblMercadoNacional
             AND d.PKId = dmn.FKId_TblDias
@@ -918,7 +909,7 @@
         $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
         $datos->bindParam(':idDia', $idDia, PDO::PARAM_INT);
         $datos->execute();
-        return $datos->fetchAll(PDO::FETCH_OBJ);
+        return $datos->fetch(PDO::FETCH_OBJ);
     }
 
     //
@@ -926,10 +917,9 @@
         $bd = conectar();
         $datos = $bd->prepare("
             SELECT * FROM tblsemanas as s
-            WHERE :fecha >= DATE(s.Fecha_Inicio) 
-            AND DATE(s.Fecha_Fin) >= :fecha     
+            WHERE '$fecha' >= CAST(s.Fecha_Inicio as DATE) 
+            AND CAST(s.Fecha_Fin as DATE) >= '$fecha'
         ");
-        $datos->bindParam(':fecha', $fecha, PDO::PARAM_STR);
         $datos->execute();
         return $datos->fetch(PDO::FETCH_OBJ);
     }
@@ -977,7 +967,10 @@
         try {
             if(eliminar_s($caja['codigo_real'], 'PKCodigo', 'tblcajasproduccion')){
                 $bd = conectar();
-                $datos = $bd->prepare("INSERT INTO tblcajasproduccion VALUES(:codigo, :descripcion, :factor, :tipofruta)");
+                $datos = $bd->prepare("
+                    INSERT INTO tblcajasproduccion (PKCodigo, Descripcion, FactorConversion, FKId_TblTipoFruta) 
+                    VALUES(:codigo, :descripcion, :factor, :tipofruta)
+                ;");
                 $datos->bindParam(":codigo", $caja['codigo'], PDO::PARAM_STR);
                 $datos->bindParam(":descripcion", $caja['descripcion'], PDO::PARAM_STR);
                 $datos->bindParam(":factor", $caja['factor'], PDO::PARAM_STR);

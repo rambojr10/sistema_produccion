@@ -4,7 +4,7 @@
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            <form class="ui form" id="form_nuevaempresa" method="post" enctype="multipart/form-data">
+            <form class="ui form">
                 <div class="modal-body">
                     <div class="ui segment">
                         <h4 class="ui dividing header">
@@ -36,7 +36,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" id="btnGuardar_empresa" class="btn btn-default" data-dismiss="modal">Agregar</button>
+                        <button id="btnGuardar_empresa" class="btn btn-default" data-dismiss="modal">Agregar</button>
                     </div>
                 </div>
             </form>

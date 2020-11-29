@@ -169,7 +169,7 @@
                         <div id="fincas" class="tab-pane notika-tab-menu-bg animated flipInX">
                             <ul class="notika-main-menu-dropdown">
                                 <li>
-                                    <a onclick="listar_fincas()" style="cursor: pointer;">Listar Fincas</a>
+                                    <a href="#listarfincas">Listar Fincas</a>
                                 </li>
                                 <li>
                                     <a href="#listarempresas">Razones Sociales</a>
@@ -743,15 +743,15 @@
 
     <!-- Controlador de contenido, según menú 
         ============================================ -->
-    <script src="../logica/js/contenido.js"></script>
-    <script src="../logica/js/home.js"></script>
-    <script src="../logica/js/fincas.js"></script>
-    <script src="../logica/js/empresas.js"></script>
-    <script src="../logica/js/cajasproduccion.js"></script>
-    <script src="../logica/js/lotes.js"></script>
-    <script src="../logica/js/programarembarque.js"></script>
-    <script src="../logica/js/ingresarproduccion/ingresarproduccion.js"></script>
-    <script src="../logica/js/usuarios.js"></script>
+        <script src="../logica/js/fincas.js"></script>
+        <script src="../logica/js/empresas.js"></script>
+        <script src="../logica/js/cajasproduccion.js"></script>
+        <script src="../logica/js/contenido.js"></script>
+        <script src="../logica/js/lotes.js"></script>
+        <script src="../logica/js/programarembarque.js"></script>
+        <script src="../logica/js/ingresarproduccion/ingresarproduccion.js"></script>
+        <script src="../logica/js/usuarios.js"></script>
+        <script src="../logica/js/home.js"></script>
     
 </body>
 

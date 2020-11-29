@@ -20,7 +20,6 @@
                 fetch('../logica/contenido.php', {method: 'POST', body: op})
                 .then(response => response.text())
                 .then(res => {
-                    console.log(res);
                     if (res == true) {
                         $.notify({
                             message: 'Password update completed',
@@ -73,7 +72,6 @@
                 })
                 .then(response => response.text())
                 .then(res => {
-                    console.error(res);
                     if (res == true) {
                         $('[href="#listarusuarios"]').trigger('click');
                         $.notify({
@@ -113,7 +111,6 @@
                 })
                 .then(response => response.text())
                 .then(res => {
-                    console.log(res);
                     if (res == true) {
                         $('[href="#listarusuarios"]').trigger('click');
                         $.notify({

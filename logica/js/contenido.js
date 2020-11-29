@@ -28,6 +28,8 @@
             })
             .then(res => {
                 console.log(res);
+                if (res == 'Ok')
+                    swal('Generador de semanas', `Las semanas se han generado correctamente, el nuevo año ${hoy.getFullYear()+1} ahora está disponible en la plataforma.`, 'success');
             });
         }
 
@@ -40,11 +42,11 @@
 
 /* Mostrar datos ================================================================================*/ 
     
-    //Llama método en archivo finca.js para listar las fincas
-    // $(document).on("click", "[href='#listarfincas']", function(e){
-    //     e.preventDefault();
-    //     listar_fincas();
-    // });
+    // Llama método en archivo finca.js para listar las fincas
+    $(document).on("click", "[href='#listarfincas']", function(e){
+        e.preventDefault();
+        listar_fincas();
+    });
 
     //Cargar vista producción
     $(document).on("click", "[href='#ingresarproduccion']", function(e){

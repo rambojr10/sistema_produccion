@@ -4,12 +4,7 @@
     //
     function cargarHome(semanaActual) {
         fetch('../logica/contenido.php?op=datos_home')
-        .then(response => {
-            if (response.ok)
-                response.json();
-            else
-                throw "No es posible obtener los datos HOME";
-        })
+        .then(response => response.json())
         .then(datos => {
             if (typeof datos === 'object') {
                 //Loader
@@ -131,12 +126,7 @@
             return hoy;
         }
         fetch(`../logica/contenido.php?op=datos_home_user&fecha_actual=${fecha(fechaActual)}`)
-        .then(response => {
-            if (response.ok) 
-                response.json();
-            else
-                throw "No es posible obtener los datos HOME";
-        })
+        .then(response => response.json())
         .then(datos => {
             if (typeof datos === 'object') {
                 //Loader

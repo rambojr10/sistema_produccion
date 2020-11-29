@@ -24,7 +24,7 @@
         fetch('../logica/contenido.php?op=listarfincas')
         .then(response => response.text())
         .then(res => {
-            const panelFincas = document.querySelector('#listarfincas');
+            const panelFincas = window.listarfincas;
             panelFincas.innerHTML = res;
             if (withoutEffect === true)
                 $(".contenido").hide().show("blind", 1500);

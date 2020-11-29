@@ -70,13 +70,16 @@
     $(document).on("click", "#btnActualizar_empresa", function(){
         empresa_ga("actualizarempresa");
     });
-    $(document).on("sumbit", "#form_nuevaempresa", function(e){
+
+    $(document).on("click", "#btnGuardar_empresa", function(e) {
         e.preventDefault();
         empresa_ga("guardarempresa");
     });
 
 // ELIMINAR EMPRESA ----------------------------------------------------------------------------------------
-    function eliminarempresa(nit) {
+    $(document).on("click", "[href='#eliminar_empresa']", function(e) {
+        e.preventDefault();
+        let nit = $(this).attr("nit");
         swal({
             title: "Está seguro?",
             text: "¡Se eliminará permanentemente el registro!",
@@ -88,9 +91,10 @@
             if(isConfirm) {
                 $.post({
                     url: '../logica/contenido.php',
-                    data: {op: 'eliminarempresa', key: nit, campo: 'tblempresas.PKNit', tabla: 'tblempresas'},
+                    data: {op: 'eliminarempresa', key: nit, campo: 'PKNit', tabla: 'tblempresas'},
                     cache: false,
                     success: function (res) {
+                        console.log(res);
                         if (res == true) {
                             swal("Eliminación", "Registro eliminado correctamente.", "success");
                             listarempresas();
@@ -101,4 +105,4 @@
                 });
             }
         });
-    }
+    });

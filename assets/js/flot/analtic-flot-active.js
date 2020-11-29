@@ -3,7 +3,7 @@
     fetch('../logica/contenido.php?op=datos_flot')
     .then(response => {return response.json()})
     .then(datos => {
-        var fincas = [null, "ÁLAMOS", "GUAIMARAL", "TAIWÁN", "KALAMARÍ", "ZARZAMORA", "CANDELARIA"];
+        var fincas = [null, "ALAMOS", "GUAIMARAL", "TAIWAN", "KALAMARI", "ZARZAMORA", "CANDELARIA"];
         var data = [
                 [1, 0],
                 [2, 0],

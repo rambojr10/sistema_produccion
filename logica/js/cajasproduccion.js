@@ -29,8 +29,7 @@
 // MOSTRAR CAJAS -------------------------------------------------------------------------   
     
     //Muestra los datos en el modal de la caja a editar
-    $(document).on("click", "[href='#editar_caja']", function(){
-        
+    $(document).on("click", "[href='#editar_caja']", function() {
         var codigo = $(this).attr("codigo");
         $.post({
             url: '../logica/contenido.php',
@@ -92,7 +91,7 @@
     function cajas_ga(op, codigo) {
         var text = "";
         var button = "";
-        if(op == "actualizarcaja"){
+        if(op == "actualizarcaja") {
             var caja = {
                 codigo_real: codigo,
                 codigo: $("[name='codigo_caja']").val(), 
@@ -111,21 +110,21 @@
                     descripcion: 'No se pudo actualizar el registro'
                 },
             };
-        }else if(op = "guardarcaja"){
+        } else if(op = "guardarcaja") {
             var caja = {
                 codigo: $("[name='codigo_caja_nueva']").val(), 
                 descripcion: $("[name='descripcion_caja_nueva']").val(), 
                 factor: $("[name='factor_caja_nueva']").val(),
                 tipofruta: $("[name='tipofruta_caja_nueva']").val()
             }
-            text =  "¡Será agregado un nuevo registro!";
+            text = "¡Será agregado un nuevo registro!";
             button = "Si, agregar!";
             alerta = {
                 tipo: 'Nuevo registro',
-                success:{
+                success: {
                     descripcion: 'Nuevo registro agregado satisfactoriamente'
                 },
-                error:{
+                error: {
                     descripcion: 'No se ha podido registrar los datos'
                 },
             };
@@ -137,18 +136,19 @@
             showCancelButton: true,
             confirmButtonText: button,
             cancelButtonText: "No, cancelar!",
-        }).then(function (isConfirm) {
+        }).then(isConfirm => {
             if(isConfirm) {
                 $.post({
                     url: '../logica/contenido.php',
                     data: {op: op, caja: caja},
                     cache: false,
                     success: function(res) {
-                        if(res == true){
+                        console.log(res);
+                        if(res == true) {
                             swal(alerta.tipo, alerta.success.descripcion, "success");
                             $("#tblcajasproduccion").dataTable().fnDestroy();
                             $("#cajasproduccion").load("../capa_web/tablas/tabla_cajasproduccion.php?op=cajasproduccion");
-                        }else{
+                        } else {
                             swal(alerta.tipo, alerta.error .descripcion, "error");
                         }
                     }
@@ -360,28 +360,31 @@
     function tipofruta_select(x, tipofruta_editar) { 
         const op = new FormData();
         op.append("op", "tipofruta-select");
-        if (tipofruta_editar != null) {
+        if (tipofruta_editar != null)
             op.append("tipofruta_editar", tipofruta_editar);
-        }
         fetch('../logica/contenido.php', {
             method: 'POST',
             body: op
         })
         .then(response => {
-            if (response.ok) {
+            if (response.ok)
                 return response.text();
-            }else {
+            else
                 throw "No se pueden cargar los datos";
-            }
         })
         .then(res => {
             //verifica de donde se llama el método y asigna los datos según
-            if (x == 'nuevacaja') {
+            if (x == 'nuevacaja')
                 $("[name='tipofruta_caja_nueva']").html(res);
-            }else if (x == 'editarcaja') {
+            else if (x == 'editarcaja')
                 $("[name='tipofruta_caja']").html(res);
-            }
-        })
+            
+            const codigoCaja = document.querySelector("[name='codigo_caja']");
+            codigoCaja.addEventListener('input', function () {
+                if(this.value.length > 5)
+                    this.value = this.value.slice(0,5);
+            });
+        });
     }
 
     //Carga el tipo de fruta para modal nueva caja
@@ -391,7 +394,7 @@
 
     //cuando se digite un año en el campo ano_semana-ve del filtro semanal se cargan las semanas del año digitado
     $(document).on("input", "[name='ano_semana-ve']", function(){
-        if($(this).val().length == 4) {
+        if ($(this).val().length == 4) {
             const op = new FormData();
             op.append("op", "cargarsemanaspa");
             op.append("anho", $(this).val());
@@ -400,16 +403,15 @@
                 body: op
             })
             .then(response => {
-                if (response.ok){
+                if (response.ok)
                     return response.text();
-                }else {
+                else
                     throw "No se ha podido completar la acción";
-                }
             })
             .then(res => {
                 $("[name='semana-ve']").html(res);
             });
-        }else {
+        } else {
             $("[name='semana-ve']").html("");
         }
     });

@@ -1,5 +1,5 @@
 <!-- Modal nuevo lote  -->
-<div class="modal fade" id="nuevolote" role="dialog">
+<div class="modal" id="nuevolote" role="dialog">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
