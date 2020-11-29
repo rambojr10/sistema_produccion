@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <button type="button" class="close" data-dismiss="modal" id="cancelNewLote">&times;</button>
             </div>
             <div class="modal-body">
                 <h2>Nuevo Lote</h2>

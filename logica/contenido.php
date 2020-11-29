@@ -210,6 +210,10 @@
                             'codEmbarque' => $datosProduccion->cod_embarque
                         ];
                         guardarcargue($datosCargue);
+                        if ($c[0] == 'CAJAS EN PLATAFORMA' && $c[9] > 0) {
+                            $dataRow = [$c[3], $c[4], $c[5], $c[6], $c[7], $c[8], $c[9]];
+                            guardarcajasplataforma($lastIdNacional, $dataRow);
+                        }
                     }
                 }
             } else {
@@ -723,6 +727,7 @@
 
             //TblNacional
             $tblNacional = buscarregistro($tblProduccion->FKId_TblMercadoNacional, "PKId", "TblMercadoNacional", false);
+            $infoPlataforma = buscarregistro($tblNacional[0]->PKId, 'FKId_TblMercadoNacional', 'TblCajasPlataforma', false);
             $tblNacional = buscarregistro($tblNacional[0]->PKId, "FKId_TblMercadoNacional", "TblDet_TblMercadoNacional", false);
             $infoNacional = [
                 'lunes' => [],
@@ -777,7 +782,8 @@
                 'tblRacimos' => $infoRacimos,
                 'tblCajas' => $infoCajas,
                 'tblNacional' => $infoNacional,
-                'tblCargue' => $infoCargue
+                'tblCargue' => $infoCargue,
+                'tblCajasPlataforma' => isset($infoPlataforma[0]) ? $infoPlataforma[0] : []
             ];
             echo json_encode($datosProduccion);
         } else {

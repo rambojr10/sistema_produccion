@@ -360,6 +360,27 @@
             }
         }
 
+        function guardarcajasplataforma($idNacional, $dataRow) {
+            try {
+                $bd = conectar();
+                $datos = $bd->prepare("
+                    INSERT INTO tblcajasproduccion (FKId_TblMercadoNacional, DedoSuelto, Cluster, ManoEntera, Especial, Bolsa20Kilos, Bolsa25Kilos, Total) 
+                    VALUES (:idNacional, :dedoSuelto, :cluster, :manoEntera, :especial, :bolsa20, :bolsa25, :total); 
+                ");
+                $datos->bindParam(':idNacional', $idNacional, PDO::PARAM_INT);
+                $datos->bindParam(':dedoSuelto', $dataRow[0], PDO::PARAM_INT);
+                $datos->bindParam(':cluster', $dataRow[1], PDO::PARAM_INT);
+                $datos->bindParam(':manoEntera', $dataRow[2], PDO::PARAM_INT);
+                $datos->bindParam(':especial', $dataRow[3], PDO::PARAM_INT);
+                $datos->bindParam(':bolsa20', $dataRow[4], PDO::PARAM_INT);
+                $datos->bindParam(':bolsa25', $dataRow[5], PDO::PARAM_INT);
+                $datos->bindParam(':total', $dataRow[6], PDO::PARAM_INT);
+                $datos->execute();
+            } catch (Exception $e) {
+                echo "Error".$e;
+            }
+        }
+
         // Guardar tblproduccion
         function guardarproduccion(
             $ibmFinca, $idEmbolse, $idRacimos, $idSemana, $idNacional, $codEmbarque, $totalCajasElaboradas, $totalCajasRechazadas, 

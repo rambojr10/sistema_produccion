@@ -36,7 +36,6 @@
         fetch(`../logica/contenido.php?op=ultimo_lote&ibmFinca=${ibmFinca}`)
         .then(response => response.json())
         .then(res => {
-            console.log(res.FKIbm_TblFincas);
             let loteInArray = String(res.Lote).split(' ');
             localStorage.setItem('newLote', ibmFinca);
             $('#newNameLote').html(`Lote ${parseInt(loteInArray[1])+1}`);
@@ -107,10 +106,10 @@
         .then(response => response.text())
         .then(res => {
             if (res == 1) {
-                $('#cancelNewLote').trigger('click');
                 swal('Fincas', `${nameLote} guardado correctamente.`, 'success');
-                localStorage.removeItem('newLote');
+                $('#cancelNewLote').trigger('click');
                 listar_fincas(false);
+                localStorage.removeItem('newLote');
             } else {
                 swal('Fincas', 'No se ha podido guardar el registro, por favor intente nuevamente.', 'error');
             }

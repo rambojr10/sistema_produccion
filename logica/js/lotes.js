@@ -75,7 +75,8 @@
     });
 
     //Eliminar lote
-    $(document).on("click", "[href='#eliminar_lote']", function() {
+    $(document).on("click", "[href='#eliminar_lote']", function(e) {
+        e.preventDefault();
         let idLote = $(this).attr("id");
         swal({
             title: "¿Está seguro?",
@@ -96,7 +97,6 @@
                 fetch('../logica/contenido.php', {method: 'POST', body: op})
                 .then(response => response.text())
                 .then(res => {
-                    console.log(res); 
                     if (res == 1) {
                         swal('Lotes', 'Registro eliminado correctamente.', 'success');
                         $('#exitModalListarLotes').trigger('click');

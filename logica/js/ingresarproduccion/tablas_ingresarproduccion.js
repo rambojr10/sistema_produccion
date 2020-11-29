@@ -388,6 +388,7 @@
                     throw 'No se ha podido cargar los datos'
             })
             .then(datosProduccion => {
+                console.log(datosProduccion);
                 if (datosProduccion.result == false) {
                     cargar_tabla_racimos_ip(res[0].FKId_TblSemanas, false);
                     cargar_tabla_cajas_ip(false);
@@ -398,7 +399,7 @@
                     $('#lblTotal_ip').val(calculateTotalEmbolse());
                     cargar_tabla_racimos_ip(res[0].FKId_TblSemanas, datosProduccion.tblRacimos);
                     cargar_tabla_cajas_ip(datosProduccion.tblCajas);
-                    cargar_tabla_nacional_ip(datosProduccion.tblNacional, datosProduccion.tblCargue);
+                    cargar_tabla_nacional_ip(datosProduccion.tblNacional, datosProduccion.tblCargue, datosProduccion.tblCajasPlataforma);
                 }
             });
         } else {
@@ -1022,32 +1023,50 @@
                 return row.slice(3,10);
             }
 
-            function getProcesados(indexDia) {
+           /*  function getProcesados(indexDia) {
                 let row = hot1.getDataAtRow(9);
-                return row[indexDia];
+                return (row[indexDia]);
             }
+
+            function setRatio(where, value){
+                hot2.setDataAtCell(1, where, value, 'edit');
+                console.log(length-7, where, value);
+            } */
             
             hot2.setDataAtCell(length-7, 10, averageFunction(getDataForTotals(length-7)), 'runningMyCalc');
             hot2.setDataAtCell(length-6, 10, averageFunction(getDataForTotals(length-6)), 'runningMyCalc');
             hot2.setDataAtCell(length-5, 10, averageFunction(getDataForTotals(length-5)), 'runningMyCalc');
             hot2.setDataAtCell(length-3, 10, averageFunction(getDataForTotals(length-3)), 'runningMyCalc');
             
-            // hot2.setDataAtCell(length-7, 3, ratioCalc(getProcesados(1)), 'ratioCalc');
-            // hot2.setDataAtCell(length-7, 4, ratioCalc(getProcesados(2)), 'ratioCalc');
-            // hot2.setDataAtCell(length-7, 5, ratioCalc(getProcesados(3)), 'ratioCalc');
-            // hot2.setDataAtCell(length-7, 6, ratioCalc(getProcesados(4)), 'ratioCalc');
-            // hot2.setDataAtCell(length-7, 7, ratioCalc(getProcesados(5)), 'ratioCalc');
-            // hot2.setDataAtCell(length-7, 8, ratioCalc(getProcesados(6)), 'ratioCalc');
-            // hot2.setDataAtCell(length-7, 9, ratioCalc(getProcesados(7)), 'ratioCalc');
-          
             hot2.addHook('afterChange', function(changes, source) {
-                let result = 0;
-                if (changes[0][1] == 'lunes') {
-                    for (let x=0; x<length-10; x++) {
-                        result += tblRacimos[x][3];
+                /* if(source !== 'ratioCalc') {
+                    switch (changes[0][1]) {
+                        case 'lunes':
+                            setRatio(3, getProcesados(1));
+                            break;
+                        case 'martes':
+                            setRatio(4, getProcesados(2));
+                            break;
+                        case 'miercoles':
+                            setRatio(5, getProcesados(3));
+                            break;
+                        case 'jueves':
+                            setRatio(6, getProcesados(4));
+                            break;
+                        case 'viernes':
+                            setRatio(7, getProcesados(5));
+                            break;
+                        case 'sabado':
+                            setRatio(8, getProcesados(6));
+                            break;
+                        case 'domingo':
+                            setRatio(9, getProcesados(7));
+                            break;
+                        
+                        default:
+                            break;
                     }
-                }
-                console.log(result);
+                } */
                 if (source !== 'runningMyCalc') {
                     let rowChanged = changes[0][0];
                     if (rowChanged === length-7) {
@@ -1065,7 +1084,7 @@
     }
 
 // Tabla nacional + cargue --------------------------------------------------------------------------------------
-    function cargar_tabla_nacional_ip(existsTblNacional, existsTblCargue) {
+    function cargar_tabla_nacional_ip(existsTblNacional, existsTblCargue, existsTblCajasPlataforma = false) {
         let tblNacional_data = [
             {
                 descripcion: 'Dedo suelto cartón',
@@ -1214,6 +1233,12 @@
                 total: "=SUM(J1:J5)",
             }, {
                 fechaCargue: "CAJAS EN PLATAFORMA",
+                dedoSuelto: `${existsTblCajasPlataforma !== false ? (existsTblCajasPlataforma.DedoSuelto == null ? '' : existsTblCajasPlataforma.DedoSuelto) : ''}`,
+                cluster: `${existsTblCajasPlataforma !== false ? (existsTblCajasPlataforma.Cluster == null ? '' : existsTblCajasPlataforma.Cluster) : ''}`,
+                manoEntera: `${existsTblCajasPlataforma !== false ? (existsTblCajasPlataforma.ManoEntera == null ? '' : existsTblCajasPlataforma.ManoEntera) : ''}`,
+                especial: `${existsTblCajasPlataforma !== false ? (existsTblCajasPlataforma.Especial == null ? '' : existsTblCajasPlataforma.Especial) : ''}`,
+                dedoSueltoBolsa20: `${existsTblCajasPlataforma !== false ? (existsTblCajasPlataforma.Bolsa20Kilos == null ? '' : existsTblCajasPlataforma.Bolsa20Kilos) : ''}`,
+                dedoSueltoBolsa25: `${existsTblCajasPlataforma !== false ? (existsTblCajasPlataforma.Bolsa25Kilos == null ? '' : existsTblCajasPlataforma.Bolsa25Kilos) : ''}`,
                 total: "=SUM(D7:I7)"
             }
         ];
