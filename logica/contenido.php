@@ -323,10 +323,10 @@
                 " . $f->Nombre . "
                 </td>
                 <td>
-                " . $f->area_neta . "
+                " . round($f->area_neta, 2) . "
                 </td>
                 <td>
-                " . $f->area_bruta . "
+                " . round($f->area_bruta, 2) . "
                 </td>
                 <td dato='$f->PKIbm'>
                     <a href='#nuevolote' class='notika-icon notika-edit' data-toggle='modal' data-target='#nuevolote' onclick='nuevo_lote($f->PKIbm)' title='Nuevo lote'></a> - 
@@ -395,7 +395,7 @@
                         . $c->Descripcion . 
                     "</td>
                     <td>"
-                        . $c->FactorConversion .
+                        . round($c->FactorConversion, 2) .
                     "</td>
                     <td>"
                         . $c->TipoFruta .
@@ -418,10 +418,10 @@
                         . $l->Lote .
                     "</td>
                     <td>"
-                        . $l->Area_Neta .
+                        . round($l->Area_Neta, 2) .
                     "</td>
                     <td>"
-                        . $l->Area_Bruta .
+                        . round($l->Area_Bruta, 2) .
                     "</td>
                     <td>
                         <a href='#editar_lote' id='$l->PKId' data-toggle='modal' data-target='#editarlote' class='notika-icon notika-edit' title='Editar'></a> - 

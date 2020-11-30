@@ -22,7 +22,8 @@
                     "sortAscending":  ": Activar para ordenar la columna de manera ascendente",
                     "sortDescending": ": Activar para ordenar la columna de manera descendente"
                 }
-            }
+            },
+            "bDestroy": true
         });
     }
     
