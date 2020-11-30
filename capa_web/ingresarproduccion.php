@@ -33,7 +33,7 @@
             </div>
             <div class="panel-body">
                 <h5 class="card-title">Información de producción</h5>
-                <p class="card-text">Última semana registrada: <span class="label label-warning">00</span></p>
+                <!-- <p class="card-text">Última semana registrada: <span class="label label-warning">00</span></p> -->
                 <button type="button" id="btnModal_ip" class="btn btn-success notika-btn-success waves-effect" data-toggle="modal" data-target="#modal-ip">Ingresar</button>
             </div>
         </div>

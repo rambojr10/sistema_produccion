@@ -125,9 +125,11 @@
             let hoy = `${objectDate.getFullYear()}-${objectDate.getMonth() + 1}-${objectDate.getDate()}`;
             return hoy;
         }
+        console.log(fecha(fechaActual));
         fetch(`../logica/contenido.php?op=datos_home_user&fecha_actual=${fecha(fechaActual)}`)
         .then(response => response.json())
         .then(datos => {
+            console.log(datos);
             if (typeof datos === 'object') {
                 //Loader
                 $('.osc').fadeOut();
@@ -179,11 +181,14 @@
 
                 const objectSemanaActual = {
                     infoSemanaSemana: document.getElementById('info-semana-semana'),
-                    inforSemanaInicio: document.getElementById('info-semana-inicio'),
+                    infoSemanaInicio: document.getElementById('info-semana-inicio'),
                     infoSemanaFin: document.getElementById('info-semana-fin'),
                     cintasRenderer: document.querySelectorAll('.btn-block')
                 };
                 (function (selectores, datos) {
+                    selectores.infoSemanaSemana.innerHTML = datos.semana.N_Semana;
+                    selectores.infoSemanaInicio.innerHTML = datos.semana.Fecha_Inicio;
+                    selectores.infoSemanaFin.innerHTML = datos.semana.Fecha_Fin;
                     let claseReturn = (element) => {
                         switch (element) {
                             case '1':

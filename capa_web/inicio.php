@@ -455,9 +455,9 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="view-all-onging">
+                                    <!-- <div class="view-all-onging">
                                         <a href="#">View All Tasks</a>
-                                    </div>
+                                    </div> -->
                                 </div>
                             </div>
                         </div>
@@ -470,7 +470,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-lg-9 col-md-8 col-sm-7 col-xs-12">
-                            <div class="sale-statistic-inner notika-shadow mg-t-30">
+                            <div class="sale-statistic-inner notika-shadow mg-tb-30">
                                 <div class="curved-inner-pro">
                                     <div class="curved-ctn">
                                         <h2>Producción</h2>
