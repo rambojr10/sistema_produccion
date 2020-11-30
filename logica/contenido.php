@@ -878,7 +878,7 @@
 
     // retorna los datos a la gráfica principal
     function datos_flot() {
-        echo json_encode(datosflot());
+        echo json_encode(datosflot($_GET['anhoActual']));
     }
 
     // retorna los datos del home admin

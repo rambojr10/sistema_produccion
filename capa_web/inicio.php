@@ -260,7 +260,7 @@
                             <div class="visitor-sv-tm-int">
                                 <div class="contact-hd mg-bt-ant-inner">
                                     <h2>Producción</h2>
-                                    <p>Total produccion por fincas, histórico.</p>
+                                    <p>Total produccion por fincas, año: <h3 id="lblAnhoAdmin"></h3></p>
                                 </div>
                                 <div class="visit-server-time">
                                     <div id="chart-produccion-fincas" class="flot-chart"></div>

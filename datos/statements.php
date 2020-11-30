@@ -803,7 +803,7 @@
     }
 
     //
-    function datosflot() {
+    function datosflot($anhoActual) {
         $bd = conectar();
         $datos = $bd->prepare("
             SELECT DISTINCT tblfincas.PKIbm, tblfincas.Nombre, 
@@ -812,7 +812,9 @@
                     WHERE tblproduccion.FKIbm_TblFincas = tblfincas.PKIbm)  as totalElaborado
             FROM tblfincas, tblproduccion
             WHERE tblfincas.PKIbm = tblproduccion.FKIbm_TblFincas
+            AND tblproduccion.Anho_Produccion = :anhoActual
         ");
+        $datos->bindParam(':anhoActual', $anhoActual, PDO::PARAM_STR);
         $datos->execute();
         return $datos->fetchAll(PDO::FETCH_OBJ);
     }
