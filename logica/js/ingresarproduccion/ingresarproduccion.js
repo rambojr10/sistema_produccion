@@ -19,7 +19,6 @@
                 throw "No se ha podido cargar los datos IP";
         })
         .then(res => {
-            console.log(res)
             //si existe carga el módulo de insertar racimos, enviando un parámetro por get para pintar el valor en la vista
             if (res[0].PKCod == CodEmbarque_ip) {
                 $("#btnCancelar_ip").trigger('click');

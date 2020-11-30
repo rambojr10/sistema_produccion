@@ -466,7 +466,26 @@
 
     // --------------------------------------------------------------------------
 
-    
+    //
+    function createuser($assignFinca, $userName, $password, $isAdministrator) {
+        try {
+            $bd = conectar();
+            $datos = $bd->prepare("
+                INSERT INTO tblusuarios (Usuario, Password, Ibm_Finca, FKId_TblTipoUsuario, FKId_TblEstadoUsuario)
+                VALUES (:userName, :password, :assignFinca, :isAdministrator, 1);
+            ");
+            $datos->bindParam(':userName', $userName, PDO::PARAM_STR);
+            $datos->bindParam(':password', $password, PDO::PARAM_STR);
+            $datos->bindParam(':assignFinca', $assignFinca, PDO::PARAM_STR);
+            $datos->bindParam(':isAdministrator', $isAdministrator, PDO::PARAM_INT);
+            if ($datos->execute())
+                return true;
+            else
+                return false;
+        } catch (Exception $e) {
+            echo "Error".$e;
+        }
+    }
     
 // Sentencias de búsqueda ==========================================================================================
     //función busca un único registro globalmente si tiene condicional lo ejecuta

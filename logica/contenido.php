@@ -271,7 +271,16 @@
             $state = 22; //response 22 is a error code for limit of elaboration
         }
         echo $state;
-    } 
+    }
+
+    function create_user() {
+        $assignFinca = $_POST['assignFinca'];
+        $userName = $_POST['userName'];
+        $password = $_POST['password'];
+        $isAdministrator = $_POST['isAdministrator'];
+        $result = createuser($assignFinca, $userName, $password, $isAdministrator);
+        echo $result;
+    }
 
 //  BUSCAR =================================================================================================================
 
@@ -818,8 +827,11 @@
             $datos = listarusuarios();
             foreach ($datos as $d) {
                 $controlEstadoUsuario = $d->EstadoUsuario == 'ACTIVO' ? 'success' : 'danger';
-                $controlTipoUsuario = $d->TipoUsuario == 'ADMINISTRADOR' ? 'success' : 'danger';
-                $controlTipoUsuarioIcono = $d->TipoUsuario == 'ADMINISTRADOR' ? 'unlock' : 'lock';
+                // controla el tipousuario
+                // $controlTipoUsuario = $d->TipoUsuario == 'ADMINISTRADOR' ? 'success' : 'danger';
+                // $controlTipoUsuarioIcono = $d->TipoUsuario == 'ADMINISTRADOR' ? 'unlock' : 'lock';
+                // <a class='btn btn-$controlTipoUsuario $controlTipoUsuario-icon-notika btn-reco-mg btn-button-mg' onclick='changePrivileges($d->PKId, $d->FKId_TblTipoUsuario)' data-tooltip='Change privileges' data-position='right center'><i class='fa fa-$controlTipoUsuarioIcono'></i></a>
+
                 echo "
                     <div class='col-lg-4 col-md-4 col-sm-6 col-xs-12'>
                         <div class='contact-list mg-t-15'>
@@ -830,8 +842,8 @@
                                 </div>
                                 <div class='conct-sc-ic'>
                                     <a class='btn btn-orange orange-icon-notika btn-reco-mg btn-button-mg' onclick='changePassword($d->PKId)' data-tooltip='Change password' data-position='right center'><i class='fa fa-key'></i></a>
-                                    <a class='btn btn-$controlTipoUsuario $controlTipoUsuario-icon-notika btn-reco-mg btn-button-mg' onclick='changePrivileges($d->PKId, $d->FKId_TblTipoUsuario)' data-tooltip='Change privileges' data-position='right center'><i class='fa fa-$controlTipoUsuarioIcono'></i></a>
                                     <a class='btn btn-$controlEstadoUsuario $controlEstadoUsuario-icon-notika btn-reco-mg btn-button-mg' onclick='changeStatus($d->PKId, $d->FKId_TblEstadoUsuario)' data-tooltip='Change status' data-position='right center'><i class='fa fa-ban'></i></a>
+                                    <a class='btn btn-danger danger-icon-notika btn-reco-mg btn-button-mg' onclick='deleteUser($d->PKId)' data-tooltip='Delete user' data-position='right center'><i class='fa fa-trash'></i></a>
                                 </div>
                             </div>
                             <div class='contact-ctn'>
@@ -961,9 +973,15 @@
         echo json_encode($result);
     }
 
-    function ver_reporte() {
-        return json_encode('todo ok');
+    //
+    function listar_fincas_option() {
+        $result = listarfincas();
+        echo json_encode($result);
     }
+
+    // function ver_reporte() {
+    //     return json_encode('todo ok');
+    // }
 
 //  ACTUALIZAR ==================================================================================================================
     
@@ -1147,6 +1165,11 @@
                 guardar_produccion();
                 break;
 
+            //
+            case 'create_user':
+                create_user();
+                break;
+
     //Métodos de mostrar
             case 'verify_ibmfinca':
                 verify_ibmfinca();
@@ -1286,6 +1309,11 @@
             // Busca semana
             case 'buscar_semana_verificar':
                 buscar_semana_verificar();
+                break;
+            
+            //
+            case 'listar_fincas_option':
+                listar_fincas_option();
                 break;
                 
     //Metodos de actualizar

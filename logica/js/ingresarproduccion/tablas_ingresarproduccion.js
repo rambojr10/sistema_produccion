@@ -1395,10 +1395,11 @@
                     correctFormat: true
                 }, {
                     data: 'cliente',
-                    type: 'autocomplete',
-                    source: ['Nombre cliente1', 'Nombre cliente2', 'Nombre cliente3'],
-                    strict: true,
-                    allowInvalid: false
+                    type: 'text',
+                    // type: 'autocomplete',
+                    // source: ['Nombre cliente1', 'Nombre cliente2', 'Nombre cliente3'],
+                    // strict: true,
+                    // allowInvalid: false
                 }, {
                     data: 'poma',
                     type: 'numeric'
