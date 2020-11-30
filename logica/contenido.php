@@ -210,10 +210,10 @@
                             'codEmbarque' => $datosProduccion->cod_embarque
                         ];
                         guardarcargue($datosCargue);
-                        if ($c[0] == 'CAJAS EN PLATAFORMA' && $c[9] > 0) {
-                            $dataRow = [$c[3], $c[4], $c[5], $c[6], $c[7], $c[8], $c[9]];
-                            guardarcajasplataforma($lastIdNacional, $dataRow);
-                        }
+                    }
+                    if ($c[0] == 'CAJAS EN PLATAFORMA' && $c[9] > 0) {
+                        $dataRow = [$c[3], $c[4], $c[5], $c[6], $c[7], $c[8], $c[9]];
+                        guardarcajasplataforma($lastIdNacional, $dataRow);
                     }
                 }
             } else {

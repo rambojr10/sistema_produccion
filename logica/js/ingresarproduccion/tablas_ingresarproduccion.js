@@ -234,7 +234,6 @@
                             throw "No se ha podido guardar los datos correctamente IP";
                     })
                     .then(res => {
-
                         $(".osc").fadeOut();
                         $("#loader").fadeOut();
                         if (res == 20) { // response 20 is a code for save data
@@ -388,7 +387,6 @@
                     throw 'No se ha podido cargar los datos'
             })
             .then(datosProduccion => {
-                console.log(datosProduccion);
                 if (datosProduccion.result == false) {
                     cargar_tabla_racimos_ip(res[0].FKId_TblSemanas, false);
                     cargar_tabla_cajas_ip(false);

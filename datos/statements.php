@@ -364,7 +364,7 @@
             try {
                 $bd = conectar();
                 $datos = $bd->prepare("
-                    INSERT INTO tblcajasproduccion (FKId_TblMercadoNacional, DedoSuelto, Cluster, ManoEntera, Especial, Bolsa20Kilos, Bolsa25Kilos, Total) 
+                    INSERT INTO tblcajasplataforma (FKId_TblMercadoNacional, DedoSuelto, Cluster, ManoEntera, Especial, Bolsa20Kilos, Bolsa25Kilos, Total) 
                     VALUES (:idNacional, :dedoSuelto, :cluster, :manoEntera, :especial, :bolsa20, :bolsa25, :total); 
                 ");
                 $datos->bindParam(':idNacional', $idNacional, PDO::PARAM_INT);
@@ -376,6 +376,7 @@
                 $datos->bindParam(':bolsa25', $dataRow[5], PDO::PARAM_INT);
                 $datos->bindParam(':total', $dataRow[6], PDO::PARAM_INT);
                 $datos->execute();
+                return $bd->lastInsertId();
             } catch (Exception $e) {
                 echo "Error".$e;
             }
