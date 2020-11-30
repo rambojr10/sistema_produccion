@@ -390,6 +390,9 @@
 
     //Carga el tipo de fruta para modal nueva caja
     $(document).on("click", "#modal_nuevacaja", function() {
+        $('[name="codigo_caja_nueva"]').val('');
+        $('[name="descripcion_caja_nueva"]').val('');
+        $('[name="factor_caja_nueva"]').val('');
         tipofruta_select("nuevacaja", null);
     });
 

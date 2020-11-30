@@ -939,9 +939,10 @@
         //rowTwo
         $ultimaProgramacion = buscarultimaprogramacion($_SESSION['conectado']->PKIbm)[0];
         $totalProgramado = totalprogramadofinca($ultimaProgramacion->PKCod, $_SESSION['conectado']->PKIbm)[0];
+        $ultimaProduccionPorCodigo = produccionporcodigo($ultimaProgramacion->PKCod, $_SESSION['conectado']->PKIbm);
         $result['rowTwo']['ultimaProgramacion']['codigoEmbarque'] = $ultimaProgramacion->PKCod;
         $result['rowTwo']['ultimaProgramacion']['totalProgramado'] = $totalProgramado->Total;
-        $result['rowTwo']['ultimaProgramacion']['totalElaborado'] = $ultimaProduccion->Total_CElaboradas;
+        $result['rowTwo']['ultimaProgramacion']['totalElaborado'] = isset($ultimaProduccionPorCodigo->totalElaborado) ? $ultimaProduccionPorCodigo->totalElaborado : 0;
         
         //rowThree
         $cajasElaboradasUltimaSemana = buscarelaboradosemana($ultimaProduccion->Cod_Embarque, $_SESSION['conectado']->PKIbm);

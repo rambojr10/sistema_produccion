@@ -981,6 +981,23 @@
         return $datos->fetchAll(PDO::FETCH_OBJ);
     }
 
+    //
+    function produccionporcodigo($codEmbarque, $ibmFinca){
+        $bd = conectar();
+        $datos = $bd->prepare("
+            SELECT Total_CElaboradas as totalElaborado
+            FROM tblproduccion as p, tblfincas as f, tblsemanas as s
+            WHERE p.FKIbm_TblFincas = f.PKIbm
+            AND p.FKId_TblSemanas = s.PKId
+            AND f.PKIbm = :ibmFinca
+            AND p.Cod_Embarque = :codEmbarque 
+        ");
+        $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
+        $datos->bindParam(':codEmbarque', $codEmbarque, PDO::PARAM_STR);
+        $datos->execute();
+        return $datos->fetch(PDO::FETCH_OBJ);
+    }
+
 
 // Sentencias de actualización------------------------------------------------------------------------------------------------------------
 

@@ -125,11 +125,9 @@
             let hoy = `${objectDate.getFullYear()}-${objectDate.getMonth() + 1}-${objectDate.getDate()}`;
             return hoy;
         }
-        console.log(fecha(fechaActual));
         fetch(`../logica/contenido.php?op=datos_home_user&fecha_actual=${fecha(fechaActual)}`)
         .then(response => response.json())
         .then(datos => {
-            console.log(datos);
             if (typeof datos === 'object') {
                 //Loader
                 $('.osc').fadeOut();
