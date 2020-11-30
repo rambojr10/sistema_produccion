@@ -140,7 +140,11 @@
                 lblTotalRechazadas.textContent = datos.rowOne.historico.totalRechazadas;
                 const lblTotalSemana = document.getElementById('lblTotalSemana');
                 lblTotalSemana.textContent = datos.ultimaProduccion.Total_CElaboradas;
-
+                document.getElementById('lblCodigoSemana').textContent = datos.ultimaProduccion.Cod_Embarque;
+                [...document.getElementsByClassName('lblAnhoUser')].forEach(element=> {
+                    element.textContent = datos.ultimaProduccion.Anho_Produccion;
+                });
+                
                 //rowTwo
                 function Porcentaje(...dynamicValues) {
                     this.value = (dynamicValues[0] / dynamicValues[1]) * 100;
@@ -148,19 +152,21 @@
                 }
                 const porcentaje = Porcentaje(datos.rowTwo.ultimaProgramacion.totalElaborado, datos.rowTwo.ultimaProgramacion.totalProgramado);
                 const progressBar = document.getElementById('porcentajeElaborado');
+                document.getElementById('lblUltimaProgramacion').textContent = datos.rowTwo.ultimaProgramacion.codigoEmbarque;
                 progressBar.setAttribute('data-progress', porcentaje);
                 progressBar.setAttribute('style', `width: ${porcentaje}`);
                 progressBar.children[0].textContent = porcentaje;
-
+                
                 //rowThree
                 chartHomeUser(jQuery, datos.rowThree);
-
+                
                 function Rendimientos(semana, values, elements) {
                     semana.textContent = values.N_Semana;
                     elements.forEach(element => {
                         let tag = document.querySelector(`#td-${element}`);
-                        let simbolo = element == 'Area_Recorrida' ? '' : element == 'Cod_Embarque' ? '' : '%';
-                        tag.textContent = values[element] !== null ? `${values[element]}${simbolo}` : 0;
+                        let simbolo = element == 'Area_Recorrida' ||  element == 'Cod_Embarque' || element == 'Peso_Racimos' ? '' : '%';
+                        let valor = element == 'Cod_Embarque' ? values[element] : Math.round(values[element] * 100) / 100;
+                        tag.textContent = valor !== null ? `${valor}${simbolo}` : 0;
                     });
                 }
                 const lblUltimaSemanaRegistrada = document.querySelector('#ultimaSemanaRegistrada');
@@ -174,8 +180,8 @@
                 const infoFincaContainer = document.querySelector('#infoFincaContainer');
                 infoFincaContainer.children[0].textContent = datos.ultimaProduccion.PKIbm;
                 infoFincaContainer.children[1].textContent = datos.ultimaProduccion.Nombre;
-                infoFincaContainer.children[2].children[0].textContent = datos.ultimaProduccion.Area_Neta;
-                infoFincaContainer.children[3].children[0].textContent = datos.ultimaProduccion.Area_Bruta;
+                infoFincaContainer.children[2].children[0].textContent = Math.round(datos.ultimaProduccion.Area_Neta * 100) / 100;
+                infoFincaContainer.children[3].children[0].textContent = Math.round(datos.ultimaProduccion.Area_Bruta * 100) / 100;
 
                 const objectSemanaActual = {
                     infoSemanaSemana: document.getElementById('info-semana-semana'),

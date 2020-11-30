@@ -874,14 +874,16 @@
     }
 
     //
-    function totalelaboradofinca($ibmFinca) {
+    function totalelaboradofinca($ibmFinca, $anhoActual) {
         $bd = conectar();
         $datos = $bd->prepare("
             SELECT SUM(p.Total_CElaboradas) as totalElaborado, SUM(p.Total_CRechazadas) as totalRechazadas 
             FROM tblproduccion as p, tblfincas as f WHERE p.FKIbm_TblFincas = f.PKIbm 
             AND f.PKIbm = :ibmFinca
+            AND p.Anho_Produccion = :anhoActual
         ");
         $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
+        $datos->bindParam(':anhoActual', $anhoActual, PDO::PARAM_STR);
         $datos->execute();
         return $datos->fetchAll(PDO::FETCH_OBJ);
     }

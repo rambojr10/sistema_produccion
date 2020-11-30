@@ -927,6 +927,7 @@
 
     // retorna los datos del home user
     function datos_home_user() {
+        $fechaSplit = explode('-', $_GET['fecha_actual']);
         $result = ['ultimaProduccion' => [], 'rowOne' => [], 'rowTwo' => [], 'rowThree' => [], 'rowFour' => []];
 
         //Use register
@@ -934,7 +935,7 @@
         $result['ultimaProduccion'] = $ultimaProduccion;
 
         //rowOne
-        $result['rowOne']['historico'] = totalelaboradofinca($_SESSION['conectado']->PKIbm)[0];
+        $result['rowOne']['historico'] = totalelaboradofinca($_SESSION['conectado']->PKIbm, $fechaSplit[0])[0];
 
         //rowTwo
         $ultimaProgramacion = buscarultimaprogramacion($_SESSION['conectado']->PKIbm)[0];

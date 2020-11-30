@@ -405,7 +405,7 @@
                             <div class="wb-traffic-inner notika-shadow sm-res-mg-t-30 tb-res-mg-t-30">
                                 <div class="website-traffic-ctn">
                                     <h2 id="lblTotalElaborado">0</h2>
-                                    <p>Total elaborado, histórico.</p>
+                                    <p>Total elaboradas año: <span class="lblAnhoUser" style="font-weight: bold;"></span></p>
                                 </div>
                                 <div class="sparkline-bar-stats1">12,11,10,9,8,7,6,5,4,3,2,1</div>
                             </div>
@@ -414,7 +414,7 @@
                             <div class="wb-traffic-inner notika-shadow sm-res-mg-t-30 tb-res-mg-t-30">
                                 <div class="website-traffic-ctn">
                                     <h2 id="lblTotalRechazadas">0</h2>
-                                    <p>Total rechazadas, histórico.</p>
+                                    <p>Total rechazadas año: <span class="lblAnhoUser" style="font-weight: bold;"></span></p>
                                 </div>
                                 <div class="sparkline-bar-stats2">1,2,3,4,5,6,6,5,4,3,2,1</div>
                             </div>
@@ -423,7 +423,7 @@
                             <div class="wb-traffic-inner notika-shadow sm-res-mg-t-30 tb-res-mg-t-30 dk-res-mg-t-30">
                                 <div class="website-traffic-ctn">
                                     <h2 id="lblTotalSemana">0</h2>
-                                    <p>Total última semana.</p>
+                                    <p>Total última semana: <span id="lblCodigoSemana" style="font-weight: bold;"></span></p>
                                 </div>
                                 <div class="sparkline-bar-stats3">1,2,3,4,5,6,7,8,9,10,11,12</div>
                             </div>
@@ -441,7 +441,7 @@
                                 <div class="realtime-ctn">
                                     <div class="realtime-title ongoing-hd-wd">
                                         <h2>Alineación</h2>
-                                        <p>Porcentaje de elaboración de la última alineación</p>
+                                        <p>Porcentaje de elaboración de la última alineación: <span id="lblUltimaProgramacion" class="ui label" style="font-weight: bold;"></span></p>
                                     </div>
                                 </div>
                                 <div class="skill-content-3 ongoing-tsk">
@@ -485,7 +485,7 @@
                             <div class="statistic-right-area notika-shadow mg-tb-30 sm-res-mg-t-0">
                                 <div class="past-day-statis">
                                     <h2>Rendimientos</h2>
-                                    <p>Datos de última semana registrada: <span class="text-muted" id="ultimaSemanaRegistrada">SEMANA 00</span></p>
+                                    <p>Datos de última semana registrada: <span class="badge" id="ultimaSemanaRegistrada">SEMANA 00</span></p>
                                 </div>
                                 <div>
                                     <table class="table">
