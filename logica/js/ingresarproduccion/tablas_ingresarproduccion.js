@@ -234,6 +234,7 @@
                             throw "No se ha podido guardar los datos correctamente IP";
                     })
                     .then(res => {
+                        console.log(res);
                         $(".osc").fadeOut();
                         $("#loader").fadeOut();
                         if (res == 20) { // response 20 is a code for save data
@@ -391,6 +392,7 @@
                     cargar_tabla_racimos_ip(res[0].FKId_TblSemanas, false);
                     cargar_tabla_cajas_ip(false);
                     cargar_tabla_nacional_ip(false, false);
+                    cargar_info_elaboracion_ip(false);
                 } else {
                     $("#txtPresente_ip").val(datosProduccion.embolse.presente);
                     $("#txtPrematuro_ip").val(datosProduccion.embolse.prematuro);
@@ -398,6 +400,7 @@
                     cargar_tabla_racimos_ip(res[0].FKId_TblSemanas, datosProduccion.tblRacimos);
                     cargar_tabla_cajas_ip(datosProduccion.tblCajas);
                     cargar_tabla_nacional_ip(datosProduccion.tblNacional, datosProduccion.tblCargue, datosProduccion.tblCajasPlataforma);
+                    cargar_info_elaboracion_ip(datosProduccion.infoElaboracion);
                 }
             });
         } else {
@@ -1492,3 +1495,28 @@
     $(document).on('input', '#txtPrematuro_ip', () => {
         $('#lblTotal_ip').val(calculateTotalEmbolse());
     });
+
+    // 
+    function cargar_info_elaboracion_ip(params) {
+        if (params !== false) {
+            const porcentaje = function (num1, num2) {
+                this.value = (num1 / num2) * 100;
+                return `${this.value.toFixed(2)}%`;
+            }
+            document.querySelector('#lblCajasElaboradas').textContent = params.totalElaborado;
+            document.querySelector('#lblCajasProgramadas').textContent = params.totalProgramado;
+            document.querySelector('#lblVersusCajas').textContent = `${params.totalElaborado}/${params.totalProgramado}`;
+            const progressBar = document.querySelector('#lblPorcentajeCajas');
+            const porcentajeResult = porcentaje(params.totalElaborado, params.totalProgramado);
+            progressBar.setAttribute('data-progress', porcentajeResult);
+            progressBar.setAttribute('style', `width: ${porcentajeResult}`);
+            progressBar.children[0].textContent = porcentajeResult;
+        } else {
+            fetch(`../logica/contenido.php?op=buscar_cajas_programadas&codEmbarque=${cod_embarque}`)
+            .then(response => response.json())
+            .then(datos => {
+                document.querySelector('#lblCajasProgramadas').textContent = datos.Total;
+                document.querySelector('#lblVersusCajas').textContent = `0/${datos.Total}`;
+            });
+        }
+    }

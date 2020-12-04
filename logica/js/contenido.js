@@ -102,7 +102,13 @@
         });
         $(".contenido").hide().show("blind", 1500);
     });
-    
+  
+    //Cargar módulo reportes
+    $(document).on("click", "[href='#verreporte']", function(e){
+        e.preventDefault();
+        $(".contenido").load("../capa_web/reportes.php");
+    });
+
 // COMPLEMENTOS --------------------------------------------------------------------------------------------------------
     
     //Valida campos de ingreso de sólo número

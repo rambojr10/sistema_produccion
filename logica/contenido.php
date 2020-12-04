@@ -120,10 +120,12 @@
         foreach ($datosProduccion->tblCajas as $caja) {
             if ($caja[1] != null) {
                 $cantidadEmbarque = compararEmbarqueAndProduccion($_SESSION['conectado']->PKIbm, $caja[1], $datosProduccion->cod_embarque);
-                if ($caja[10] > $cantidadEmbarque->Cantidad)
+                if ($caja[10] > $cantidadEmbarque->Cantidad) {
+                    $validarCantidadesCajas = false;
                     break;
-                else 
+                } else {
                     $validarCantidadesCajas = true;
+                }
             } else {
                 break;
             }
@@ -267,6 +269,7 @@
                 echo false;
             }
         // End TblCajas --------------------------------------------
+        
         } else {
             $state = 22; //response 22 is a error code for limit of elaboration
         }
@@ -779,6 +782,11 @@
             $infoCargue = buscarregistro($tblProduccion->Cod_Embarque, "FKCod_TblEmbarque", "TblCargue", 'FKIbm_TblFincas = '.$_SESSION['conectado']->PKIbm);
             // $infoCargue = buscarregistro($tblProduccion->Cod_Embarque, "FKCod_TblEmbarque", "TblCargue", "FKIbm_TblFincas = '".$_GET['ibm_finca']."';");
 
+            //infoElaboracion
+            $totalElaborado = produccionporcodigo($cod_embarque, $_SESSION['conectado']->PKIbm);
+            $totalProgramado = totalprogramadofinca($cod_embarque, $_SESSION['conectado']->PKIbm);
+            $infoElaboracion = ['totalElaborado' => $totalElaborado->totalElaborado, 'totalProgramado' => $totalProgramado->Total];
+
             //Result
             $datosProduccion = [
                 'cod_embarque' => $cod_embarque,
@@ -792,7 +800,8 @@
                 'tblCajas' => $infoCajas,
                 'tblNacional' => $infoNacional,
                 'tblCargue' => $infoCargue,
-                'tblCajasPlataforma' => isset($infoPlataforma[0]) ? $infoPlataforma[0] : []
+                'tblCajasPlataforma' => isset($infoPlataforma[0]) ? $infoPlataforma[0] : [],
+                'infoElaboracion' => $infoElaboracion
             ];
             echo json_encode($datosProduccion);
         } else {
@@ -939,7 +948,7 @@
 
         //rowTwo
         $ultimaProgramacion = buscarultimaprogramacion($_SESSION['conectado']->PKIbm)[0];
-        $totalProgramado = totalprogramadofinca($ultimaProgramacion->PKCod, $_SESSION['conectado']->PKIbm)[0];
+        $totalProgramado = totalprogramadofinca($ultimaProgramacion->PKCod, $_SESSION['conectado']->PKIbm);
         $ultimaProduccionPorCodigo = produccionporcodigo($ultimaProgramacion->PKCod, $_SESSION['conectado']->PKIbm);
         $result['rowTwo']['ultimaProgramacion']['codigoEmbarque'] = $ultimaProgramacion->PKCod;
         $result['rowTwo']['ultimaProgramacion']['totalProgramado'] = $totalProgramado->Total;
@@ -984,6 +993,11 @@
     // function ver_reporte() {
     //     return json_encode('todo ok');
     // }
+
+    //
+    function buscar_cajas_programadas() {
+        echo json_encode(totalprogramadofinca($_GET['codEmbarque'], $_SESSION['conectado']->PKIbm));
+    }
 
 //  ACTUALIZAR ==================================================================================================================
     
@@ -1316,6 +1330,11 @@
             //
             case 'listar_fincas_option':
                 listar_fincas_option();
+                break;
+
+            //
+            case 'buscar_cajas_programadas':
+                buscar_cajas_programadas();
                 break;
                 
     //Metodos de actualizar

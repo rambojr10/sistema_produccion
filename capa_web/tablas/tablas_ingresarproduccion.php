@@ -49,7 +49,6 @@
             </div>
 
             <div class="row">
-                
                 <!-- col1 -->
                 <div class="col-lg-6 col-md-6">
                     <form class="ui small form">
@@ -96,9 +95,38 @@
                         </div>
                     </form>
                 </div>
-
             </div>
-            
+
+            <div class="row">
+                <div class="col-lg-12">
+                    <h4 class="ui dividing header">Información de elaboración</h4>
+                    <div class="ui horizontal divided list">
+                        <div class="item">
+                            <div class="content">
+                                <div class="header">Cajas elaboradas</div>
+                                <span id="lblCajasElaboradas">0</span>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="content">
+                                <div class="header">Cajas programadas</div>
+                                <span id="lblCajasProgramadas">0</span>
+                            </div>
+                        </div>
+                        <div class="item">
+                            <div class="content">
+                                <div class="header">Versus</div>
+                                <span id="lblVersusCajas">0/0</span>
+                            </div>
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar wow fadeInLeft" id="lblPorcentajeCajas" data-progress="0%" style="width: 0%;" data-wow-duration="1.5s" data-wow-delay="1.2s"> <span style="color: black;">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     </div>

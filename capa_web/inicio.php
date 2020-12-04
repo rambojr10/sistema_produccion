@@ -135,7 +135,9 @@
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <ul class="nav nav-tabs notika-menu-wrap menu-it-icon-pro">
-                        <li class="active"><a data-toggle="tab" href="#inicio"><i class="notika-icon notika-house"></i> Inicio</a>
+                        
+                        <li class="active">
+                            <a data-toggle="tab" href="#inicio"><i class="notika-icon notika-house"></i> Inicio</a>
                         </li>
 
                         <?php if ($_SESSION['conectado']->FKId_TblTipoUsuario == 1) : ?> 
@@ -147,11 +149,11 @@
                         <li>
                             <a data-toggle="tab" href="#produccion"><i class="notika-icon notika-edit"></i> Producción</a>
                         </li>
-                        <!-- <li>
-                            <a data-toggle="tab" href="#reportes"><i class="notika-icon notika-bar-chart"></i> Reportes</a>
-                        </li> -->
 
                         <?php if ($_SESSION['conectado']->FKId_TblTipoUsuario == 1) : ?> 
+                        <li>
+                            <a data-toggle="tab" href="#reportes"><i class="notika-icon notika-bar-chart"></i> Reportes</a>
+                        </li>
                         <li>
                             <a data-toggle="tab" href="#usuarios"><i class="notika-icon notika-social"></i> Usuarios</a>
                         </li>
@@ -194,20 +196,22 @@
 
                             </ul>
                         </div>
+                        <?php if ($_SESSION['conectado']->FKId_TblTipoUsuario == 1) : ?> 
                         <div id="reportes" class="tab-pane notika-tab-menu-bg animated flipInX">
                             <ul class="notika-main-menu-dropdown">
-                                <li><a href="#verreporte">Ver Reporte</a>
+                                <li>
+                                    <a href="#verreporte">Ver Reporte</a>
                                 </li>
                             </ul>
                         </div>
                         <div id="usuarios" class="tab-pane notika-tab-menu-bg animated flipInX">
                             <ul class="notika-main-menu-dropdown">
-                                <?php if ($_SESSION['conectado']->FKId_TblTipoUsuario == 1) : ?> 
-                                <li><a href="#listarusuarios">Usuarios</a>
+                                <li>
+                                    <a href="#listarusuarios">Usuarios</a>
                                 </li>
-                                <?php endif; ?>
                             </ul>
                         </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
@@ -746,8 +750,8 @@
         <script src="../logica/js/fincas.js"></script>
         <script src="../logica/js/empresas.js"></script>
         <script src="../logica/js/cajasproduccion.js"></script>
-        <script src="../logica/js/contenido.js"></script>
         <script src="../logica/js/lotes.js"></script>
+        <script src="../logica/js/contenido.js"></script>
         <script src="../logica/js/programarembarque.js"></script>
         <script src="../logica/js/ingresarproduccion/ingresarproduccion.js"></script>
         <script src="../logica/js/usuarios.js"></script>

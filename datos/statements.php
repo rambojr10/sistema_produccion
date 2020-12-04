@@ -919,7 +919,7 @@
         $datos->bindParam(':codEmbarque', $codEmbarque, PDO::PARAM_STR);
         $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
         $datos->execute();
-        return $datos->fetchAll(PDO::FETCH_OBJ);
+        return $datos->fetch(PDO::FETCH_OBJ);
     }
 
     //

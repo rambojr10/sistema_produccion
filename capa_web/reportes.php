@@ -1,5 +1,5 @@
 
-    <div class="breadcomb-area">
+    <!-- <div class="breadcomb-area">
 		<div class="container">
             <div class="breadcomb-list">
                 <div class="row">
@@ -17,14 +17,14 @@
                 </div>
             </div>
 		</div>
-	</div>
+	</div> -->
     <div class="contact-area">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="invoice-wrap">
                         <div class="invoice-img">
-                            <img src="img/logo/logo.png" alt="" />
+                            <h2>Reportes <i class="fa fa-inbox"></i></h2>
                         </div>
                         <div class="invoice-hds-pro">
                             <div class="row">
