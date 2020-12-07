@@ -754,6 +754,7 @@
         <script src="../logica/js/contenido.js"></script>
         <script src="../logica/js/programarembarque.js"></script>
         <script src="../logica/js/ingresarproduccion/ingresarproduccion.js"></script>
+        <script src="../logica/js/ingresarproduccion/balancemasas.js"></script>
         <script src="../logica/js/usuarios.js"></script>
         <script src="../logica/js/home.js"></script>
     

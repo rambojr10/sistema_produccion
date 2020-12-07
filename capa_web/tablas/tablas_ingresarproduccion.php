@@ -98,7 +98,7 @@
             </div>
 
             <div class="row">
-                <div class="col-lg-12">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     <h4 class="ui dividing header">Información de elaboración</h4>
                     <div class="ui horizontal divided list">
                         <div class="item">
@@ -124,6 +124,10 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                    <h4 class="ui dividing header">Balance de masas</h4>
+                    <button id="btnBalanceMasas" class="fluid ui button waves-effect">Generar balance de masas</button>
                 </div>
             </div>
 
