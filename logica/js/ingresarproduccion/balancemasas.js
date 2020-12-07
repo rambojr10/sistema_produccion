@@ -6,7 +6,14 @@
 		let racimosProcesados = hot1.getDataAtRow(9);
 		let frutaPiso = hot2.getDataAtRow(hot2.countRows()-1);
 		const balanceDeMasas = balanceDias(datosTblCajas, datosTblNacional, racimosProcesados, frutaPiso);
-		console.log(balanceDeMasas);
+		for (let x = 0; x < balanceDeMasas.length; x++) {
+			let element = balanceDeMasas[x];
+			if (typeof element === 'object') {
+				hot2.setDataAtCell(hot2.countRows()-7, x+2, element.ratio, 'edit');
+				hot2.setDataAtCell(hot2.countRows()-6, x+2, element.merma, 'edit');
+				hot2.setDataAtCell(hot2.countRows()-5, x+2, element.pesoRacimos, 'edit');
+			}
+		}
 	});
 
     function createObjectCajas(datos, dia) {
