@@ -732,6 +732,19 @@
                     total: `=K${tblCajas_data.length+1}-K${tblCajas_data.length+2}`,
                     conversion: `=L${tblCajas_data.length+1}-L${tblCajas_data.length+2}`
                 }, {
+                    caja: 'Fruta piso',
+                    codigo: null,
+                    factor: null,
+                    lunes: (existsTblCajas != false ? existsTblCajas[0].frutaPiso : ''),
+                    martes: (existsTblCajas != false ? existsTblCajas[1].frutaPiso : ''),
+                    miercoles: (existsTblCajas != false ? existsTblCajas[2].frutaPiso : ''),
+                    jueves: (existsTblCajas != false ? existsTblCajas[3].frutaPiso : ''),
+                    viernes: (existsTblCajas != false ? existsTblCajas[4].frutaPiso : ''),
+                    sabado: (existsTblCajas != false ? existsTblCajas[5].frutaPiso : ''),
+                    domingo: (existsTblCajas != false ? existsTblCajas[6].frutaPiso : ''),
+                    total: `=SUM(D${tblCajas_data.length+4}:J${tblCajas_data.length+4})`,
+                    conversion: null
+                }, {
                     caja: 'Ratio 1a. / 2a.',
                     codigo: null,
                     factor: null,
@@ -780,7 +793,7 @@
                     viernes: (existsTblCajas != false ? existsTblCajas[4].areaRecorrida : ''),
                     sabado: (existsTblCajas != false ? existsTblCajas[5].areaRecorrida : ''),
                     domingo: (existsTblCajas != false ? existsTblCajas[6].areaRecorrida : ''),
-                    total: `=ROUND(SUM(D${tblCajas_data.length+7}:J${tblCajas_data.length+7}), 2)`,
+                    total: `=ROUND(SUM(D${tblCajas_data.length+8}:J${tblCajas_data.length+8}), 2)`,
                     conversion: null
                 }, {
                     caja: 'Peso Vástago',
@@ -940,9 +953,10 @@
                 ],
                 colWidths: [120, 30, 30],
                 cell: [
+                    {row: (length-11), col: 0, renderer: subtitleRenderer, className: 'htCenter'},
                     {row: (length-10), col: 0, renderer: subtitleRenderer, className: 'htCenter'},
                     {row: (length-9), col: 0, renderer: subtitleRenderer, className: 'htCenter'},
-                    {row: (length-8), col: 0, renderer: subtitleRenderer, className: 'htCenter'},
+                    {row: (length-8), col: 0, renderer: compRenderer, className: 'htCenter'},
                     {row: (length-7), col: 0, renderer: compRenderer, className: 'htCenter'},
                     {row: (length-6), col: 0, renderer: compRenderer, className: 'htCenter'},
                     {row: (length-5), col: 0, renderer: compRenderer, className: 'htCenter'},
@@ -951,21 +965,28 @@
                     {row: (length-2), col: 0, renderer: subtitleRenderer, className: 'htCenter'},
                     {row: (length-1), col: 0, renderer: subtitleRenderer, className: 'htCenter'},
                     // ReadOnly
-                    {row: (length-10), col: 3, readOnly: true},
-                    {row: (length-10), col: 4, readOnly: true},
-                    {row: (length-10), col: 5, readOnly: true},
-                    {row: (length-10), col: 6, readOnly: true},
-                    {row: (length-10), col: 7, readOnly: true},
-                    {row: (length-10), col: 8, readOnly: true},
-                    {row: (length-10), col: 9, readOnly: true},
-                    {row: (length-8), col: 3, readOnly: true},
-                    {row: (length-8), col: 4, readOnly: true},
-                    {row: (length-8), col: 5, readOnly: true},
-                    {row: (length-8), col: 6, readOnly: true},
-                    {row: (length-8), col: 7, readOnly: true},
-                    {row: (length-8), col: 8, readOnly: true},
-                    {row: (length-8), col: 9, readOnly: true},
+                    {row: (length-11), col: 3, readOnly: true},
+                    {row: (length-11), col: 4, readOnly: true},
+                    {row: (length-11), col: 5, readOnly: true},
+                    {row: (length-11), col: 6, readOnly: true},
+                    {row: (length-11), col: 7, readOnly: true},
+                    {row: (length-11), col: 8, readOnly: true},
+                    {row: (length-11), col: 9, readOnly: true},
+                    {row: (length-9), col: 3, readOnly: true},
+                    {row: (length-9), col: 4, readOnly: true},
+                    {row: (length-9), col: 5, readOnly: true},
+                    {row: (length-9), col: 6, readOnly: true},
+                    {row: (length-9), col: 7, readOnly: true},
+                    {row: (length-9), col: 8, readOnly: true},
+                    {row: (length-9), col: 9, readOnly: true},
                     // Custom cells
+                    {row: (length-3), col: 3, type: 'text', className: 'htCenter'},
+                    {row: (length-3), col: 4, type: 'text', className: 'htCenter'},
+                    {row: (length-3), col: 5, type: 'text', className: 'htCenter'},
+                    {row: (length-3), col: 6, type: 'text', className: 'htCenter'},
+                    {row: (length-3), col: 7, type: 'text', className: 'htCenter'},
+                    {row: (length-3), col: 8, type: 'text', className: 'htCenter'},
+                    {row: (length-3), col: 9, type: 'text', className: 'htCenter'},
                     {row: (length-2), col: 3, type: 'text', className: 'htCenter'},
                     {row: (length-2), col: 4, type: 'text', className: 'htCenter'},
                     {row: (length-2), col: 5, type: 'text', className: 'htCenter'},
@@ -973,15 +994,9 @@
                     {row: (length-2), col: 7, type: 'text', className: 'htCenter'},
                     {row: (length-2), col: 8, type: 'text', className: 'htCenter'},
                     {row: (length-2), col: 9, type: 'text', className: 'htCenter'},
-                    {row: (length-1), col: 3, type: 'text', className: 'htCenter'},
-                    {row: (length-1), col: 4, type: 'text', className: 'htCenter'},
-                    {row: (length-1), col: 5, type: 'text', className: 'htCenter'},
-                    {row: (length-1), col: 6, type: 'text', className: 'htCenter'},
-                    {row: (length-1), col: 7, type: 'text', className: 'htCenter'},
-                    {row: (length-1), col: 8, type: 'text', className: 'htCenter'},
-                    {row: (length-1), col: 9, type: 'text', className: 'htCenter'},
                 ],
                 mergeCells: [
+                    {row: (length-11), col: 0, rowspan: 1, colspan: 3},
                     {row: (length-10), col: 0, rowspan: 1, colspan: 3},
                     {row: (length-9), col: 0, rowspan: 1, colspan: 3},
                     {row: (length-8), col: 0, rowspan: 1, colspan: 3},
@@ -993,7 +1008,7 @@
                     {row: (length-2), col: 0, rowspan: 1, colspan: 3},
                     {row: (length-1), col: 0, rowspan: 1, colspan: 3},
                     // 
-                    {row: (length-7), col: 11, rowspan: 7, colspan: 1}
+                    {row: (length-8), col: 11, rowspan: 7, colspan: 1}
                 ]
             };
             hot2 = new Handsontable(tblCajas, tblSettings_cajas);
@@ -1023,16 +1038,6 @@
                 row = hot2.getDataAtRow(row_index);
                 return row.slice(3,10);
             }
-
-           /*  function getProcesados(indexDia) {
-                let row = hot1.getDataAtRow(9);
-                return (row[indexDia]);
-            }
-
-            function setRatio(where, value){
-                hot2.setDataAtCell(1, where, value, 'edit');
-                console.log(length-7, where, value);
-            } */
             
             hot2.setDataAtCell(length-7, 10, averageFunction(getDataForTotals(length-7)), 'runningMyCalc');
             hot2.setDataAtCell(length-6, 10, averageFunction(getDataForTotals(length-6)), 'runningMyCalc');
@@ -1040,34 +1045,6 @@
             hot2.setDataAtCell(length-3, 10, averageFunction(getDataForTotals(length-3)), 'runningMyCalc');
             
             hot2.addHook('afterChange', function(changes, source) {
-                /* if(source !== 'ratioCalc') {
-                    switch (changes[0][1]) {
-                        case 'lunes':
-                            setRatio(3, getProcesados(1));
-                            break;
-                        case 'martes':
-                            setRatio(4, getProcesados(2));
-                            break;
-                        case 'miercoles':
-                            setRatio(5, getProcesados(3));
-                            break;
-                        case 'jueves':
-                            setRatio(6, getProcesados(4));
-                            break;
-                        case 'viernes':
-                            setRatio(7, getProcesados(5));
-                            break;
-                        case 'sabado':
-                            setRatio(8, getProcesados(6));
-                            break;
-                        case 'domingo':
-                            setRatio(9, getProcesados(7));
-                            break;
-                        
-                        default:
-                            break;
-                    }
-                } */
                 if (source !== 'runningMyCalc') {
                     let rowChanged = changes[0][0];
                     if (rowChanged === length-7) {

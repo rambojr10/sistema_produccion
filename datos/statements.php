@@ -385,11 +385,11 @@
         // Guardar tblproduccion
         function guardarproduccion(
             $ibmFinca, $idEmbolse, $idRacimos, $idSemana, $idNacional, $codEmbarque, $totalCajasElaboradas, $totalCajasRechazadas, 
-            $totalCajasExportadas, $ratio, $merma, $pesoRacimos, $areaRecorrida, $pesoVastago, $anhoProduccion) {
+            $totalCajasExportadas, $ratio, $merma, $pesoRacimos, $areaRecorrida, $pesoVastago, $anhoProduccion, $frutaPiso) {
             try {
                 $bd = conectar();
-                $datos = $bd->prepare("INSERT INTO tblproduccion (FKIbm_TblFincas, FKId_TblEmbolse, FKId_TblRacimos, FKId_TblSemanas, FKId_TblMercadoNacional, Cod_Embarque, Total_CElaboradas, Total_CREchazadas, Total_CExportadas, Ratio, Merma, Peso_Racimos, Area_Recorrida, Peso_Vastago, Anho_Produccion)
-                    VALUES(:ibmFinca, :idEmbolse, :idRacimos, :idSemana, :idNacional, :codEmbarque, :totalCajasElaboradas, :totalCajasRechazadas, :totalCajasExportadas, :ratio, :merma, :pesoRacimos, :areaRecorrida, :pesoVastago, :anhoProduccion);
+                $datos = $bd->prepare("INSERT INTO tblproduccion (FKIbm_TblFincas, FKId_TblEmbolse, FKId_TblRacimos, FKId_TblSemanas, FKId_TblMercadoNacional, Cod_Embarque, Total_CElaboradas, Total_CREchazadas, Total_CExportadas, Ratio, Merma, Peso_Racimos, Area_Recorrida, Peso_Vastago, Anho_Produccion, Fruta_Piso)
+                    VALUES(:ibmFinca, :idEmbolse, :idRacimos, :idSemana, :idNacional, :codEmbarque, :totalCajasElaboradas, :totalCajasRechazadas, :totalCajasExportadas, :ratio, :merma, :pesoRacimos, :areaRecorrida, :pesoVastago, :anhoProduccion, :frutaPiso);
                 ");
                 $datos->bindParam(':ibmFinca', $ibmFinca, PDO::PARAM_STR);
                 $datos->bindParam(':idEmbolse', $idEmbolse, PDO::PARAM_INT);
@@ -406,6 +406,7 @@
                 $datos->bindParam(':areaRecorrida', $areaRecorrida, PDO::PARAM_STR);
                 $datos->bindParam(':pesoVastago', $pesoVastago, PDO::PARAM_STR);
                 $datos->bindParam(':anhoProduccion', $anhoProduccion, PDO::PARAM_INT);
+                $datos->bindParam(':frutaPiso', $frutaPiso, PDO::PARAM_INT);
                 if ($datos->execute())
                     return $bd->lastInsertId();
                 else 
@@ -419,12 +420,12 @@
         function guardarproduccion_detalle(
             $idTblProduccion, $idTblDias, $cajasElaboradasDia, $cajasRechazadasDia, 
             $cajasExportadasDia, $ratioDia, $mermaDia, $pesoRacimosDia, $areaRecorridaDia, 
-            $pesoVastagoDia, $lotesCortadosDia, $lotesIniciadosDia) {
+            $pesoVastagoDia, $lotesCortadosDia, $lotesIniciadosDia, $frutaPisoDia) {
             try {
                 $bd = conectar();
                 $datos = $bd->prepare("
-                    INSERT INTO tbldet_tblproduccion (FKId_TblProduccion, FKId_TblDias, Total_CE_Dia, Total_CR_Dia, Total_CEx_Dia, Ratio, Merma, Peso_Racimos, Area_Recorrida, Peso_Vastago, Lotes_Cortados, Lotes_Iniciados)
-                    VALUES(:idTblProduccion, :idTblDias, :cajasElaboradasDia, :cajasRechazadasDia, :cajasExportadasDia, :ratioDia, :mermaDia, :pesoRacimosDia, :areaRecorridaDia, :pesoVastagoDia, :lotesCortadosDia, :lotesIniciadosDia);
+                    INSERT INTO tbldet_tblproduccion (FKId_TblProduccion, FKId_TblDias, Total_CE_Dia, Total_CR_Dia, Total_CEx_Dia, Ratio, Merma, Peso_Racimos, Area_Recorrida, Peso_Vastago, Lotes_Cortados, Lotes_Iniciados, Fruta_Piso)
+                    VALUES(:idTblProduccion, :idTblDias, :cajasElaboradasDia, :cajasRechazadasDia, :cajasExportadasDia, :ratioDia, :mermaDia, :pesoRacimosDia, :areaRecorridaDia, :pesoVastagoDia, :lotesCortadosDia, :lotesIniciadosDia, :frutaPisoDia);
                 ");
                 $datos->bindParam(':idTblProduccion', $idTblProduccion, PDO::PARAM_INT);
                 $datos->bindParam(':idTblDias', $idTblDias, PDO::PARAM_INT);
@@ -438,6 +439,7 @@
                 $datos->bindParam(':pesoVastagoDia', $pesoVastagoDia, PDO::PARAM_STR);
                 $datos->bindParam(':lotesCortadosDia', $lotesCortadosDia, PDO::PARAM_STR);
                 $datos->bindParam(':lotesIniciadosDia', $lotesIniciadosDia, PDO::PARAM_STR);
+                $datos->bindParam(':frutaPisoDia', $frutaPisoDia, PDO::PARAM_INT);
                 if ($datos->execute())
                     return $bd->lastInsertId();
                 else 

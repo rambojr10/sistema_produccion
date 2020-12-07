@@ -230,28 +230,30 @@
             $maxItems = count($datosProduccion->tblCajas);
             $lastIdProduccion = guardarproduccion(
                 $_SESSION['conectado']->PKIbm, $lastIdEmbolse, $lastIdRacimos, $datosProduccion->embolse->id_semana, $lastIdNacional, $datosProduccion->cod_embarque,
-                $datosProduccion->tblCajas[$maxItems-10][10], $datosProduccion->tblCajas[$maxItems-9][10], $datosProduccion->tblCajas[$maxItems-8][10],
+                $datosProduccion->tblCajas[$maxItems-11][10], $datosProduccion->tblCajas[$maxItems-10][10], $datosProduccion->tblCajas[$maxItems-9][10],
                 ($datosProduccion->tblCajas[$maxItems-7][10] == '#VALUE!' ? null : $datosProduccion->tblCajas[$maxItems-7][10]), 
                 ($datosProduccion->tblCajas[$maxItems-6][10] == '#VALUE!' ? null : $datosProduccion->tblCajas[$maxItems-6][10]),
                 ($datosProduccion->tblCajas[$maxItems-5][10] == '#VALUE!' ? null : $datosProduccion->tblCajas[$maxItems-5][10]),
                 $datosProduccion->tblCajas[$maxItems-4][10], 
                 ($datosProduccion->tblCajas[$maxItems-3][10] == '#VALUE!' ? null : $datosProduccion->tblCajas[$maxItems-3][10]),
-                substr($datosProduccion->cod_embarque, 4,4)
+                substr($datosProduccion->cod_embarque, 4,4), 
+                ($datosProduccion->tblCajas[$maxItems-8][10] > 0 ? $datosProduccion->tblCajas[$maxItems-8][10] : null)
             );
             if ($lastIdProduccion != false) {
                 for ($x = 1; $x < 8; $x++) {
                     $idProduccionDetalle = guardarproduccion_detalle(
                         $lastIdProduccion, $x, 
-                        $datosProduccion->tblCajas[$maxItems-10][$x+2], 
+                        $datosProduccion->tblCajas[$maxItems-11][$x+2], 
+                        $datosProduccion->tblCajas[$maxItems-10][$x+2],
                         $datosProduccion->tblCajas[$maxItems-9][$x+2],
-                        $datosProduccion->tblCajas[$maxItems-8][$x+2],
                         $datosProduccion->tblCajas[$maxItems-7][$x+2],
                         $datosProduccion->tblCajas[$maxItems-6][$x+2],
                         $datosProduccion->tblCajas[$maxItems-5][$x+2],
                         $datosProduccion->tblCajas[$maxItems-4][$x+2],
                         $datosProduccion->tblCajas[$maxItems-3][$x+2],
                         $datosProduccion->tblCajas[$maxItems-2][$x+2],
-                        $datosProduccion->tblCajas[$maxItems-1][$x+2]
+                        $datosProduccion->tblCajas[$maxItems-1][$x+2],
+                        $datosProduccion->tblCajas[$maxItems-8][$x+2]
                     );
                     if ($idProduccionDetalle != false) {
                         for ($y = 0; $y < $maxItems-10; $y++) {
@@ -696,7 +698,6 @@
     function cargar_produccion_ip() {
         $cod_embarque = $_GET['cod_embarque'];
         $tblProduccion = buscarregistro($cod_embarque, 'Cod_Embarque', 'TblProduccion', 'FKIbm_TblFincas = '.$_SESSION['conectado']->PKIbm);
-        // $tblProduccion = buscarregistro($cod_embarque, "Cod_Embarque", "TblProduccion", "FKIbm_TblFincas = '".$_GET['ibm_finca']."';");
         $tblProduccion = (count($tblProduccion) == 1 ? $tblProduccion[0] : ""); 
         if ($tblProduccion != "") {
 
@@ -724,7 +725,7 @@
             $infoCajas = array();
             foreach ($tblCajas as $dc) {
                 $pushDetalle = [
-                    "cajasRechazadas" => $dc->Total_CR_Dia, "ratio" => $dc->Ratio, "merma" => $dc->Merma, 
+                    "cajasRechazadas" => $dc->Total_CR_Dia, "frutaPiso" => $dc->Fruta_Piso, "ratio" => $dc->Ratio, "merma" => $dc->Merma, 
                     "pesoRacimos" => $dc->Peso_Racimos, "areaRecorrida" => $dc->Area_Recorrida, 
                     "pesoVastago" => $dc->Peso_Vastago, "lotesCortados" => $dc->Lotes_Cortados, "lotesIniciados" => $dc->Lotes_Iniciados
                 ];
@@ -780,7 +781,6 @@
 
             //TblCargue
             $infoCargue = buscarregistro($tblProduccion->Cod_Embarque, "FKCod_TblEmbarque", "TblCargue", 'FKIbm_TblFincas = '.$_SESSION['conectado']->PKIbm);
-            // $infoCargue = buscarregistro($tblProduccion->Cod_Embarque, "FKCod_TblEmbarque", "TblCargue", "FKIbm_TblFincas = '".$_GET['ibm_finca']."';");
 
             //infoElaboracion
             $totalElaborado = produccionporcodigo($cod_embarque, $_SESSION['conectado']->PKIbm);
