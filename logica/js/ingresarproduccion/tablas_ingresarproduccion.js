@@ -732,7 +732,7 @@
                     total: `=K${tblCajas_data.length+1}-K${tblCajas_data.length+2}`,
                     conversion: `=L${tblCajas_data.length+1}-L${tblCajas_data.length+2}`
                 }, {
-                    caja: 'Fruta piso',
+                    caja: 'Fruta Piso',
                     codigo: null,
                     factor: null,
                     lunes: (existsTblCajas != false ? existsTblCajas[0].frutaPiso : ''),
@@ -979,6 +979,27 @@
                     {row: (length-9), col: 7, readOnly: true},
                     {row: (length-9), col: 8, readOnly: true},
                     {row: (length-9), col: 9, readOnly: true},
+                    {row: (length-7), col: 3, readOnly: true},
+                    {row: (length-7), col: 4, readOnly: true},
+                    {row: (length-7), col: 5, readOnly: true},
+                    {row: (length-7), col: 6, readOnly: true},
+                    {row: (length-7), col: 7, readOnly: true},
+                    {row: (length-7), col: 8, readOnly: true},
+                    {row: (length-7), col: 9, readOnly: true},
+                    {row: (length-6), col: 3, readOnly: true},
+                    {row: (length-6), col: 4, readOnly: true},
+                    {row: (length-6), col: 5, readOnly: true},
+                    {row: (length-6), col: 6, readOnly: true},
+                    {row: (length-6), col: 7, readOnly: true},
+                    {row: (length-6), col: 8, readOnly: true},
+                    {row: (length-6), col: 9, readOnly: true},,
+                    {row: (length-5), col: 3, readOnly: true},
+                    {row: (length-5), col: 4, readOnly: true},
+                    {row: (length-5), col: 5, readOnly: true},
+                    {row: (length-5), col: 6, readOnly: true},
+                    {row: (length-5), col: 7, readOnly: true},
+                    {row: (length-5), col: 8, readOnly: true},
+                    {row: (length-5), col: 9, readOnly: true},
                     // Custom cells
                     {row: (length-3), col: 3, type: 'text', className: 'htCenter'},
                     {row: (length-3), col: 4, type: 'text', className: 'htCenter'},
@@ -1008,7 +1029,8 @@
                     {row: (length-2), col: 0, rowspan: 1, colspan: 3},
                     {row: (length-1), col: 0, rowspan: 1, colspan: 3},
                     // 
-                    {row: (length-8), col: 11, rowspan: 7, colspan: 1}
+                    {row: (length-8), col: 11, rowspan: 8, colspan: 1},
+                    {row: (length-2), col: 10, rowspan: 2, colspan: 1}
                 ]
             };
             hot2 = new Handsontable(tblCajas, tblSettings_cajas);

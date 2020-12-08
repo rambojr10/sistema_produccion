@@ -9,11 +9,14 @@
 		for (let x = 0; x < balanceDeMasas.length; x++) {
 			let element = balanceDeMasas[x];
 			if (typeof element === 'object') {
-				console.log(element)
 				hot2.setDataAtCell(hot2.countRows()-7, x+2, element.ratio > 0 ? element.ratio : '', 'edit');
 				hot2.setDataAtCell(hot2.countRows()-6, x+2, element.merma > 0 ? element.merma : '', 'edit');
 				hot2.setDataAtCell(hot2.countRows()-5, x+2, element.pesoRacimos > 0 ? element.pesoRacimos : '', 'edit');
-			}
+			} else {
+                hot2.setDataAtCell(hot2.countRows()-7, x+2, '', 'edit');
+                hot2.setDataAtCell(hot2.countRows()-6, x+2, '', 'edit');
+                hot2.setDataAtCell(hot2.countRows()-5, x+2, '', 'edit');
+            }
 		}
 	});
 
