@@ -6,18 +6,31 @@
 		let racimosProcesados = hot1.getDataAtRow(9);
 		let frutaPiso = hot2.getDataAtRow(hot2.countRows()-8);
 		const balanceDeMasas = balanceDias(datosTblCajas, datosTblNacional, racimosProcesados, frutaPiso);
-		for (let x = 0; x < balanceDeMasas.length; x++) {
-			let element = balanceDeMasas[x];
-			if (typeof element === 'object') {
-				hot2.setDataAtCell(hot2.countRows()-7, x+2, element.ratio > 0 ? element.ratio : '', 'edit');
-				hot2.setDataAtCell(hot2.countRows()-6, x+2, element.merma > 0 ? element.merma : '', 'edit');
-				hot2.setDataAtCell(hot2.countRows()-5, x+2, element.pesoRacimos > 0 ? element.pesoRacimos : '', 'edit');
-			} else {
-                hot2.setDataAtCell(hot2.countRows()-7, x+2, '', 'edit');
-                hot2.setDataAtCell(hot2.countRows()-6, x+2, '', 'edit');
-                hot2.setDataAtCell(hot2.countRows()-5, x+2, '', 'edit');
+        console.log(balanceDeMasas)
+        if (balanceDeMasas.length > 0) {
+    		for (let x = 0; x < balanceDeMasas.length; x++) {
+    			let element = balanceDeMasas[x];
+                console.log(element)
+    			if (typeof element === 'object') {
+    				hot2.setDataAtCell(hot2.countRows()-7, x+2, element.ratio > 0 ? element.ratio : '', 'edit');
+    				hot2.setDataAtCell(hot2.countRows()-6, x+2, element.merma > 0 ? element.merma : '', 'edit');
+    				hot2.setDataAtCell(hot2.countRows()-5, x+2, element.pesoRacimos > 0 ? element.pesoRacimos : '', 'edit');
+                    hot2.setDataAtCell(hot2.countRows()-3, x+2, element.vastago > 0 ? element.vastago : '', 'edit');
+    			} else {
+                    hot2.setDataAtCell(hot2.countRows()-7, x+2, '', 'edit');
+                    hot2.setDataAtCell(hot2.countRows()-6, x+2, '', 'edit');
+                    hot2.setDataAtCell(hot2.countRows()-5, x+2, '', 'edit');
+                    hot2.setDataAtCell(hot2.countRows()-3, x+2, '', 'edit');
+                }
+    		}
+        } else {
+            for (let x = 3; x < 9; x++) {
+                hot2.setDataAtCell(hot2.countRows()-7, x, '', 'edit');
+                hot2.setDataAtCell(hot2.countRows()-6, x, '', 'edit');
+                hot2.setDataAtCell(hot2.countRows()-5, x, '', 'edit');
+                hot2.setDataAtCell(hot2.countRows()-3, x, '', 'edit');
             }
-		}
+        }
 	});
 
     function createObjectCajas(datos, dia) {
@@ -95,11 +108,13 @@
             ratio: 0,
             merma: 0,
             pesoRacimos: 0,
+            vastago: 0,
         }
 
         result.ratio = parseFloat(params.total20Kilos / racimosProcesados).toFixed(2);
         result.pesoRacimos = parseFloat(parseFloat(params.totalKilos + params.totalKilosNacional + frutaPiso)  / racimosProcesados).toFixed(2);
         result.merma = parseFloat((params.totalKilosNacional + frutaPiso) / (params.totalKilos + params.totalKilosNacional + frutaPiso) * 100).toFixed(2);
+        result.vastago = parseFloat(result.pesoRacimos * 0.10).toFixed(2);
 
         return result;
     }
