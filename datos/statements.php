@@ -699,11 +699,10 @@
         ");
         $datos->bindParam(':cod_embarque', $cod_embarque, PDO::PARAM_STR);
         $datos->bindParam(':ibm_finca', $ibm_finca, PDO::PARAM_STR);
-        if ($datos->execute()) {
+        if ($datos->execute())
             return $datos->fetchAll(PDO::FETCH_OBJ);
-        } else {
+        else
             return false;
-        }
     }
 
     // Carga la semana según el código de embarque
@@ -1135,8 +1134,10 @@
                 eliminar_lotes($key);
             $datos = $bd->prepare("DELETE FROM ".$tabla." WHERE ".$campo." = :key");
             $datos->bindParam(":key", $key, PDO::PARAM_STR);
-            $datos->execute();
-            return true;
+            if ($datos->execute()) 
+                return true;
+            else 
+                return false;
         } catch (Exception $e) {
             echo "Error".$e;
         }

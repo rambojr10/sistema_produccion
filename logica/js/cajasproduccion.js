@@ -182,9 +182,10 @@
             if(isConfirm) {
                 $.post({
                     url: '../logica/contenido.php',
-                    data: {op: 'eliminarcaja', key: codigo, campo: 'tblcajasproduccion.PKCodigo', tabla: 'tblcajasproduccion'},
+                    data: {op: 'eliminarcaja', key: codigo, campo: 'PKCodigo', tabla: 'tblcajasproduccion'},
                     cache: false,
                     success: function (res) {
+                        console.log(res)
                         if (res == true) {
                             swal("Eliminación", "Registro eliminado correctamente.", "success");
                             $.post({

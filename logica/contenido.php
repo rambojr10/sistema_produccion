@@ -2,6 +2,14 @@
     session_start();
     require_once "../datos/statements.php";
     
+    //Complemento
+    function object_sorter($clave, $orden = null) {
+        return function ($a, $b) use ($clave,$orden) {
+            $result = ($orden == "DESC") ? strnatcmp($b->$clave, $a->$clave) : strnatcmp($a->$clave, $b->$clave);
+            return $result;
+        };
+    }
+
 //  CREAR ===========================================================================================================
     //
     function nueva_finca() {
@@ -68,6 +76,7 @@
             for ($x=0; $x < count($datos->codigoCajas) ; $x++) { 
                 $vista['cajas'][$x] = buscarcaja($datos->codigoCajas[$x]);
             }
+            usort($vista['cajas'], object_sorter('FKId_TblTipoFruta'));
             echo json_encode($vista);
         } else {
             echo $result;
@@ -407,7 +416,7 @@
                     "<td>
                         <a href='#editar_caja' codigo='$c->PKCodigo' class='notika-icon notika-edit' title='Editar' data-toggle='modal' data-target='#modal-ec'></a> - 
                         <a href='#ver_elaboracion' codigo='$c->PKCodigo' class='notika-icon notika-menus' title='Ver Elaboración' data-toggle='modal' data-target='#modal-ve'></a> - 
-                        <a href='#eliminar_caja' class='notika-icon notika-trash' title='Eliminar' onclick=eliminarcaja($c->PKCodigo)></a>
+                        <a href='' class='notika-icon notika-trash' title='Eliminar' onclick=eliminarcaja($c->PKCodigo)></a>
                     </td>
                 </tr>";
         }
@@ -647,13 +656,13 @@
                     <option value='$t->PKId'>$t->Descripcion</option>
                 ";
             }
-        }else {
+        } else {
             foreach ($tipofruta as $t) {
                 if ($t->PKId == $_POST['tipofruta_editar']) {
                     echo "
                         <option value='$t->PKId' selected='true'>$t->Descripcion</option>
                     ";
-                }else{
+                } else {
                     echo "
                         <option value='$t->PKId'>$t->Descripcion</option>
                     ";
@@ -880,8 +889,9 @@
         }
 
         $estimativo = buscarregistro($codEmbarque, 'FKCod_TblEmbarque', 'TblEstimativo', false);
-        array_push($result['estimativo'], $estimativo);           
+        array_push($result['estimativo'], $estimativo);
 
+        usort($result['infoCajas'], object_sorter('FKId_TblTipoFruta'));
         echo json_encode($result);
     }
 
@@ -990,9 +1000,9 @@
         echo json_encode($result);
     }
 
-    // function ver_reporte() {
-    //     return json_encode('todo ok');
-    // }
+    function ver_reporte() {
+        return json_encode('todo ok');
+    }
 
     //
     function buscar_cajas_programadas() {

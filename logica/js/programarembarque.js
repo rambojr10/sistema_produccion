@@ -190,7 +190,7 @@
         fetch(`../logica/contenido.php?op=cargar_programacion&codEmbarque=${valuesInvoice[0]}`)
         .then(response => response.json())
         .then(datos => {
-
+            
             if (datos.infoCajas.length > 0 && datos.estimativo[0].length > 0) {
                 $("#alineacion-pe").prop("hidden", false);
                 $("#estimativo-pe").prop("hidden", false);
