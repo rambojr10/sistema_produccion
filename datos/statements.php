@@ -1028,19 +1028,21 @@
     //Actualiza con código 
     function actualizarcaja($caja) {
         try {
-            if(eliminar_s($caja['codigo_real'], 'PKCodigo', 'tblcajasproduccion')){
-                $bd = conectar();
-                $datos = $bd->prepare("
-                    INSERT INTO tblcajasproduccion (PKCodigo, Descripcion, FactorConversion, FKId_TblTipoFruta) 
-                    VALUES(:codigo, :descripcion, :factor, :tipofruta)
-                ;");
-                $datos->bindParam(":codigo", $caja['codigo'], PDO::PARAM_STR);
-                $datos->bindParam(":descripcion", $caja['descripcion'], PDO::PARAM_STR);
-                $datos->bindParam(":factor", $caja['factor'], PDO::PARAM_STR);
-                $datos->bindParam(":tipofruta", $caja['tipofruta'], PDO::PARAM_INT);
-                $datos->execute();
+            $bd = conectar();
+            $datos = $bd->prepare("
+                UPDATE tblcajasproduccion 
+                SET PKCodigo = :codigo, Descripcion = :descripcion, FactorConversion = :factor, FKId_TblTipoFruta = :tipofruta 
+                WHERE PKCodigo = :codigoreal
+            ");
+            $datos->bindParam(":codigoreal", $caja['codigo_real'], PDO::PARAM_STR);
+            $datos->bindParam(":codigo", $caja['codigo'], PDO::PARAM_STR);
+            $datos->bindParam(":descripcion", $caja['descripcion'], PDO::PARAM_STR);
+            $datos->bindParam(":factor", $caja['factor'], PDO::PARAM_STR);
+            $datos->bindParam(":tipofruta", $caja['tipofruta'], PDO::PARAM_INT);
+            if ($datos->execute())
                 return true;
-            }
+            else
+                return false;
         } catch (Exception $e) {
             echo "Error".$e;
         }
