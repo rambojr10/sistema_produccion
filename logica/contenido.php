@@ -144,7 +144,7 @@
             //Verifica si existe una producción previa y la elimina 
             $existsProduccion = buscarregistro($datosProduccion->cod_embarque, 'Cod_Embarque', 'TblProduccion', 'FKIbm_TblFincas = '.$_SESSION['conectado']->PKIbm);
             if (isset($existsProduccion[0])) {
-                $state = (eliminar_produccion($datosProduccion->cod_embarque, $_SESSION['conectado']->PKIbm) == true ? 21 : null);
+                $state = (eliminar_produccion($datosProduccion->cod_embarque, $_SESSION['conectado']->PKIbm) === true ? 21 : null);
             }
 
             $lastIdEmbolse = guardarembolse(
@@ -193,7 +193,7 @@
         // TblNacional y cargue ------------------------------------
             
             $lastIdNacional = guardarnacional($datosProduccion->tblNacional[6][8]);
-            if ($lastIdNacional != false) {
+            if ($lastIdNacional !== false) {
                 for ($x=1; $x < 8; $x++) {
                     for ($y=1; $y < 7; $y++) {
                         guardarnacional_detalle($lastIdNacional, $x, $y, $datosProduccion->tblNacional[$y-1][$x]);
@@ -248,7 +248,7 @@
                 substr($datosProduccion->cod_embarque, 4,4), 
                 ($datosProduccion->tblCajas[$maxItems-8][10] > 0 ? $datosProduccion->tblCajas[$maxItems-8][10] : null)
             );
-            if ($lastIdProduccion != false) {
+            if ($lastIdProduccion !== false) {
                 for ($x = 1; $x < 8; $x++) {
                     $idProduccionDetalle = guardarproduccion_detalle(
                         $lastIdProduccion, $x, 
@@ -275,7 +275,7 @@
                         echo false;
                     }
                 }
-                $state = ($state == 21 ? $state : 20);
+                $state = ($state === 21 ? $state : 20);
             } else {
                 echo false;
             }
@@ -1113,9 +1113,8 @@
     // Elimina toda la producción y sus detalles
     function eliminar_produccion($codEmbarque, $ibmFinca) {
         $tblProduccion = buscarregistro($codEmbarque, 'Cod_Embarque', 'TblProduccion', "FKIbm_TblFincas = $ibmFinca");
-        // $tblProduccion = buscarregistro($codEmbarque, 'Cod_Embarque', 'TblProduccion', 'FKIbm_TblFincas = '.$_POST['ibmFinca']);
         $tblProduccion = (count($tblProduccion) == 1 ? $tblProduccion[0] : null);
-        if ($tblProduccion != null) {
+        if ($tblProduccion !== null) {
         // Eliminar racimos y sus detalles
             $tblRacimos = buscarregistro($tblProduccion->FKId_TblRacimos, 'PKId', 'TblRacimos', false)[0];
             $tblDet_TblRacimos = buscarregistro($tblRacimos->PKId, 'FKId_TblRacimos', 'TblDet_TblRacimos_TblDias', false);
@@ -1126,11 +1125,14 @@
         // Eliminar mercado nacional - cargue y sus detalles
             $tblNacional = buscarregistro($tblProduccion->FKId_TblMercadoNacional, 'PKId', 'TblMercadoNacional', false)[0];
             eliminar_s($tblNacional->PKId, 'FKId_TblMercadoNacional', 'TblDet_TblMercadoNacional');
+            // TblCajasPlataforma
+            eliminar_s($tblNacional->PKId, 'FKId_TblMercadoNacional', 'TblCajasPlataforma');
 
             $tblCargue = buscarregistro($tblProduccion->Cod_Embarque, 'FKCod_TblEmbarque', 'TblCargue', "FKIbm_TblFincas = $ibmFinca");
             foreach ($tblCargue as $c) {
                 eliminar_s($c->PKId_Cargue, 'PKId_Cargue', 'TblCargue');
             }
+
         // Eliminar producción y sus detalles
             $tblDet_TblProduccion = buscarregistro($tblProduccion->PKId, 'FKId_TblProduccion', 'TblDet_TblProduccion', false);
             foreach ($tblDet_TblProduccion as $dp) {
@@ -1139,12 +1141,16 @@
             eliminar_s($tblProduccion->PKId, 'FKId_TblProduccion', 'TblDet_TblProduccion');
 
         // Eliminar claves principales
-            eliminar_s($tblProduccion->PKId, 'PKId', 'TblProduccion');
-            eliminar_s($tblProduccion->FKId_TblEmbolse, 'PKId', 'TblEmbolse');
-            eliminar_s($tblRacimos->PKId, 'PKId', 'TblRacimos');
-            eliminar_s($tblNacional->PKId, 'PKId', 'TblMercadoNacional');
-
-            return true;
+            if (
+                eliminar_s($tblProduccion->PKId, 'PKId', 'TblProduccion') and
+                eliminar_s($tblProduccion->FKId_TblEmbolse, 'PKId', 'TblEmbolse') and
+                eliminar_s($tblRacimos->PKId, 'PKId', 'TblRacimos') and
+                eliminar_s($tblNacional->PKId, 'PKId', 'TblMercadoNacional')
+            ) {
+                return true;
+            } else {
+                return false;
+            }
         } else {
             return false;
         }

@@ -234,7 +234,6 @@
                             throw "No se ha podido guardar los datos correctamente IP";
                     })
                     .then(res => {
-                        console.log(res);
                         $(".osc").fadeOut();
                         $("#loader").fadeOut();
                         if (res == 20) { // response 20 is a code for save data
@@ -1223,6 +1222,12 @@
                 total: "=SUM(J1:J5)",
             }, {
                 fechaCargue: "CAJAS EN PLATAFORMA",
+                dedoSuelto: `${existsTblCajasPlataforma !== false ? (existsTblCajasPlataforma.DedoSuelto == null ? '' : existsTblCajasPlataforma.DedoSuelto) : ''}`,
+                cluster: `${existsTblCajasPlataforma !== false ? (existsTblCajasPlataforma.Cluster == null ? '' : existsTblCajasPlataforma.Cluster) : ''}`,
+                manoEntera: `${existsTblCajasPlataforma !== false ? (existsTblCajasPlataforma.ManoEntera == null ? '' : existsTblCajasPlataforma.ManoEntera) : ''}`,
+                especial: `${existsTblCajasPlataforma !== false ? (existsTblCajasPlataforma.Especial == null ? '' : existsTblCajasPlataforma.Especial) : ''}`,
+                dedoSueltoBolsa20: `${existsTblCajasPlataforma !== false ? (existsTblCajasPlataforma.Bolsa20Kilos == null ? '' : existsTblCajasPlataforma.Bolsa20Kilos) : ''}`,
+                dedoSueltoBolsa25: `${existsTblCajasPlataforma !== false ? (existsTblCajasPlataforma.Bolsa25Kilos == null ? '' : existsTblCajasPlataforma.Bolsa25Kilos) : ''}`,
                 total: "=SUM(D7:I7)"
             }
         ];
@@ -1249,7 +1254,7 @@
                 total: "=SUM(D7:I7)"
             }
         ];
-        if (existsTblCargue != false ) {
+        if (existsTblCargue !== false ) {
             existsTblCargue.forEach( function(element, index) {
                 let object = {
                     fechaCargue: element.Fecha_Cargue,
@@ -1405,10 +1410,6 @@
                 }, {
                     data: 'cliente',
                     type: 'text',
-                    // type: 'autocomplete',
-                    // source: ['Nombre cliente1', 'Nombre cliente2', 'Nombre cliente3'],
-                    // strict: true,
-                    // allowInvalid: false
                 }, {
                     data: 'poma',
                     type: 'numeric'
