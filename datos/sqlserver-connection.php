@@ -5,7 +5,7 @@
 		$port = '1433';
 		$databaseName = 'bdspmontesol';
 		$userName = 'usermontesol';
-		$password = '987654';
+		$password = '123456';
 		try {
 			$bd = new PDO("sqlsrv:Server=$server,$port;Database=$databaseName","$userName","$password");
 			$bd->query("SET NAMES 'utf-8'");

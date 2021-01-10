@@ -4,7 +4,7 @@
     
     //Complemento
     function object_sorter($clave, $orden = null) {
-        return function ($a, $b) use ($clave,$orden) {
+        return function ($a, $b) use ($clave, $orden) {
             $result = ($orden == "DESC") ? strnatcmp($b->$clave, $a->$clave) : strnatcmp($a->$clave, $b->$clave);
             return $result;
         };
@@ -1009,6 +1009,40 @@
         echo json_encode(totalprogramadofinca($_GET['codEmbarque'], $_SESSION['conectado']->PKIbm));
     }
 
+    //
+    function listar_embarques() {
+        $result = ['tblEmbarques' => '', 'cmbFincas' => '', 'cmbCajas' => ''];
+        $embarques = listarembarques();
+        $result['tblEmbarques'] = $embarques;
+        // foreach ($embarques as $i => $e) {
+        //     $result['tblEmbarques'] .= "
+        //         <tr>
+        //             <td>".($i+1)."</td>
+        //             <td>$e->PKCod</td>
+        //             <td>$e->N_Semana</td>
+        //             <td>$e->Fecha_Inicio</td>
+        //             <td>$e->Fecha_Fin</td>
+        //             <td>$e->Anho</td>
+        //         </tr>
+        //     ";
+        // }
+
+        $fincas = listarfincas();
+        foreach ($fincas as $f) {
+            $result['cmbFincas'] .= "
+                <option value='$f->PKIbm'>$f->Nombre</option>
+            ";
+        }
+
+        $cajas = cajasproduccion();
+        foreach ($cajas as $c) {
+            $result['cmbCajas'] .= "
+                <option value='$c->PKCodigo'>$c->PKCodigo</option>
+            ";
+        }
+        echo json_encode($result);
+    }
+
 //  ACTUALIZAR ==================================================================================================================
     
     //
@@ -1351,6 +1385,11 @@
             //
             case 'buscar_cajas_programadas':
                 buscar_cajas_programadas();
+                break;
+            
+            //
+            case 'listarembarques': 
+                listar_embarques();
                 break;
                 
     //Metodos de actualizar

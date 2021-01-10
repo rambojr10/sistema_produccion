@@ -1,65 +1,11 @@
 
-    <!-- <div class="breadcomb-area">
-		<div class="container">
-            <div class="breadcomb-list">
-                <div class="row">
-                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                        <div class="breadcomb-wp">
-                            <div class="breadcomb-icon">
-                                <i class="notika-icon notika-support"></i>
-                            </div>
-                            <div class="breadcomb-ctn">
-                                <h2>Reporte</h2>
-                                <p>Módulo reportes del sistema</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-		</div>
-	</div> -->
     <div class="contact-area">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="invoice-wrap">
-                        <div class="invoice-img">
-                            <h2>Reportes <i class="fa fa-inbox"></i></h2>
-                        </div>
-                        <div class="invoice-hds-pro">
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                    <div class="invoice-cmp-ds ivc-frm">
-                                        <div class="invoice-frm">
-                                            <span>Invoice from</span>
-                                        </div>
-                                        <div class="comp-tl">
-                                            <h2>David Designs LLC</h2>
-                                            <p>44, Qube Towers uttara Media City, Dubai, Bangladesh</p>
-                                        </div>
-                                        <div class="cmp-ph-em">
-                                            <span>01962067309</span>
-                                            <span>David@notika.com</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                    <div class="invoice-cmp-ds ivc-to">
-                                        <div class="invoice-frm">
-                                            <span>Invoice to</span>
-                                        </div>
-                                        <div class="comp-tl">
-                                            <h2>Mallinda Hollaway</h2>
-                                            <p>10098 ABC Towers Uttara Silicon Oasis, Dubai, Bangladesh.</p>
-                                        </div>
-                                        <div class="cmp-ph-em">
-                                            <span>01955239099</span>
-                                            <span>Mall@notika.com</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <h2>Reportes <i class="fa fa-inbox"></i></h2>
+
                         <div class="row">
                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                                 <div class="invoice-hs">
@@ -86,67 +32,60 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <div class="invoice-sp">
-                                    <table class="table table-hover">
-                                        <thead>
-                                            <tr>
-                                                <th>#</th>
-                                                <th>Item Title</th>
-                                                <th>Unit Price</th>
-                                                <th>Quantity</th>
-                                                <th>Total</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>1</td>
-                                                <td>Crusal Damperal</td>
-                                                <td>$500</td>
-                                                <td>05</td>
-                                                <td>$3000</td>
-                                            </tr>
-                                            <tr>
-                                                <td>2</td>
-                                                <td>Indriacal Superral</td>
-                                                <td>$650</td>
-                                                <td>06</td>
-                                                <td>$7000</td>
-                                            </tr>
-                                            <tr>
-                                                <td>3</td>
-                                                <td>Vidaska Adrioal</td>
-                                                <td>$400</td>
-                                                <td>03</td>
-                                                <td>$2000</td>
-                                            </tr>
-                                            <tr>
-                                                <td>4</td>
-                                                <td>Croustal Desrikal</td>
-                                                <td>$600</td>
-                                                <td>04</td>
-                                                <td>$7000</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+
+                        <div class="invoice-hds-pro">
+                            <hr>
+                            <div class="ui pointing blue five item menu" id="menuItems">
+                                <a class="active item" id="btnEmbarques">
+                                    Embarques
+                                </a>
+                                <a class="item" id="btnSemanal">
+                                    Semanal
+                                </a>
+                                <a class="item" id="btnGeneral">
+                                    General
+                                </a>
+                                <a class="item" id="btnRechazos">
+                                    Rechazos
+                                </a>
+                                <a class="item" id="btnNacional">
+                                    Mercado nacional
+                                </a>    
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <div class="invoice-ds-int">
-                                    <h2>Remarks</h2>
-                                    <p>Ornare non tortor. Nam quis ipsum vitae dolor porttitor interdum. Curabitur faucibus erat vel ante fermentum lacinia. Integer porttitor laoreet suscipit. Sed cursus cursus massa ut pellentesque. Phasellus vehicula dictum arcu, eu interdum massa bibendum. Ornare non tortor. Nam quis ipsum vitae dolor porttitor interdum. Curabitur faucibus erat vel ante fermentum lacinia. Integer porttitor laoreet suscipit. Sed cursus cursus massa ut pellentesque. Phasellus vehicula dictum arcu, eu interdum massa bibendum. </p>
-                                </div>
-                                <div class="invoice-ds-int invoice-last">
-                                    <h2>Notika For Your Business</h2>
-                                    <p class="tab-mg-b-0">Ornare non tortor. Nam quis ipsum vitae dolor porttitor interdum. Curabitur faucibus erat vel ante fermentum lacinia. Integer porttitor laoreet suscipit. Sed cursus cursus massa ut pellentesque. Phasellus vehicula dictum arcu, eu interdum massa bibendum. Ornare non tortor. Nam quis ipsum vitae dolor porttitor interdum. Curabitur faucibus erat vel ante fermentum lacinia. Integer porttitor laoreet suscipit. Sed cursus cursus massa ut pellentesque. Phasellus vehicula dictum arcu, eu interdum massa bibendum. </p>
-                                </div>
-                            </div>
+
+                        <!-- Forms -->
+                        <div class="ui segment" style="padding-bottom: 0;" id="frmReportes">
+                            
+                        </div>
+                        
+                        <div class="mg-b-15">
+                            <button id="btnAplicar" class="btn btn-default">
+                                <i class="fa fa-clone"></i>
+                                Generar reportes
+                            </button>
+                        </div>
+
+                        <div class="ui segment">
+                            <table class="table table-hover" id="tblReportes">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Semana</th>
+                                        <th>Inicio</th>
+                                        <th>Fin</th>
+                                        <th>Año</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tblEmbarques">
+                                    
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+   

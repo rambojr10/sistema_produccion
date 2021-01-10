@@ -1003,6 +1003,19 @@
         return $datos->fetch(PDO::FETCH_OBJ);
     }
 
+    //
+    function listarembarques() {
+        $bd = conectar();
+        $datos = $bd->prepare("
+            SELECT e.PKCod, s.N_Semana, s.Fecha_Inicio, s.Fecha_Fin, s.Anho
+            FROM tblembarque as e
+            INNER JOIN tblsemanas as s
+            ON e.FKId_TblSemanas = s.PKId
+        ");
+        $datos->execute();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
+    }
+
 
 // Sentencias de actualización------------------------------------------------------------------------------------------------------------
 

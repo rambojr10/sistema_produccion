@@ -253,8 +253,8 @@
         </div>
         <!-- section title End-->
 
-        <!-- stadistics home-->
         <?php if ($_SESSION['conectado']->FKId_TblTipoUsuario == 1) :?>
+            <!-- stadistics home-->
             <div class="visitor-sv-tm-area">
                 <div class="container">
 
@@ -633,7 +633,6 @@
                     </div>
                 </div>
             </div>
-
         <?php endif; ?>
 
     </div>
@@ -757,7 +756,8 @@
         <script src="../logica/js/ingresarproduccion/balancemasas.js"></script>
         <script src="../logica/js/usuarios.js"></script>
         <script src="../logica/js/home.js"></script>
-    
+        <script src="../logica/js/reportes.js"></script>
+            
 </body>
 
 </html>

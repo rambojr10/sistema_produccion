@@ -1,6 +1,6 @@
 // FORMATO DATATABLE CAJAS -----------------------------------------------------------------
-    function data_cajas() {
-        $("#tblcajasproduccion").DataTable({
+    function data_cajas(element) {
+        $("#"+element).DataTable({
             language: {
                 "processing":       "Procesando...",
                 "search":           "Buscar:",
@@ -144,7 +144,6 @@
                     data: {op: op, caja: caja},
                     cache: false,
                     success: function(res) {
-                        console.log(res);
                         if(res == true) {
                             swal(alerta.tipo, alerta.success.descripcion, "success");
                             $("#tblcajasproduccion").dataTable().fnDestroy();
@@ -185,7 +184,6 @@
                     data: {op: 'eliminarcaja', key: codigo, campo: 'PKCodigo', tabla: 'tblcajasproduccion'},
                     cache: false,
                     success: function (res) {
-                        console.log(res)
                         if (res == true) {
                             swal("Eliminación", "Registro eliminado correctamente.", "success");
                             $.post({
@@ -222,11 +220,10 @@
                 body: op
             })
             .then(response => {
-                if (response.ok){
+                if (response.ok)
                     return response.text();
-                }else{
+                else
                     throw "No se pueden cargar los datos, S";
-                }
             })
             .then(res => {
                 $("#form_ve").html(res)
@@ -249,16 +246,15 @@
                 body: op
             })
             .then(response => {
-                if (response.ok) {
+                if (response.ok)
                     return response.text();
-                }else{
+                else
                     throw "No se pueden cargar los datos";
-                }
             })
             .then(res => {
                 $("#form_ve").html(res);
             });
-        }else{
+        } else {
             $("#form_ve").html("");
         }
     });
@@ -296,20 +292,18 @@
             switch (filtro) {
                 case 'semanal':
                     //valido que los campos tengan datos
-                    if (semana != "" && ano != "") {
+                    if (semana != "" && ano != "")
                         buscar_ve('semanal');
-                    }else{
+                    else
                         swal("Verificación", "Faltan campos por llenar, por favor verifique.", "error");
-                    }
                     break;
                 
                 case 'anual':
                     //valido que los campos tengan datos
-                    if (ano != "") {
+                    if (ano != "")
                         buscar_ve('anual');
-                    }else{
+                    else
                         swal("Verificación", "Faltan campos por llenar, por favor verifique.", "error");
-                    }
                     break;
 
                 case 'historico':

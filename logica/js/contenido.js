@@ -87,7 +87,7 @@
         })
         .then(res => {
             $("#cajasproduccion").html(res);
-            data_cajas();
+            data_cajas('tblcajasproduccion');
         });
     });
 

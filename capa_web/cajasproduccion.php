@@ -3,18 +3,7 @@
     include_once '../capa_web/modals/editarcaja.php';
     include_once '../capa_web/modals/ver_elaboracion.php';
 ?>
-<!-- Data Table area Start-->
-<!-- <style>
-    #data-table-basic {
-    padding: 20px 0px;
-    }
-    .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_paginate{
-        padding-top:0px;
-    }
-    #data-table-basic_filter label, #data-table-basic_length label{
-        margin-bottom: 0px;
-    }
-</style> -->
+
 <div class="data-table-area">
     <div class="container">
         <div class="row">
