@@ -55,33 +55,123 @@
                         </div>
 
                         <!-- Forms -->
-                        <div class="ui segment" style="padding-bottom: 0;" id="frmReportes">
-                            
+                        <div class="ui segment" style="padding-bottom: 0;">
+                            <form class="ui form">
+                                <div class="field">
+                                    <div class="three fields">
+                                        <div class="field">
+                                            <div class="ui labeled mini input">
+                                                <div class="ui label">Año</div>
+                                                <input type="text" id="txtAnho" name="txtAnho" class="valida">
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui labeled mini input">
+                                                <div class="ui label">Desde</div>
+                                                <select name="cmbDesde" id="cmbDesde">
+                                                    <option>Seleccione...</option>
+                                                    <?php include './formularios/semanas.php'; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="field">
+                                            <div class="ui labeled mini input">
+                                                <div class="ui label">Hasta</div>
+                                                <select name="cmbHasta" id="cmbHasta">
+                                                    <option>Seleccione...</option>
+                                                    <?php include './formularios/semanas.php'; ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="two fields">
+                                    <div class="field">
+                                        <div class="ui labeled mini input">
+                                            <div class="ui label">Fincas</div>
+                                            <select name="cmbFincas" id="cmbFincas">
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="field">
+                                        <div class="ui labeled mini input">
+                                            <div class="ui label">Tipo fruta</div>
+                                            <select name="cmbTipoFruta" id="cmbTipoFruta">
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="ui labeled input-group input-group-sm mg-b-15">
+                                <div class="input-group-addon" style="font-weight: 700; font-size: 11px;">Cajas</div>
+                                <select id="cmbCajas" class="js-example-placeholder-multiple form-control" multiple="multiple">
+                                    
+                                </select>
+                            </div>
                         </div>
                         
                         <div class="mg-b-15">
-                            <button id="btnAplicar" class="btn btn-default">
+                            <button id="btnGenerarReportes" class="btn btn-default">
                                 <i class="fa fa-clone"></i>
                                 Generar reportes
                             </button>
                         </div>
 
                         <div class="ui segment">
-                            <table class="table table-hover" id="tblReportes">
-                                <thead>
-                                    <tr>
-                                        <th>Código</th>
-                                        <th>Semana</th>
-                                        <th>Inicio</th>
-                                        <th>Fin</th>
-                                        <th>Año</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tblEmbarques">
+                            <div class="table-responsive">
+                                <table class="table" id="tblReportes">
                                     
-                                </tbody>
-                            </table>
+                                </table>
+                            </div>
                         </div>
+
+                         <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="panel panel-warning">
+                                    <div class="panel-heading">
+                                        <h3>Rendimientos</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-light">
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th>Description</th>
+                                                        <th>RT</th>
+                                                        <th>MR</th>
+                                                        <th>PR</th>
+                                                        <th>AR</th>
+                                                        <th>PV</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <th>Total</th>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="panel panel-success">
+                                    <div class="panel-heading">
+                                        <h3>Cantidades</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>

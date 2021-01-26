@@ -1011,7 +1011,7 @@
 
     //
     function listar_embarques() {
-        $result = ['tblEmbarques' => '', 'cmbFincas' => '', 'cmbCajas' => ''];
+        $result = ['tblEmbarques' => '', 'cmbFincas' => '', 'cmbCajas' => '', 'cmbTipoFruta' => ''];
         $embarques = listarembarques();
         $result['tblEmbarques'] = $embarques;
         // foreach ($embarques as $i => $e) {
@@ -1028,6 +1028,7 @@
         // }
 
         $fincas = listarfincas();
+        $result['cmbFincas'] .= "<option>Seleccione...</option>";
         foreach ($fincas as $f) {
             $result['cmbFincas'] .= "
                 <option value='$f->PKIbm'>$f->Nombre</option>
@@ -1040,7 +1041,22 @@
                 <option value='$c->PKCodigo'>$c->PKCodigo</option>
             ";
         }
+
+        $tipoFruta = tipofrutaselect();
+        $result['cmbTipoFruta'] .= "<option>Seleccione...</option>";
+        foreach ($tipoFruta as $tp) {
+            $result['cmbTipoFruta'] .= "
+                <option value='$tp->PKId'>$tp->Descripcion</option>
+            ";
+        }
         echo json_encode($result);
+        // print_r($result);
+    }
+
+    // 
+    function generar_reportes() {
+        $options = json_decode($_POST['options']);
+        // $rendimientos 
     }
 
 //  ACTUALIZAR ==================================================================================================================
@@ -1390,6 +1406,10 @@
             //
             case 'listarembarques': 
                 listar_embarques();
+                break;
+
+            case 'generar_reportes':
+                generar_reportes();
                 break;
                 
     //Metodos de actualizar

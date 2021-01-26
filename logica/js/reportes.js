@@ -6,35 +6,46 @@
         .then(response => response.json())
         .then(data => {
             Object.assign(info, data);
-            data_cajas('tblReportes');
+            cargarCmbs('tblEmbarques')
+            $("#cmbCajas").select2();
         });
     });
+
     console.log(info)
 
     document.addEventListener('click', function(e) { 
         if (e.target.matches('#btnEmbarques')) { 
             activeClass('btnEmbarques');
-            // const reportes = document.querySelector('[href="#verreporte"]');
+            cargarCmbs('cmbFincas', 'cmbCajas', 'cmbTipoFruta', 'tblEmbarques');
         }
         if (e.target.matches('#btnSemanal')) { 
             activeClass('btnSemanal');
-            $('#frmReportes').load('./formularios/form_reportes.php?frm=semanal', () => {
-                cargarCmbs('cmbFincas', 'tblEmbarques', 'cmbCajas');
-            });
-            
         }
         if (e.target.matches('#btnGeneral')) {
             activeClass('btnGeneral');
-            $('#frmReportes').load('./formularios/form_reportes.php?frm=general');
         }
         if (e.target.matches('#btnRechazos')) {
             activeClass('btnRechazos');
-            $('#frmReportes').load('./formularios/form_reportes.php?frm=rechazos');
         }
         if (e.target.matches('#btnNacional')) {
             activeClass('btnNacional');
-            $('#frmReportes').load('./formularios/form_reportes.php?frm=nacional');
         }
+    });
+
+    $(document).on('click', '#btnGenerarReportes', function() {
+        const options = {
+            anho: $('#txtAnho').val(),
+            from: $('#cmbDesde').val(),
+            to: $('#cmbHasta').val(),
+            tipoFruta: $('#cmbTipoFruta').val(),
+            cajas: $('#cmbCajas').val()
+        }
+        const op = new FormData();
+        op.append('op', 'generar_reportes');
+        op.append('options', JSON.stringify(options));
+        fetch('../logica/contenido.php', {method: 'POST', body: op})
+        .then(response => response.text())
+        .then(data => console.log(data))
     });
 
     function activeClass(idElement) {
@@ -50,22 +61,15 @@
     function cargarCmbs(...dynamicValues) {
         dynamicValues.forEach(item => {
             if (item.includes('tbl'))
-                cargarDatosTabla(info[item]);
+                cargarDatosTabla(info[item], getColumns(item));
             else 
                 document.getElementById(item).innerHTML = info[item];
         });
     }
 
-    function cargarDatosTabla(data) {
-        $('#tblReportes').DataTable({
-            data: data,
-            columns: [
-                { data: 'PKCod' },
-                { data: 'N_Semana' },
-                { data: 'Fecha_Inicio' },
-                { data: 'Fecha_Fin' },
-                { data: 'Anho' }
-            ],
+    function cargarDatosTabla(data = null, columns = null) {
+        console.log(data, columns)
+        let objDataTable = {
             language: {
                 "processing":       "Procesando...",
                 "search":           "Buscar:",
@@ -89,5 +93,38 @@
                 }
             },
             bDestroy: true
-        });
+        }
+
+        if (data) Object.assign(objDataTable, {data: data});
+        if (columns) Object.assign(objDataTable, columns);
+        $('#tblReportes').DataTable(objDataTable);
+
+        console.log(objDataTable)
+    }
+
+    //definir las columnas segun el selector del option semanal, reportes, etc.
+    // enviar el parámetro mediante una función y asignarlo
+
+    function getColumns(title) {
+        const columns = {
+            'tblEmbarques': [
+                { title: 'Código', data: 'PKCod'},
+                { title: 'Semana', data: 'N_Semana'},
+                { title: 'Fecha Inicio', data: 'Fecha_Inicio'},
+                { title: 'Fecha Fin', data: 'Fecha_Fin'},
+                { title: 'Año', data: 'Anho'},
+            ],
+            'tblSemanal': [
+                { title: 'Id'},
+                { title: 'Nombre'},
+                { title: 'Fecha Inicio'},
+                { title: 'Fecha Fin'},
+                { title: 'Anho'},
+            ],
+            'tblGeneral': [],
+            'tblRechazos': [],
+            'tblNacional': [],
+        }
+
+        return {'columns': columns[title]}
     }
