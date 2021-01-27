@@ -6,7 +6,7 @@
         .then(response => response.json())
         .then(data => {
             Object.assign(info, data);
-            cargarCmbs('tblEmbarques')
+            cargarCmbs('cmbFincas', 'cmbTipoFruta', 'cmbCajas');
             $("#cmbCajas").select2();
         });
     });
@@ -16,10 +16,13 @@
     document.addEventListener('click', function(e) { 
         if (e.target.matches('#btnEmbarques')) { 
             activeClass('btnEmbarques');
-            cargarCmbs('cmbFincas', 'cmbCajas', 'cmbTipoFruta', 'tblEmbarques');
+            swithOptions('all');
+            cargarCmbs('tblEmbarques');
         }
         if (e.target.matches('#btnSemanal')) { 
             activeClass('btnSemanal');
+            swithOptions('none');
+            cargarCmbs('tblSemanal');
         }
         if (e.target.matches('#btnGeneral')) {
             activeClass('btnGeneral');
@@ -34,11 +37,13 @@
 
     $(document).on('click', '#btnGenerarReportes', function() {
         const options = {
-            anho: $('#txtAnho').val(),
-            from: $('#cmbDesde').val(),
-            to: $('#cmbHasta').val(),
-            tipoFruta: $('#cmbTipoFruta').val(),
-            cajas: $('#cmbCajas').val()
+            reportType: document.querySelector('a.item.active').textContent.trim(),
+            anho: $('#txtAnho').val() !== '' ? $('#txtAnho').val() : null,
+            from: $('#cmbDesde').val().includes('SEMANA') ? $('#cmbDesde').val() : null,
+            to: $('#cmbHasta').val().includes('SEMANA') ? $('#cmbHasta').val() : null,
+            finca: $('#cmbFincas').val() !== '' ? $('#cmbFincas').val() : null,
+            tipoFruta: $('#cmbTipoFruta').val() !== '' ? $('#cmbTipoFruta').val() : null,
+            cajas: typeof $('#cmbCajas').val() === 'object' ? $('#cmbCajas').val() : null
         }
         const op = new FormData();
         op.append('op', 'generar_reportes');
@@ -46,6 +51,17 @@
         fetch('../logica/contenido.php', {method: 'POST', body: op})
         .then(response => response.text())
         .then(data => console.log(data))
+    });
+
+    $(document).on('change', '#cmbTipoFruta', function() {
+        let value = $(this).val();
+        if (parseInt(value)) {
+            fetch(`../logica/contenido.php?op=cajas_tipofruta&id=${value}`)
+            .then(response => response.text())
+            .then(data => {
+                $('#cmbCajas').html(data);
+            })
+        }
     });
 
     function activeClass(idElement) {
@@ -68,7 +84,6 @@
     }
 
     function cargarDatosTabla(data = null, columns = null) {
-        console.log(data, columns)
         let objDataTable = {
             language: {
                 "processing":       "Procesando...",
@@ -97,6 +112,7 @@
 
         if (data) Object.assign(objDataTable, {data: data});
         if (columns) Object.assign(objDataTable, columns);
+        //$('#tblReportes').DataTable().fnDestroy();
         $('#tblReportes').DataTable(objDataTable);
 
         console.log(objDataTable)
@@ -115,11 +131,21 @@
                 { title: 'Año', data: 'Anho'},
             ],
             'tblSemanal': [
-                { title: 'Id'},
-                { title: 'Nombre'},
-                { title: 'Fecha Inicio'},
-                { title: 'Fecha Fin'},
-                { title: 'Anho'},
+                { title: 'Id', data: 'PKId'},
+                { title: 'Código', data: 'Cod_Embarque'},
+                { title: 'Nombre', data: 'Nombre'},
+                { title: 'Semana', data: 'N_Semana'},
+                { title: 'Fecha Inicial', data: 'Fecha_Inicio'},
+                { title: 'Fecha Final', data: 'Fecha_Fin'},
+                { title: 'Año', data: 'Anho'},
+                { title: 'RT', data: 'Ratio'},
+                { title: 'MM', data: 'Merma'},
+                { title: 'PR', data: 'Peso_Racimos'},
+                { title: 'AR', data: 'Area_Recorrida'},
+                { title: 'FP', data: 'Fruta_Piso'},
+                { title: 'Cajas Ela.', data: 'Total_CElaboradas'},
+                { title: 'Cajas Rec.', data: 'Total_CREchazadas'},
+                { title: 'Cajas Exp.', data: 'Total_CExportadas'},
             ],
             'tblGeneral': [],
             'tblRechazos': [],
@@ -127,4 +153,26 @@
         }
 
         return {'columns': columns[title]}
+    }
+
+    function swithOptions(param) {
+        const changeOp = (value, array) => {
+            if (value) {
+                array.forEach(item => {
+                    document.getElementById(item).setAttribute('disabled', value);
+                });
+            } else {
+                array.forEach(item => {
+                    document.getElementById(item).removeAttribute('disabled');
+                });
+            }
+        }
+        switch (param) {
+            case 'all':
+                changeOp(true, ['txtAnho', 'cmbDesde', 'cmbHasta', 'cmbFincas', 'cmbTipoFruta', 'cmbCajas']);
+                break;
+            case 'none':
+                changeOp(false, ['txtAnho', 'cmbDesde', 'cmbHasta', 'cmbFincas', 'cmbTipoFruta', 'cmbCajas']);
+                break;
+        }
     }

@@ -1010,22 +1010,13 @@
     }
 
     //
-    function listar_embarques() {
-        $result = ['tblEmbarques' => '', 'cmbFincas' => '', 'cmbCajas' => '', 'cmbTipoFruta' => ''];
+    function listar_embarques() { 
+        $result = ['tblEmbarques' => '', 'tblSemanal' => '', 'cmbFincas' => '', 'cmbCajas' => '', 'cmbTipoFruta' => ''];
         $embarques = listarembarques();
         $result['tblEmbarques'] = $embarques;
-        // foreach ($embarques as $i => $e) {
-        //     $result['tblEmbarques'] .= "
-        //         <tr>
-        //             <td>".($i+1)."</td>
-        //             <td>$e->PKCod</td>
-        //             <td>$e->N_Semana</td>
-        //             <td>$e->Fecha_Inicio</td>
-        //             <td>$e->Fecha_Fin</td>
-        //             <td>$e->Anho</td>
-        //         </tr>
-        //     ";
-        // }
+
+        $produccion = listartblproduccion();
+        $result['tblSemanal'] = $produccion;
 
         $fincas = listarfincas();
         $result['cmbFincas'] .= "<option>Seleccione...</option>";
@@ -1057,6 +1048,18 @@
     function generar_reportes() {
         $options = json_decode($_POST['options']);
         // $rendimientos 
+    }
+
+    //
+    function cajas_tipofruta() {
+        $cajas = buscarregistro($_GET['id'], 'FKId_TblTipoFruta', 'TblCajasProduccion', false);
+        $result = '';
+        foreach ($cajas as $c) {
+            $result .= "
+                <option value='$c->PKCodigo'>$c->PKCodigo</option>
+            ";
+        }
+        echo $result;
     }
 
 //  ACTUALIZAR ==================================================================================================================
@@ -1408,9 +1411,16 @@
                 listar_embarques();
                 break;
 
+            //
             case 'generar_reportes':
                 generar_reportes();
                 break;
+
+            //
+            case 'cajas_tipofruta':
+                cajas_tipofruta();
+                break;
+
                 
     //Metodos de actualizar
             case 'actualizarempresa':

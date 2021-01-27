@@ -1016,6 +1016,21 @@
         return $datos->fetchAll(PDO::FETCH_OBJ);
     }
 
+    //
+    function listartblproduccion() {
+        $bd = conectar();
+        $datos = $bd->prepare("
+            SELECT *
+            FROM TblProduccion as p
+            INNER JOIN TblSemanas as s 
+            ON p.FKId_TblSemanas = s.PKId
+            INNER JOIN TblFincas as f
+            ON f.PKIbm = p.FKIbm_TblFincas
+        ");
+        $datos->execute();
+        return $datos->fetchAll(PDO::FETCH_OBJ);
+    }
+
 
 // Sentencias de actualización------------------------------------------------------------------------------------------------------------
 

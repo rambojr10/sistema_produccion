@@ -36,7 +36,7 @@
                         <div class="invoice-hds-pro">
                             <hr>
                             <div class="ui pointing blue five item menu" id="menuItems">
-                                <a class="active item" id="btnEmbarques">
+                                <a class="item" id="btnEmbarques">
                                     Embarques
                                 </a>
                                 <a class="item" id="btnSemanal">
