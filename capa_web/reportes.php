@@ -120,12 +120,8 @@
                             </button>
                         </div>
 
-                        <div class="ui segment">
-                            <div class="table-responsive">
-                                <table class="table" id="tblReportes">
-                                    
-                                </table>
-                            </div>
+                        <div class="table-responsive" id="tblReportes" style="font-size: 12px; margin-bottom: 10px;">
+                            
                         </div>
 
                          <div class="row">

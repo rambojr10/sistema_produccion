@@ -110,10 +110,27 @@
             bDestroy: true
         }
 
-        if (data) Object.assign(objDataTable, {data: data});
+        if (data) {
+            let realData = [];
+            data.forEach(item => {
+                item.Merma = item.Merma ? parseFloat(item.Merma).toFixed(2) : null;
+                item.Peso_Racimos = item.Peso_Racimos ? parseFloat(item.Peso_Racimos).toFixed(2) : null;
+                item.Area_Recorrida = item.Area_Recorrida ? parseFloat(item.Area_Recorrida).toFixed(2) : null;
+                item.Ratio = item.Ratio ? parseFloat(item.Ratio).toFixed(2) : null;
+                item.Fruta_Piso = item.Fruta_Piso ? parseFloat(item.Fruta_Piso).toFixed(2) : null;
+                realData.push(item);
+            });
+
+            Object.assign(objDataTable, {data: realData});
+        }
         if (columns) Object.assign(objDataTable, columns);
-        //$('#tblReportes').DataTable().fnDestroy();
-        $('#tblReportes').DataTable(objDataTable);
+        
+        const tbl = document.querySelector('#tblReportes');
+        if (tbl.children[0]) tbl.removeChild(tbl.children[0]);
+        const table = document.createElement('table');
+        table.id = 'tblTemp';
+        tbl.appendChild(table);
+        $('#tblTemp').DataTable(objDataTable);
 
         console.log(objDataTable)
     }
@@ -131,7 +148,6 @@
                 { title: 'Año', data: 'Anho'},
             ],
             'tblSemanal': [
-                { title: 'Id', data: 'PKId'},
                 { title: 'Código', data: 'Cod_Embarque'},
                 { title: 'Nombre', data: 'Nombre'},
                 { title: 'Semana', data: 'N_Semana'},
