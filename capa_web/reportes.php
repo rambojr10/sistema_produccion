@@ -120,7 +120,7 @@
                             </button>
                         </div>
 
-                        <div class="table-responsive" id="tblReportes" style="font-size: 12px; margin-bottom: 10px;">
+                        <div class="table-responsive" id="tblReportes" style="font-size: 11.5px; margin-bottom: 10px;">
                             
                         </div>
 

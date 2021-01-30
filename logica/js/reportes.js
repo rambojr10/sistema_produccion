@@ -14,15 +14,18 @@
     console.log(info)
 
     document.addEventListener('click', function(e) { 
+        let tabla = '';
         if (e.target.matches('#btnEmbarques')) { 
-            activeClass('btnEmbarques');
+            tabla = 'tblEmbarques';
+            activeClass(tabla);
             swithOptions('all');
-            cargarCmbs('tblEmbarques');
+            cargarDatosTabla(tabla, info[tabla], false);
         }
         if (e.target.matches('#btnSemanal')) { 
+            tabla = 'tblSemanal';
             activeClass('btnSemanal');
             swithOptions('none');
-            cargarCmbs('tblSemanal');
+            cargarDatosTabla(tabla, info[tabla], true);
         }
         if (e.target.matches('#btnGeneral')) {
             activeClass('btnGeneral');
@@ -37,7 +40,7 @@
 
     $(document).on('click', '#btnGenerarReportes', function() {
         const options = {
-            reportType: document.querySelector('a.item.active').textContent.trim(),
+            reportType: document.querySelector('a.item.active').id.replace('btn', 'tbl'),
             anho: $('#txtAnho').val() !== '' ? $('#txtAnho').val() : null,
             from: $('#cmbDesde').val().includes('SEMANA') ? $('#cmbDesde').val() : null,
             to: $('#cmbHasta').val().includes('SEMANA') ? $('#cmbHasta').val() : null,
@@ -45,12 +48,16 @@
             tipoFruta: $('#cmbTipoFruta').val() !== '' ? $('#cmbTipoFruta').val() : null,
             cajas: typeof $('#cmbCajas').val() === 'object' ? $('#cmbCajas').val() : null
         }
+        console.log(options)
         const op = new FormData();
         op.append('op', 'generar_reportes');
         op.append('options', JSON.stringify(options));
         fetch('../logica/contenido.php', {method: 'POST', body: op})
-        .then(response => response.text())
-        .then(data => console.log(data))
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            //cargarDatosTabla(options.reportType, data, true);
+        });
     });
 
     $(document).on('change', '#cmbTipoFruta', function() {
@@ -76,15 +83,13 @@
 
     function cargarCmbs(...dynamicValues) {
         dynamicValues.forEach(item => {
-            if (item.includes('tbl'))
-                cargarDatosTabla(info[item], getColumns(item));
-            else 
-                document.getElementById(item).innerHTML = info[item];
+            document.getElementById(item).innerHTML = info[item];
         });
     }
 
-    function cargarDatosTabla(data = null, columns = null) {
+    function cargarDatosTabla(nameOption, data = null, hasFooter = false) {
         let objDataTable = {
+            columns: getColumns(nameOption),
             language: {
                 "processing":       "Procesando...",
                 "search":           "Buscar:",
@@ -107,36 +112,30 @@
                     "sortDescending": ": Activar para ordenar la columna de manera descendente"
                 }
             },
-            bDestroy: true
+            bDestroy: true,
         }
 
-        if (data) {
-            let realData = [];
-            data.forEach(item => {
-                item.Merma = item.Merma ? parseFloat(item.Merma).toFixed(2) : null;
-                item.Peso_Racimos = item.Peso_Racimos ? parseFloat(item.Peso_Racimos).toFixed(2) : null;
-                item.Area_Recorrida = item.Area_Recorrida ? parseFloat(item.Area_Recorrida).toFixed(2) : null;
-                item.Ratio = item.Ratio ? parseFloat(item.Ratio).toFixed(2) : null;
-                item.Fruta_Piso = item.Fruta_Piso ? parseFloat(item.Fruta_Piso).toFixed(2) : null;
-                realData.push(item);
-            });
-
-            Object.assign(objDataTable, {data: realData});
+        let footer = false;
+        if (data && hasFooter) {
+            let resultTfoot = setTfoot(data, nameOption);
+            Object.assign(objDataTable, {data: resultTfoot.data});
+            footer = resultTfoot.tfoot;
+        } else if (data) {
+            Object.assign(objDataTable, {data: data});
         }
-        if (columns) Object.assign(objDataTable, columns);
         
         const tbl = document.querySelector('#tblReportes');
         if (tbl.children[0]) tbl.removeChild(tbl.children[0]);
+        tbl.style.textAlign = hasFooter ? 'center' : 'left';
         const table = document.createElement('table');
         table.id = 'tblTemp';
+
         tbl.appendChild(table);
         $('#tblTemp').DataTable(objDataTable);
+        if (footer) $('#tblTemp').append(footer());
 
         console.log(objDataTable)
     }
-
-    //definir las columnas segun el selector del option semanal, reportes, etc.
-    // enviar el parámetro mediante una función y asignarlo
 
     function getColumns(title) {
         const columns = {
@@ -151,8 +150,8 @@
                 { title: 'Código', data: 'Cod_Embarque'},
                 { title: 'Nombre', data: 'Nombre'},
                 { title: 'Semana', data: 'N_Semana'},
-                { title: 'Fecha Inicial', data: 'Fecha_Inicio'},
-                { title: 'Fecha Final', data: 'Fecha_Fin'},
+                { title: 'Fecha In.', data: 'Fecha_Inicio'},
+                { title: 'Fecha Fi.', data: 'Fecha_Fin'},
                 { title: 'Año', data: 'Anho'},
                 { title: 'RT', data: 'Ratio'},
                 { title: 'MM', data: 'Merma'},
@@ -168,7 +167,7 @@
             'tblNacional': [],
         }
 
-        return {'columns': columns[title]}
+        return columns[title];
     }
 
     function swithOptions(param) {
@@ -191,4 +190,91 @@
                 changeOp(false, ['txtAnho', 'cmbDesde', 'cmbHasta', 'cmbFincas', 'cmbTipoFruta', 'cmbCajas']);
                 break;
         }
+    }
+
+    function setTfoot(data, option) {
+        let result = {data: [], tfoot: ''};
+        if (option === 'tblSemanal') {
+            this.ratio = 0;
+            this.merma = 0;
+            this.pesoRacimos = 0;
+            this.areaRecorrida = 0;
+            this.frutaPiso = 0;
+            this.totalElaboradas = 0;
+            this.totalExportadas = 0;
+            this.totalRechazadas = 0;
+            this.countRatio = 0;
+            this.countMerma = 0;
+            this.countPesoRacimos = 0;
+            this.countAreaRecorrida = 0;
+            this.countFrutaPiso = 0;
+            data.forEach(item => {
+                if (item.Ratio) {
+                    item.Ratio = parseFloat(item.Ratio).toFixed(2);
+                    this.ratio += parseFloat(item.Ratio);
+                    this.countRatio++;
+                }
+                if (item.Merma) {
+                    item.Merma = parseFloat(item.Merma).toFixed(2);
+                    this.merma += parseFloat(item.Merma);
+                    this.countMerma++;
+                }
+                if (item.Peso_Racimos) {
+                    item.Peso_Racimos = parseFloat(item.Peso_Racimos).toFixed(2);
+                    this.pesoRacimos += parseFloat(item.Peso_Racimos);
+                    this.countPesoRacimos++;
+                }
+                if (item.Area_Recorrida) {
+                    item.Area_Recorrida = parseFloat(item.Area_Recorrida).toFixed(1);
+                    this.areaRecorrida += parseFloat(item.Area_Recorrida);
+                    this.countAreaRecorrida++;
+                }
+                if (item.Fruta_Piso) {
+                    item.Fruta_Piso = parseFloat(item.Fruta_Piso).toFixed(2);
+                    this.frutaPiso += parseFloat(item.Fruta_Piso);
+                    this.countFrutaPiso++;
+                }
+                if (item.Total_CElaboradas) {
+                    this.totalElaboradas += parseInt(item.Total_CElaboradas);
+                }
+                if (item.Total_CREchazadas) {
+                    this.totalRechazadas += parseInt(item.Total_CREchazadas);
+                }
+                if (item.Total_CExportadas) {
+                    this.totalExportadas += parseInt(item.Total_CExportadas);
+                }
+                // --------------------------------------------
+                result.data.push(item);
+            });
+            const tfoot = _ => {
+                let tagFoot = document.createElement('tfoot');
+                tagFoot.innerHTML = `
+                    <tr>
+                        <th>TOTAL</th>
+                        <td colspan="5"></td>
+                        <td>${this.ratio}</td>
+                        <td>${this.merma}</td>
+                        <td>${this.pesoRacimos}</td>
+                        <td>${this.areaRecorrida}</td>
+                        <td>${this.frutaPiso}</td>
+                        <td>${this.totalElaboradas}</td>
+                        <td>${this.totalRechazadas}</td>
+                        <td>${this.totalExportadas}</td>
+                    </tr>
+                    <tr>
+                        <th>PROMEDIO</th>
+                        <td colspan="5"></td>
+                        <td>${(this.ratio/this.countRatio).toFixed(1)}</td>
+                        <td>${(this.merma/this.countMerma).toFixed(1)}</td>
+                        <td>${(this.pesoRacimos/this.countPesoRacimos).toFixed(1)}</td>
+                        <td>${(this.areaRecorrida/this.countAreaRecorrida).toFixed(1)}</td>
+                        <td>${(this.frutaPiso/this.countFrutaPiso).toFixed(1)}</td>
+                        <td colspan="3"></td>  
+                    </tr>
+                `;
+                return tagFoot;
+            }
+            result.tfoot = tfoot;
+        }
+        return result;
     }
