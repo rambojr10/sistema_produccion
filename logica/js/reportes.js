@@ -17,7 +17,7 @@
         let tabla = '';
         if (e.target.matches('#btnEmbarques')) { 
             tabla = 'tblEmbarques';
-            activeClass(tabla);
+            activeClass('btnEmbarques');
             swithOptions('all');
             cargarDatosTabla(tabla, info[tabla], false);
         }
@@ -32,6 +32,7 @@
         }
         if (e.target.matches('#btnRechazos')) {
             activeClass('btnRechazos');
+            swithOptions('rechazos');
         }
         if (e.target.matches('#btnNacional')) {
             activeClass('btnNacional');
@@ -53,7 +54,7 @@
         op.append('op', 'generar_reportes');
         op.append('options', JSON.stringify(options));
         fetch('../logica/contenido.php', {method: 'POST', body: op})
-        .then(response => response.json())
+        .then(response => response.text())
         .then(data => {
             console.log(data)
             //cargarDatosTabla(options.reportType, data, true);
@@ -113,6 +114,9 @@
                 }
             },
             bDestroy: true,
+            "scrollY": "400px",
+            "scrollCollapse": true,
+            "paging": false
         }
 
         let footer = false;
@@ -188,6 +192,10 @@
                 break;
             case 'none':
                 changeOp(false, ['txtAnho', 'cmbDesde', 'cmbHasta', 'cmbFincas', 'cmbTipoFruta', 'cmbCajas']);
+                break;
+            case 'rechazos':
+                changeOp(false, ['txtAnho', 'cmbDesde', 'cmbHasta', 'cmbFincas']);
+                changeOp(true, ['cmbTipoFruta', 'cmbCajas']);
                 break;
         }
     }

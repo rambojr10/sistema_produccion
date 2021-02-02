@@ -1047,8 +1047,73 @@
     // 
     function generar_reportes() {
         $options = json_decode($_POST['options']);
-        // $rendimientos 
+        $statement = '';
+        if ($options->reportType === 'tblSemanal') {
+            if ($options->anho) {
+                $statement = "
+                    SELECT *, p.PKId as Id
+                    FROM TblProduccion as p
+                    INNER JOIN TblSemanas as s 
+                    ON p.FKId_TblSemanas = s.PKId
+                    INNER JOIN TblFincas as f
+                    ON f.PKIbm = p.FKIbm_TblFincas
+                    WHERE p.Anho_Produccion = $options->anho
+                ";
+                if ($options->from and $options->to) {
+                    $convertData = [
+                        'from' => explode(' ', $options->from),
+                        'to' => explode(' ', $options->to),
+                        'all' => []
+                    ];
+                    for ($x = $convertData['from'][1]; $x <= $convertData['to'][1]; $x++) { 
+                        $convertData['all'][] = "'".$convertData['from'][0]." $x'";
+                    }
+                    $convertData['return'] = implode(', ', $convertData['all']);
+                    $statement .= "AND s.N_Semana IN (" . ($convertData['return']) . ")";
+                    /*if ($option['finca']) {
+                    }*/
+                }
+            }
+        }
+        echo $statement . ' ------------------------------------------------ ';
+        $result = generarReportes($statement);
+        echo json_encode($result);
     }
+
+            /*
+                SELECT *, p.PKId as Id
+                FROM TblDet_TblDet_TblProduccion as ddp, TblDet_TblProduccion as dp, TblProduccion as p, TblSemanas as s, TblFincas as f
+                WHERE 
+                AND ddp.N_CajasProducidas_Dia > 0
+                AND ddp.FKId_TblDet_TblProduccion = dp.PKId
+                AND dp.FKId_TblProduccion = p.PKId
+                AND p.FKIbm_TblFincas = f.PKIbm
+                AND p.FKId_TblSemanas = s.PKId
+                AND ddp.FKCodigo_TblCajasProduccion IN ('1015', '1014', '1107', '1124')
+                AND p.PKId IN
+                (
+                    SELECT p.PKId
+                    FROM TblProduccion as p
+                    INNER JOIN TblSemanas as s 
+                    ON p.FKId_TblSemanas = s.PKId
+                    INNER JOIN TblFincas as f
+                    ON f.PKIbm = p.FKIbm_TblFincas
+                    WHERE p.Anho_Produccion = '2020'
+                    AND p.FKIbm_TblFincas = '80074'
+                    AND s.N_Semana BETWEEN 'SEMANA 49' AND 'SEMANA 52'
+                )
+
+                quitar el botón de search
+
+        if ($options['reportType'] === 'tblGeneral') {
+            # code...
+        }
+        if ($options['reportType'] === 'tblRechazos') {
+            # code...
+        }
+        if ($options['reportType'] === 'tblNacional') {
+            # code...
+        }*/
 
     //
     function cajas_tipofruta() {
