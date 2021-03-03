@@ -19,13 +19,13 @@
             tabla = 'tblEmbarques';
             activeClass('btnEmbarques');
             swithOptions('all');
-            cargarDatosTabla(tabla, info[tabla], false);
+            cargarDatosTabla(tabla, info[tabla]);
         }
         if (e.target.matches('#btnSemanal')) { 
             tabla = 'tblSemanal';
             activeClass('btnSemanal');
             swithOptions('none');
-            cargarDatosTabla(tabla, info[tabla], true);
+            cargarDatosTabla(tabla, 'case1', info[tabla], true);
         }
         if (e.target.matches('#btnGeneral')) {
             activeClass('btnGeneral');
@@ -45,8 +45,8 @@
             anho: $('#txtAnho').val() !== '' ? $('#txtAnho').val() : null,
             from: $('#cmbDesde').val().includes('SEMANA') ? $('#cmbDesde').val() : null,
             to: $('#cmbHasta').val().includes('SEMANA') ? $('#cmbHasta').val() : null,
-            finca: $('#cmbFincas').val() !== '' ? $('#cmbFincas').val() : null,
-            tipoFruta: $('#cmbTipoFruta').val() !== '' ? $('#cmbTipoFruta').val() : null,
+            finca: $('#cmbFincas').val().includes('...') ? null : $('#cmbFincas').val(),
+            tipoFruta: $('#cmbTipoFruta').val().includes('...') ? null : document.getElementById('cmbTipoFruta').value,
             cajas: typeof $('#cmbCajas').val() === 'object' ? $('#cmbCajas').val() : null
         }
         console.log(options)
@@ -73,6 +73,7 @@
     });
 
     function activeClass(idElement) {
+        cleanFields();
         const elements = document.querySelectorAll('a.item');
         elements.forEach(item => {
             if (item.id === idElement)
@@ -88,9 +89,15 @@
         });
     }
 
-    function cargarDatosTabla(nameOption, data = null, hasFooter = false) {
+    function cargarDatosTabla(nameOption, option = null, data = null, hasFooter = false) {
         let objDataTable = {
-            columns: getColumns(nameOption),
+            "columnDefs": nameOption === 'tblSemanal' ? [{
+                "targets": [ 0 ],
+                "visible": false,
+                "searchable": false
+            }] : undefined,
+            "ordering": false,
+            columns: getColumns(nameOption, option),
             language: {
                 "processing":       "Procesando...",
                 "search":           "Buscar:",
@@ -141,7 +148,7 @@
         console.log(objDataTable)
     }
 
-    function getColumns(title) {
+    function getColumns(title, option) {
         const columns = {
             'tblEmbarques': [
                 { title: 'Código', data: 'PKCod'},
@@ -150,28 +157,41 @@
                 { title: 'Fecha Fin', data: 'Fecha_Fin'},
                 { title: 'Año', data: 'Anho'},
             ],
-            'tblSemanal': [
-                { title: 'Código', data: 'Cod_Embarque'},
-                { title: 'Nombre', data: 'Nombre'},
-                { title: 'Semana', data: 'N_Semana'},
-                { title: 'Fecha In.', data: 'Fecha_Inicio'},
-                { title: 'Fecha Fi.', data: 'Fecha_Fin'},
-                { title: 'Año', data: 'Anho'},
-                { title: 'RT', data: 'Ratio'},
-                { title: 'MM', data: 'Merma'},
-                { title: 'PR', data: 'Peso_Racimos'},
-                { title: 'AR', data: 'Area_Recorrida'},
-                { title: 'FP', data: 'Fruta_Piso'},
-                { title: 'Cajas Ela.', data: 'Total_CElaboradas'},
-                { title: 'Cajas Rec.', data: 'Total_CREchazadas'},
-                { title: 'Cajas Exp.', data: 'Total_CExportadas'},
-            ],
+            'tblSemanal': {
+                'case1' : [
+                    { title: 'Id', data: 'Id'},
+                    { title: 'Código', data: 'Cod_Embarque'},
+                    { title: 'Nombre', data: 'Nombre'},
+                    { title: 'Semana', data: 'N_Semana'},
+                    { title: 'Fecha In.', data: 'Fecha_Inicio'},
+                    { title: 'Fecha Fi.', data: 'Fecha_Fin'},
+                    { title: 'Año', data: 'Anho'},
+                    { title: 'RT', data: 'Ratio'},
+                    { title: 'MM', data: 'Merma'},
+                    { title: 'PR', data: 'Peso_Racimos'},
+                    { title: 'AR', data: 'Area_Recorrida'},
+                    { title: 'FP', data: 'Fruta_Piso'},
+                    { title: 'Cajas Ela.', data: 'Total_CElaboradas'},
+                    { title: 'Cajas Rec.', data: 'Total_CREchazadas'},
+                    { title: 'Cajas Exp.', data: 'Total_CExportadas'},
+                ],
+                'case2' : [
+                    { title: 'Id', data: 'Id'},
+                    { title: 'Código', data: 'Cod_Embarque'},
+                    { title: 'Nombre', data: 'Nombre'},
+                    { title: 'Semana', data: 'N_Semana'},
+                    { title: 'F.Conv', data: 'FactorConversion'},
+                    { title: 'Cod. Caja', data: 'FKCodigo_TblCajasProduccion'},
+                    { title: 'Cajas Prod.', data: 'N_CajasProducidas_Dia'},
+                    { title: '20 Kilos', data: 'Convertido'},
+                ]
+            },
             'tblGeneral': [],
             'tblRechazos': [],
             'tblNacional': [],
         }
 
-        return columns[title];
+        return option ? columns[title][option] : columns[title];
     }
 
     function swithOptions(param) {
@@ -285,4 +305,20 @@
             result.tfoot = tfoot;
         }
         return result;
+    }
+
+    function cleanFields() {
+        let first = 'Seleccione...'
+        $('#txtAnho').val('');
+        $('#cmbDesde').val(first);
+        $('#cmbHasta').val(first);
+        $('#cmbFincas').val(first);
+        $('#cmbTipoFruta').val(first);
+        $("#cmbCajas option[value]").remove();
+        cargarCmbs('cmbCajas');
+    }
+
+    function dayOf(v) {
+        const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+        return days[v];
     }
