@@ -34,15 +34,12 @@
 
                     <div class="invoice-hds-pro">
                         <hr>
-                        <div class="ui pointing blue five item menu" id="menuItems">
+                        <div class="ui pointing blue four item menu" id="menuItems">
                             <a class="item" id="btnEmbarques">
                                 Embarques
                             </a>
-                            <a class="item" id="btnSemanal">
-                                Semanal
-                            </a>
-                            <a class="item" id="btnGeneral">
-                                General
+                            <a class="item" id="btnAllinone">
+                                All in one
                             </a>
                             <a class="item" id="btnRechazos">
                                 Rechazos

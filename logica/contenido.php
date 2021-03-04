@@ -1012,12 +1012,12 @@
 
     //
     function listar_embarques() { 
-        $result = ['tblEmbarques' => '', 'tblSemanal' => '', 'cmbFincas' => '', 'cmbCajas' => '', 'cmbTipoFruta' => ''];
+        $result = ['tblEmbarques' => '', 'tblAllinone' => '', 'cmbFincas' => '', 'cmbCajas' => '', 'cmbTipoFruta' => ''];
         $embarques = listarembarques();
         $result['tblEmbarques'] = $embarques;
 
         $produccion = listartblproduccion();
-        $result['tblSemanal'] = $produccion;
+        $result['tblAllinone'] = $produccion;
 
         $fincas = listarfincas();
         $result['cmbFincas'] .= "<option>Seleccione...</option>";
@@ -1049,7 +1049,7 @@
     function generar_reportes() {
         $options = json_decode($_POST['options']);
         $statement = '';
-        if ($options->reportType === 'tblSemanal' || $options->reportType === 'tblRechazos') {
+        if ($options->reportType === 'tblAllinone' || $options->reportType === 'tblRechazos') {
             if ($options->anho) {
                 $statement = "
                     SELECT *, p.PKId as Id
@@ -1113,7 +1113,7 @@
             }
         }
         $result = generarReportes($statement);
-        echo $statement;
+        //echo $statement;
         echo json_encode($result);
     }
 

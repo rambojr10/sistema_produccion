@@ -1,5 +1,6 @@
 
     const info = {};
+    let api;
 
     $(document).on('click', "[href='#verreporte']", function() {
         fetch('../logica/contenido.php?op=listarembarques')
@@ -21,14 +22,11 @@
             swithOptions('all');
             cargarDatosTabla(tabla, info[tabla]);
         }
-        if (e.target.matches('#btnSemanal')) { 
-            tabla = 'tblSemanal';
-            activeClass('btnSemanal');
+        if (e.target.matches('#btnAllinone')) { 
+            tabla = 'tblAllinone';
+            activeClass('btnAllinone');
             swithOptions('none');
-            cargarDatosTabla(tabla, 'case1', info[tabla], true);
-        }
-        if (e.target.matches('#btnGeneral')) {
-            activeClass('btnGeneral');
+            cargarDatosTabla(tabla, info[tabla], true, 'case1');
         }
         if (e.target.matches('#btnRechazos')) {
             activeClass('btnRechazos');
@@ -54,9 +52,10 @@
         op.append('op', 'generar_reportes');
         op.append('options', JSON.stringify(options));
         fetch('../logica/contenido.php', {method: 'POST', body: op})
-        .then(response => response.text())
+        .then(response => response.json())
         .then(data => {
             console.log(data)
+            if (options.reportType === 'tblAllinone' && options.tipoFruta) cargarDatosTabla(options.reportType, data, false, 'case2');
             //cargarDatosTabla(options.reportType, data, true);
         });
     });
@@ -70,6 +69,11 @@
                 $('#cmbCajas').html(data);
             })
         }
+    });
+
+    $(document).on('click', '#tblReportes tbody tr', function () {
+        let data = api?.row(this).data();
+        console.log(data);
     });
 
     function activeClass(idElement) {
@@ -89,9 +93,9 @@
         });
     }
 
-    function cargarDatosTabla(nameOption, option = null, data = null, hasFooter = false) {
+    function cargarDatosTabla(nameOption, data = null, hasFooter = false, option = null) {
         let objDataTable = {
-            "columnDefs": nameOption === 'tblSemanal' ? [{
+            "columnDefs": nameOption === 'tblAllinone' ? [{
                 "targets": [ 0 ],
                 "visible": false,
                 "searchable": false
@@ -126,6 +130,8 @@
             "paging": false
         }
 
+        data = objDataTable.columns.filter(v => v.data === 'Convertido') ? aggConvert(data) : data;
+
         let footer = false;
         if (data && hasFooter) {
             let resultTfoot = setTfoot(data, nameOption);
@@ -143,6 +149,8 @@
 
         tbl.appendChild(table);
         $('#tblTemp').DataTable(objDataTable);
+        api = $("#tblTemp").DataTable(objDataTable);
+
         if (footer) $('#tblTemp').append(footer());
 
         console.log(objDataTable)
@@ -157,7 +165,7 @@
                 { title: 'Fecha Fin', data: 'Fecha_Fin'},
                 { title: 'Año', data: 'Anho'},
             ],
-            'tblSemanal': {
+            'tblAllinone': {
                 'case1' : [
                     { title: 'Id', data: 'Id'},
                     { title: 'Código', data: 'Cod_Embarque'},
@@ -186,7 +194,6 @@
                     { title: '20 Kilos', data: 'Convertido'},
                 ]
             },
-            'tblGeneral': [],
             'tblRechazos': [],
             'tblNacional': [],
         }
@@ -222,7 +229,7 @@
 
     function setTfoot(data, option) {
         let result = {data: [], tfoot: ''};
-        if (option === 'tblSemanal') {
+        if (option === 'tblAllinone') {
             this.ratio = 0;
             this.merma = 0;
             this.pesoRacimos = 0;
@@ -304,6 +311,12 @@
             }
             result.tfoot = tfoot;
         }
+        if (option === 'tblRechazos') {
+
+        }
+        if (option === 'tblNacional') {
+            
+        }
         return result;
     }
 
@@ -316,6 +329,15 @@
         $('#cmbTipoFruta').val(first);
         $("#cmbCajas option[value]").remove();
         cargarCmbs('cmbCajas');
+    }
+
+    function aggConvert(data) {
+        let newData = [];
+        data.forEach(e => {
+            e.Convertido = parseFloat(e.FactorConversion) * parseInt(e.N_CajasProducidas_Dia);
+            newData.push(e);
+        });
+        return newData;
     }
 
     function dayOf(v) {
