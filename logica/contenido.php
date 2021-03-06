@@ -1048,73 +1048,76 @@
     // 
     function generar_reportes() {
         $options = json_decode($_POST['options']);
-        $statement = '';
-        if ($options->reportType === 'tblAllinone' || $options->reportType === 'tblRechazos') {
-            if ($options->anho) {
-                $statement = "
-                    SELECT *, p.PKId as Id
-                    FROM TblProduccion as p
-                    INNER JOIN TblSemanas as s 
-                    ON p.FKId_TblSemanas = s.PKId
-                    INNER JOIN TblFincas as f
-                    ON f.PKIbm = p.FKIbm_TblFincas
-                    WHERE p.Anho_Produccion = $options->anho
-                ";
-                if ($options->from and $options->to) {
-                    $convertData = [
-                        'from' => explode(' ', $options->from),
-                        'to' => explode(' ', $options->to),
-                        'all' => []
-                    ];
-                    for ($x = $convertData['from'][1]; $x <= $convertData['to'][1]; $x++) { 
-                        $convertData['all'][] = "'".$convertData['from'][0]." $x'";
+        if (isset($options->reportType)) {
+            $statement = '';
+            if ($options->reportType === 'tblAllinone' || $options->reportType === 'tblRechazos') {
+                if ($options->anho) {
+                    $statement = "
+                        SELECT *, p.PKId as Id
+                        FROM TblProduccion as p
+                        INNER JOIN TblSemanas as s 
+                        ON p.FKId_TblSemanas = s.PKId
+                        INNER JOIN TblFincas as f
+                        ON f.PKIbm = p.FKIbm_TblFincas
+                        WHERE p.Anho_Produccion = $options->anho
+                    ";
+                    if ($options->from !== null and $options->to !== null) {
+                        $convertData = [
+                            'from' => explode(' ', $options->from),
+                            'to' => explode(' ', $options->to),
+                            'all' => []
+                        ];
+                        for ($x = $convertData['from'][1]; $x <= $convertData['to'][1]; $x++) { 
+                            $convertData['all'][] = "'".$convertData['from'][0]." $x'";
+                        }
+                        $convertData['return'] = implode(', ', $convertData['all']);
+                        $statement .= "
+                            AND s.N_Semana IN (" . ($convertData['return']) . ")
+                        ";
                     }
-                    $convertData['return'] = implode(', ', $convertData['all']);
-                    $statement .= "
-                        AND s.N_Semana IN (" . ($convertData['return']) . ")
-                    ";
-                }
-                if ($options->finca) {
-                    $statement .= "
-                        AND p.FKIbm_TblFincas = '$options->finca'
-                    ";
-                }
-                if ($options->tipoFruta and !$options->cajas) {
-                    $isData = explode('FROM', $statement);
-                    $statement = "
-                        SELECT *, p.PKId as Id
-                        FROM TblDet_TblDet_TblProduccion as ddp, TblDet_TblProduccion as dp, TblProduccion as p, TblSemanas as s, TblFincas as f, TblCajasProduccion as cp
-                        WHERE ddp.N_CajasProducidas_Dia > 0
-                        AND ddp.FKId_TblDet_TblProduccion = dp.PKId
-                        AND dp.FKId_TblProduccion = p.PKId
-                        AND p.FKIbm_TblFincas = f.PKIbm
-                        AND p.FKId_TblSemanas = s.PKId
-                        AND ddp.FKCodigo_TblCajasProduccion = cp.PKCodigo
-                        AND cp.FKId_TblTipoFruta = $options->tipoFruta
-                        AND p.PKId IN (SELECT p.PKId FROM $isData[1])
-                    ";
-                }
-                if ($options->cajas) {
-                    $cajas = implode(', ', $options->cajas);
-                    $isData = explode('FROM', $statement);
-                    $statement = "
-                        SELECT *, p.PKId as Id
-                        FROM TblDet_TblDet_TblProduccion as ddp, TblDet_TblProduccion as dp, TblProduccion as p, TblSemanas as s, TblFincas as f, TblCajasProduccion as cp
-                        WHERE ddp.N_CajasProducidas_Dia > 0
-                        AND ddp.FKId_TblDet_TblProduccion = dp.PKId
-                        AND dp.FKId_TblProduccion = p.PKId
-                        AND p.FKIbm_TblFincas = f.PKIbm
-                        AND p.FKId_TblSemanas = s.PKId
-                        AND ddp.FKCodigo_TblCajasProduccion = cp.PKCodigo
-                        AND ddp.FKCodigo_TblCajasProduccion IN ($cajas)
-                        AND p.PKId IN (SELECT p.PKId FROM $isData[1])
-                    ";
+                    if ($options->finca) {
+                        $statement .= "
+                            AND p.FKIbm_TblFincas = '$options->finca'
+                        ";
+                    }
+                    if ($options->tipoFruta and !$options->cajas) {
+                        $isData = explode('FROM', $statement);
+                        $statement = "
+                            SELECT *, p.PKId as Id
+                            FROM TblDet_TblDet_TblProduccion as ddp, TblDet_TblProduccion as dp, TblProduccion as p, TblSemanas as s, TblFincas as f, TblCajasProduccion as cp
+                            WHERE ddp.N_CajasProducidas_Dia > 0
+                            AND ddp.FKId_TblDet_TblProduccion = dp.PKId
+                            AND dp.FKId_TblProduccion = p.PKId
+                            AND p.FKIbm_TblFincas = f.PKIbm
+                            AND p.FKId_TblSemanas = s.PKId
+                            AND ddp.FKCodigo_TblCajasProduccion = cp.PKCodigo
+                            AND cp.FKId_TblTipoFruta = $options->tipoFruta
+                            AND p.PKId IN (SELECT p.PKId FROM $isData[1])
+                        ";
+                    }
+                    if ($options->cajas) {
+                        $cajas = implode(', ', $options->cajas);
+                        $isData = explode('FROM', $statement);
+                        $statement = "
+                            SELECT *, p.PKId as Id
+                            FROM TblDet_TblDet_TblProduccion as ddp, TblDet_TblProduccion as dp, TblProduccion as p, TblSemanas as s, TblFincas as f, TblCajasProduccion as cp
+                            WHERE ddp.N_CajasProducidas_Dia > 0
+                            AND ddp.FKId_TblDet_TblProduccion = dp.PKId
+                            AND dp.FKId_TblProduccion = p.PKId
+                            AND p.FKIbm_TblFincas = f.PKIbm
+                            AND p.FKId_TblSemanas = s.PKId
+                            AND ddp.FKCodigo_TblCajasProduccion = cp.PKCodigo
+                            AND ddp.FKCodigo_TblCajasProduccion IN ($cajas)
+                            AND p.PKId IN (SELECT p.PKId FROM $isData[1])
+                        ";
+                    }
                 }
             }
+            $result = $statement ? generarReportes($statement) : null;
+            echo json_encode($result);
+        } else {
+            echo json_encode(null);
         }
-        $result = generarReportes($statement);
-        //echo $statement;
-        echo json_encode($result);
     }
 
     //

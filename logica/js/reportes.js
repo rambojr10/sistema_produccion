@@ -8,7 +8,8 @@
         .then(data => {
             Object.assign(info, data);
             cargarCmbs('cmbFincas', 'cmbTipoFruta', 'cmbCajas');
-            $("#cmbCajas").select2();
+            document.querySelector('#cmbCajas').hasChildNodes() ? $("#cmbCajas").select2() : this.click();
+            switchOptions('all')
         });
     });
 
@@ -19,18 +20,18 @@
         if (e.target.matches('#btnEmbarques')) { 
             tabla = 'tblEmbarques';
             activeClass('btnEmbarques');
-            swithOptions('all');
+            switchOptions('all');
             cargarDatosTabla(tabla, info[tabla]);
         }
         if (e.target.matches('#btnAllinone')) { 
             tabla = 'tblAllinone';
             activeClass('btnAllinone');
-            swithOptions('none');
+            switchOptions('none');
             cargarDatosTabla(tabla, info[tabla], true, 'case1');
         }
         if (e.target.matches('#btnRechazos')) {
             activeClass('btnRechazos');
-            swithOptions('rechazos');
+            switchOptions('rechazos');
         }
         if (e.target.matches('#btnNacional')) {
             activeClass('btnNacional');
@@ -38,8 +39,9 @@
     });
 
     $(document).on('click', '#btnGenerarReportes', function() {
+        
         const options = {
-            reportType: document.querySelector('a.item.active').id.replace('btn', 'tbl'),
+            reportType: document.querySelector('a.item.active')?.id.replace('btn', 'tbl'),
             anho: $('#txtAnho').val() !== '' ? $('#txtAnho').val() : null,
             from: $('#cmbDesde').val().includes('SEMANA') ? $('#cmbDesde').val() : null,
             to: $('#cmbHasta').val().includes('SEMANA') ? $('#cmbHasta').val() : null,
@@ -48,16 +50,41 @@
             cajas: typeof $('#cmbCajas').val() === 'object' ? $('#cmbCajas').val() : null
         }
         console.log(options)
-        const op = new FormData();
-        op.append('op', 'generar_reportes');
-        op.append('options', JSON.stringify(options));
-        fetch('../logica/contenido.php', {method: 'POST', body: op})
-        .then(response => response.json())
-        .then(data => {
-            console.log(data)
-            if (options.reportType === 'tblAllinone' && options.tipoFruta) cargarDatosTabla(options.reportType, data, false, 'case2');
-            //cargarDatosTabla(options.reportType, data, true);
-        });
+        if (options.reportType && options.anho) {
+
+            //Loader
+            $('.osc').fadeIn();
+            $('#loader').fadeIn();
+
+            const op = new FormData();
+            op.append('op', 'generar_reportes');
+            op.append('options', JSON.stringify(options));
+            fetch('../logica/contenido.php', {method: 'POST', body: op})
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                if (options.reportType === 'tblAllinone' && options.tipoFruta) {
+                    cargarDatosTabla(options.reportType, data, false, 'case2');
+                } else if (options.reportType === 'tblAllinone' && !options.tipoFruta) {
+                    cargarDatosTabla(options.reportType, data, false, 'case1');
+                } else if (options.reportType === 'tblRechazos') {
+                    cargarDatosTabla(options.reportType, data, true);
+                }
+                //cargarDatosTabla(options.reportType, data, true);
+                
+                //Loader
+                $('.osc').fadeOut();
+                $('#loader').fadeOut();
+            });
+        } else {
+            $.notify({
+                icon: "fa fa-times",
+                title: "<strong>Generar reportes: </strong>",
+                message: "Consulta no generada, datos no encontrados."
+            },{
+                type: "danger"
+            });
+        }
     });
 
     $(document).on('change', '#cmbTipoFruta', function() {
@@ -71,7 +98,7 @@
         }
     });
 
-    $(document).on('click', '#tblReportes tbody tr', function () {
+    $(document).on('dblclick', '#tblReportes tbody tr', function() {
         let data = api?.row(this).data();
         console.log(data);
     });
@@ -95,12 +122,12 @@
 
     function cargarDatosTabla(nameOption, data = null, hasFooter = false, option = null) {
         let objDataTable = {
-            "columnDefs": nameOption === 'tblAllinone' ? [{
+            "columnDefs": nameOption !== 'tblEmbarques' ? [{
                 "targets": [ 0 ],
                 "visible": false,
                 "searchable": false
             }] : undefined,
-            "ordering": false,
+            "ordering": nameOption !== 'tblEmbarques' ? false : true,
             columns: getColumns(nameOption, option),
             language: {
                 "processing":       "Procesando...",
@@ -194,14 +221,23 @@
                     { title: '20 Kilos', data: 'Convertido'},
                 ]
             },
-            'tblRechazos': [],
+            'tblRechazos': [
+                { title: 'Id', data: 'Id'},
+                { title: 'Código', data: 'Cod_Embarque'},
+                { title: 'Nombre', data: 'Nombre'},
+                { title: 'Semana', data: 'N_Semana'},
+                { title: 'Fecha In.', data: 'Fecha_Inicio'},
+                { title: 'Fecha Fi.', data: 'Fecha_Fin'},
+                { title: 'Cajas Rec.', data: 'Total_CREchazadas'},
+                { title: 'Año', data: 'Anho'},
+            ],
             'tblNacional': [],
         }
 
         return option ? columns[title][option] : columns[title];
     }
 
-    function swithOptions(param) {
+    function switchOptions(param) {
         const changeOp = (value, array) => {
             if (value) {
                 array.forEach(item => {
@@ -245,17 +281,17 @@
             this.countFrutaPiso = 0;
             data.forEach(item => {
                 if (item.Ratio) {
-                    item.Ratio = parseFloat(item.Ratio).toFixed(2);
+                    item.Ratio = parseFloat(item.Ratio).toFixed(1);
                     this.ratio += parseFloat(item.Ratio);
                     this.countRatio++;
                 }
                 if (item.Merma) {
-                    item.Merma = parseFloat(item.Merma).toFixed(2);
+                    item.Merma = parseFloat(item.Merma).toFixed(1);
                     this.merma += parseFloat(item.Merma);
                     this.countMerma++;
                 }
                 if (item.Peso_Racimos) {
-                    item.Peso_Racimos = parseFloat(item.Peso_Racimos).toFixed(2);
+                    item.Peso_Racimos = parseFloat(item.Peso_Racimos).toFixed(1);
                     this.pesoRacimos += parseFloat(item.Peso_Racimos);
                     this.countPesoRacimos++;
                 }
@@ -265,7 +301,7 @@
                     this.countAreaRecorrida++;
                 }
                 if (item.Fruta_Piso) {
-                    item.Fruta_Piso = parseFloat(item.Fruta_Piso).toFixed(2);
+                    item.Fruta_Piso = parseFloat(item.Fruta_Piso).toFixed(1);
                     this.frutaPiso += parseFloat(item.Fruta_Piso);
                     this.countFrutaPiso++;
                 }
@@ -312,7 +348,35 @@
             result.tfoot = tfoot;
         }
         if (option === 'tblRechazos') {
-
+            this.totalRechazadas = 0;
+            this.countRechazos = 0;
+            data.forEach(item => {
+                if (item.Total_CREchazadas) {
+                    this.totalRechazadas += parseInt(item.Total_CREchazadas);
+                    this.countRechazos++;
+                }
+                // --------------------------------------------
+                result.data.push(item);
+            });
+            const tfoot = _ => {
+                let tagFoot = document.createElement('tfoot');
+                tagFoot.innerHTML = `
+                    <tr>
+                        <th>TOTAL</th>
+                        <td colspan="4"></td>
+                        <td>${this.totalRechazadas}</td>
+                        <td colspan="1"></td>
+                    </tr>
+                    <tr>
+                        <th>PROMEDIO</th>
+                        <td colspan="4"></td>
+                        <td>${(this.totalRechazadas/this.countRechazos).toFixed(1)}</td>
+                        <td colspan="1"></td>
+                    </tr>
+                `;
+                return tagFoot;
+            }
+            result.tfoot = tfoot; 
         }
         if (option === 'tblNacional') {
             
@@ -321,7 +385,7 @@
     }
 
     function cleanFields() {
-        let first = 'Seleccione...'
+        let first = 'Seleccione...';
         $('#txtAnho').val('');
         $('#cmbDesde').val(first);
         $('#cmbHasta').val(first);

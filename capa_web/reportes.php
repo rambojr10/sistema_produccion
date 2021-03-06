@@ -1,37 +1,20 @@
     
+    <style>
+        table thead th {
+            text-align: center !important;
+        }
+        table tbody tr:hover {
+            background-color: gray;
+            cursor: pointer;
+        }
+    </style>
+
     <div class="container">
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="invoice-wrap">
                     <h2>Reportes <i class="fa fa-inbox"></i></h2>
-
-                    <div class="row">
-                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                            <div class="invoice-hs">
-                                <span>Invoice#</span>
-                                <h2>456656</h2>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                            <div class="invoice-hs date-inv sm-res-mg-t-30 tb-res-mg-t-30 tb-res-mg-t-0">
-                                <span>Date</span>
-                                <h2>20/03/2018</h2>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                            <div class="invoice-hs wt-inv sm-res-mg-t-30 tb-res-mg-t-30 tb-res-mg-t-0">
-                                <span>Whatever</span>
-                                <h2>472-000</h2>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                            <div class="invoice-hs gdt-inv sm-res-mg-t-30 tb-res-mg-t-30 tb-res-mg-t-0">
-                                <span>Grand Total</span>
-                                <h2>$25,980</h2>
-                            </div>
-                        </div>
-                    </div>
-
+                    
                     <div class="invoice-hds-pro">
                         <hr>
                         <div class="ui pointing blue four item menu" id="menuItems">
@@ -127,6 +110,34 @@
             
             </div>
 
+            <!-- Mini cards -->
+            <div class="row mg-b-15">
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                    <div class="invoice-hs">
+                        <span>Invoice#</span>
+                        <h2>456656</h2>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                    <div class="invoice-hs date-inv sm-res-mg-t-30 tb-res-mg-t-30 tb-res-mg-t-0">
+                        <span>Date</span>
+                        <h2>20/03/2018</h2>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                    <div class="invoice-hs wt-inv sm-res-mg-t-30 tb-res-mg-t-30 tb-res-mg-t-0">
+                        <span>Whatever</span>
+                        <h2>472-000</h2>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                    <div class="invoice-hs gdt-inv sm-res-mg-t-30 tb-res-mg-t-30 tb-res-mg-t-0">
+                        <span>Grand Total</span>
+                        <h2>$25,980</h2>
+                    </div>
+                </div>
+            </div>
+
             <div class="row">
 
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -171,6 +182,7 @@
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
