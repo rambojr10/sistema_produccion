@@ -22,7 +22,7 @@
                                 Embarques
                             </a>
                             <a class="item" id="btnAllinone">
-                                All in one
+                                SearcHEF
                             </a>
                             <a class="item" id="btnRechazos">
                                 Rechazos

@@ -63,15 +63,15 @@
             .then(response => response.json())
             .then(data => {
                 console.log(data)
-                if (options.reportType === 'tblAllinone' && options.tipoFruta) {
-                    cargarDatosTabla(options.reportType, data, false, 'case2');
+                if (options.reportType === 'tblAllinone' && options.tipoFruta || options.cajas) {
+                    cargarDatosTabla(options.reportType, data, true, 'case2');
                 } else if (options.reportType === 'tblAllinone' && !options.tipoFruta) {
-                    cargarDatosTabla(options.reportType, data, false, 'case1');
+                    cargarDatosTabla(options.reportType, data, true, 'case1');
                 } else if (options.reportType === 'tblRechazos') {
                     cargarDatosTabla(options.reportType, data, true);
                 }
                 //cargarDatosTabla(options.reportType, data, true);
-                
+
                 //Loader
                 $('.osc').fadeOut();
                 $('#loader').fadeOut();
@@ -161,7 +161,8 @@
 
         let footer = false;
         if (data && hasFooter) {
-            let resultTfoot = setTfoot(data, nameOption);
+            console.log(option)
+            let resultTfoot = setTfoot(data, nameOption, option);
             Object.assign(objDataTable, {data: resultTfoot.data});
             footer = resultTfoot.tfoot;
         } else if (data) {
@@ -170,7 +171,7 @@
         
         const tbl = document.querySelector('#tblReportes');
         if (tbl.children[0]) tbl.removeChild(tbl.children[0]);
-        tbl.style.textAlign = hasFooter ? 'center' : 'left';
+        tbl.style.textAlign = 'center';
         const table = document.createElement('table');
         table.id = 'tblTemp';
 
@@ -215,6 +216,7 @@
                     { title: 'Código', data: 'Cod_Embarque'},
                     { title: 'Nombre', data: 'Nombre'},
                     { title: 'Semana', data: 'N_Semana'},
+                    { title: 'Día', data: 'FKId_TblDias'},
                     { title: 'F.Conv', data: 'FactorConversion'},
                     { title: 'Cod. Caja', data: 'FKCodigo_TblCajasProduccion'},
                     { title: 'Cajas Prod.', data: 'N_CajasProducidas_Dia'},
@@ -263,9 +265,9 @@
         }
     }
 
-    function setTfoot(data, option) {
+    function setTfoot(data, option, extra = null) {
         let result = {data: [], tfoot: ''};
-        if (option === 'tblAllinone') {
+        if (option === 'tblAllinone' && extra === 'case1') {
             this.ratio = 0;
             this.merma = 0;
             this.pesoRacimos = 0;
@@ -347,6 +349,43 @@
             }
             result.tfoot = tfoot;
         }
+        if (option === 'tblAllinone' && extra === 'case2') {
+            this.cajasProducidas = 0;
+            this.totalConvertido = 0;
+            this.countCajas = 0;
+            this.countConvertido = 0;
+            data.forEach(item => {
+                if (item.N_CajasProducidas_Dia) {
+                    this.cajasProducidas += parseInt(item.N_CajasProducidas_Dia);
+                    this.countCajas++;
+                }
+                if (item.Convertido) {
+                    this.totalConvertido += parseFloat(item.Convertido);
+                    this.countConvertido++;
+                }
+                // --------------------------------------------
+                result.data.push(item);
+            });
+            const tfoot = _ => {
+                let tagFoot = document.createElement('tfoot');
+                tagFoot.innerHTML = `
+                    <tr>
+                        <th>TOTAL</th>
+                        <td colspan="5"></td>
+                        <td>${this.cajasProducidas}</td>
+                        <td>${this.totalConvertido.toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                        <th>PROMEDIO</th>
+                        <td colspan="5"></td>
+                        <td>${(this.cajasProducidas/this.countCajas).toFixed(2)}</td>
+                        <td>${(this.totalConvertido/this.countConvertido).toFixed(2)}</td>
+                    </tr>
+                `;
+                return tagFoot;
+            }
+            result.tfoot = tfoot;
+        }
         if (option === 'tblRechazos') {
             this.totalRechazadas = 0;
             this.countRechazos = 0;
@@ -398,7 +437,9 @@
     function aggConvert(data) {
         let newData = [];
         data.forEach(e => {
-            e.Convertido = parseFloat(e.FactorConversion) * parseInt(e.N_CajasProducidas_Dia);
+            e.Convertido = (parseFloat(e.FactorConversion) * parseInt(e.N_CajasProducidas_Dia)).toFixed(2);
+            e.FactorConversion = parseFloat(e.FactorConversion).toFixed(2);
+            e.FKId_TblDias = dayOf(e.FKId_TblDias);
             newData.push(e);
         });
         return newData;
@@ -408,3 +449,6 @@
         const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
         return days[v];
     }
+
+    // aquí perdiendo el tiempo
+    // .replace('<td>', '["').replaceAll('<td>', '", "').replaceAll('</td>', '') + ']'));
