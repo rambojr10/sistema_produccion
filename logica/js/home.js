@@ -128,6 +128,7 @@
         fetch(`../logica/contenido.php?op=datos_home_user&fecha_actual=${fecha(fechaActual)}`)
         .then(response => response.json())
         .then(datos => {
+            console.log(datos)
             if (typeof datos === 'object') {
                 //Loader
                 $('.osc').fadeOut();
@@ -135,14 +136,15 @@
             
                 //rowOne
                 const lblTotalElaborado = document.getElementById('lblTotalElaborado');
-                lblTotalElaborado.textContent = datos.rowOne.historico.totalElaborado;
+                lblTotalElaborado.textContent = datos.rowOne.historico.totalElaborado ? datos.ultimaProduccion.totalElaborado : 0;
                 const lblTotalRechazadas = document.getElementById('lblTotalRechazadas');
-                lblTotalRechazadas.textContent = datos.rowOne.historico.totalRechazadas;
+                lblTotalRechazadas.textContent = datos.rowOne.historico.totalRechazadas ? datos.ultimaProduccion.totalRechazadas : 0;
                 const lblTotalSemana = document.getElementById('lblTotalSemana');
-                lblTotalSemana.textContent = datos.ultimaProduccion.Total_CElaboradas;
+                lblTotalSemana.textContent = datos.ultimaProduccion.Total_CElaboradas ? datos.ultimaProduccion.Total_CElaboradas : 0;
                 document.getElementById('lblCodigoSemana').textContent = datos.ultimaProduccion.Cod_Embarque;
                 [...document.getElementsByClassName('lblAnhoUser')].forEach(element=> {
-                    element.textContent = datos.ultimaProduccion.Anho_Produccion;
+                    //element.textContent = datos.ultimaProduccion.Anho_Produccion;
+                    element.textContent = fechaActual.getFullYear();
                 });
                 
                 //rowTwo
@@ -258,7 +260,7 @@
                 }
                 const tblAlineacionHomeUser = document.querySelector('#tblAlineacionHomeUser');
                 const lblInfoAlineacion = document.querySelector('#lblInfoAlineacion');
-                lblInfoAlineacion.innerHTML = `Semana: ${datos.rowFour.ultimaSemanaInfo.semana.N_Semana} <br> Código: EMB-${datos.rowFour.ultimaSemanaInfo.semana.Anho}${datos.rowFour.ultimaSemanaInfo.semana.PKId}`;
+                lblInfoAlineacion.innerHTML = `Semana: ${datos.rowFour.ultimaSemanaInfo.semana.N_Semana} <br> Código: EMB-${datos.rowFour.ultimaSemanaInfo.semana.Anho}${datos.rowFour.ultimaSemanaInfo.semana.N_Semana.split(' ').pop().trim()}`;
                 tblAlineacionHomeUser.innerHTML = TablaAlineacion(datos.rowFour.ultimaAlineacion);
             } else {
                 swal('Dashboard', 'No se ha podido cargar correctamente, es posible que no existan datos para tratar', 'error');

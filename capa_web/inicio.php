@@ -595,8 +595,8 @@
                                     </div>
                                     <div class="row">
                                         <button type="button" class="btn btn-block">12 SEMANAS</button>
-                                        <button type="button" class="btn btn-block"">11 SEMANAS</button>
-                                        <button type="button" class="btn btn-block"">10 SEMANAS</button>
+                                        <button type="button" class="btn btn-block">11 SEMANAS</button>
+                                        <button type="button" class="btn btn-block">10 SEMANAS</button>
                                         <button type="button" class="btn btn-block">09 SEMANAS</button>
                                     </div>
                                 </div>

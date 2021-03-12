@@ -8,12 +8,10 @@
         .then(data => {
             Object.assign(info, data);
             cargarCmbs('cmbFincas', 'cmbTipoFruta', 'cmbCajas');
-            document.querySelector('#cmbCajas').hasChildNodes() ? $("#cmbCajas").select2() : this.click();
+            $("#cmbCajas").select2();
             switchOptions('all')
         });
     });
-
-    console.log(info)
 
     document.addEventListener('click', function(e) { 
         let tabla = '';
@@ -35,6 +33,7 @@
         }
         if (e.target.matches('#btnNacional')) {
             activeClass('btnNacional');
+            switchOptions('rechazos');
         }
     });
 
@@ -49,9 +48,8 @@
             tipoFruta: $('#cmbTipoFruta').val().includes('...') ? null : document.getElementById('cmbTipoFruta').value,
             cajas: typeof $('#cmbCajas').val() === 'object' ? $('#cmbCajas').val() : null
         }
-        console.log(options)
-        if (options.reportType && options.anho) {
 
+        if (options.reportType && options.anho) {
             //Loader
             $('.osc').fadeIn();
             $('#loader').fadeIn();
@@ -69,9 +67,9 @@
                     cargarDatosTabla(options.reportType, data, true, 'case1');
                 } else if (options.reportType === 'tblRechazos') {
                     cargarDatosTabla(options.reportType, data, true);
+                } else if (options.reportType === 'tblNacional') {
+                    cargarDatosTabla(options.reportType, data, true);
                 }
-                //cargarDatosTabla(options.reportType, data, true);
-
                 //Loader
                 $('.osc').fadeOut();
                 $('#loader').fadeOut();
@@ -118,6 +116,7 @@
         dynamicValues.forEach(item => {
             document.getElementById(item).innerHTML = info[item];
         });
+        document.querySelector('#cmbCajas').hasChildNodes() ? console.log('Nothing') : $("[href='#verreporte']").trigger('click');
     }
 
     function cargarDatosTabla(nameOption, data = null, hasFooter = false, option = null) {
@@ -161,7 +160,6 @@
 
         let footer = false;
         if (data && hasFooter) {
-            console.log(option)
             let resultTfoot = setTfoot(data, nameOption, option);
             Object.assign(objDataTable, {data: resultTfoot.data});
             footer = resultTfoot.tfoot;
@@ -180,8 +178,6 @@
         api = $("#tblTemp").DataTable(objDataTable);
 
         if (footer) $('#tblTemp').append(footer());
-
-        console.log(objDataTable)
     }
 
     function getColumns(title, option) {
@@ -233,7 +229,16 @@
                 { title: 'Cajas Rec.', data: 'Total_CREchazadas'},
                 { title: 'Año', data: 'Anho'},
             ],
-            'tblNacional': [],
+            'tblNacional': [
+                { title: 'Id', data: 'Id'},
+                { title: 'Código', data: 'Cod_Embarque'},
+                { title: 'Nombre', data: 'Nombre'},
+                { title: 'Semana', data: 'N_Semana'},
+                { title: 'Fecha In.', data: 'Fecha_Inicio'},
+                { title: 'Fecha Fi.', data: 'Fecha_Fin'},
+                { title: 'Total Elaborado', data: 'Total_Elaborado'},
+                { title: 'Año', data: 'Anho_Produccion'},
+            ],
         }
 
         return option ? columns[title][option] : columns[title];
@@ -281,6 +286,9 @@
             this.countPesoRacimos = 0;
             this.countAreaRecorrida = 0;
             this.countFrutaPiso = 0;
+            this.countElaboradas = 0;
+            this.countExportadas = 0;
+            this.countRechazadas = 0;
             data.forEach(item => {
                 if (item.Ratio) {
                     item.Ratio = parseFloat(item.Ratio).toFixed(1);
@@ -309,12 +317,15 @@
                 }
                 if (item.Total_CElaboradas) {
                     this.totalElaboradas += parseInt(item.Total_CElaboradas);
+                    this.countElaboradas++;
                 }
                 if (item.Total_CREchazadas) {
                     this.totalRechazadas += parseInt(item.Total_CREchazadas);
+                    this.countRechazadas++;
                 }
                 if (item.Total_CExportadas) {
                     this.totalExportadas += parseInt(item.Total_CExportadas);
+                    this.countExportadas++;
                 }
                 // --------------------------------------------
                 result.data.push(item);
@@ -342,7 +353,9 @@
                         <td>${(this.pesoRacimos/this.countPesoRacimos).toFixed(1)}</td>
                         <td>${(this.areaRecorrida/this.countAreaRecorrida).toFixed(1)}</td>
                         <td>${(this.frutaPiso/this.countFrutaPiso).toFixed(1)}</td>
-                        <td colspan="3"></td>  
+                        <td>${(this.totalElaboradas/this.countElaboradas).toFixed(1)}</td>
+                        <td>${(this.totalRechazadas/this.countRechazadas).toFixed(1)}</td>
+                        <td>${(this.totalExportadas/this.countExportadas).toFixed(1)}</td>
                     </tr>
                 `;
                 return tagFoot;
@@ -418,7 +431,35 @@
             result.tfoot = tfoot; 
         }
         if (option === 'tblNacional') {
-            
+            this.totalElaborado = 0;
+            this.countTotal = 0;
+            data.forEach(item => {
+                if (item.Total_Elaborado) {
+                    this.totalElaborado += parseInt(item.Total_Elaborado);
+                    this.countTotal++;
+                }
+                // --------------------------------------------
+                result.data.push(item);
+            });
+            const tfoot = _ => {
+                let tagFoot = document.createElement('tfoot');
+                tagFoot.innerHTML = `
+                    <tr>
+                        <th>TOTAL</th>
+                        <td colspan="4"></td>
+                        <td>${this.totalElaborado}</td>
+                        <td colspan="1"></td>
+                    </tr>
+                    <tr>
+                        <th>PROMEDIO</th>
+                        <td colspan="4"></td>
+                        <td>${(this.totalElaborado/this.countTotal).toFixed(1)}</td>
+                        <td colspan="1"></td>
+                    </tr>
+                `;
+                return tagFoot;
+            }
+            result.tfoot = tfoot; 
         }
         return result;
     }
@@ -449,6 +490,3 @@
         const days = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
         return days[v];
     }
-
-    // aquí perdiendo el tiempo
-    // .replace('<td>', '["').replaceAll('<td>', '", "').replaceAll('</td>', '') + ']'));

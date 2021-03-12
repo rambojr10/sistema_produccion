@@ -2,11 +2,16 @@
     <style>
         table thead th {
             text-align: center !important;
+            background-color: #1A2020;
+            color: white;
         }
         table tbody tr:hover {
-            background-color: gray;
+            background-color: #DAD1D6;
             cursor: pointer;
         }
+        /*table tfoot {
+            background-color: #87BFD8;
+        }*/
     </style>
 
     <div class="container">
@@ -92,7 +97,7 @@
                         </div>
                     </div>
                     
-                    <div class="mg-b-15">
+                    <div class="">
                         <button id="btnGenerarReportes" class="btn btn-default">
                             <i class="fa fa-clone"></i>
                             Generar reportes
@@ -111,7 +116,7 @@
             </div>
 
             <!-- Mini cards -->
-            <div class="row mg-b-15">
+            <!-- <div class="row mg-b-15">
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                     <div class="invoice-hs">
                         <span>Invoice#</span>
@@ -136,10 +141,9 @@
                         <h2>$25,980</h2>
                     </div>
                 </div>
-            </div>
+            </div> -->
 
-            <div class="row">
-
+            <!-- <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                     <div class="panel panel-warning">
                         <div class="panel-heading">
@@ -182,8 +186,8 @@
                         </div>
                     </div>
                 </div>
+            </div> -->
 
-            </div>
         </div>
     </div>
 

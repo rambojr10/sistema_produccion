@@ -1061,7 +1061,7 @@
             ";
         } else if ($options->reportType === 'tblNacional') {
             $statement = "
-                SELECT p.PKId as Id, f.Nombre, s.N_Semana, s.Fecha_Inicio, s.Fecha_Fin, mn.Total_Elaborado
+                SELECT p.PKId as Id, p.Cod_Embarque, f.Nombre, s.N_Semana, s.Fecha_Inicio, s.Fecha_Fin, mn.Total_Elaborado, p.Anho_Produccion
                 FROM TblProduccion as p
                 INNER JOIN TblSemanas as s 
                 ON p.FKId_TblSemanas = s.PKId
