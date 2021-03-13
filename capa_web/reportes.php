@@ -9,9 +9,9 @@
             background-color: #DAD1D6;
             cursor: pointer;
         }
-        /*table tfoot {
-            background-color: #87BFD8;
-        }*/
+        div.dataTables_wrapper {
+            margin: 0 auto;
+        }
     </style>
 
     <div class="container">
@@ -111,7 +111,7 @@
     <div class="container">
         <div class="invoice-wrap mg-t-15">
             <h4>Information</h4>
-            <div class="table-responsive" id="tblReportes" style="font-size: 11.5px; margin-bottom: 10px;">
+            <div id="tblReportes" style="font-size: 11.5px !important; margin-bottom: 10px;">
             
             </div>
 

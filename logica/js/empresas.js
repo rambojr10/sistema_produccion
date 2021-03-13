@@ -94,7 +94,6 @@
                     data: {op: 'eliminarempresa', key: nit, campo: 'PKNit', tabla: 'tblempresas'},
                     cache: false,
                     success: function (res) {
-                        console.log(res);
                         if (res == true) {
                             swal("Eliminación", "Registro eliminado correctamente.", "success");
                             listarempresas();

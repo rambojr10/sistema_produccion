@@ -247,7 +247,8 @@
                 $datosProduccion->tblCajas[$maxItems-4][10], 
                 ($datosProduccion->tblCajas[$maxItems-3][10] == '#VALUE!' ? null : $datosProduccion->tblCajas[$maxItems-3][10]),
                 substr($datosProduccion->cod_embarque, 4,4), 
-                ($datosProduccion->tblCajas[$maxItems-8][10] > 0 ? $datosProduccion->tblCajas[$maxItems-8][10] : null)
+                ($datosProduccion->tblCajas[$maxItems-8][10] > 0 ? $datosProduccion->tblCajas[$maxItems-8][10] : null),
+                $datosProduccion->tblCajas[$maxItems-11][11]
             );
             if ($lastIdProduccion !== false) {
                 for ($x = 1; $x < 8; $x++) {
@@ -881,7 +882,7 @@
     //
     function cargar_programacion() {
         $codEmbarque = $_GET['codEmbarque'];
-        $listaCajas = buscarregistro($codEmbarque, 'FKCod_TblEmbarque', 'TblDet_TblEmbarque', 'FKIbm_TblFincas = (SELECT TOP 1 PKIbm FROM tblfincas);');
+        $listaCajas = buscarregistro($codEmbarque, 'FKCod_TblEmbarque', 'TblDet_TblEmbarque', 'FKIbm_TblFincas = (SELECT TOP 1 FKIbm_TblFincas FROM TblDet_TblEmbarque);');
         $result = [ 'infoCajas' => [], 'estimativo' => [] ];
         foreach ($listaCajas as $lc) {
             $infoCaja = buscarcaja($lc->FKCodigo_TblCajasProduccion);
@@ -939,7 +940,7 @@
         $result['cardEstimativo']['tableHead'] = $tableHead;
         $result['cardEstimativo']['tableBody']['premiun'] = $tablePremiun;
         $result['cardEstimativo']['tableBody']['especial'] = $tableEspecial;
-        $result['cardEstimativo']['codEmbarque'] = $estimativo[0]->FKCod_TblEmbarque;
+        $result['cardEstimativo']['codEmbarque'] = $estimativo ? $estimativo[0]->FKCod_TblEmbarque : null ;
         
         echo json_encode($result);
 
@@ -950,6 +951,7 @@
         $fechaSplit = explode('-', $_GET['fecha_actual']);
         $result = ['ultimaProduccion' => [], 'rowOne' => [], 'rowTwo' => [], 'rowThree' => [], 'rowFour' => []];
 
+    if (buscarultimaproduccion($_SESSION['conectado']->PKIbm)) {
         //Use register
         $ultimaProduccion = buscarultimaproduccion($_SESSION['conectado']->PKIbm)[0];
         $result['ultimaProduccion'] = $ultimaProduccion;
@@ -985,6 +987,9 @@
 
         //Final
         echo json_encode($result);
+    } else {
+        echo json_encode(null);
+    }
     }
 
     //

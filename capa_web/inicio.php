@@ -576,19 +576,19 @@
                                             <div class="item">
                                                 <div class="content">
                                                     <a class="header">Semana</a>
-                                                    <div class="description" id="info-semana-semana">SEMANA 48</div>
+                                                    <div class="description" id="info-semana-semana">SEMANA 00</div>
                                                 </div>
                                             </div>
                                             <div class="item">
                                                 <div class="content">
                                                     <a class="header">Fecha inicio</a>
-                                                    <div class="description" id="info-semana-inicio">2020-12-23</div>
+                                                    <div class="description" id="info-semana-inicio">0000-00-00</div>
                                                 </div>
                                             </div>
                                             <div class="item">
                                                 <div class="content">
                                                     <a class="header">Fecha fin</a>
-                                                    <div class="description" id="info-semana-fin">2020-12-30</div>
+                                                    <div class="description" id="info-semana-fin">0000-00-00</div>
                                                 </div>
                                             </div>
                                         </div>

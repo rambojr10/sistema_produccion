@@ -27,7 +27,6 @@
                     throw "No se pueden cargar los datos";
             })
             .then(res => {
-                console.log(res);
                 if (res == 'Ok')
                     swal('Generador de semanas', `Las semanas se han generado correctamente, el nuevo año ${hoy.getFullYear()+1} ahora está disponible en la plataforma.`, 'success');
             });

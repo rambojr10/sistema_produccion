@@ -2,7 +2,7 @@
  "use strict";
     const anhoActual = new Date();
     fetch(`../logica/contenido.php?op=datos_flot&anhoActual=${anhoActual.getFullYear()}`)
-    .then(response => {return response.json()})
+    .then(response => response.json())
     .then(datos => {
         document.getElementById('lblAnhoAdmin').textContent = anhoActual.getFullYear();
         var fincas = [null, "ALAMOS", "GUAIMARAL", "TAIWAN", "KALAMARI", "ZARZAMORA", "CANDELARIA"];

@@ -60,7 +60,6 @@
             fetch('../logica/contenido.php', {method: 'POST', body: op})
             .then(response => response.json())
             .then(data => {
-                console.log(data)
                 if (options.reportType === 'tblAllinone' && options.tipoFruta || options.cajas) {
                     cargarDatosTabla(options.reportType, data, true, 'case2');
                 } else if (options.reportType === 'tblAllinone' && !options.tipoFruta) {
@@ -96,10 +95,10 @@
         }
     });
 
-    $(document).on('dblclick', '#tblReportes tbody tr', function() {
+    //The future is here - ILOVEU MY RABBIT - This project was development by AndrésValencia♥RamboJR#10
+   /* $(document).on('dblclick', '#tblReportes tbody tr', function() {
         let data = api?.row(this).data();
-        console.log(data);
-    });
+    });*/
 
     function activeClass(idElement) {
         cleanFields();
@@ -171,7 +170,9 @@
         if (tbl.children[0]) tbl.removeChild(tbl.children[0]);
         tbl.style.textAlign = 'center';
         const table = document.createElement('table');
+        table.style.width = '100%';
         table.id = 'tblTemp';
+        table.classList = 'display nowrap';
 
         tbl.appendChild(table);
         $('#tblTemp').DataTable(objDataTable);
@@ -197,13 +198,13 @@
                     { title: 'Semana', data: 'N_Semana'},
                     { title: 'Fecha In.', data: 'Fecha_Inicio'},
                     { title: 'Fecha Fi.', data: 'Fecha_Fin'},
-                    { title: 'Año', data: 'Anho'},
                     { title: 'RT', data: 'Ratio'},
                     { title: 'MM', data: 'Merma'},
                     { title: 'PR', data: 'Peso_Racimos'},
                     { title: 'AR', data: 'Area_Recorrida'},
                     { title: 'FP', data: 'Fruta_Piso'},
                     { title: 'Cajas Ela.', data: 'Total_CElaboradas'},
+                    { title: 'Conv.', data: 'Conversion'},
                     { title: 'Cajas Rec.', data: 'Total_CREchazadas'},
                     { title: 'Cajas Exp.', data: 'Total_CExportadas'},
                 ],
@@ -279,6 +280,7 @@
             this.areaRecorrida = 0;
             this.frutaPiso = 0;
             this.totalElaboradas = 0;
+            this.totalConversion = 0;
             this.totalExportadas = 0;
             this.totalRechazadas = 0;
             this.countRatio = 0;
@@ -287,6 +289,7 @@
             this.countAreaRecorrida = 0;
             this.countFrutaPiso = 0;
             this.countElaboradas = 0;
+            this.countConversion = 0;
             this.countExportadas = 0;
             this.countRechazadas = 0;
             data.forEach(item => {
@@ -319,6 +322,10 @@
                     this.totalElaboradas += parseInt(item.Total_CElaboradas);
                     this.countElaboradas++;
                 }
+                if (item.Conversion) {
+                    this.totalConversion += parseInt(item.Conversion);
+                    this.countConversion++;
+                }
                 if (item.Total_CREchazadas) {
                     this.totalRechazadas += parseInt(item.Total_CREchazadas);
                     this.countRechazadas++;
@@ -332,28 +339,31 @@
             });
             const tfoot = _ => {
                 let tagFoot = document.createElement('tfoot');
+                tagFoot.classList = 'highlight';
                 tagFoot.innerHTML = `
                     <tr>
                         <th>TOTAL</th>
-                        <td colspan="5"></td>
+                        <td colspan="4"></td>
                         <td>${this.ratio}</td>
                         <td>${this.merma}</td>
                         <td>${this.pesoRacimos}</td>
                         <td>${this.areaRecorrida}</td>
                         <td>${this.frutaPiso}</td>
                         <td>${this.totalElaboradas}</td>
+                        <td>${this.totalConversion}</td>
                         <td>${this.totalRechazadas}</td>
                         <td>${this.totalExportadas}</td>
                     </tr>
                     <tr>
                         <th>PROMEDIO</th>
-                        <td colspan="5"></td>
+                        <td colspan="4"></td>
                         <td>${(this.ratio/this.countRatio).toFixed(1)}</td>
                         <td>${(this.merma/this.countMerma).toFixed(1)}</td>
                         <td>${(this.pesoRacimos/this.countPesoRacimos).toFixed(1)}</td>
                         <td>${(this.areaRecorrida/this.countAreaRecorrida).toFixed(1)}</td>
                         <td>${(this.frutaPiso/this.countFrutaPiso).toFixed(1)}</td>
                         <td>${(this.totalElaboradas/this.countElaboradas).toFixed(1)}</td>
+                        <td>${(this.totalConversion/this.countConversion).toFixed(1)}</td>
                         <td>${(this.totalRechazadas/this.countRechazadas).toFixed(1)}</td>
                         <td>${(this.totalExportadas/this.countExportadas).toFixed(1)}</td>
                     </tr>
